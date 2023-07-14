@@ -52,10 +52,7 @@
     width: 85%;
 
 }
-.solidline
-{
-    border-right: 2px solid black;
-}
+
 
 .icon{
   font-size: 3rem;
@@ -67,25 +64,4 @@
   text-decoration: none;
 }
 
-.card:hover
-{
-    background-color: #05d230;
-    border: 2px solid #02295d;
-}
-.card:hover .solidline
-{
-    border-right: 2px solid #fff;
-}
 
-.card:hover h2, .card:hover p
-{
-    color: #fff;
-}
-
-.card:hover .icon{
-  color: #fff;
-}
-.projectscard
-{
-    border-left: 10px solid #02295d;
-}
