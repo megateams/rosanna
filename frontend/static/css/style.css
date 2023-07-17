@@ -21,6 +21,9 @@
 
 .inner-content{
     padding: 10px;
+    height: 80vh;
+    overflow: hidden;
+    overflow-y: scroll;
     /* display: none; */
 }
 .header img{
@@ -92,9 +95,6 @@
     bottom: 0;
     width: 85%;
 }
-
-
-
 /* table */
 .inner-content .add-btn
 {
@@ -118,3 +118,42 @@
 }
 
 /* table */
+
+
+
+.cards .card .icon{
+    font-size: 2rem;
+    align-items: center;
+    justify-content: center;
+    padding-right: 50px;
+    padding-top: 10px;
+    color: #fff;
+}
+
+.card{
+    text-align: center;
+    padding-top: 20px;
+    color: #fff;
+}
+.cards .trcard{
+    background-color: red;
+}
+.cards .staff-card{
+    background-color: #f9b855;
+}
+.donut-chart {
+    width: 400px;
+    height: 300px;
+    padding-top: 10px;
+  }
+  .bar-chart {
+    width: 600px;
+    height: 300px;
+    padding-top: 10px;
+  }
+  .line-chart {
+    width: 600px;
+    height: 400px;
+  }
+
+  

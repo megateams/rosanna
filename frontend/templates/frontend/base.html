@@ -8,8 +8,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
     
@@ -90,7 +94,8 @@
                 
                 <div class="right mr-5 d-flex">
                     <p class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
-                    <a class='ml-3 mr-2 text-danger' ><i class="fas fa-power-off   mr-2 "></i>Logout</a>   
+                    <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mt-2 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
+
                 </div>   
             </nav>
             <!-- navbar -->
@@ -128,7 +133,24 @@
     <!-- custom js -->
     <script src="{% static 'js/scripts.js' %}"></script>
 
-    
+    <!-- charts.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script src="{% static 'js/charts.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        dycalendar.draw({
+            target: '#calendar',
+            type: 'month',
+            // dayformat: 'full',
+            // monthformat: 'full',
+            highlighttargetdate: true,
+            // prevnextbutton: 'show'
+
+        })
+    </script>
 </body>
+
 </html>
