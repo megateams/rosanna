@@ -7,8 +7,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
 
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
@@ -67,8 +71,8 @@
                 </div>
                 
                 <div class="right mr-5 d-flex">
-                    <h5 class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</h5>
-                    <h5 class='ml-3 mt-2 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</h5>   
+                    <p class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
+                    <p class='ml-3 mt-2 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p>   
                 </div>   
             </nav>
             <!-- navbar -->
@@ -90,5 +94,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <!-- charts.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static 'js/charts.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        dycalendar.draw({
+            target: '#calendar',
+            type: 'month',
+            // dayformat: 'full',
+            // monthformat: 'full',
+            highlighttargetdate: true,
+            // prevnextbutton: 'show'
+
+        })
+    </script>
 </body>
+
 </html>
