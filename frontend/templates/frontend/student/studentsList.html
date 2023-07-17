@@ -1,11 +1,95 @@
 {% extends 'frontend/base.html' %}
 {% block  title %} Students List {% endblock title %}
+{% block  pagetitle %} Students List {% endblock pagetitle %}
 
 {% block  main %} 
 
 <!-- inner-content -->
 <div class="inner-content">
-    
+    <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Reg number</th>
+                    <th>Child Fullname</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
+                    <th>Address</th>
+                    <th>Class</th>
+                    <th>House</th>
+                    <th>Father</th>
+                    <th>Mother</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" class="text-primary"><i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"><i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" class="text-primary"><i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"><i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" class="text-primary"><i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"><i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" class="text-primary"><i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"><i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
 </div>
 <!-- inner-content -->
 {% endblock main %}

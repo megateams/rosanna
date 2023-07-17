@@ -48,9 +48,6 @@
     color: #fff;
     text-decoration: none;
 }
-
-
-
 .submenu li
 {
     padding-left: 5%;
@@ -94,5 +91,30 @@
     position: absolute;
     bottom: 0;
     width: 85%;
-
 }
+
+
+
+/* table */
+.inner-content .add-btn
+{
+    background-color: #d79430;
+}
+.inner-content .table-section
+{
+    padding: 3px 15px;
+    /* background-color: #fff; */
+    border-radius: 10px;
+}
+.table-section .table thead
+{
+    background-color: rgb(26, 1, 1);
+    color: #fff;
+}
+
+.table-section .table tbody tr td{
+    background-color: #fff;
+    border: 1px solid #000;
+}
+
+/* table */

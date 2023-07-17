@@ -1,11 +1,63 @@
 {% extends 'frontend/base.html' %}
 {% block  title %} Students Add {% endblock title %}
+{% block  pagetitle %} Students Add {% endblock pagetitle %}
 
 {% block  main %} 
 
 <!-- inner-content -->
 <div class="inner-content">
-    
+    <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded">
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Student</h5>
+            <hr>
+        </div>
+
+        <!-- student info section -->
+        <div class="stud-info">
+            <div class="sub-heading">
+                <h5>Student Information</h5>
+            </div>
+            <div class="row">
+                <!-- regno -->
+                <div class="form-group col-md-6">
+                    <label for="">Registration Number: </label>
+                    <input type="text" name="regnumber" class="form-control">
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for="">Child Fullname: </label>
+                    <input type="text" name="childname" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- gender -->
+                <div class="form-group col-md-6">
+                    <label for="">Registration Number: </label>
+                    <select name="gender" id="" class="form-control">
+                        <option value="">---</option>
+                        <option value="Male">Male</option>
+                        <option value="Female         ">Female</option>
+                    </select>
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for="">Child Fullname: </label>
+                    <input type="text" name="childname" class="form-control">
+                </div>
+            </div>
+        </div>
+        
+        <!-- student info section -->
+        
+
+        
+    </form>
+    <!-- form-section -->
+
 </div>
 <!-- inner-content -->
 
