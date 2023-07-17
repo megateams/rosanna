@@ -1,3 +1,10 @@
+*{
+    box-sizing: border-box;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+}
+
 .main{
     display: flex;
     width: 100%;
@@ -25,10 +32,44 @@
 }
 .sidebar ul{
     list-style-type: none;
+    padding-left: 10%;
 }
+
+.sidebar-links li a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar-links li a:hover
+{
+    color: #d79430;
+}
+
+/* sidebar sub menu */
+.sidebar-links .main-menu a, .sidebar-links .main-menu .chevron
+{
+    color: #fff;
+    text-decoration: none;
+}
+.submenu li
+{
+    padding-left: 5%;
+    line-height: 38px;
+
+}
+.submenu li a
+{
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    
+}
+
+
+/* sidebar sub menu */
+
 .navbar
 {
-    
     color: black;
 }
 
@@ -53,8 +94,30 @@
     position: absolute;
     bottom: 0;
     width: 85%;
-
 }
+/* table */
+.inner-content .add-btn
+{
+    background-color: #d79430;
+}
+.inner-content .table-section
+{
+    padding: 3px 15px;
+    /* background-color: #fff; */
+    border-radius: 10px;
+}
+.table-section .table thead
+{
+    background-color: rgb(26, 1, 1);
+    color: #fff;
+}
+
+.table-section .table tbody tr td{
+    background-color: #fff;
+    border: 1px solid #000;
+}
+
+/* table */
 
 
 
@@ -93,6 +156,4 @@
     height: 400px;
   }
 
-  
-  
   
