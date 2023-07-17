@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date
 # Create your models here.
 
 GENDER_CHOICES = [
@@ -20,63 +20,87 @@ CLASS_CHOICES =[
     ('P.7' , 'P.7')
 ]
 
-IMMUNIZED_CHOICES = [
-    ('yes' , 'yes'),
-    ('no' , 'no')
-]
+# IMMUNIZED_CHOICES = [
+#     ('yes' , 'yes'),
+#     ('no' , 'no')
+# ]
 
-PARENTS_CHOICES = [
-    ('yes' , 'yes'),
-    ('no' , 'no')
-]
+# PARENTS_CHOICES = [
+#     ('yes' , 'yes'),
+#     ('no' , 'no')
+# ]
 
 class Registration(models.Model):
-    childsurname = models.CharField(max_length = 25 , verbose_name = 'Child Surname')
-    childlastname = models.CharField(max_length = 25 , verbose_name = 'Child Last name' )
-    childgender = models.CharField(max_length=1 , choices= GENDER_CHOICES , verbose_name = 'Choose Gender')
-    appliedclass = models.CharField(max_length= 6 , choices= CLASS_CHOICES , verbose_name= 'Class Applied for')
-    immunized = models.CharField(max_length= 3, choices=IMMUNIZED_CHOICES , verbose_name= 'Was your child immunized?' )
-    formerschool = models.CharField(max_length=50 , verbose_name="Former School")
-    passportphoto = models.ImageField(verbose_name='Childs Passport photo' , upload_to='imagesfiles')
-    fathersfirstname  = models.CharField(max_length=25 , verbose_name="Fathers First Name")
-    fatherslastname = models.CharField(max_length= 25 , verbose_name= 'Fathers last name')
-    fathersphonecontact = models.CharField(max_length=20 , verbose_name='Phone Contact')
-    fathersemail = models.EmailField(max_length= 30 , verbose_name='Fathers email')
-    fathersoccupation = models.CharField(max_length= 25 , verbose_name='occupation')
-    fathersresidence = models.CharField(max_length= 25 , verbose_name='Residence')
-    mothersfirstname  = models.CharField(max_length=25 , verbose_name="Mothers First Name")
-    motherslastname = models.CharField(max_length= 25 , verbose_name= 'Mothers last name')
-    mothersphonecontact = models.CharField(max_length=20 , verbose_name='Phone Contact')
-    mothersemail = models.EmailField(max_length= 30 , verbose_name='Mothers email')
-    mothersoccupation = models.CharField(max_length= 25 , verbose_name='occupation')
-    mothersresidence = models.CharField(max_length= 25 , verbose_name='Residence')
-    parentsstay = models.CharField(max_length= 3 , choices= PARENTS_CHOICES , verbose_name='Do both parents stay together?' )
-    fathersphoto = models.ImageField(verbose_name= 'Fathers passport photo' , upload_to='imagesfile')
-    mothersphoto = models.ImageField(verbose_name= 'Mothers passport photo' , upload_to='imagesfile')
-    residencedistrict = models.CharField(max_length= 25 , verbose_name= 'district of Residence')
-    county = models.CharField(max_length=25 , verbose_name='County')
-    subcounty = models.CharField(max_length=25 , verbose_name='subcounty')
-    parish = models.CharField(max_length=25 , verbose_name='parish')
-    village = models.CharField(max_length=25 , verbose_name='village/ zone')
-    otherguardianfirstname = models.CharField(max_length=25 , verbose_name='Other Guardian First name')
-    otherguardianlastname = models.CharField(max_length=25 , verbose_name='Other Guardians LAst name')
-    guardianoccupation = models.CharField(max_length= 25 , verbose_name='Guardian occupation')
-    guardiancontact = models.CharField(max_length=20 , verbose_name="Guardian Contact")
-    guardianresidence = models.CharField(max_length= 25 , verbose_name='Guardians Residence')
-    guardianphoto = models.ImageField(verbose_name='Guardians Photo' , upload_to='imagesfile')
-    comments = models.TextField(verbose_name='Comments')
-    
+    regnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Registration Number' , blank= True)
+    regdate = models.DateField(verbose_name='Date', default=None, blank=True )
+    childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
+    gender = models.CharField(max_length=10 , verbose_name="Child's Gender" , blank=True)
+    dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
+    address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
+    house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
+    appliedclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='House' , blank=True)
+
+    fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
+    fcontact = models.CharField(max_length=10 , verbose_name="Father's Contact" , blank=True)
+    foccupation = models.CharField(max_length=20 , verbose_name="Father's Occupation" , blank=True)
+
+    mothername = models.CharField(max_length=25 , verbose_name="Mother's Name" , blank=True)
+    mcontact = models.CharField(max_length=10 , verbose_name="Mother's Contact" , blank=True)
+    moccupation = models.CharField(max_length=20 , verbose_name="Mother's Occupation" , blank=True)
+    livingwith = models.CharField(max_length=20 , verbose_name="Living With" , blank=True)
+
+    guardianname = models.CharField(max_length=10 , verbose_name='Guardian Names' , blank=True)
+    gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
+
     Display_Fields = [
-        'childsurname' , 'childlastname' , 'childgender' , 'appliedclass' , 'immunized' , 'formerschool' , 'passportphoto' ,
-        'fathersfirstname' , 'fatherslastname' , 'fathersphonecontact' , 'fathersemail' , 'fathersoccupation' , 'fathersresidence',
-        'mothersfirstname' , 'motherslastname' , 'mothersphonecontact' , 'mothersemail' , 'mothersoccupation' ,
-        'mothersresidence' , 'parentsstay' , 'fathersphoto' , 'mothersphoto' , 'residencedistrict' , 'county' , 'subcounty',
-        'parish' , 'village' , 'otherguardianfirstname' , 'otherguardianlastname' , 'guardianoccupation' , 'guardiancontact' ,
-        'guardianresidence' , 'guardianphoto' , 'comments'
+        'regnumber','childname' , 'gender' , 'dob' , 'address' , 'house' , 'appliedclass' , 'foccupation' , 'mothername'
+    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
     ]
 
+class Subjects(models.Model):
+    subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
+    subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
+    classlevel = models.CharField(max_length = 25 , verbose_name = 'Class Level')
+    subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
 
+    Display_Subjects = [
+        'subjectname' , 'subjectid' , 'classlevel' , 'subjecthead'
+    ]
 
+class Schoolclasses(models.Model):
+    subjects = models.ManyToManyField(Subjects)
+    classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+    classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
+    classteacher = models.CharField(max_length = 10 , verbose_name = "Classteacher")
+    numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
+
+    Display_schoolclasses = [
+        'classname' , 'classid' , 'classteacher' , 'numofstds'
+    ]
+
+class Teachers(models.Model):
+    classrelationship = models.ManyToManyField(Schoolclasses)
+    subjectrelationship = models.ManyToManyField(Subjects)
+    
+    teacherid = models.CharField(primary_key=True , max_length= 10 , verbose_name='Teacher id')
+    teachernames = models.CharField(max_length=25 , verbose_name='Teachers Names')
+    dob = models.DateField(default=None , verbose_name='Date of Birth')
+    gender = models.CharField(max_length=1 , choices=GENDER_CHOICES , verbose_name='Gender')
+    contact = models.CharField(max_length=10 , verbose_name='Contact')
+    email = models.EmailField(verbose_name="Email Address")
+    address = models.CharField(max_length=20 , verbose_name='Address')
+    classes = models.CharField(max_length=50 , verbose_name="Classes Taught")
+    joiningdate = models.DateField(default=None , verbose_name='Joining Date')
+    position = models.CharField(max_length=20 , verbose_name='Position')
+    subject = models.CharField(max_length=20 , verbose_name='Subject')
+    qualification = models.CharField(max_length=20 , verbose_name='Academic Qualifications')
+    username = models.CharField(max_length=20 , verbose_name='Username')
+    password = models.CharField(max_length=20 , verbose_name='Password')
+    
+    Display_Teachers = [
+        'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'classes' , 'joiningdate',
+        'position' , 'subject' , 'qualification' , 'username' , 'password'
+    ]
 
 
 
