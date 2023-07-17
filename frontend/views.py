@@ -1,4 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, HttpResponse
+# from .models import Registration
+
+# # creating views for the registration 
+# def save_registration(request):
+#     if request.method == 'POST':
+#         #Retrieve form data from the request
+#         childsurname =request.POST.get('childsurname')
+#         childlastname =request.POST.get('childlastname')
+        
+#         #create a new Registarion object band save it in the database
+#         registration =Registration.objects.create(
+#             childsurname =childsurname,
+#             childlastname =childlastname,
+#         )
+#         registration.save()
+#         return HttpResponse('successful registration')
 
 # Create your views here.
 def home(request):
@@ -9,3 +25,7 @@ def login(request):
 
 def students(request):
     return render(request, 'frontend/students.html')
+
+def test(request):
+    return render(request, 'frontend/test.html')
+
