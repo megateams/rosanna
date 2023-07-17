@@ -7,5 +7,11 @@ def home(request):
 def login(request):
     return render(request, 'frontend/login.html')
 
-def students(request):
-    return render(request, 'frontend/students.html')
+def studentsList(request):
+    return render(request, 'frontend/student/studentsList.html')
+
+def studentsAdd(request):
+    return render(request, 'frontend/student/studentsAdd.html')
+
+def staff(request):
+    return render(request, 'frontend/staff.html')

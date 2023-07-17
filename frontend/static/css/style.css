@@ -1,3 +1,10 @@
+*{
+    box-sizing: border-box;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+}
+
 .main{
     display: flex;
     width: 100%;
@@ -22,10 +29,47 @@
 }
 .sidebar ul{
     list-style-type: none;
+    padding-left: 10%;
 }
+
+.sidebar-links li a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar-links li a:hover
+{
+    color: #d79430;
+}
+
+/* sidebar sub menu */
+.sidebar-links .main-menu a, .sidebar-links .main-menu .chevron
+{
+    color: #fff;
+    text-decoration: none;
+}
+
+
+
+.submenu li
+{
+    padding-left: 5%;
+    line-height: 38px;
+
+}
+.submenu li a
+{
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    
+}
+
+
+/* sidebar sub menu */
+
 .navbar
 {
-    
     color: black;
 }
 

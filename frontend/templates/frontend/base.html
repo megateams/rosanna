@@ -4,12 +4,12 @@
   <head>
     <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
     <!-- Required meta tags -->
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
     
@@ -27,32 +27,52 @@
 
                 <h5 class="text-white"><b>Rosanna Schools</b></h5>
             </div>
+            <hr color="#fff" style="height: 3px;">
     
-            <ul className='sidebar-links pt-3 pl-3'>
-                <li>
-                    <a class="text-white" href='/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>
-                    <hr className='mt-3' />
+            <ul class='sidebar-links pt-3'>
+                <li class="sidebar-item active">
+                    <a class="" href='/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>
+                    
                 </li>
+                <hr color="#fff">
                 <li>
-                    <a class="text-white" href='./students'><i class="fas fa-users    mr-2"></i><span>Students</span></a>
-                    <hr className='mt-3' />
+                    <div class="main-menu d-flex justify-content-between">
+                        <a class="" href='./students'><i class="fas fa-users    mr-2"></i><span>Students</span></a>
+                        <div class="chevron">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                    </div>
+                    <!-- sub menu -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a>
+                        </li>
+                    </ul>
                 </li>
+                <hr color="#fff">
+                <li class="sidebar-item">
+                    <a class="" href='/staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
+                    <!-- <hr className='mt-3' /> -->
+                </li>
+                <hr color="#fff">
                 <li>
-                    <a class="text-white" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
-                    <hr className='mt-3' />
+                    <a class="" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a>
+                    <!-- <hr className='mt-3' /> -->
                 </li>
+                <hr color="#fff">
                 <li>
-                    <a class="text-white" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a>
-                    <hr className='mt-3' />
+                    <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
+                    <!-- <hr className='mt-3' /> -->
                 </li>
+                <hr color="#fff">
                 <li>
-                    <a class="text-white" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
-                    <hr className='mt-3' />
+                    <a class="" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
+                    <!-- <hr className='mt-3' /> -->
                 </li>
-                <li>
-                    <a class="text-white" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
-                    <hr className='mt-3' />
-                </li>
+                <hr color="#fff">
             </ul>
         </aside>
 
@@ -67,8 +87,8 @@
                 </div>
                 
                 <div class="right mr-5 d-flex">
-                    <h5 class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</h5>
-                    <h5 class='ml-3 mt-2 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</h5>   
+                    <p class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
+                    <a class='ml-3 mr-2 text-danger' ><i class="fas fa-power-off   mr-2 "></i>Logout</a>   
                 </div>   
             </nav>
             <!-- navbar -->
@@ -90,5 +110,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <!-- ajax -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+
+    <!-- custom js -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    
+
 </body>
 </html>
