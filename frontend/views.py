@@ -13,5 +13,13 @@ def studentsList(request):
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
 
+# teachers views
+def teacherAdd(request):
+    return render(request,'frontend/staff/teacherAdd.html')
+
+def teacherList(request):
+    return render(request,'frontend/staff/teacherList.html')
+# teachers views
+
 def staff(request):
     return render(request, 'frontend/staff.html')
