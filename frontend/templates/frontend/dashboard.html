@@ -4,12 +4,12 @@
 {% block  main %} 
 
 <!-- inner-content -->
-<div class="inner-content mt-3">
+<div class="inner-content pl-4 pr-4">
     <div class="dashboard">
         <!-- cards -->
       <div class="row cards">
         <div class="col-lg-3 col-md-3">
-            <div class="card bg-primary">
+            <div class="card bg-primary shadow">
                 <div class="row">
                     <div class="col-8 cbody">
                         <h4>Term 1</h4>
@@ -24,14 +24,14 @@
       
 
         <div class="col-lg-3 col-md-3">
-            <div class="card bg-success">
+            <div class="card bg-success shadow">
                 <div class="row">
-                    <div class="col-9 cbody">
+                    <div class="col-8 cbody">
                         <h4>500+</h4>
                         <p>Students</p>
                     </div >
 
-                    <div class="col-3 icon">
+                    <div class="col-4 icon">
                         <i class="fa fa-users " aria-hidden="true"></i>
                     </div> 
             </div>
@@ -39,13 +39,13 @@
         </div>
 
         <div class=" col-lg-3 col-md-3">
-            <div class="card trcard">
+            <div class="card trcard shadow">
                 <div class="row">
-                <div class="col-9">
+                <div class="col-8 cbody" >
                     <h4>45</h4>
                     <p>Teachers</p>
                 </div>
-                <div class="col-3 icon">
+                <div class="col-4 icon">
                     <i class="fas fa-user-graduate   "></i>
                 </div>
             </div>
@@ -53,13 +53,13 @@
         </div>
 
         <div class="col-lg-3 col-md-3">
-            <div class="card staff-card">
+            <div class="card staff-card shadow">
                 <div class="row ">
-                    <div class="col-9">
+                    <div class="col-8 cbody">
                         <h4>16</h4>
                         <p>Support Staff</p>
                     </div>
-                    <div class="col-3  icon">
+                    <div class="col-4  icon">
                         <i class="fas fa-people-carry    "></i>
                     </div>
                 </div>
@@ -69,13 +69,13 @@
         <!-- cards -->
 
         <!-- donut and bargraph-->
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="donut-chart">
+        <div class="row mt-4">
+            <div class="col-md-5 ">
+                <div class="donut-chart shadow bg-light pb-2">
                     <canvas id="genderDonutChart"></canvas>
                 </div>
             </div>
-            <div class="col-lg-7">
+            <div class="col-md-7 bar">
                 <div class="bar-chart">
                     <canvas id="genderBarChart"></canvas>
                 </div>                   
@@ -84,7 +84,7 @@
          
 <!-- calendar and line graph -->
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-7 bar">
                 <div class="line-chart">
                     <canvas id="paymentChart"></canvas>
                 </div>          
