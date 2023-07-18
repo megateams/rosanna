@@ -11,7 +11,7 @@
 
 }
 .sidebar{
-    background-color: #251a1b;
+    background-color: #1b1415;
     height: 100vh;
     width: 15%;
 }
@@ -51,13 +51,19 @@
     color: #fff;
     text-decoration: none;
 }
-.submenu li
+
+.submenu-staff
+{
+    display: none;
+}
+
+.submenu li, .submenu-staff li,.submenu-acc li, .submenu-acad li,.submenu-users li
 {
     padding-left: 5%;
     line-height: 38px;
 
 }
-.submenu li a
+.submenu li a, .submenu-staff li a,.submenu-acc li a, .submenu-acad li a,.submenu-users li a
 {
     color: #fff;
     text-decoration: none;
@@ -71,7 +77,7 @@
 .navbar
 {
     color: black;
-}
+     }
 
 .brand
 {
@@ -155,5 +161,16 @@
     width: 600px;
     height: 400px;
   }
+
+.sub-heading h5{
+    font-size: 24px;
+    margin-bottom: 15x;
+  }
+
+.footer{
+    background-color: #251a1b;
+    color: #fff;
+    height: 5vh;
+}
 
   
