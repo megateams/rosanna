@@ -92,24 +92,47 @@ $(".livingwith").change(function (e) {
 
 // more student details
 // $(document).ready(function () {
-    $(".more").click(function (e) { 
-        e.preventDefault();
-
-        regno = $(this).attr("id");
-
-        alert(regno);
-        $(".table-section").hide();
-
-        $.ajax({
-            type: "post",
-            url: "/",
-            data: {id:regno},
-            success: function (response) {
-                $(".show_student").html(response);
-            }
+    $(document).ready(function() {
+        $('.more').click(function(e) {
+            e.preventDefault();
+            $(".table-section").hide();
+            var studentId = $(this).attr('id');
+            alert(studentId);
+            $.ajax({
+                url: '/showstudent',  // Replace with the appropriate URL
+                type: 'GET',
+                data: { studentId: studentId },
+                success: function(response) {
+                    $('.show_student').html(response);
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr.responseText);
+                }
+            });
         });
         
+        // support staff details
+        $('.more_support_staff').click(function(e) {
+            e.preventDefault();
+            $(".table-section").hide();
+            var staffId = $(this).attr('id');
+            alert(staffId);
+            $.ajax({
+                url: '/show-support-staff',  // Replace with the appropriate URL
+                type: 'GET',
+                data: { staffId: staffId },
+                success: function(response) {
+                    $('.show_support_staff').html(response);
+                },
+                error: function(xhr) {
+                    // Handle error case
+                    console.log(xhr.responseText);
+                }
+            });
+        });
     });
+    
 // });
 
 
