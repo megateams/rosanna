@@ -64,22 +64,131 @@
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item">
-                    <a class="" href='/staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
+                    <div class="main-menu-staff d-flex justify-content-between">
+                        <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
+                        <div class="chevron0 text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                    </div>
+                    
+                    <ul class="submenu-staff">
+                        <li>
+                            <div class="main-submenu1 d-flex justify-content-between">
+                                <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Teachers</span></a>
+                                <div class="chevron1 ">
+                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
+                                </div>
+                            </div>
+                            <ul class="submenu1">
+                                <li>
+                                    <a href="/studentslist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Teachers List</a>
+                                </li>
+                                <li>
+                                    <a href="/addstudent" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
+                                </li>
+                            </ul>
+                            <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
+                        </li>
+                        <li>
+                            <div class="main-submenu2 d-flex justify-content-between">
+                                <a class="" href='./staff'><i class="fas fa-people-carry    mr-2"></i><span>Support staff</span></a>
+                                <div class="chevron2">
+                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
+                                </div>
+                            </div>
+                            <ul class="submenu2">
+                                <li>
+                                    <a href="/studentslist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Suppport Staff List</a>
+                                </li>
+                                <li>
+                                    <a href="/addstudent" style="font-size: 12px;"> <i class="fas fa-people-carry    mr-2"></i> Add support staff</a>
+                                </li>
+                            </ul>
+                            <!-- <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a> -->
+                        </li>
+                    </ul>
+
+                    <!-- <a class="" href='/staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a> -->
                     <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
                 <li>
-                    <a class="" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a>
+                    <div class="main-menu-acad d-flex justify-content-between">
+                        <a class="" href='/academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
+                        <div class="chevron-acad text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    <!-- submenus -->
+                    <ul class="submenu-acad">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-road       mr-2"></i> Classes</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-book    mr-2"></i>Subjects</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-file    mr-2"></i> Marks</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> Academic Reports</a>
+                        </li>
+                    </ul>
+
+                    <!-- <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a> -->
                     <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
                 <li>
-                    <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
+                    <div class="main-menu-acc d-flex justify-content-between">
+                        <a class="" href='/accounting'><i class="fas fa-money-bill    mr-2"></i><span>Accounting</span></a>
+                        <div class="chevron-acc text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    
+                    <ul class="submenu-acc">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-money-bill-wave    mr-2"></i> Fees Collection</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-alt    mr-2"></i>Salaries</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-wave     mr-2"></i> Expenses</a>
+                        </li>
+                        <!-- <li>
+                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
+                        </li> -->
+                    </ul>
+
+                    <!-- <a class="" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a> -->
                     <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
+                
                 <li>
-                    <a class="" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
+                    <div class="main-menu-users d-flex justify-content-between">
+                        <a class="" href='/accounting'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
+                        <div class="chevron-users text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    <!-- submenu -->
+                    <ul class="submenu-users">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-list    mr-2"></i> Add User</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-users   mr-2"></i>Users List</a>
+                        </li>
+                        
+                    </ul>
+
+                    <!-- <a class="" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a> -->
                     <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
@@ -97,8 +206,8 @@
                 </div>
                 
                 <div class="right mr-5 d-flex">
-                    <p class='mt-2 mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
-                    <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mt-2 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
+                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
+                    <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
 
                 </div>   
             </nav>
@@ -115,10 +224,9 @@
             {% block main %}
             {% endblock main %}
             <!-- extending to other pages -->
-            <footer class="footer bg-light text-dark">
-                <p>
-                    Developed by Nicety Technologies Limited
-                </p>
+            <footer class="footer ">
+                <div class="container"><p class="text-center">All Rights Reserved | &copy; 2023 Rosanna Schools</p></div>
+
             </footer>
         </div>
         <!-- content -->

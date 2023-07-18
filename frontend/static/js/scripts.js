@@ -14,15 +14,103 @@
 $('.submenu').css({
     'display' : 'none',
 });
+$('.submenu1').css({
+    'display' : 'none',
+});
+$('.submenu2').css({
+    'display' : 'none',
+});
+$('.submenu-acc').css({
+    'display' : 'none',
+});
+$('.submenu-acad').css({
+    'display' : 'none',
+});
+$('.submenu-users').css({
+    'display' : 'none',
+});
+
+
 $('.main-menu').click(function (e) { 
     e.preventDefault();
     $('.chevron').toggle();
 
-    $('.submenu').toggle();
-    
-    
+    $('.submenu').toggle(); 
+});
+$('.main-menu-staff').click(function (e) { 
+    e.preventDefault();
+    $('.chevron0').toggle();
+
+    $('.submenu-staff').toggle();
+});
+$('.main-submenu1').click(function (e) { 
+    e.preventDefault();
+    $('.chevron1').toggle();
+
+    $('.submenu1').toggle();
+});
+$('.main-submenu2').click(function (e) { 
+    e.preventDefault();
+    $('.chevron2').toggle();
+
+    $('.submenu2').toggle();
+});
+$('.main-menu-acc').click(function (e) { 
+    e.preventDefault();
+    $('.chevron-acc').toggle();
+
+    $('.submenu-acc').toggle();
+});
+$('.main-menu-acad').click(function (e) { 
+    e.preventDefault();
+    $('.chevron-acad').toggle();
+
+    $('.submenu-acad').toggle();
+});
+$('.main-menu-users').click(function (e) { 
+    e.preventDefault();
+    $('.chevron-users').toggle();
+
+    $('.submenu-users').toggle();
 });
 // handling sidebar menu click
+$(".guardian").hide();
+$(".livingwith").change(function (e) { 
+    e.preventDefault();
+    
+    let optionValue = document.querySelector(".livingwith").value;
+
+    if(optionValue === "Guardian"){
+        $(".guardian").show();
+    }
+    else
+    {
+        $(".guardian").hide();
+    }
+
+});
+
+// more student details
+// $(document).ready(function () {
+    $(".more").click(function (e) { 
+        e.preventDefault();
+
+        regno = $(this).attr("id");
+
+        alert(regno);
+        $(".table-section").hide();
+
+        $.ajax({
+            type: "post",
+            url: "/",
+            data: {id:regno},
+            success: function (response) {
+                $(".show_student").html(response);
+            }
+        });
+        
+    });
+// });
 
 
 
