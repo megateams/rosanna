@@ -7,6 +7,12 @@ GENDER_CHOICES = [
     ('f' , 'Female'),
 ]
 
+TERM_CHOICES = [
+    ('I' , 'I'),
+    ('II' , 'II'),
+    ('III' , 'III'),
+]
+
 CLASS_CHOICES =[
     ('baby' , 'baby'),
     ('middle' , 'middle'),
@@ -30,15 +36,15 @@ CLASS_CHOICES =[
 #     ('no' , 'no')
 # ]
 
-class Registration(models.Model):
-    regnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Registration Number' , blank= True)
+class Students(models.Model):
+    stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number' , blank= True)
     regdate = models.DateField(verbose_name='Date', default=None, blank=True )
     childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
     gender = models.CharField(max_length=10 , verbose_name="Child's Gender" , blank=True)
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    appliedclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='House' , blank=True)
+    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='Class' , blank=True)
 
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
     fcontact = models.CharField(max_length=10 , verbose_name="Father's Contact" , blank=True)
@@ -53,7 +59,7 @@ class Registration(models.Model):
     gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
 
     Display_Fields = [
-        'regnumber','childname' , 'gender' , 'dob' , 'address' , 'house' , 'appliedclass' , 'foccupation' , 'mothername'
+        'stdnumber','childname' , 'gender' , 'dob' , 'address' , 'house' , 'studentclass' , 'foccupation' , 'mothername'
     , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
     ]
 
@@ -81,7 +87,7 @@ class Schoolclasses(models.Model):
 class Teachers(models.Model):
     classrelationship = models.ManyToManyField(Schoolclasses)
     subjectrelationship = models.ManyToManyField(Subjects)
-    
+
     teacherid = models.CharField(primary_key=True , max_length= 10 , verbose_name='Teacher id')
     teachernames = models.CharField(max_length=25 , verbose_name='Teachers Names')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
@@ -96,11 +102,37 @@ class Teachers(models.Model):
     qualification = models.CharField(max_length=20 , verbose_name='Academic Qualifications')
     username = models.CharField(max_length=20 , verbose_name='Username')
     password = models.CharField(max_length=20 , verbose_name='Password')
-    
+
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'classes' , 'joiningdate',
-        'position' , 'subject' , 'qualification' , 'username' , 'password'
+        'position' , 'subject' , 'qualification' , 'username' , 'password' 
     ]
 
+# class primaryonestds(models.Model):
+#     stdnumber = models.CharField(primary_key=True , max_length=25 , verbose_name='Student Number')
+#     stdname = models.CharField(max_length=25 , verbose_name='Student Name')
+    
+#     displayprimaryone = [
+#         'stdnumber' , 'stdname' 
+#     ]
+    
+
+class marks(models.Model):
+    stdnum = models.ForeignKey(Students , on_delete=models.CASCADE)
+    term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I')
+    year = models.CharField(max_length=5 , verbose_name='Year' , default='2023')
+    studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7')
+    math = models.IntegerField(verbose_name='Math')
+    eng = models.IntegerField(verbose_name='Eng')
+    sci = models.IntegerField(verbose_name='Sci')
+    sst = models.IntegerField(verbose_name='SST')
+    
+    
+    #stdname = Registration.objects.get(regnum = stdnum)
+    #stdmarks - models.IntegerField(verbose_name='Student Marks')
+    
+    displaymarks = [
+        'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'
+    ]
 
 

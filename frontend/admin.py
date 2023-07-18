@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Registration , Subjects , Schoolclasses , Teachers
+from .models import Students , Subjects , Schoolclasses , Teachers  , marks
 
 # Register your models here.
 
-@admin.register(Registration)
+@admin.register(Students)
 class MyClass(admin.ModelAdmin):
-    list_display = Registration.Display_Fields
+    list_display = Students.Display_Fields
 
 @admin.register(Subjects)
 class Displaysubject(admin.ModelAdmin):
@@ -18,5 +18,16 @@ class Displayclasses(admin.ModelAdmin):
 @admin.register(Teachers)
 class Displayteachers(admin.ModelAdmin):
     list_display = Teachers.Display_Teachers
+    # list_display = Teachers.classrelationship
+
+# @admin.register(primaryonestds)
+# class Displayp1stds(admin.ModelAdmin):
+#     list_display = primaryonestds.displayprimaryone
+    
+@admin.register(marks)
+class Displayprimaryonemarks(admin.ModelAdmin):
+    list_display = marks.displaymarks
+    
+
 
 
