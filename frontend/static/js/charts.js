@@ -91,9 +91,29 @@ document.addEventListener("DOMContentLoaded", function() {
         label: "Payments",
         data: [1500, 2000, 1800, 2300], // Replace with your actual payment data
         fill: false,
-        borderColor: "blue",
-        borderWidth: 2,
-        pointBackgroundColor: "blue",
+        borderColor: "#007",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6
+      },
+      {
+        label: "Fees",
+        data: [700, 1300, 2800, 4000], // Replace with your actual payment data
+        fill: false,
+        borderColor: "#0f0",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6
+      },
+      {
+        label: "Expenses",
+        data: [900, 1000, 1500, 2900], // Replace with your actual payment data
+        fill: false,
+        borderColor: "#f00",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
         pointRadius: 4,
         pointHoverRadius: 6
       }]
@@ -113,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
           y: {
             beginAtZero: true,
             grid: {
-              color: "green"
+              color: "#999"
             },
             ticks: {
               stepSize: 500
@@ -126,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function() {
           },
           title: {
             display: true,
+            color: 'black',
             text: "Payment Overview"
           }
         }
