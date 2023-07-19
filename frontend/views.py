@@ -26,6 +26,5 @@ def login(request):
 def students(request):
     return render(request, 'frontend/students.html')
 
-def test(request):
-    return render(request, 'frontend/test.html')
+
 
