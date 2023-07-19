@@ -26,5 +26,37 @@ def login(request):
 def students(request):
     return render(request, 'frontend/students.html')
 
+# students views
+def studentsList(request):
+    return render(request, 'frontend/student/studentsList.html')
+
+def studentsAdd(request):
+    return render(request, 'frontend/student/studentsAdd.html')
 
 
+# teachers views
+def teacherAdd(request):
+    return render(request,'frontend/staff/teacherAdd.html')
+
+def teacherList(request):
+    return render(request,'frontend/staff/teacherList.html')
+# teachers views
+
+def showStudent(request):
+    return render(request, 'frontend/student/showStudent.html')
+# students views
+
+# support staff views
+def supportstaffAdd(request):
+    return render(request, 'frontend/staff/supportstaffAdd.html')
+
+def supportstaffList(request):
+    return render(request, 'frontend/staff/supportstaffList.html')
+
+def showSupportstaff(request):
+    return render(request, 'frontend/staff/showSupportstaff.html')
+# support staff views
+
+
+def staff(request):
+    return render(request, 'frontend/staff.html')
