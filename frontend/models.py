@@ -82,7 +82,7 @@ class Role_Model(models.Model):
 
 #Admin model   
 class Admin_Model(models.Model):
-    id =models.AutoField(max_length=10, primary_key=True, verbose_name='Admin ID')
+    id =models.AutoField(primary_key=True, verbose_name='Admin ID')
     name=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
     username=models.CharField(max_length=30, blank=True, verbose_name='Username')
     contact =models.CharField(max_length=20, verbose_name='Phone contact')
@@ -97,8 +97,8 @@ class Admin_Model(models.Model):
     
 #support staff model
 class Supportstaff(models.Model):
-    # id =models.AutoField(max_length=10, verbose_name='Admin ID')
-    name=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
+    id =models.AutoField(primary_key=True, verbose_name='Staff Number')
+    fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
     contact =models.CharField(max_length=20, blank=True, verbose_name='Phone contact')
     email=models.EmailField(max_length=50, blank=True, verbose_name='Email')
     address=models.CharField(max_length=255, blank=True, verbose_name='Address')
@@ -107,7 +107,7 @@ class Supportstaff(models.Model):
     qualification=models.CharField(max_length=255, blank=True, verbose_name='Qualification')
     position=models.CharField(max_length=255, blank=True, verbose_name='Position')
     
-    Display_Supportstaff =['name','contact','email','address','dob','gender','dob','qualification', 'position']
+    Display_Supportstaff =['id','fullname','contact','email','address','dob','gender','dob','qualification', 'position']
 
 
     

@@ -17,10 +17,11 @@ urlpatterns = [
     path('showstudent/', views.showStudent, name="Student details"),
 
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
-    path('add-support-staff/', views.supportstaffAdd, name="Add Support staff "),
+    path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
     path('show-support-staff/', views.showSupportstaff, name=" Support staff Details"),
-
-
+    #test
+    path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
+    # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
 
     path('staff/', views.staff, name="Staff"),
 ]

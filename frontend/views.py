@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
+from django.contrib import messages
+from .models import *
 # from .models import Registration
 
 # # creating views for the registration 
@@ -48,15 +50,49 @@ def showStudent(request):
 
 # support staff views
 def supportstaffAdd(request):
-    return render(request, 'frontend/staff/supportstaffAdd.html')
+      return render(request, 'frontend/staff/supportstaffAdd.html')
 
+# Send the registration staff details to and retrieve from database 
+def supportstaffreg(request):
+    # retrieve data from request
+    if request.method == 'POST':
+        fullname =request.POST.get('fullname')
+        contact =request.POST.get('contact')
+        email =request.POST.get('email')
+        address =request.POST.get('address')
+        gender =request.POST.get('gender')
+        dob =request.POST.get('dob')
+        qualification =request.POST.get('qualification')
+        position =request.POST.get('position')
+        
+        #create support staff object and submit it in the database
+        supportStaffReg =Supportstaff.objects.create(
+            fullname =fullname,
+            contact=contact,
+            email=email,
+            address=address,
+            gender=gender,
+            dob=dob,
+            qualification=qualification,
+            position=position            
+        )
+        supportStaffReg.save()
+        messages.success(request, 'Data successfully added!')
+                
+        # Redirect to the registration page for support staff after successful data addition
+        return redirect('AddSupportstaff')
+   
 def supportstaffList(request):
-    return render(request, 'frontend/staff/supportstaffList.html')
-
+    # Retrieve all support staff data from the database
+    all_support_staff = Supportstaff.objects.all()
+    # Pass the data to the template for rendering
+    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+    
 def showSupportstaff(request):
     return render(request, 'frontend/staff/showSupportstaff.html')
 # support staff views
 
-
 def staff(request):
     return render(request, 'frontend/staff.html')
+
+
