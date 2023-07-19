@@ -11,6 +11,9 @@ urlpatterns = [
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
 
+    path('addusers/', views.addUsers, name="Add User"),
+    path('userslist/', views.usersList, name="View List"),    
+
     path('showstudent/', views.showStudent, name="Student details"),
 
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
