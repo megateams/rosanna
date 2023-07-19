@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Students , Subjects , Schoolclasses , Teachers  , marks
+from .models import Students , Subjects , Schoolclasses , Teachers  , Marks
 
 # Register your models here.
 
@@ -24,9 +24,9 @@ class Displayteachers(admin.ModelAdmin):
 # class Displayp1stds(admin.ModelAdmin):
 #     list_display = primaryonestds.displayprimaryone
     
-@admin.register(marks)
+@admin.register(Marks)
 class Displayprimaryonemarks(admin.ModelAdmin):
-    list_display = marks.displaymarks
+    list_display = Marks.displaymarks
     
 
 
