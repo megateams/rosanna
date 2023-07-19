@@ -35,7 +35,6 @@ def studentsList(request):
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
 
-
 # teachers views
 def teacherAdd(request):
     return render(request,'frontend/staff/teacherAdd.html')
@@ -77,7 +76,7 @@ def supportstaffreg(request):
             position=position            
         )
         supportStaffReg.save()
-        messages.success(request, 'Data successfully added!')
+        messages.success(request, f" Your data, {fullname} has been successfully added!")
                 
         # Redirect to the registration page for support staff after successful data addition
         return redirect('AddSupportstaff')
