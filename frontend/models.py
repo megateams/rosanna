@@ -108,8 +108,14 @@ class Supportstaff(models.Model):
     position=models.CharField(max_length=255, blank=True, verbose_name='Position')
     
     Display_Supportstaff =['name','contact','email','address','dob','gender','dob','qualification', 'position']
+
+
     
-
-
-
+    
+    
+    
+    
+    
+    
+    
     
