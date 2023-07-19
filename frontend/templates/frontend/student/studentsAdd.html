@@ -1,0 +1,159 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Students Add {% endblock title %}
+{% block  pagetitle %} Students Add {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Student</h5>
+            <hr>
+        </div>
+
+        <!-- student info section -->
+        <div class="stud-info">
+            <div class="sub-heading">
+                <h5>Student Information</h5>
+            </div>
+            <div class="row">
+                <!-- regno -->
+                <div class="form-group col-md-6">
+                    <label for="">Registration Number: </label>
+                    <input type="text" name="regnumber" class="form-control">
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for="">Child Fullname: </label>
+                    <input type="text" name="childname" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- class -->
+                <div class="form-group col-md-4">
+                    <label for="">Gender: </label>
+                    <select name="gender" id="" class="form-control pr-2">
+                        <option value="">---</option>
+                        <option value="Male">Male</option>
+                        <option value="Female ">Female</option>
+                    </select>
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-4">
+                    <label for="">Date Of Birth </label>
+                    <input type="date" name="regdate" class="form-control">
+                </div>
+
+                <!-- address -->
+                <div class="form-group col-md-4">
+                    <label for="">Place of Residence </label>
+                    <input type="text" name="address" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- class -->
+                <div class="form-group col-md-4">
+                    <label for="">Attached Class: </label>
+                    <select name="appliedclass" id="" class="form-control pr-2">
+                        <option value="">---</option>
+                    </select>
+                </div>
+                <!-- house -->
+                <div class="form-group col-md-4">
+                    <label for="">Attached House </label>
+                    <input type="text" name="house" class="form-control">
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- student info section -->
+
+        <div class="parent-info">
+            <div class="sub-heading">
+                <h5>Parents Information</h5>
+            </div>
+            <div class="row">
+                <!-- father name -->
+                <div class="form-group col-md-4">
+                    <label for="">Father's Name: </label>
+                    <input type="text" name="fathername" class="form-control">
+                </div>
+                <!-- father contact -->
+                <div class="form-group col-md-4">
+                    <label for="">Father's Phone Number: </label>
+                    <input type="text" name="fcontact" class="form-control">
+                </div>
+                <!-- father occupation -->
+                <div class="form-group col-md-4">
+                    <label for="">Father's Occupation: </label>
+                    <input type="text" name="foccupation" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- mother name -->
+                <div class="form-group col-md-4">
+                    <label for="">Mother's Name: </label>
+                    <input type="text" name="mothername" class="form-control">
+                </div>
+                <!-- mother contact -->
+                <div class="form-group col-md-4">
+                    <label for="">Mother's Phone Number: </label>
+                    <input type="text" name="mcontact" class="form-control">
+                </div>
+                <!-- mother occupation -->
+                <div class="form-group col-md-4">
+                    <label for="">Mother's Occupation: </label>
+                    <input type="text" name="moccupation" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- mother name -->
+                <div class="form-group col-md-4">
+                    <label for="">Living with </label>
+                    <select  name="livingwith" class="form-control livingwith">
+                        <option value="">---</option>
+                        <option value="Father only">Father only</option>
+                        <option value="Mother only">Mother only</option>
+                        <option value="Both Parents">Both parents</option>
+                        <option value="Guardian">Guardian</option>
+                        <div class="form-group col-md-4">
+                    </select>
+                </div>
+                <!-- guardian details -->
+                <div class="col-md-8 guardian">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="">Guardian's Name: </label>
+                            <input type="text" name="guardianname" class="form-control">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="">Guardian's Name: </label>
+                            <input type="text" name="guardianname" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

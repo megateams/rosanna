@@ -4,62 +4,233 @@
   <head>
     <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
     <!-- Required meta tags -->
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
+    
+    <!-- jquery datatables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
+
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    
+</head>
   <body>
 
     <div class="main">
         <!-- sidebar -->
-        <aside class="sidebar">hey</aside>
+        <aside class="sidebar">
+            <div class="dismiss">
+                <p>X</p>
+            </div>
+            <div class='header text-center p-2 mb-2'>
+                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+
+                <h5 class="text-white"><b>Rosanna Schools</b></h5>
+            </div>
+            <hr color="#fff" style="height: 3px;">
+    
+            <ul class='sidebar-links pt-3'>
+                
+                <li class="sidebar-item active">
+                    <a class="" href='/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>
+                    
+                </li>
+                <hr color="#fff">
+                <li>
+                    <div class="main-menu d-flex justify-content-between">
+                        <a class="" href='./students'><i class="fas fa-users    mr-2"></i><span>Students</span></a>
+                        <div class="chevron">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                    </div>
+                    <!-- sub menu -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a>
+                        </li>
+                    </ul>
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item">
+                    <div class="main-menu-staff d-flex justify-content-between">
+                        <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
+                        <div class="chevron0 text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                    </div>
+                    
+                    <ul class="submenu-staff">
+                        <li>
+                            <div class="main-submenu1 d-flex justify-content-between">
+                                <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Teachers</span></a>
+                                <div class="chevron1 ">
+                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
+                                </div>
+                            </div>
+                            <ul class="submenu1">
+                                <li>
+                                    <a href="/teacherlist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Teachers List</a>
+                                </li>
+                                <li>
+                                    <a href="/addteacher" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
+                                </li>
+                            </ul>
+                            <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
+                        </li>
+                        <li>
+                            <div class="main-submenu2 d-flex justify-content-between">
+                                <a class="" href='./staff'><i class="fas fa-people-carry    mr-2"></i><span>Support staff</span></a>
+                                <div class="chevron2">
+                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
+                                </div>
+                            </div>
+                            <ul class="submenu2">
+                                <li>
+                                    <a href="/support-staff-list" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Suppport Staff List</a>
+                                </li>
+                                <li>
+                                    <a href="/add-support-staff" style="font-size: 12px;"> <i class="fas fa-people-carry    mr-2"></i> Add support staff</a>
+                                </li>
+                            </ul>
+                            <!-- <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a> -->
+                        </li>
+                    </ul>
+
+                    <!-- <a class="" href='/staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a> -->
+                    <!-- <hr className='mt-3' /> -->
+                </li>
+                <hr color="#fff">
+                <li>
+                    <div class="main-menu-acad d-flex justify-content-between">
+                        <a class="" href='/academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
+                        <div class="chevron-acad text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    <!-- submenus -->
+                    <ul class="submenu-acad">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-road       mr-2"></i> Classes</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-book    mr-2"></i>Subjects</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-file    mr-2"></i> Marks</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> Academic Reports</a>
+                        </li>
+                    </ul>
+
+                    <!-- <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a> -->
+                    <!-- <hr className='mt-3' /> -->
+                </li>
+                <hr color="#fff">
+                <li>
+                    <div class="main-menu-acc d-flex justify-content-between">
+                        <a class="" href='/accounting'><i class="fas fa-money-bill    mr-2"></i><span>Accounting</span></a>
+                        <div class="chevron-acc text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    
+                    <ul class="submenu-acc">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-money-bill-wave    mr-2"></i> Fees Collection</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-alt    mr-2"></i>Salaries</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-wave     mr-2"></i> Expenses</a>
+                        </li>
+                        <!-- <li>
+                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
+                        </li> -->
+                    </ul>
+
+                    <!-- <a class="" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a> -->
+                    <!-- <hr className='mt-3' /> -->
+                </li>
+                <hr color="#fff">
+                
+                <li>
+                    <div class="main-menu-users d-flex justify-content-between">
+                        <a class="" href='/accounting'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
+                        <div class="chevron-users text-white">
+                            <i class="fas fa-chevron-right    mr-2"></i>
+                        </div>
+                        
+                    </div>
+                    <!-- submenu -->
+                    <ul class="submenu-users">
+                        <li>
+                            <a href="/studentslist" ><i class="fas fa-list    mr-2"></i> Add User</a>
+                        </li>
+                        <li>
+                            <a href="/addstudent"> <i class="fas fa-users   mr-2"></i>Users List</a>
+                        </li>
+                        
+                    </ul>
+
+                    <!-- <a class="" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a> -->
+                    <!-- <hr className='mt-3' /> -->
+                </li>
+                <hr color="#fff">
+            </ul>
+        </aside>
 
         <!-- sidebar -->
         <!-- content -->
-        <div class="content">
+        <div class="content bg-light">
 
             <!-- navbar -->
-            <nav class="navbar navbar-expand-sm navbar-light bg-light">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavId">
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownId">
-                                <a class="dropdown-item" href="#">Action 1</a>
-                                <a class="dropdown-item" href="#">Action 2</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+            <nav class="navbar bg-light shadow">
+                <div class='brand '>
+                    <i class="fas fa-bars " ></i>    
                 </div>
+                
+                <div class="right mr-5 d-flex">
+                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
+                    <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
+
+                </div>   
             </nav>
             <!-- navbar -->
+
+            <!-- page header -->
+            <div class="m-2 mt-3">
+                <a href="/dashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
+                <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
+            </div>
+            <!-- page header -->
 
             <!-- extending to other pages -->
             {% block main %}
             {% endblock main %}
             <!-- extending to other pages -->
-            <footer class="footer bg-dark text-white">
-                hey
+            <footer class="footer ">
+                <div class="container"><p class="text-center">All Rights Reserved | &copy; 2023 Rosanna Schools</p></div>
+
             </footer>
         </div>
         <!-- content -->
@@ -67,8 +238,67 @@
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+    <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <!-- ajax -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- datatables -->
+    <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- custom js -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <!-- charts.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static 'js/charts.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        dycalendar.draw({
+            target: '#calendar',
+            type: 'month',
+            // dayformat: 'full',
+            // monthformat: 'full',
+            highlighttargetdate: true,
+            // prevnextbutton: 'show'
+
+        });
+
+    $('.brand').click(function () {
+
+        $(".sidebar").css({
+            'display' : 'block',
+            'width' : '100%'
+        });
+
+        $(".content").css({
+            'width': '0%',
+        });
+
+        $(".dismiss").css({
+            'display' : 'block',
+        });
+
+        // document.querySelector('.sidebar').style.display = "block";
+        // document.querySelector('.sidebar').classList.toggle('active');
+        // document.querySelector('.content').classList.toggle('hide-content');
+    });
+
+    $(".dismiss").click(function (){
+        $('.sidebar').css({
+            'display' : 'none'
+        })
+
+        $('.content').css({
+            'width' : '100%'
+        });
+    });
+    </script>
+</body>
+
 </html>

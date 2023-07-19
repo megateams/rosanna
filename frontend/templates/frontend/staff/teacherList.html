@@ -1,0 +1,98 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Teahers List {% endblock title %}
+{% block  pagetitle %} Teachers List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns float-right">
+        <a href="/addteacher" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Teacher</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Teacher ID</th>
+                    <th>Teacher Name</th>
+                    <th>Gender</th>
+                    <th>Contact</th>
+                    <th>Email Address</th>
+                    <th>Classes Taught</th>
+                    <th>Joining Date</th>
+                    <th>Position</th>
+                    <th>Subject</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RS001</td>
+                    <td>Mukisa Junior</td>
+                    <td>Male</td>
+                    <td>17/08/2013</td>
+                    <td>Nansana</td>
+                    <td>P.4</td>
+                    <td>Orange</td>
+                    <td>Mukisa Henry</td>
+                    <td>Kwagala Suzan</td>
+                    <td>
+                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_teacher">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}
