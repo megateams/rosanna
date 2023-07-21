@@ -1,3 +1,0 @@
-// brand click
-
-// brand click
