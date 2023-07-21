@@ -1,0 +1,65 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Add Class {% endblock title %}
+{% block  pagetitle %} Add Class  {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/classlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Classes</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+               
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Classes</h5>
+            <hr>
+        </div>
+
+        <!-- classes info section -->
+        <div class="users-info">
+            <div class="row">
+                <!-- classid -->
+                <div class="form-group col-md-6">
+                    <label for="">Class ID: </label>
+                    <input type="text" name="classid" class="form-control">
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for=""> Class Name: </label>
+                    <input type="text" name="classname" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- classteacher -->
+                <div class="form-group col-md-6">
+                    <label for="">Class Teacher </label>
+                    <input type="text" name="classteacher" class="form-control">
+                </div>
+                <!-- numbr of pupils -->
+                <div class="form-group col-md-6">
+                    <label for=""> Number of Pupils </label>
+                    <input type="text" name="numofstds" class="form-control">
+                </div>
+            </div>
+            
+            
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

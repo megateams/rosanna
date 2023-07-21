@@ -1,0 +1,65 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Add Subject {% endblock title %}
+{% block  pagetitle %} Add Subject {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/subjectlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Subjects</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+               
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Subjects</h5>
+            <hr>
+        </div>
+
+        <!-- subjects info section -->
+        <div class="users-info">
+            <div class="row">
+                <!-- subjectid -->
+                <div class="form-group col-md-6">
+                    <label for="">Subject ID: </label>
+                    <input type="text" name="subjectid" class="form-control">
+                </div>
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for=""> Subject Name: </label>
+                    <input type="text" name="subjectname" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- subject head -->
+                <div class="form-group col-md-6">
+                    <label for="">Subject Head </label>
+                    <input type="text" name="subjecthead" class="form-control">
+                </div>
+                <!-- class level -->
+                <div class="form-group col-md-6">
+                    <label for=""> Class Level </label>
+                    <input type="text" name="classlevel" class="form-control">
+                </div>
+            </div>
+            
+            
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}
