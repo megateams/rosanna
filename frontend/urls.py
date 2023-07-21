@@ -10,6 +10,8 @@ urlpatterns = [
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="Add Students"),
+    path('addstudent/submit/', views.studentReg, name="studentReg"),
+    
 
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
@@ -19,7 +21,7 @@ urlpatterns = [
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
     path('show-support-staff/', views.showSupportstaff, name=" Support staff Details"),
-    #test
+    #submit the template data url
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
 

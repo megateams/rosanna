@@ -10,7 +10,8 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="submit/" method="POST" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Student</h5>
             <hr>
@@ -25,7 +26,7 @@
                 <!-- regno -->
                 <div class="form-group col-md-6">
                     <label for="">Registration Number: </label>
-                    <input type="text" name="regnumber" class="form-control">
+                    <input type="text" name="stdnumber" class="form-control">
                 </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
@@ -39,14 +40,14 @@
                     <label for="">Gender: </label>
                     <select name="gender" id="" class="form-control pr-2">
                         <option value="">---</option>
-                        <option value="Male">Male</option>
-                        <option value="Female ">Female</option>
+                        <option value="m">Male</option>
+                        <option value="f">Female</option>
                     </select>
                 </div>
                 <!-- name -->
                 <div class="form-group col-md-4">
                     <label for="">Date Of Birth </label>
-                    <input type="date" name="regdate" class="form-control">
+                    <input type="date" name="dob" class="form-control">
                 </div>
 
                 <!-- address -->
@@ -59,14 +60,28 @@
                 <!-- class -->
                 <div class="form-group col-md-4">
                     <label for="">Attached Class: </label>
-                    <select name="appliedclass" id="" class="form-control pr-2">
+                    <select name="studentclass" id="" class="form-control pr-2">
                         <option value="">---</option>
+                        <option value="">Baby</option>
+                        <option value="">Middle</option>
+                        <option value="">Top</option>
+                        <option value="">P.1</option>
+                        <option value="">P.2</option>
+                        <option value="">P.3</option>
+                        <option value="">P.4</option>
+                        <option value="">P.5</option>
+                        <option value="">P.6</option>
+                        <option value="">P.7</option>
                     </select>
                 </div>
                 <!-- house -->
                 <div class="form-group col-md-4">
                     <label for="">Attached House </label>
                     <input type="text" name="house" class="form-control">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="">Registration Date </label>
+                    <input type="date" name="regdate" class="form-control">
                 </div>
 
             </div>
@@ -126,7 +141,15 @@
                     </select>
                 </div>
                 <!-- guardian details -->
-                <div class="col-md-8 guardian">
+                <div class="form-group col-md-4">
+                    <label for="">Guardian's Name: </label>
+                    <input type="text" name="guardianname" class="form-control">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="">Guardian's Contact: </label>
+                    <input type="text" name="gcontact" class="form-control">
+                </div>
+                {% comment %} <div class="col-md-4 guardian">
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="">Guardian's Name: </label>
@@ -137,7 +160,7 @@
                             <input type="text" name="guardianname" class="form-control">
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
 
             

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Login, Admin_Model, Role_Model, Supportstaff, Students , Subjects , Schoolclasses , Teachers  , Marks
+from .models import Login, Admin_Model, Role_Model, Supportstaff, Student , Subjects , Schoolclasses , Teachers  , Marks
 
 # Register your models here.
 # admin.site.register(Registration)
@@ -22,9 +22,9 @@ class SupportstaffAdmin(admin.ModelAdmin):
     list_display=Supportstaff.Display_Supportstaff
     
 ##################################
-@admin.register(Students)
+@admin.register(Student)
 class MyClass(admin.ModelAdmin):
-    list_display = Students.Display_Fields
+    list_display = Student.Display_Fields
 
 @admin.register(Subjects)
 class Displaysubject(admin.ModelAdmin):

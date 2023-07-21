@@ -31,7 +31,8 @@ CLASS_CHOICES =[
     ('P.7' , 'P.7')
 ]
 
-class Students(models.Model):
+#students model
+class Student(models.Model):
     stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number' , blank= True)
     regdate = models.DateField(verbose_name='Date', default=None, blank=True )
     childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
@@ -105,7 +106,7 @@ class Teachers(models.Model):
 
 
 class Marks(models.Model):
-    stdnum = models.ForeignKey(Students , on_delete=models.CASCADE , default='std_000')
+    stdnum = models.ForeignKey(Student , on_delete=models.CASCADE , default='std_000')
     term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I')
     year = models.CharField(max_length=5 , verbose_name='Year' , default='2023')
     studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7')
@@ -115,9 +116,6 @@ class Marks(models.Model):
     sst = models.IntegerField(verbose_name='SST')
     re = models.IntegerField(verbose_name='Religious Education' , default=None)
     computer = models.IntegerField(verbose_name='Computer' , default=None)
-    
-    #stdname = Registration.objects.get(regnum = stdnum)
-    #stdmarks - models.IntegerField(verbose_name='Student Marks')
     
     displaymarks = [
         'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'

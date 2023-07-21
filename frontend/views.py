@@ -14,7 +14,10 @@ def students(request):
 
 # students views
 def studentsList(request):
-    return render(request, 'frontend/student/studentsList.html')
+    #retrieve all the students data from the database
+    all_students_list =Student.objects.all()
+    #pass the data to template for rendering
+    return render(request, 'frontend/student/studentsList.html', {'students': all_students_list})
 
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
@@ -81,9 +84,10 @@ def staff(request):
 
 
 #moses code
-def student(request):
+#students registration views
+def studentReg(request):
     if(request.method == 'POST'):
-        # stdnumber = request.POST.get('stdnumber')
+        stdnumber = request.POST.get('stdnumber')
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         gender = request.POST.get('gender')
@@ -101,11 +105,12 @@ def student(request):
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
 
-        Students.objects.create(
+        student =Student.objects.create(
+            stdnumber =stdnumber,            
             regdate = regdate ,
             childname = childname ,
             gender = gender ,
-            dob = dob ,
+            dob = dob,
             address = address ,
             house = house ,
             studentclass = studentclass , 
@@ -118,11 +123,10 @@ def student(request):
             livingwith = livingwith ,
             guardianname = guardianname ,
             gcontact = gcontact
-        )
+        )        
+        student.save ()
         
-        Students.save 
-        
-    return HttpResponse('Registration Successfull')
+        return HttpResponse('Registration Successful')
 
 def subjects(request):
     if request.method == 'POST':

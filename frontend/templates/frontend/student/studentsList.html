@@ -15,35 +15,38 @@
         <table class="table" id="table">
             <thead>
                 <tr>
-                    <th>Reg number</th>
+                    <th>Student number</th>
                     <th>Child Fullname</th>
                     <th>Gender</th>
                     <th>Date of Birth</th>
                     <th>Address</th>
-                    <th>Class</th>
-                    <th>House</th>
+                    {% comment %} <th>Class</th> {% endcomment %}
+                    <th>Registration Date </th>
+                    {% comment %} <th>House</th> {% endcomment %}
                     <th>Father</th>
                     <th>Mother</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for student in students %}
                 <tr>
-                    <td>RS001</td>
-                    <td>Mukisa Junior</td>
-                    <td>Male</td>
-                    <td>17/08/2013</td>
-                    <td>Nansana</td>
-                    <td>P.4</td>
-                    <td>Orange</td>
-                    <td>Mukisa Henry</td>
-                    <td>Kwagala Suzan</td>
-                    <td>
-                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
+                    <td>{{ student.stdnumber }}</td>
+                    <td>{{ student.childname }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.dob }}</td>
+                    <td>{{ student.address }}</td>
+                    <td>{{ student.class }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.dob }}</td>
+                    {% comment %} <td>{{ staff. }}</td> {% endcomment %}
+                    <td>{{ student.fathername }}</td>
+                    <td>{{ student.mothername }}</td>
+                        <a href="" id={{ student.stdnumber }} class="btn btn-sm btn-primary more">More ...</a>
                         
                     </td>
                 </tr>
-                <tr>
+                {% comment %} <tr>
                     <td>RS001</td>
                     <td>Mukisa Junior</td>
                     <td>Male</td>
@@ -56,8 +59,8 @@
                     <td>
                         <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
                     </td>
-                </tr>
-                <tr>
+                </tr> {% endcomment %}
+                {% comment %} <tr>
                     <td>RS002</td>
                     <td>Mukisa Junior</td>
                     <td>Male</td>
@@ -70,8 +73,8 @@
                     <td>
                         <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
                     </td>
-                </tr>
-                <tr>
+                </tr> {% endcomment %}
+                {% comment %} <tr>
                     <td>RS003</td>
                     <td>Mukisa Junior</td>
                     <td>Male</td>
@@ -84,8 +87,8 @@
                     <td>
                         <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
                     </td>
-                </tr>
-                
+                </tr> {% endcomment %}
+                {% endfor %}  
             </tbody>
         </table>
     </div>
