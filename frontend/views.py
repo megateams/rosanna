@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Students , Subjects , Schoolclasses , Teachers , Marks
+from .models import Students , Subjects , Schoolclasses , Teachers , Marks 
 
 # Create your views here.
 def home(request):
@@ -15,6 +15,16 @@ def students(request):
 # def marksform(request):
 #     return render(request , 'test/marks.html')
 
+def studentsAdd(request):
+    return render(request, 'frontend/student/studentsAdd.html')
+
+# teachers views
+def teacherAdd(request):
+    return render(request,'frontend/staff/teacherAdd.html')
+
+def teacherList(request):
+    return render(request,'frontend/staff/teacherList.html')
+# teachers views
 # def marks(request):
 #     if request.method == 'POST':
 #         term = request.POST.get('term')
@@ -41,8 +51,6 @@ def students(request):
         
 #         Marks.save
 #     return HttpResponse('marks submitted')
-        
-
 def student(request):
     if(request.method == 'POST'):
         # stdnumber = request.POST.get('stdnumber')
@@ -153,7 +161,7 @@ def teachers(request):
             username = username , 
             password = password
         )
-        
+
         Teachers.save
     
     return HttpResponse('Teacher created successfully')
