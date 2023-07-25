@@ -39,6 +39,14 @@ def classList(request):
     return render(request,'frontend/classes/classList.html')
 # classes views
 
+# marks views
+def addMarks(request):
+    return render(request,'frontend/marks/addMarks.html')
+
+def marksList(request):
+    return render(request,'frontend/marks/marksList.html')
+# marks views
+
 # subjects views
 def addSubject(request):
     return render(request,'frontend/subjects/addSubject.html')

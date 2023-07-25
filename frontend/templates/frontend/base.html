@@ -26,6 +26,9 @@
     <!-- animate CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
     
+    <style>
+        
+    </style>
 </head>
   <body>
 
@@ -33,7 +36,7 @@
         <!-- sidebar -->
         <aside class="sidebar">
             <div class="dismiss">
-                <p>X</p>
+                <i class="fas fa-bars    text-white"></i>
             </div>
             <div class='header text-center p-2 mb-2'>
                 <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
@@ -59,10 +62,10 @@
                     <!-- sub menu -->
                     <ul class="submenu">
                         <li>
-                            <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a>
+                            <a href="/studentslist"><i class="fas fa-list    mr-2"></i> <span>Students List</span></a>
                         </li>
                         <li>
-                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a>
+                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> <span>Add student</span></a>
                         </li>
                     </ul>
                 </li>
@@ -85,10 +88,10 @@
                             </div>
                             <ul class="submenu1">
                                 <li>
-                                    <a href="/teacherlist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Teachers List</a>
+                                    <a href="/teacherlist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> <span>Teachers List</span></a>
                                 </li>
                                 <li>
-                                    <a href="/addteacher" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
+                                    <a href="/addteacher" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-2"></i> <span>Add teacher</span></a>
                                 </li>
                             </ul>
                             <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
@@ -102,10 +105,10 @@
                             </div>
                             <ul class="submenu2">
                                 <li>
-                                    <a href="/support-staff-list" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> Suppport Staff List</a>
+                                    <a href="/support-staff-list" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> <span>Suppport Staff List</span></a>
                                 </li>
                                 <li>
-                                    <a href="/add-support-staff" style="font-size: 12px;"> <i class="fas fa-people-carry    mr-2"></i> Add support staff</a>
+                                    <a href="/add-support-staff" style="font-size: 12px;"> <i class="fas fa-people-carry    mr-2"></i> <span>Add support staff</span></a>
                                 </li>
                             </ul>
                             <!-- <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a> -->
@@ -127,16 +130,16 @@
                     <!-- submenus -->
                     <ul class="submenu-acad">
                         <li>
-                            <a href="/classlist" ><i class="fas fa-road       mr-2"></i> Classes</a>
+                            <a href="/classlist" ><i class="fas fa-road       mr-2"></i> <span>Classes</span></a>
                         </li>
                         <li>
-                            <a href="/subjectlist"> <i class="fas fa-book    mr-2"></i>Subjects</a>
+                            <a href="/subjectlist"> <i class="fas fa-book    mr-2"></i><span>Subjects</span></a>
                         </li>
                         <li>
-                            <a href="/markslist"> <i class="fas fa-file    mr-2"></i> Marks</a>
+                            <a href="/markslist"> <i class="fas fa-file    mr-2"></i> <span>Marks</span></a>
                         </li>
                         <li>
-                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> Academic Reports</a>
+                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> <span>Academic Reports</span></a>
                         </li>
                     </ul>
 
@@ -155,13 +158,13 @@
                     
                     <ul class="submenu-acc">
                         <li>
-                            <a href="/studentslist" ><i class="fas fa-money-bill-wave    mr-2"></i> Fees Collection</a>
+                            <a href="/studentslist" ><i class="fas fa-money-bill-wave    mr-2"></i> <span>Academic Reports</span></a>
                         </li>
                         <li>
-                            <a href="/addstudent"> <i class="fas fa-money-bill-alt    mr-2"></i>Salaries</a>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-alt    mr-2"></i><span>Salaries</span></a>
                         </li>
                         <li>
-                            <a href="/addstudent"> <i class="fas fa-money-bill-wave     mr-2"></i> Expenses</a>
+                            <a href="/addstudent"> <i class="fas fa-money-bill-wave     mr-2"></i> <span>Expenses</span></a>
                         </li>
                         <!-- <li>
                             <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
@@ -184,11 +187,12 @@
                     <!-- submenu -->
                     <ul class="submenu-users">
                         <li>
-                            <a href="/addusers" ><i class="fas fa-list    mr-2"></i> Add User</a>
+                            <a href="/userslist"> <i class="fas fa-users   mr-2"></i><span>Users List</span></a>
                         </li>
                         <li>
-                            <a href="/userslist"> <i class="fas fa-users   mr-2"></i>Users List</a>
+                            <a href="/addusers" ><i class="fas fa-list    mr-2"></i> <span>Add User</span></a>
                         </li>
+                        
                         
                     </ul>
 
@@ -204,12 +208,12 @@
         <div class="content bg-light">
 
             <!-- navbar -->
-            <nav class="navbar bg-light shadow">
-                <div class='brand '>
+            <nav class="navbar bg-light shadow align-items-center">
+                <div class='brand'>
                     <i class="fas fa-bars " ></i>    
                 </div>
                 
-                <div class="right mr-5 d-flex">
+                <div class="right mr-5 d-flex mt-2">
                     <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
                     <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
 
@@ -255,49 +259,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="{% static 'js/charts.js' %}"></script>
-    <script src="{% static 'js/calendar.js' %}"></script>
+    <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
     <script src="{% static 'js/script.js' %}"></script>
 
+
     <script>
-        dycalendar.draw({
-            target: '#calendar',
-            type: 'month',
-            // dayformat: 'full',
-            // monthformat: 'full',
-            highlighttargetdate: true,
-            // prevnextbutton: 'show'
-
-        });
-
-    $('.brand').click(function () {
-
-        $(".sidebar").css({
-            'display' : 'block',
-            'width' : '100%'
-        });
-
-        $(".content").css({
-            'width': '0%',
-        });
-
-        $(".dismiss").css({
-            'display' : 'block',
-        });
-
-        // document.querySelector('.sidebar').style.display = "block";
-        // document.querySelector('.sidebar').classList.toggle('active');
-        // document.querySelector('.content').classList.toggle('hide-content');
-    });
-
-    $(".dismiss").click(function (){
-        $('.sidebar').css({
-            'display' : 'none'
-        })
-
-        $('.content').css({
-            'width' : '100%'
-        });
-    });
+        
     </script>
 </body>
 

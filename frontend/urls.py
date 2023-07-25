@@ -18,7 +18,10 @@ urlpatterns = [
     path('classlist/', views.classList, name=" View Classes"), 
 
     path('addsubject/', views.addSubject, name="Add Subject"),
-    path('subjectlist/', views.subjectList, name=" View Subjects"),    
+    path('subjectlist/', views.subjectList, name=" View Subjects"),
+
+    path('addmarks/', views.addMarks, name="Add Marks"),
+    path('markslist/', views.marksList, name=" View Marks"),    
 
     path('showstudent/', views.showStudent, name="Student details"),
 
