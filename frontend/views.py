@@ -88,7 +88,7 @@ def addsubject(request):
         )
         
         Subjects.save
-    return render(request , 'frontend/academics/subjects.html')
+    return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
     
 def supportstaffList(request):
     # Retrieve all support staff data from the database
@@ -167,7 +167,7 @@ def subjects(request):
     return HttpResponse(subjectnames)
 
 def showclasses(request):
-    classes = Schoolclasses.objects.all
+    classes = Schoolclasses.objects.all()
     return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
 
 def addclasses(request):
@@ -189,7 +189,8 @@ def schoolclasses(request):
         )
     
         Schoolclasses.save
-    return render(request , 'frontend/academics/showclasses.html')
+    classes = Schoolclasses.objects.all()
+    return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
     
 def teachers(request):
     if request.method == 'POST':
