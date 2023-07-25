@@ -12,7 +12,16 @@ urlpatterns = [
     path('teacherlist/', views.teacherList, name="Teachers List"),
 
     path('addusers/', views.addUsers, name="Add User"),
-    path('userslist/', views.usersList, name="View List"),    
+    path('userslist/', views.usersList, name="View List"),
+
+    path('addclass/', views.addClass, name="Add Class"),
+    path('classlist/', views.classList, name=" View Classes"), 
+
+    path('addsubject/', views.addSubject, name="Add Subject"),
+    path('subjectlist/', views.subjectList, name=" View Subjects"),
+
+    path('addmarks/', views.addMarks, name="Add Marks"),
+    path('markslist/', views.marksList, name=" View Marks"),    
 
     path('showstudent/', views.showStudent, name="Student details"),
 
