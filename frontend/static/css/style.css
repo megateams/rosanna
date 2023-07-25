@@ -169,13 +169,23 @@
     box-shadow: 2px 2px 2px 2px rgb(64, 43, 43);
 }
 
+.cards .card:hover{
+    background-color: rgb(95,86,86);
+}
+
 .card .cbody
 {
     border-right: 3px solid #fff;
     margin-bottom: 10px;
 }
 
+.cards .session_card{
+    background-color: blue;
+}
 
+.cards .stud_card{
+    background-color: green;
+}
 
 .cards .trcard{
     background-color: red;
