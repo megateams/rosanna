@@ -172,7 +172,7 @@ def showclasses(request):
 
 def addclasses(request):
     classes = Schoolclasses.objects.all
-    return render(request , 'frontend/academics/addclasses.html')
+    return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
     
 def schoolclasses(request):
     if request.method == 'POST':
@@ -189,8 +189,7 @@ def schoolclasses(request):
         )
     
         Schoolclasses.save
-    classes = Schoolclasses.objects.all()
-    return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
+    return render(request , 'frontend/academics/showclasses.html')
     
 def teachers(request):
     if request.method == 'POST':

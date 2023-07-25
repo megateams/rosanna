@@ -2,11 +2,6 @@ from django.db import models
 from frontend.models import Teachers 
 
 # Create your models here.
-staffnames = Teachers.objects.values_list('teachernames')
-for values in staffnames:
-    choose=(
-        ('values' , 'values')
-    )
         
 class Staffpayments(models.Model):
     staffid = models.ForeignKey(Teachers , on_delete=models.CASCADE)
@@ -23,7 +18,7 @@ class Staffpayments(models.Model):
     ]
 
 class Bankdetails(models.Model):
-    staffname = models.CharField(max_length=20 , verbose_name='Staff Names' , blank=True )
+    staffname = models.CharField(max_length=20 , verbose_name='Staff Names' , blank=True)
     bankname = models.CharField(max_length=30 ,  verbose_name='Bank Name' , blank=True)
     accnum = models.IntegerField(verbose_name='Account Number' , blank=True)
     accname = models.CharField(verbose_name='Account Name' , max_length=25 , blank=True)

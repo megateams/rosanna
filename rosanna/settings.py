@@ -76,14 +76,21 @@ WSGI_APPLICATION = 'rosanna.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# connecting to mysql database
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rosanna',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',             
+        'USER' : 'root',
+        'PASSWORD' : '',
+        'HOST' : 'localhost',
     }
 }
 # DATABASES = {
