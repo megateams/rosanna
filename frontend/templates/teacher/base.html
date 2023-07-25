@@ -4,16 +4,24 @@
   <head>
     <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
     <!-- Required meta tags -->
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
+    
+    <!-- jquery datatables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-  </head>
 
     <!-- animate CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
@@ -122,11 +130,6 @@
                     <!-- submenus -->
                     <ul class="submenu-acad">
                         <li>
-                            <a href="/showclasses" ><i class="fas fa-road       mr-2"></i> Classes</a>
-                        </li>
-                        <li>
-                            <a href="/showsubjects"> <i class="fas fa-book    mr-2"></i>Subjects</a>
-
                             <a href="/classlist" ><i class="fas fa-road       mr-2"></i> <span>Classes</span></a>
                         </li>
                         <li>
@@ -202,10 +205,9 @@
 
         <!-- sidebar -->
         <!-- content -->
-        <div class="content">
+        <div class="content bg-light">
 
             <!-- navbar -->
-            
             <nav class="navbar bg-light shadow align-items-center">
                 <div class='brand'>
                     <i class="fas fa-bars " ></i>    
@@ -219,12 +221,20 @@
             </nav>
             <!-- navbar -->
 
+            <!-- page header -->
+            <div class="m-2 mt-3">
+                <a href="/dashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
+                <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
+            </div>
+            <!-- page header -->
+
             <!-- extending to other pages -->
             {% block main %}
             {% endblock main %}
             <!-- extending to other pages -->
-            <footer class="footer bg-dark text-white">
-                hey
+            <footer class="footer ">
+                <div class="container"><p class="text-center">All Rights Reserved | &copy; 2023 Rosanna Schools</p></div>
+
             </footer>
         </div>
         <!-- content -->
@@ -232,11 +242,8 @@
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-  </body>
     <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
 
     <!-- ajax -->

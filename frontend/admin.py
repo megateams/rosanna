@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Students , Subjects , Schoolclasses , Teachers  , Marks
+from .models import Student , Subjects , Schoolclasses , Teachers  , Marks
 
 # Register your models here.
 
-@admin.register(Students)
+@admin.register(Student)
 class MyClass(admin.ModelAdmin):
-    list_display = Students.Display_Fields
+    list_display = Student.Display_Fields
 
 @admin.register(Subjects)
 class Displaysubject(admin.ModelAdmin):
