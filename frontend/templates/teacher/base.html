@@ -13,7 +13,8 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/cal.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/teacher.css' %}">
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
     
@@ -48,80 +49,13 @@
             <ul class='sidebar-links pt-3'>
                 
                 <li class="sidebar-item active">
-                    <a class="" href='/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>
+                    <a class="" href='/teacher'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>
                     
-                </li>
-                <hr color="#fff">
-                <li>
-                    <div class="main-menu d-flex justify-content-between">
-                        <a class="" href='./students'><i class="fas fa-users    mr-2"></i><span>Students</span></a>
-                        <div class="chevron">
-                            <i class="fas fa-chevron-right    mr-2"></i>
-                        </div>
-                    </div>
-                    <!-- sub menu -->
-                    <ul class="submenu">
-                        <li>
-                            <a href="/studentslist"><i class="fas fa-list    mr-2"></i> <span>Students List</span></a>
-                        </li>
-                        <li>
-                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> <span>Add student</span></a>
-                        </li>
-                    </ul>
-                </li>
-                <hr color="#fff">
-                <li class="sidebar-item">
-                    <div class="main-menu-staff d-flex justify-content-between">
-                        <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a>
-                        <div class="chevron0 text-white">
-                            <i class="fas fa-chevron-right    mr-2"></i>
-                        </div>
-                    </div>
-                    
-                    <ul class="submenu-staff">
-                        <li>
-                            <div class="main-submenu1 d-flex justify-content-between">
-                                <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Teachers</span></a>
-                                <div class="chevron1 ">
-                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
-                                </div>
-                            </div>
-                            <ul class="submenu1">
-                                <li>
-                                    <a href="/teacherlist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> <span>Teachers List</span></a>
-                                </li>
-                                <li>
-                                    <a href="/addteacher" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-2"></i> <span>Add teacher</span></a>
-                                </li>
-                            </ul>
-                            <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
-                        </li>
-                        <li>
-                            <div class="main-submenu2 d-flex justify-content-between">
-                                <a class="" href='./staff'><i class="fas fa-people-carry    mr-2"></i><span>Support staff</span></a>
-                                <div class="chevron2">
-                                    <i class="fas fa-chevron-right text-white    mr-2"></i>
-                                </div>
-                            </div>
-                            <ul class="submenu2">
-                                <li>
-                                    <a href="/support-staff-list" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> <span>Suppport Staff List</span></a>
-                                </li>
-                                <li>
-                                    <a href="/add-support-staff" style="font-size: 12px;"> <i class="fas fa-people-carry    mr-2"></i> <span>Add support staff</span></a>
-                                </li>
-                            </ul>
-                            <!-- <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add student</a> -->
-                        </li>
-                    </ul>
-
-                    <!-- <a class="" href='/staff'><i class="fas fa-user-graduate    mr-2"></i><span>Staff</span></a> -->
-                    <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
                 <li>
                     <div class="main-menu-acad d-flex justify-content-between">
-                        <a class="" href='/academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a>
+                        <a class="" href='/academics'><i class="fas fa-book-open    mr-2"></i><span>Classes</span></a>
                         <div class="chevron-acad text-white">
                             <i class="fas fa-chevron-right    mr-2"></i>
                         </div>
@@ -130,16 +64,13 @@
                     <!-- submenus -->
                     <ul class="submenu-acad">
                         <li>
-                            <a href="/classlist" ><i class="fas fa-road       mr-2"></i> <span>Classes</span></a>
+                            <a href="/p1" ><i class="fas fa-road       mr-2"></i> <span>P1</span></a>
                         </li>
                         <li>
-                            <a href="/subjectlist"> <i class="fas fa-book    mr-2"></i><span>Subjects</span></a>
+                            <a href="/p3"> <i class="fas fa-book    mr-2"></i><span>P3</span></a>
                         </li>
                         <li>
-                            <a href="/markslist"> <i class="fas fa-file    mr-2"></i> <span>Marks</span></a>
-                        </li>
-                        <li>
-                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> <span>Academic Reports</span></a>
+                            <a href="/p5"> <i class="fas fa-file    mr-2"></i> <span>P5</span></a>
                         </li>
                     </ul>
 
@@ -147,59 +78,7 @@
                     <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
-                <li>
-                    <div class="main-menu-acc d-flex justify-content-between">
-                        <a class="" href='/accounting'><i class="fas fa-money-bill    mr-2"></i><span>Accounting</span></a>
-                        <div class="chevron-acc text-white">
-                            <i class="fas fa-chevron-right    mr-2"></i>
-                        </div>
-                        
-                    </div>
-                    
-                    <ul class="submenu-acc">
-                        <li>
-                            <a href="/studentslist" ><i class="fas fa-money-bill-wave    mr-2"></i> <span>Academic Reports</span></a>
-                        </li>
-                        <li>
-                            <a href="/addstudent"> <i class="fas fa-money-bill-alt    mr-2"></i><span>Salaries</span></a>
-                        </li>
-                        <li>
-                            <a href="/addstudent"> <i class="fas fa-money-bill-wave     mr-2"></i> <span>Expenses</span></a>
-                        </li>
-                        <!-- <li>
-                            <a href="/addstudent"> <i class="fas fa-user-graduate    mr-2"></i> Add teacher</a>
-                        </li> -->
-                    </ul>
-
-                    <!-- <a class="" href='./accounting'><i class="fas fa-book-open    mr-2"></i><span>Accounting</span></a> -->
-                    <!-- <hr className='mt-3' /> -->
-                </li>
-                <hr color="#fff">
                 
-                <li>
-                    <div class="main-menu-users d-flex justify-content-between">
-                        <a class="" href='/accounting'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a>
-                        <div class="chevron-users text-white">
-                            <i class="fas fa-chevron-right    mr-2"></i>
-                        </div>
-                        
-                    </div>
-                    <!-- submenu -->
-                    <ul class="submenu-users">
-                        <li>
-                            <a href="/userslist"> <i class="fas fa-users   mr-2"></i><span>Users List</span></a>
-                        </li>
-                        <li>
-                            <a href="/addusers" ><i class="fas fa-list    mr-2"></i> <span>Add User</span></a>
-                        </li>
-                        
-                        
-                    </ul>
-
-                    <!-- <a class="" href='./manageusers'><i class="fas fa-users    mr-2"></i><span>Manage Users</span></a> -->
-                    <!-- <hr className='mt-3' /> -->
-                </li>
-                <hr color="#fff">
             </ul>
         </aside>
 
@@ -214,7 +93,7 @@
                 </div>
                 
                 <div class="right mr-5 d-flex mt-2">
-                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>Username</p>
+                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>Teacher Name</p>
                     <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
 
                 </div>   
