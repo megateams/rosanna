@@ -4,6 +4,15 @@
 
 {% block  main %} 
 
+<!-- Success message after data has been sent  -->
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
@@ -26,19 +35,19 @@
                 <!-- regno -->
                 <div class="form-group col-md-6">
                     <label for="">Registration Number: </label>
-                    <input type="text" name="stdnumber" class="form-control">
+                    <input type="text" name="stdnumber" class="form-control" required>
                 </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
                     <label for="">Child Fullname: </label>
-                    <input type="text" name="childname" class="form-control">
+                    <input type="text" name="childname" class="form-control" required>
                 </div>
             </div>
             <div class="row">
                 <!-- class -->
                 <div class="form-group col-md-4">
                     <label for="">Gender: </label>
-                    <select name="gender" id="" class="form-control pr-2">
+                    <select name="gender" id="" class="form-control pr-2" required>
                         <option value="">---</option>
                         <option value="m">Male</option>
                         <option value="f">Female</option>
@@ -47,7 +56,7 @@
                 <!-- name -->
                 <div class="form-group col-md-4">
                     <label for="">Date Of Birth </label>
-                    <input type="date" name="dob" class="form-control">
+                    <input type="date" name="dob" class="form-control" required>
                 </div>
 
                 <!-- address -->
@@ -60,7 +69,7 @@
                 <!-- class -->
                 <div class="form-group col-md-4">
                     <label for="">Attached Class: </label>
-                    <select name="studentclass" id="" class="form-control pr-2">
+                    <select name="studentclass" id="" class="form-control pr-2" required>
                         <option value="">---</option>
                         <option value="">Baby</option>
                         <option value="">Middle</option>
@@ -81,7 +90,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Registration Date </label>
-                    <input type="date" name="regdate" class="form-control">
+                    <input type="date" name="regdate" class="form-control" required>
                 </div>
 
             </div>
@@ -131,7 +140,7 @@
                 <!-- mother name -->
                 <div class="form-group col-md-4">
                     <label for="">Living with </label>
-                    <select  name="livingwith" class="form-control livingwith">
+                    <select  name="livingwith" class="form-control livingwith" required>
                         <option value="">---</option>
                         <option value="Father only">Father only</option>
                         <option value="Mother only">Mother only</option>

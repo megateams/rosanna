@@ -33,21 +33,22 @@
     
                 <!-- login section for the user -->
                 <div class="loginform col-md-6">
-                    <form action="" class="form shadow rounded">
+                    <form action="" method="POST" class="form shadow rounded">
+                        {% csrf_token %}
                         <div class="title text-center">
                             <h5>USER LOGIN</h5>
                         </div>
                         <div class="form-content p-3">
                             <div class="form-group ">
                                 <label for="">Username / Email</label> <span class="text-danger ml-2"><b>*</b></span>
-                                <input type="text" class="form-control" required/>
+                                <input type="text" name ="username" class="form-control" required/>
                             </div>
                             <div class="form-group ">
                                 <label for="">Password</label><span class="text-danger ml-2"><b>*</b></span>
-                                <input type="text" class="form-control" required/>
+                                <input type="text" name="password" class="form-control" required/>
                             </div>
 
-                            <button class="btn btn-sm">Login</button>
+                            <button type="submit" class="btn btn-sm">Login</button>
 
                             <div class="checkbox mt-3"><input type="checkbox" class="mr-2" name="" id=""><span>Remember me</span></div>
                             

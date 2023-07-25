@@ -1,13 +1,47 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from .models import *
+from django.contrib.auth import login, logout 
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
+
 def home(request):
     return render(request,'frontend/dashboard.html')
+#register details
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")  # Redirect to the login page after successful registration
+    else:
+        form = UserCreationForm()
+    return render(request, "frontend/registration.html", {"form": form})
 
-def login(request):
-    return render(request, 'frontend/login.html')
+def user_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            # Log the user in
+            user = form.get_user()
+            login(request, user)
+            return redirect("Dashboard")
+    else:
+        form = AuthenticationForm()
+    return render(request, "frontend/login.html", {"form": form})
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect("login") # Redirect to the login page after logout
+
+# def login(request):
+    #retrieve the login crudentials from the database
+    # login_details =Login.objects.all()
+    # return render(request, 'frontend/login.html')
 
 def students(request):
     return render(request, 'frontend/students.html')
@@ -83,7 +117,6 @@ def staff(request):
     return render(request, 'frontend/staff.html')
 
 
-#moses code
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
@@ -125,8 +158,9 @@ def studentReg(request):
             gcontact = gcontact
         )        
         student.save ()
-        
-        return HttpResponse('Registration Successful')
+        messages.success(request, 'Data successfully added!')
+        return redirect("AddStudents")
+        # return HttpResponse('Registration Successful')
 
 def subjects(request):
     if request.method == 'POST':

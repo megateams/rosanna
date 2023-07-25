@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     'frontend',
+    'finance',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,5 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# after successful login, the user will be redirected to the dashboard (home) view.
+LOGIN_REDIRECT_URL = "Dashboard"
