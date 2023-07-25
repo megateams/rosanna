@@ -136,6 +136,19 @@
 /* table */
 
 
+.cards .card:hover{
+    background-color: rgb(95, 86, 86);
+}
+
+.cards .session_card
+{
+    background-color: blue;
+}
+
+.cards .stud_card
+{
+    background-color: green;
+}
 
 .cards .card .icon{
     font-size: 2rem;
