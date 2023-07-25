@@ -22,7 +22,7 @@
                     <th>Address</th>
                     {% comment %} <th>Class</th> {% endcomment %}
                     <th>Registration Date </th>
-                    {% comment %} <th>House</th> {% endcomment %}
+                    <th>House</th>
                     <th>Father</th>
                     <th>Mother</th>
                     <th>Actions</th>
@@ -36,13 +36,12 @@
                     <td>{{ student.gender }}</td>
                     <td>{{ student.dob }}</td>
                     <td>{{ student.address }}</td>
-                    <td>{{ student.class }}</td>
-                    <td>{{ student.gender }}</td>
-                    <td>{{ student.dob }}</td>
-                    {% comment %} <td>{{ staff. }}</td> {% endcomment %}
+                    {% comment %} <td>{{ student.stdclass }}</td> {% endcomment %}
+                    <td>{{ student.regdate }}</td>
+                    <td>{{ student.house }}</td>
                     <td>{{ student.fathername }}</td>
                     <td>{{ student.mothername }}</td>
-                        <a href="" id={{ student.stdnumber }} class="btn btn-sm btn-primary more">More ...</a>
+                     <td>   <a href="" id={{ student.stdnumber }} class="btn btn-sm btn-primary more">More ...</a>
                         
                     </td>
                 </tr>

@@ -40,8 +40,9 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='Class' , blank=True)
-
+    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
+    regdate =models.DateField(verbose_name="Date of Registration")
+    
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
     fcontact = models.CharField(max_length=10 , verbose_name="Father's Contact" , blank=True)
     foccupation = models.CharField(max_length=20 , verbose_name="Father's Occupation" , blank=True)
@@ -55,7 +56,7 @@ class Student(models.Model):
     gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
 
     Display_Fields = [
-        'stdnumber','childname' , 'gender' , 'dob' , 'address' , 'house' , 'studentclass' , 'foccupation' , 'mothername'
+        'stdnumber','childname' , 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
     , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
     ]
 

@@ -7,10 +7,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
-
+# creating views for dashboard
 def home(request):
+    if request.session.get('logged_out', False):
+        messages.warning(request, "You need to login to access the dashboard")
+        return redirect("login")
+    
     return render(request,'frontend/dashboard.html')
-#register details
+#register details for the user (admin)
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -21,6 +25,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, "frontend/registration.html", {"form": form})
 
+# login views for the admin user
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -28,7 +33,10 @@ def user_login(request):
             # Log the user in
             user = form.get_user()
             login(request, user)
+            request.session.pop('logged_out', None) # clear logout session variable in login
             return redirect("Dashboard")
+        else:
+            messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
     return render(request, "frontend/login.html", {"form": form})
@@ -36,6 +44,8 @@ def user_login(request):
 @login_required
 def user_logout(request):
     logout(request)
+    messages.success(request, "You have successfully logged out")
+    request.session['logged_out'] = True # Set the session variable to True
     return redirect("login") # Redirect to the login page after logout
 
 # def login(request):
@@ -48,10 +58,11 @@ def students(request):
 
 # students views
 def studentsList(request):
-    #retrieve all the students data from the database
-    all_students_list =Student.objects.all()
+    #retrieve all the selected students data from the database
+    selected_students =Student.objects.values('stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'regdate', 'fathername', 'mothername')
+    # all_students_list =Student.objects.all()
     #pass the data to template for rendering
-    return render(request, 'frontend/student/studentsList.html', {'students': all_students_list})
+    return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
 
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
@@ -127,7 +138,7 @@ def studentReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
-        studentclass = request.POST.get('studentclass')
+        # stdclass = request.POST.get('studentclass')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -146,7 +157,7 @@ def studentReg(request):
             dob = dob,
             address = address ,
             house = house ,
-            studentclass = studentclass , 
+            # stdclass = stdclass , 
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
