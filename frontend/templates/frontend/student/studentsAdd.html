@@ -4,16 +4,17 @@
 
 {% block  main %} 
 
-
-
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
+
     <form action="submit/" method="POST" class="form ml-3 p-3 shadow rounded bg-light">
         {% csrf_token %}
+
+ 
         <div class="title">
             <h5 class="text-uppercase text-center">Register Student</h5>
             <hr>
@@ -32,6 +33,7 @@
         </ul>
         {% endif %}
 
+
         <!-- student info section -->
         <div class="stud-info">
             <div class="sub-heading">
@@ -42,6 +44,7 @@
                 <div class="form-group col-md-6">
                     <label for="">Registration Number: </label>
                     <input type="text" name="stdnumber" class="form-control" required>
+
                 </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
@@ -75,7 +78,7 @@
                 <!-- class -->
                 <div class="form-group col-md-4">
                     <label for="">Attached Class: </label>
-                    <select name="" id="" class="form-control pr-2" >
+                    <select name="studentclass" id="" class="form-control pr-2">
                         <option value="">---</option>
                         <option value="">Baby</option>
                         <option value="">Middle</option>
@@ -156,34 +159,26 @@
                     </select>
                 </div>
                 <!-- guardian details -->
-                <div class="form-group col-md-4">
-                    <label for="">Guardian's Name: </label>
-                    <input type="text" name="guardianname" class="form-control">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Guardian's Contact: </label>
-                    <input type="text" name="gcontact" class="form-control">
-                </div>
-                {% comment %} <div class="col-md-4 guardian">
+
+                
+                <div class="col-md-8 guardian">
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 ">
                             <label for="">Guardian's Name: </label>
                             <input type="text" name="guardianname" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="">Guardian's Name: </label>
-                            <input type="text" name="guardianname" class="form-control">
+                            <label for="">Guardian's Contact: </label>
+                            <input type="text" name="gcontact" class="form-control">
                         </div>
                     </div>
-                </div> {% endcomment %}
+                </div>
             </div>
-
-            
         </div>
 
         <!-- button -->
         <div class="form-group">
-            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+            <button style="width: 100px;" type="submit" class="btn btn-sm bg-dark text-white">SUBMIT</button>
         </div>
         
 

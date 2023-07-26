@@ -303,7 +303,6 @@
     .sidebar.active .header h5{
         font-size: 20px;
     }
-    
     .sidebar.active .sidebar-links ul li span{
         display: inline;
     }
@@ -331,6 +330,4 @@
    
 }
 /* small screen */
- 
-    
-  
+

@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Login, Admin_Model, Role_Model, Supportstaff, Student , Subjects , Schoolclasses , Teachers  , Marks
 
+
 # Register your models here.
 # admin.site.register(Registration)
 # admin.site.register(Login)
-
 @admin.register(Login)
 class LoginAdmin(admin.ModelAdmin):
     list_display =Login.Display_Login_Fields
@@ -21,7 +21,6 @@ class Role_modelAdmin(admin.ModelAdmin):
 class SupportstaffAdmin(admin.ModelAdmin):
     list_display=Supportstaff.Display_Supportstaff
     
-##################################
 @admin.register(Student)
 class MyClass(admin.ModelAdmin):
     list_display = Student.Display_Fields

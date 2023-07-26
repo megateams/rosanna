@@ -145,7 +145,31 @@ def supportstaffreg(request):
                 
         # Redirect to the registration page for support staff after successful data addition
         return redirect('AddSupportstaff')
-   
+    
+def showsubjects(request):
+    subjects = Subjects.objects.all()
+    return render(request , 'frontend/academics/subjects.html' , {'subjects' : subjects})
+
+def addsubjectsform(request):
+    return render(request, 'frontend/academics/addsubjects.html')
+
+def addsubject(request):
+    if request.method == 'POST':
+        subjectname = request.POST.get('subjectname')
+        subjectid = request.POST.get('subjectid')
+        classlevel = request.POST.get('classlevel')
+        subjecthead = request.POST.get('subjecthead')
+        
+        Subjects.objects.create(
+            subjectname = subjectname ,
+            subjectid = subjectid ,
+            classlevel = classlevel ,
+            subjecthead = subjecthead ,
+        )
+        
+        Subjects.save
+    return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
+
 def supportstaffList(request):
     # Retrieve all support staff data from the database
     all_support_staff = Supportstaff.objects.all()
@@ -159,9 +183,12 @@ def showSupportstaff(request):
 def staff(request):
     return render(request, 'frontend/staff.html')
 
+#students registration views
+# def studentReg(request):
+#moses code
 
 #students registration views
-def studentReg(request):
+def student(request):
     if(request.method == 'POST'):
         stdnumber = request.POST.get('stdnumber')
         regdate = request.POST.get('regdate')
@@ -170,7 +197,7 @@ def studentReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
-        # stdclass = request.POST.get('studentclass')
+        studentclass = request.POST.get('studentclass')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -180,16 +207,15 @@ def studentReg(request):
         livingwith = request.POST.get('livingwith')
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
-
         student =Student.objects.create(
             stdnumber =stdnumber,            
             regdate = regdate ,
             childname = childname ,
             gender = gender ,
-            dob = dob,
+            dob = dob ,
             address = address ,
             house = house ,
-            # stdclass = stdclass , 
+            studentclass = studentclass , 
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -221,6 +247,14 @@ def subjects(request):
     
         Subjects.save
     return HttpResponse(subjectnames)
+
+def showclasses(request):
+    classes = Schoolclasses.objects.all()
+    return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
+
+def addclasses(request):
+    classes = Schoolclasses.objects.all
+    return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
     
 def schoolclasses(request):
     if request.method == 'POST':
@@ -237,7 +271,7 @@ def schoolclasses(request):
         )
     
         Schoolclasses.save
-    return HttpResponse('Class Created')
+    return render(request , 'frontend/academics/showclasses.html')
     
 def teachers(request):
     if request.method == 'POST':

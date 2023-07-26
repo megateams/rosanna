@@ -33,7 +33,7 @@ CLASS_CHOICES =[
 
 #students model
 class Student(models.Model):
-    stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number')
+    stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number' , blank= True)
     regdate = models.DateField(verbose_name='Date', default=None, blank=True )
     childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
     gender = models.CharField(max_length=10 , verbose_name="Child's Gender" , blank=True)
