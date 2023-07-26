@@ -25,8 +25,11 @@ def register(request):
         form = UserCreationForm()
     return render(request, "frontend/registration.html", {"form": form})
 
-# login views for the admin user
+# login views for the admin user login
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect("Dashboard")  # Redirect to the dashboard if the user is already logged in       
+    
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -56,6 +59,50 @@ def user_logout(request):
 def students(request):
     return render(request, 'frontend/students.html')
 
+#students registration views
+def student(request):
+    if(request.method == 'POST'):
+        stdnumber = request.POST.get('stdnumber')
+        regdate = request.POST.get('regdate')
+        childname = request.POST.get('childname')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        address = request.POST.get('address')
+        house = request.POST.get('house')
+        studentclass = request.POST.get('studentclass')
+        fathername = request.POST.get('fathername')
+        fcontact = request.POST.get('fcontact')
+        foccupation = request.POST.get('foccupation')
+        mothername = request.POST.get('mothername')
+        mcontact = request.POST.get('mcontact')
+        moccupation = request.POST.get('moccupation')
+        livingwith = request.POST.get('livingwith')
+        guardianname = request.POST.get('guardianname')
+        gcontact = request.POST.get('gcontact')
+        
+        student =Student.objects.create(
+            stdnumber =stdnumber,            
+            regdate = regdate ,
+            childname = childname ,
+            gender = gender ,
+            dob = dob ,
+            address = address ,
+            house = house ,
+            studentclass = studentclass , 
+            fathername = fathername ,
+            fcontact = fcontact ,
+            foccupation = foccupation ,
+            mothername = mothername , 
+            mcontact = mcontact ,
+            moccupation = moccupation ,
+            livingwith = livingwith ,
+            guardianname = guardianname ,
+            gcontact = gcontact
+        )        
+        student.save ()
+        messages.success(request, 'Data successfully added!')
+        return redirect("AddStudents")
+    
 # students views
 def studentsList(request):
     #retrieve all the selected students data from the database
@@ -116,7 +163,7 @@ def showStudent(request):
 def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
-# Send the registration staff details to and retrieve from database 
+# Send the registration support staff details to and retrieve from database 
 def supportstaffreg(request):
     # retrieve data from request
     if request.method == 'POST':
@@ -141,11 +188,20 @@ def supportstaffreg(request):
             position=position            
         )
         supportStaffReg.save()
-        messages.success(request, 'Data successfully added!')
-                
+        messages.success(request, 'Data successfully added!')               
         # Redirect to the registration page for support staff after successful data addition
         return redirect('AddSupportstaff')
+
+def supportstaffList(request):
+    # Retrieve all support staff data from the database
+    all_support_staff = Supportstaff.objects.all()
+    # Pass the data to the template for rendering
+    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
     
+def showSupportstaff(request):
+    return render(request, 'frontend/staff/showSupportstaff.html')
+
+
 def showsubjects(request):
     subjects = Subjects.objects.all()
     return render(request , 'frontend/academics/subjects.html' , {'subjects' : subjects})
@@ -170,66 +226,12 @@ def addsubject(request):
         Subjects.save
     return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
 
-def supportstaffList(request):
-    # Retrieve all support staff data from the database
-    all_support_staff = Supportstaff.objects.all()
-    # Pass the data to the template for rendering
-    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
-    
-def showSupportstaff(request):
-    return render(request, 'frontend/staff/showSupportstaff.html')
-# support staff views
-
 def staff(request):
     return render(request, 'frontend/staff.html')
 
 #students registration views
 # def studentReg(request):
-#moses code
 
-#students registration views
-def student(request):
-    if(request.method == 'POST'):
-        stdnumber = request.POST.get('stdnumber')
-        regdate = request.POST.get('regdate')
-        childname = request.POST.get('childname')
-        gender = request.POST.get('gender')
-        dob = request.POST.get('dob')
-        address = request.POST.get('address')
-        house = request.POST.get('house')
-        studentclass = request.POST.get('studentclass')
-        fathername = request.POST.get('fathername')
-        fcontact = request.POST.get('fcontact')
-        foccupation = request.POST.get('foccupation')
-        mothername = request.POST.get('mothername')
-        mcontact = request.POST.get('mcontact')
-        moccupation = request.POST.get('moccupation')
-        livingwith = request.POST.get('livingwith')
-        guardianname = request.POST.get('guardianname')
-        gcontact = request.POST.get('gcontact')
-        student =Student.objects.create(
-            stdnumber =stdnumber,            
-            regdate = regdate ,
-            childname = childname ,
-            gender = gender ,
-            dob = dob ,
-            address = address ,
-            house = house ,
-            studentclass = studentclass , 
-            fathername = fathername ,
-            fcontact = fcontact ,
-            foccupation = foccupation ,
-            mothername = mothername , 
-            mcontact = mcontact ,
-            moccupation = moccupation ,
-            livingwith = livingwith ,
-            guardianname = guardianname ,
-            gcontact = gcontact
-        )        
-        student.save ()
-        messages.success(request, 'Data successfully added!')
-        return redirect("AddStudents")
-        # return HttpResponse('Registration Successful')
 
 def subjects(request):
     if request.method == 'POST':
@@ -306,15 +308,15 @@ def teachers(request):
             username = username , 
             password = password
         )
-        supportStaffReg.save()
-        messages.success(request, f" Your data, {fullname} has been successfully added!")
+        # supportStaffReg.save()
+        # messages.success(request, f" Your data, {fullname} has been successfully added!")
                 
-        # Redirect to the registration page for support staff after successful data addition
-        return redirect('AddSupportstaff')
+        # # Redirect to the registration page for support staff after successful data addition
+        # return redirect('AddSupportstaff')
    
-def supportstaffList(request):
-    # Retrieve all support staff data from the database
-    all_support_staff = Supportstaff.objects.all()
-    # Pass the data to the template for rendering
-    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+# def supportstaffList(request):
+#     # Retrieve all support staff data from the database
+#     all_support_staff = Supportstaff.objects.all()
+#     # Pass the data to the template for rendering
+#     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
         

@@ -4,15 +4,6 @@
 
 {% block  main %} 
 
-<!-- Success message after data has been sent  -->
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/support-staff-list" class="btn btn-sm add-btn text-white mb-2 ml-3">View Support staff</a>
@@ -25,6 +16,24 @@
             <h5 class="text-uppercase text-center">Add Support Staff</h5>
             <hr>
         </div>
+        <!-- Success message after data has been sent  -->
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>{{ message }}</strong> 
+        </div>
+
+        <script>
+          $(".alert").alert();
+        </script>      
+    
+        {% endfor %}
+        </ul>
+        {% endif %}
 
         <!-- student info section -->
         <div class="stud-info">
