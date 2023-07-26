@@ -4,13 +4,23 @@
 
 {% block  main %} 
 
+<!-- Success message after data has been sent  -->
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/support-staff-list" class="btn btn-sm add-btn text-white mb-2 ml-3">View Support staff</a>
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form method='POST', action="submit/" class="form ml-3 p-3 shadow rounded bg-light">
+        {%csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Add Support Staff</h5>
             <hr>
@@ -22,15 +32,15 @@
                 <h5>Support Staff Information</h5>
             </div> -->
             <div class="row">
-                <!-- staff number -->
-                <div class="form-group col-md-6">
-                    <label for="">Staff Number: </label>
-                    <input type="text" name="staffnumber" class="form-control">
-                </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
                     <label for="">Fullname: </label>
-                    <input type="text" name="name" class="form-control">
+                    <input type="text" name="fullname" class="form-control">
+                </div>
+                <!-- staff contact -->
+                <div class="form-group col-md-6">
+                    <label for="">Phone contact: </label>
+                    <input type="text" name="contact" class="form-control" pattern="0\d{9}" max_length="10" title="Please enter a 10-digit phone number starting with 0" required>
                 </div>
             </div>
             <div class="row">
@@ -51,8 +61,8 @@
                     <label for="">Gender: </label>
                     <select name="gender" id="" class="form-control pr-2">
                         <option value="">---</option>
-                        <option value="Male">Male</option>
-                        <option value="Female ">Female</option>
+                        <option value="m">Male</option>
+                        <option value="f ">Female</option>
                     </select>
                 </div>
                 <!-- date of birth -->

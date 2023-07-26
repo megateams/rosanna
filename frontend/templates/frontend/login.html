@@ -16,8 +16,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
   <body>
+    <!--display logout message when logined in -->
+    
+
+    {% block content %}
+    {% endblock %}
+    
     <!-- main -->
     <div class="main">
+        
         <div class="container shadow">
             <div class="row">
                 <!-- content contains badge, school name and a welcome message -->
@@ -33,21 +40,37 @@
     
                 <!-- login section for the user -->
                 <div class="loginform col-md-6">
-                    <form action="" class="form shadow rounded">
+                    <form action="" method="POST" class="form shadow rounded">
+                        {% csrf_token %}
                         <div class="title text-center">
                             <h5>USER LOGIN</h5>
                         </div>
+                        {% if messages %}
+                            <ul class="messages">
+                                <script>
+                                  $(".alert").alert();
+                                </script>
+                                {% for message in messages %}
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong >{{ message }}</strong> 
+                                    </div>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                         <div class="form-content p-3">
                             <div class="form-group ">
                                 <label for="">Username / Email</label> <span class="text-danger ml-2"><b>*</b></span>
-                                <input type="text" class="form-control" required/>
+                                <input type="text" name ="username" class="form-control" required/>
                             </div>
                             <div class="form-group ">
                                 <label for="">Password</label><span class="text-danger ml-2"><b>*</b></span>
-                                <input type="text" class="form-control" required/>
+                                <input type="text" name="password" class="form-control" required/>
                             </div>
 
-                            <button class="btn btn-sm">Login</button>
+                            <button type="submit" class="btn btn-sm">Login</button>
 
                             <div class="checkbox mt-3"><input type="checkbox" class="mr-2" name="" id=""><span>Remember me</span></div>
                             
