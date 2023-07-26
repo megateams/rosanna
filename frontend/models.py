@@ -74,11 +74,12 @@ class Schoolclasses(models.Model):
     subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classteacher = models.CharField(max_length = 10 , verbose_name = "Classteacher")
+    classlevel = models.CharField(max_length = 100 , verbose_name = "Classlevel", blank=True)
+    classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
 
     Display_schoolclasses = [
-        'classname' , 'classid' , 'classteacher' , 'numofstds'
+        'classname' , 'classid', 'classlevel' , 'classteacher' , 'numofstds'
     ]
 
 class Teachers(models.Model):

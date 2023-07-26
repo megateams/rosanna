@@ -5,13 +5,13 @@
 {% block  main %} 
 
 <!-- Success message after data has been sent  -->
-{% if messages %}
+<!-- {% if messages %}
   <ul class="messages">
     {% for message in messages %}
       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
   </ul>
-{% endif %}
+{% endif %} -->
 
 <!-- inner-content -->
 <div class="inner-content">
@@ -25,6 +25,18 @@
             <h5 class="text-uppercase text-center">Add a Class</h5>
             <hr>
         </div>
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
 
         <!-- student info section -->
         <div class="stud-info">
