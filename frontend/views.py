@@ -56,20 +56,24 @@ def user_logout(request):
     # login_details =Login.objects.all()
     # return render(request, 'frontend/login.html')
 
-def students(request):
-    return render(request, 'frontend/students.html')
+# def students(request):
+#     return render(request, 'frontend/students.html')
 
 #students registration views
-def student(request):
+def studentsReg(request):
     if(request.method == 'POST'):
         stdnumber = request.POST.get('stdnumber')
+        # Check if the student with the given stdnumber already exists in the database
+        if Student.objects.filter(stdnumber=stdnumber).exists():
+            messages.error(request, f"Student with student number {stdnumber} already exists.")
+            return redirect("AddStudents")
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
-        studentclass = request.POST.get('studentclass')
+        # studentclass = request.POST.get('studentclass')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -88,7 +92,7 @@ def student(request):
             dob = dob ,
             address = address ,
             house = house ,
-            studentclass = studentclass , 
+            # studentclass = studentclass , 
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -308,15 +312,5 @@ def teachers(request):
             username = username , 
             password = password
         )
-        # supportStaffReg.save()
-        # messages.success(request, f" Your data, {fullname} has been successfully added!")
-                
-        # # Redirect to the registration page for support staff after successful data addition
-        # return redirect('AddSupportstaff')
-   
-# def supportstaffList(request):
-#     # Retrieve all support staff data from the database
-#     all_support_staff = Supportstaff.objects.all()
-#     # Pass the data to the template for rendering
-#     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+       
         

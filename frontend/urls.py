@@ -13,11 +13,11 @@ urlpatterns = [
     # path('', views.login, name="Login"),
     path('dashboard/', views.home, name="Dashboard"),
 
-    path('students/', views.students, name="Students"),
+    path('addstudent/submit/', views.studentsReg, name="StudentsReg"),
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
 
-    path('addstudent/', views.studentsAdd, name="Add Students"),
+    # path('addstudent/', views.studentsAdd, name="Add Students"),
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
 
