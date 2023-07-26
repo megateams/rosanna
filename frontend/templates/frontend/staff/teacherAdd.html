@@ -10,11 +10,27 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
+        
         <div class="title">
             <h5 class="text-uppercase text-center">Register Teachers</h5>
             <hr>
         </div>
+
+         <!-- Success message after data has been sent  -->
+         {% if messages %}
+         <ul class="messages">
+         {% for message in messages %}
+             <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+               <strong>{{ message }}</strong> 
+             </div>
+         {% endfor %}
+         </ul>
+         {% endif %}
 
         <!-- student info section -->
         <div class="teacher-info">
@@ -71,7 +87,7 @@
                 <!-- joining date -->
                 <div class="form-group col-md-4">
                     <label for="">Joining Date </label>
-                    <input type="date" name="joining date" class="form-control">
+                    <input type="date" name="joiningdate" class="form-control">
                 </div>
             </div>
         </div>

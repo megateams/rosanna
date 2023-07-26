@@ -73,7 +73,8 @@ def teacherAdd(request):
     return render(request,'frontend/staff/teacherAdd.html')
 
 def teacherList(request):
-    return render(request,'frontend/staff/teacherList.html')
+    teachers = Teachers.objects.all()
+    return render(request,'frontend/staff/teacherList.html', {'teachers': teachers})
 # teachers views
 
 # users views
@@ -297,11 +298,11 @@ def teachers(request):
             username = username , 
             password = password
         )
-        supportStaffReg.save()
-        messages.success(request, f" Your data, {fullname} has been successfully added!")
+        Teachers.save()
+        messages.success(request, "Teacher has been successfully added!")
                 
         # Redirect to the registration page for support staff after successful data addition
-        return redirect('AddSupportstaff')
+        return redirect('Add Teacher')
    
 def supportstaffList(request):
     # Retrieve all support staff data from the database
