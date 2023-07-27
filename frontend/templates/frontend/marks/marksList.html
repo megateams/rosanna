@@ -32,30 +32,26 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>M001</th>
-                    <th>RS1</th>
-                    <th>Term 1</th>
-                    <th>2024</th>
-                    <th>Primary Two</th>
-                    <th>45</th>
-                    <th>56</th>
-                    <th>78</th>
-                    <th>67</th>
-                    <th> 86</th>
-                    <th>34</th> 
-                   <td>
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
+                    {% for showmarks in marks %}
+                    <td>{{ showmarks.id }}</td>
+                    <td>{{ showmarks.stdnum }}</td>
+                    <td>{{ showmarks.term }}</td>
+                    <td>{{ showmarks.year }}</td>
+                    <td>{{ showmarks.studentclass }}</td>
+                    <td>{{ showmarks.math }}</td>
+                    <td>{{ showmarks.eng }}</td>
+                    <td>{{ showmarks.sci }}</td>
+                    <td>{{ showmarks.sst }}</td>
+                    <td>{{ showmarks.re }}</td>
+                    <td>{{ showmarks.computer }}</td>
+                    <td>
+                        <div>
+                            <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
+                            <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        </div>
+                    </td>
                 </tr>
-
-                
-                
-                
-                
+                {% endfor %}
             </tbody>
         </table>
     </div>

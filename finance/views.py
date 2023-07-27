@@ -1,5 +1,6 @@
 
 from django.shortcuts import render, HttpResponse
+from .models import Staffpayments
 
 # Create your views here.
 def Fees(request):
@@ -7,8 +8,11 @@ def Fees(request):
 
 # Create your views here.
 
-def staffpayments(request):
-    return render(request , 'staffpayments.html')
+
+
+
+
+
 
 
 

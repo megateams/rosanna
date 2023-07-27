@@ -94,10 +94,40 @@ def classList(request):
 
 # marks views
 def addMarks(request):
-    return render(request,'frontend/marks/addMarks.html')
+    studentnumbers = Marks.objects.values_list('stdnum_id')
+    render(request, 'frontend/marks/addmarks.html' , {'stdnumbers':studentnumbers})
+    if request.method == 'POST':
+        stdnum = request.POST.get('stdnum')
+        term = request.POST.get('term')
+        year = request.POST.get('year')
+        studentclass = request.POST.get('studentclass')
+        math = request.POST.get('math')
+        eng = request.POST.get('eng')
+        sci = request.POST.get('sci')
+        sst = request.POST.get('sst')
+        re = request.POST.get('re')
+        computer = request.POST.get('computer')
+        
+        Marks.objects.create(
+            stdnum = stdnum ,
+            term = term ,
+            year = year ,
+            studentclass = studentclass ,
+            math = math ,
+            eng = eng ,
+            sci = sci ,
+            sst = sst ,
+            re = re ,
+            computer = computer 
+        )
+        
+        Marks.save()
+    marks = Marks.objects.all()
+    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
 
 def marksList(request):
-    return render(request,'frontend/marks/marksList.html')
+    marks = Marks.objects.all()
+    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
 # marks views
 
 # subjects views
@@ -317,4 +347,243 @@ def supportstaffList(request):
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
-        
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
