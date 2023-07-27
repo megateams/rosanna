@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('addstudent/submit/', views.studentsReg, name="StudentsReg"),
     path('studentslist/', views.studentsList, name="Students List"),
+    path('showstudent/<studentId>', views.Showstudents, name="Showstudents"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
 
     # path('addstudent/', views.studentsAdd, name="Add Students"),

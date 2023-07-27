@@ -51,13 +51,6 @@ def user_logout(request):
     request.session['logged_out'] = True # Set the session variable to True
     return redirect("login") # Redirect to the login page after logout
 
-# def login(request):
-    #retrieve the login crudentials from the database
-    # login_details =Login.objects.all()
-    # return render(request, 'frontend/login.html')
-
-# def students(request):
-#     return render(request, 'frontend/students.html')
 
 #students registration views
 def studentsReg(request):
@@ -73,7 +66,7 @@ def studentsReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
-        # studentclass = request.POST.get('studentclass')
+        studentclass = request.POST.get('studentclass')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -92,7 +85,7 @@ def studentsReg(request):
             dob = dob ,
             address = address ,
             house = house ,
-            # studentclass = studentclass , 
+            studentclass = studentclass , 
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -114,10 +107,14 @@ def studentsList(request):
     # all_students_list =Student.objects.all()
     #pass the data to template for rendering
     return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
+def Showstudents(request,studentId):
+    #retrieve all the selected students data from the database
+    selected_show_students = Student.objects.filter(stdnumber=studentId)
+    #pass the data to template for rendering
+    return render(request, 'frontend/student/showStudent.html', {'showstudents': selected_show_students})
 
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
-
 
 # teachers views
 def teacherAdd(request):

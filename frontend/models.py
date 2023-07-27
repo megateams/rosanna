@@ -18,7 +18,7 @@ TERM_CHOICES = [
     ('III' , 'III'),
 ]
 
-CLASS_CHOICES =[
+CLASS_CHOICES =(
     ('baby' , 'baby'),
     ('middle' , 'middle'),
     ('top' , 'top'),
@@ -29,7 +29,7 @@ CLASS_CHOICES =[
     ('P.5' , 'P.5'),
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
-]
+)
 
 #students model
 class Student(models.Model):
@@ -40,7 +40,7 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
+    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None, verbose_name="Class choices")
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
