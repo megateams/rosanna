@@ -93,9 +93,13 @@ def classList(request):
 # classes views
 
 # marks views
-def addMarks(request):
-    studentnumbers = Marks.objects.values_list('stdnum_id')
-    render(request, 'frontend/marks/addmarks.html' , {'stdnumbers':studentnumbers})
+def addmarks(request):
+    studentdata = Student.objects.all()
+    return render(request,'frontend/marks/addMarks.html', {'students': studentdata})
+
+def submitmarks(request):
+    # studentnumbers = Marks.objects.values_list('stdnum_id')
+    #render(request, 'frontend/marks/addmarks.html' , {'stdnumbers':studentnumbers})
     if request.method == 'POST':
         stdnum = request.POST.get('stdnum')
         term = request.POST.get('term')
@@ -121,7 +125,7 @@ def addMarks(request):
             computer = computer 
         )
         
-        Marks.save()
+        Marks.save
     marks = Marks.objects.all()
     return render(request,'frontend/marks/marksList.html' , {'marks':marks})
 

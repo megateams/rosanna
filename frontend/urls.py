@@ -31,7 +31,8 @@ urlpatterns = [
     path('addsubject/', views.addSubject, name="Add Subject"),
     path('subjectlist/', views.subjectList, name=" View Subjects"),
 
-    path('addmarks/', views.addMarks, name="Add Marks"),
+    path('addmarks/', views.addmarks, name="Add Marks"),
+    path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),
     path('markslist/', views.marksList, name=" View Marks"),    
 
     path('showstudent/', views.showStudent, name="Student details"),

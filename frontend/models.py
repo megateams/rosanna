@@ -108,7 +108,7 @@ class Teachers(models.Model):
 
 class Marks(models.Model):
     #id = models.AutoField(primary_key=True)
-    stdnum = models.ForeignKey(Student , on_delete=models.CASCADE , default='std_000' , blank=True)
+    stdnum = models.CharField(max_length=100 , verbose_name='Stud number' ,default='std_000' , blank=True)
     term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I' , blank=True)
     year = models.CharField(max_length=5 , verbose_name='Year' , default='2023' , blank=True)
     studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7' , blank=True)
