@@ -94,6 +94,30 @@ def marksList(request):
     return render(request,'frontend/marks/marksList.html')
 # marks views
 
+# fees views
+def addFees(request):
+    return render(request,'frontend/fees/addFees.html')
+
+def feesList(request):
+    return render(request,'frontend/fees/feesList.html')
+# fees views
+
+# staffpayments views
+def addStaffpayments(request):
+    return render(request,'frontend/staffpayments/addStaffpayments.html')
+
+def staffpaymentsList(request):
+    return render(request,'frontend/staffpayments/staffpaymentsList.html')
+# staffpayments views
+
+# expenses views
+def addExpenses(request):
+    return render(request,'frontend/expenses/addExpenses.html')
+
+def expensesList(request):
+    return render(request,'frontend/expenses/expensesList.html')
+# expenses views
+
 def showStudent(request):
     return render(request, 'frontend/student/showStudent.html')
 # students views

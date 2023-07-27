@@ -26,6 +26,15 @@ urlpatterns = [
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
 
+    path('addfees/', views.addFees, name="Add Fees"),
+    path('feeslist/', views.feesList, name="Fees List"),
+
+    path('addexpenses/', views.addExpenses, name="Add Expenses"),
+    path('expenseslist/', views.expensesList, name="Expenses List"),
+
+    path('addstaffpayments/', views.addStaffpayments, name="Add Staffpayments"),
+    path('staffpaymentslist/', views.staffpaymentsList, name="Staffpayments List"),
+
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),    
 

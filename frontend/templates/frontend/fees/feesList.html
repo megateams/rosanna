@@ -1,0 +1,59 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Fees List {% endblock title %}
+{% block  pagetitle %} Fees List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/addfees" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Fees</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Fees ID</th>
+                    <th>Student Number</th>
+                    <th>Student Name</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                    <th>Mode of Payment</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>F001</th>
+                    <th>S000001</th>
+                    <th>TRAM</th>
+                    <th>750,000</th>
+                    <th>00000</th>
+                    <th>Bank</th>
+                    <th>27-06-23</th>
+                   <td>
+                    <div>
+                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
+                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        
+                    </div> </td>
+    
+                </tr>
+
+                
+                
+                
+                
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}
