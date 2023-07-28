@@ -24,67 +24,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>S001</td>
-                    <td>English</td>
-                    <td>Junior Mukisa</td>
-                    <td>upper primary</td>
-                   <td> 
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div>
-                   </td>
-    
-                </tr>
-                <tr>
-                    <td>S001</td>
-                    <td>English</td>
-                    <td>Junior Mukisa</td>
-                    <td>upper primary</td>
-                   <td> 
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div>
-                   </td>
-    
-                </tr>
-                <tr>
-                    <td>S001</td>
-                    <td>English</td>
-                    <td>Junior Mukisa</td>
-                    <td>upper primary</td>
-                   <td>
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
-                </tr>
-                <tr>
-                    <td>S001</td>
-                    <td>English</td>
-                    <td>Junior Mukisa</td>
-                    <td>upper primary</td>
-                   <td> 
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div>
-                   </td>
-    
-                </tr>
-
-                
-                
-                
-                
-                
+                    {% for subj in subjects %}
+                    <tr>
+                    <td>{{ subj.subjectid }}</td>
+                    <td>{{ subj.subjectname }}</td>
+                    <td>{{ subj.subjecthead }}</td>
+                    <td>{{ subj.classlevel }}</td>
+                    <td>
+                        <div>
+                            <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
+                            <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        </div>
+                    </td>
+                    </tr>
+                    {% endfor %}
             </tbody>
         </table>
     </div>

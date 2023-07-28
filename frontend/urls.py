@@ -17,7 +17,7 @@ urlpatterns = [
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
-    # path('addstudent/submit/', views.studentReg, name="studentReg"),
+    #path('addstudent/submit/', views.studentReg, name="studentReg"),
     path('addstudent/', views.studentsAdd, name="Add Students"),
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
@@ -25,8 +25,8 @@ urlpatterns = [
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
 
-    path('addclass/', views.addClass, name="Add Class"),
-    path('classlist/', views.classList, name=" View Classes"), 
+    #path('addclass/', views.addClass, name="Add Class"),
+    #path('classlist/', views.classList, name=" View Classes"), 
 
     path('addsubject/', views.addSubject, name="Add Subject"),
     path('subjectlist/', views.subjectList, name=" View Subjects"),

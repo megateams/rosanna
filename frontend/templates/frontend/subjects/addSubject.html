@@ -10,7 +10,8 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
                
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action=""  method='POST' class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Subjects</h5>
             <hr>

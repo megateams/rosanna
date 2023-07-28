@@ -85,11 +85,11 @@ def usersList(request):
 # users views
 
 # classes views
-def addClass(request):
-    return render(request,'frontend/classes/addClass.html')
+# def addClass(request):
+#     return render(request,'frontend/classes/addClass.html')
 
-def classList(request):
-    return render(request,'frontend/classes/classList.html')
+# def classList(request):
+#     return render(request,'frontend/classes/classList.html')
 # classes views
 
 # marks views
@@ -136,10 +136,25 @@ def marksList(request):
 
 # subjects views
 def addSubject(request):
+    if request.method == 'POST':
+        subjectname = request.POST.get('subjectname')
+        subjectid = request.POST.get('subjectid')
+        classlevel = request.POST.get('classlevel')
+        subjecthead = request.POST.get('subjecthead')
+        
+        Subjects.objects.create(
+            subjectname = subjectname ,
+            subjectid = subjectid ,
+            classlevel = classlevel ,
+            subjecthead = subjecthead ,
+        )
+        
+        Subjects.save
     return render(request,'frontend/subjects/addSubject.html')
 
 def subjectList(request):
-    return render(request,'frontend/subjects/subjectList.html')
+    subjects = Subjects.objects.all
+    return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects})
 # classes views
 
 def showStudent(request):
@@ -284,11 +299,10 @@ def subjects(request):
 
 def showclasses(request):
     classes = Schoolclasses.objects.all()
-    return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
+    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
 
 def addclasses(request):
-    classes = Schoolclasses.objects.all
-    return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
+    return render(request , 'frontend/academics/addclasses.html')
     
 def schoolclasses(request):
     if request.method == 'POST':
@@ -305,7 +319,8 @@ def schoolclasses(request):
         )
     
         Schoolclasses.save
-    return render(request , 'frontend/academics/showclasses.html')
+        classes = Schoolclasses.objects.all()
+    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
     
 def teachers(request):
     if request.method == 'POST':
