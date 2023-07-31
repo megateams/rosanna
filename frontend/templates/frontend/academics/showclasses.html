@@ -22,6 +22,7 @@
                     <th>Class Level</th>
                     <th>Classteacher</th>
                     <th>Number of students</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,10 +30,12 @@
                 <tr>
                     <td>{{ showclass.classname }}</td>
                     <td>{{ showclass.classid }}</td>
+                    <td>{{ showclass.classlevel }}</td>
                     <td>{{ showclass.classteacher }}</td>
                     <td>{{ showclass.numofstds }}</td>
                     <td>
-                        <a href="" id={{ classes.classid }} class="btn btn-sm btn-primary more_support_staff">More ...</a>
+                        <a href="" class="text-primary"> <i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"> <i class="fas fa-trash    "></i></a>
                     </td>
                 </tr>
                 {% endfor %}  

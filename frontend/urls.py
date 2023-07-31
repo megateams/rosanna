@@ -17,19 +17,14 @@ urlpatterns = [
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
-    # path('addstudent/submit/', views.studentReg, name="studentReg"),
-    path('addstudent/', views.studentsAdd, name="Add Students"),
+    path('addstudent/submit/', views.studentReg, name="studentReg"),
+    # path('addstudent/', views.studentsAdd, name="Add Students"),
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
+    path('addteacher/submit/', views.teachers, name="Teachers"),
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
-
-    path('addclass/', views.addClass, name="Add Class"),
-    path('classlist/', views.classList, name=" View Classes"), 
-
-    path('addsubject/', views.addSubject, name="Add Subject"),
-    path('subjectlist/', views.subjectList, name=" View Subjects"),
 
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),    
@@ -38,15 +33,15 @@ urlpatterns = [
 
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
-    path('show-support-staff/', views.showSupportstaff, name=" Support staff Details"),
+    path('showteacher/<teacherId>', views.showteacher, name=" Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
 
     path('staff/', views.staff, name="Staff"),
     path('showsubjects/' , views.showsubjects , name='showsubjects'),
-    path('showsubjects/addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
+    path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
     path('addsubject/' , views.addsubject , name = 'addsubject'),
     path('showclasses/' , views.showclasses , name='showclasses'),
     path('sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
-    path('showclasses/addclasses/' , views.addclasses , name='showclasses'),
+    path('showclasses/addclasses/' , views.addclasses , name='AddClasses'),
 ]
