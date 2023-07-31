@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+import openpyxl
 
 # Create your views here.
 # creating views for dashboard
@@ -116,6 +117,13 @@ def Showstudents(request,studentId):
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html')
 
+#Delete student views
+def DeleteStudent(request, stdnumber):
+    delete_student =Student.objects.filter(stdnumber =stdnumber)
+    delete_student.delete()
+    messages.success(request, "The data deleted successfully")
+    return redirect("Students List")
+
 # teachers views
 def teacherAdd(request):
     return render(request,'frontend/staff/teacherAdd.html')
@@ -123,6 +131,13 @@ def teacherAdd(request):
 def teacherList(request):
     return render(request,'frontend/staff/teacherList.html')
 # teachers views
+
+#Delete Teacher views
+def DeleteTeacher(request, teacherid):
+    delete_teacher =Teachers.objects.filter(teacherid =teacherid)
+    delete_teacher.delete()
+    messages.success(request, "The data deleted successfully")
+    return redirect("Teachers List")
 
 # users views
 def addUsers(request):
@@ -202,6 +217,12 @@ def supportstaffList(request):
 def showSupportstaff(request):
     return render(request, 'frontend/staff/showSupportstaff.html')
 
+#delete support staff views
+def DeleteSupportStaff(request, id):
+    support_staff =Supportstaff.objects.filter(id =id)
+    support_staff.delete()
+    messages.success(request, "Data deleted successfully")
+    return redirect("Support staff List")
 
 def showsubjects(request):
     subjects = Subjects.objects.all()
@@ -310,4 +331,89 @@ def teachers(request):
             password = password
         )
        
+
+#Export the data in excel in the students model
+def export_to_excel(request):
+    #fetch all the data from the database
+        data =Student.objects.all().values_list(
+            'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'studentclass', 'regdate', 'fathername','fcontact','foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname','gcontact'
+            )
         
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        # field_names = Student._meta.get_fields()
+        # header_row = [field.name for field in field_names]
+        # ws.append(header_row)
+        
+        #write data to the worksheet
+        ws.append(['Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date', "Father's name",'Father\'s Contact','Foccupation', 'Mother\'s Name', 'Mother\'s contact', 'Moccupation', 'Livingwith', 'Guardian\'s Name','gcontact'])
+        for row_data in data:
+            ws.append(row_data)
+            
+        # Set the filename and content type for the response
+        filename = 'exported_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response
+#Export the data in excel in the support staff model
+def support_staff_export_to_excel(request):
+    #fetch all the data from the database
+        data =Supportstaff.objects.all().values()
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        field_names = Supportstaff._meta.get_fields()
+        header_row = [field.name for field in field_names]
+        ws.append(header_row)
+        
+        #write data to the worksheet
+        for row_data in data:
+            ws.append(list(row_data.values()))
+            
+        # Set the filename and content type for the response
+        filename = 'exported_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response
+
+
+#Export the data in excel in the Teacher's model
+def teacher_export_to_excel(request):
+    #fetch all the data from the database
+        data =Teachers.objects.all().values_list(
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subject', 'qualification'
+            )
+        
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        # field_names = Student._meta.get_fields()
+        # header_row = [field.name for field in field_names]
+        # ws.append(header_row)
+        
+        #write data to the worksheet
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subject', 'Qualification'])
+        for row_data in data:
+            ws.append(row_data)
+            
+        # Set the filename and content type for the response
+        filename = 'teacher\'s_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response

@@ -7,7 +7,7 @@
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Teachers</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+    <a href="#" onclick="confirmDownload()" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel<a/>
 
     <!-- form-section -->
     <form action="" class="form ml-3 p-3 shadow rounded bg-light">
@@ -180,5 +180,11 @@
 
 </div>
 <!-- inner-content -->
-
+<script>
+    function confirmDownload(){
+        if(confirm("Are you sure you want to export the data to an Excel file?")){
+            window.location.href = "{% url 'teacher_export_excel' %}"
+        }
+    }
+</script>
 {% endblock main %}
