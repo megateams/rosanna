@@ -4,8 +4,8 @@
     new DataTable("#table", {
         // responsive: true,
         // scrollX: true,
-        "aLengthMenu" : [[3,5,10,25,-1],[3,5,10,25,'All']],
-        "iDisplayLength": 3,
+        "aLengthMenu" : [[10,25,-1],[10,25,'All']],
+        "iDisplayLength": 10,
         
     });
 // });

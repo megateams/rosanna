@@ -128,9 +128,54 @@ def DeleteStudent(request, stdnumber):
 def teacherAdd(request):
     return render(request,'frontend/staff/teacherAdd.html')
 
+#Teachers views   
+def teachers(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        if Teachers.objects.filter(teacherid=teacherid).exists():
+            messages.error(request, f"Teacher with ID {teacherid} already exists.")
+            return redirect("Add Teacher")
+        teachernames = request.POST.get('teachernames')
+        dob = request.POST.get('dob')
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        classes = request.POST.get('classes')
+        joiningdate = request.POST.get('joiningdate')
+        position = request.POST.get('position')
+        subject = request.POST.get('subject')
+        qualification = request.POST.get('qualification')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        teacher =Teachers.objects.create(
+            teacherid = teacherid ,
+            teachernames = teachernames ,
+            dob = dob ,
+            gender = gender ,
+            contact = contact ,
+            email = email ,
+            address = address ,
+            classes = classes ,
+            joiningdate = joiningdate ,
+            position = position ,
+            subject = subject , 
+            qualification = qualification ,
+            username = username , 
+            password = password
+        )   
+        teacher.save()
+        messages.success(request, "Teacher has been successfully added!")
+        return redirect("Add Teacher") 
+    
 def teacherList(request):
-    return render(request,'frontend/staff/teacherList.html')
+    select_teachers = Teachers.objects.all()
+    return render(request,'frontend/staff/teacherList.html', {'teachers': select_teachers})
 # teachers views
+def showteacher(request,teacherId):
+    teachers = Teachers.objects.filter(teacherid=teacherId)
+    return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers})
 
 #Delete Teacher views
 def DeleteTeacher(request, teacherid):
@@ -147,13 +192,6 @@ def usersList(request):
     return render(request,'frontend/users/usersList.html')
 # users views
 
-# classes views
-def addClass(request):
-    return render(request,'frontend/classes/addClass.html')
-
-def classList(request):
-    return render(request,'frontend/classes/classList.html')
-# classes views
 
 # marks views
 def addMarks(request):
@@ -162,14 +200,6 @@ def addMarks(request):
 def marksList(request):
     return render(request,'frontend/marks/marksList.html')
 # marks views
-
-# subjects views
-def addSubject(request):
-    return render(request,'frontend/subjects/addSubject.html')
-
-def subjectList(request):
-    return render(request,'frontend/subjects/subjectList.html')
-# classes views
 
 def showStudent(request):
     return render(request, 'frontend/student/showStudent.html')
@@ -246,7 +276,9 @@ def addsubject(request):
         )
         
         Subjects.save
-    return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
+        messages.success(request, 'Subject successfully added!')
+        return redirect("addsubjectsform")
+    # return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
 
 def staff(request):
     return render(request, 'frontend/staff.html')
@@ -254,6 +286,60 @@ def staff(request):
 #students registration views
 # def studentReg(request):
 
+def supportstaffList(request):
+    # Retrieve all support staff data from the database
+    all_support_staff = Supportstaff.objects.all()
+    # Pass the data to the template for rendering
+    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+    
+def staff(request):
+    return render(request, 'frontend/staff.html')
+
+
+
+#students registration views
+def studentReg(request):
+    if(request.method == 'POST'):
+        stdnumber = request.POST.get('stdnumber')
+        regdate = request.POST.get('regdate')
+        childname = request.POST.get('childname')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        address = request.POST.get('address')
+        house = request.POST.get('house')
+        # studentclass = request.POST.get('studentclass')
+        fathername = request.POST.get('fathername')
+        fcontact = request.POST.get('fcontact')
+        foccupation = request.POST.get('foccupation')
+        mothername = request.POST.get('mothername')
+        mcontact = request.POST.get('mcontact')
+        moccupation = request.POST.get('moccupation')
+        livingwith = request.POST.get('livingwith')
+        guardianname = request.POST.get('guardianname')
+        gcontact = request.POST.get('gcontact')
+        student =Student.objects.create(
+            stdnumber =stdnumber,            
+            regdate = regdate ,
+            childname = childname ,
+            gender = gender ,
+            dob = dob ,
+            address = address ,
+            house = house ,
+            # studentclass = studentclass , 
+            fathername = fathername ,
+            fcontact = fcontact ,
+            foccupation = foccupation ,
+            mothername = mothername , 
+            mcontact = mcontact ,
+            moccupation = moccupation ,
+            livingwith = livingwith ,
+            guardianname = guardianname ,
+            gcontact = gcontact
+        )        
+        student.save ()
+        messages.success(request, 'Data successfully added!')
+        return redirect("AddStudents")
+        # return HttpResponse('Registration Successful')
 
 def subjects(request):
     if request.method == 'POST':
@@ -277,7 +363,7 @@ def showclasses(request):
     return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
 
 def addclasses(request):
-    classes = Schoolclasses.objects.all
+    classes = Schoolclasses.objects.all()
     return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
     
 def schoolclasses(request):
@@ -285,52 +371,21 @@ def schoolclasses(request):
         classname = request.POST.get('classname')
         classid = request.POST.get('classid')
         classteacher = request.POST.get('classteacher')
+        classlevel = request.POST.get('classlevel')
         numofstds = request.POST.get('numofstds')
     
         Schoolclasses.objects.create(
             classname = classname ,
             classid = classid ,
+            classlevel = classlevel ,
             classteacher = classteacher ,
             numofstds = numofstds 
         )
     
         Schoolclasses.save
-    return render(request , 'frontend/academics/showclasses.html')
-    
-def teachers(request):
-    if request.method == 'POST':
-        teacherid = request.POST.get('teacherid')
-        teachernames = request.POST.get('teachernames')
-        dob = request.POST.get('dob')
-        gender = request.POST.get('gender')
-        contact = request.POST.get('contact')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        classes = request.POST.get('classes')
-        joiningdate = request.POST.get('joiningdate')
-        position = request.POST.get('position')
-        subject = request.POST.get('subject')
-        qualification = request.POST.get('qualification')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        Teachers.objects.create(
-            teacherid = teacherid ,
-            teachernames = teachernames ,
-            dob = dob ,
-            gender = gender ,
-            contact = contact ,
-            email = email ,
-            address = address ,
-            classes = classes ,
-            joiningdate = joiningdate ,
-            position = position ,
-            subject = subject , 
-            qualification = qualification ,
-            username = username , 
-            password = password
-        )
-       
+        messages.success(request, 'Class successfully added!')
+        return redirect("AddClasses")
+    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})   
 
 #Export the data in excel in the students model
 def export_to_excel(request):
@@ -417,3 +472,5 @@ def teacher_export_to_excel(request):
         wb.save(response)
         
         return response
+
+        

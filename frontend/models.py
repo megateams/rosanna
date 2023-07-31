@@ -74,11 +74,12 @@ class Schoolclasses(models.Model):
     subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classteacher = models.CharField(max_length = 10 , verbose_name = "Classteacher")
+    classlevel = models.CharField(max_length = 100 , verbose_name = "Classlevel", blank=True)
+    classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
 
     Display_schoolclasses = [
-        'classname' , 'classid' , 'classteacher' , 'numofstds'
+        'classname' , 'classid', 'classlevel' , 'classteacher' , 'numofstds'
     ]
 
 class Teachers(models.Model):
@@ -92,12 +93,12 @@ class Teachers(models.Model):
     contact = models.CharField(max_length=10 , verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=20 , verbose_name='Address')
-    classes = models.CharField(max_length=50 , verbose_name="Classes Taught")
+    classes = models.CharField(max_length=50 ,blank=True, verbose_name="Classes Taught")
     joiningdate = models.DateField(default=None , verbose_name='Joining Date')
     position = models.CharField(max_length=20 , verbose_name='Position')
-    subject = models.CharField(max_length=20 , verbose_name='Subject')
-    qualification = models.CharField(max_length=20 , verbose_name='Academic Qualifications')
-    username = models.CharField(max_length=20 , verbose_name='Username')
+    subject = models.CharField(max_length=20 , blank=True, verbose_name='Subject')
+    qualification = models.CharField(max_length=20 , blank=True,  verbose_name='Academic Qualifications')
+    username = models.CharField(max_length=20 , blank=True, verbose_name='Username')
     password = models.CharField(max_length=20 , verbose_name='Password')
 
     Display_Teachers = [

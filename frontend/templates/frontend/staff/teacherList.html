@@ -28,31 +28,34 @@
                 </tr>
             </thead>
             <tbody>
+                {% for teacher in teachers %}
                 <tr>
-                    <td>RS001</td>
-                    <td>Mukisa Junior</td>
-                    <td>Male</td>
-                    <td>17/08/2013</td>
-                    <td>Nansana</td>
-                    <td>P.4</td>
-                    <td>Orange</td>
-                    <td>Mukisa Henry</td>
-                    <td>Kwagala Suzan</td>
+                    <td>{{teacher.teacherid}}</td>
+                    <td>{{teacher.teachernames}}</td>
+                    <td>{{teacher.gender}}</td>
+                    <td>{{teacher.contact}}</td>
+                    <td>{{teacher.email}}</td>
+                    <td>{{teacher.classes}}</td>
+                    <td>{{teacher.joiningdate}}</td>
+                    <td>{{teacher.position}}</td>
+                    <td>{{teacher.subject}}</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Actions
                             </button>
                             <div class="dropdown-menu">
-                                <a href="/deleteteacher/{{teacher.teacherid}}" class="dropdown-item">MORE</a>
+                                <a href="/showteacher/{{teacher.teacherid}}" class="dropdown-item">MORE</a>
                                 <a href="/deleteteacher/{{teacher.teacherid}}" class="dropdown-item btn btn-sm btn-primary text-danger">DELETE</a>
                                 <a href="/editteacher/{{teacher.teacherid}}" class="dropdown-item btn btn-sm btn-primary text-primary">EDIT</a>
                             </div>
                         </div>
                         
                     </td>
+                </tr>                        
+                    </td>
                 </tr>
-                
+                {% endfor %} 
             </tbody>
         </table>
     </div>
