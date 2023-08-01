@@ -4,4 +4,25 @@
     background-color: #FFFA85;
     /* display: none; */
 }
+.card.classcard{
+    background-color: red;
+    color: white;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 80%;
+    height : 100%;
+    
+}
+.teacher-image img {
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    
+}
+.profile{
+    background-color: grey;
+    
+}
+
 
