@@ -124,6 +124,20 @@ def DeleteStudent(request, stdnumber):
     messages.success(request, "The data deleted successfully")
     return redirect("Students List")
 
+#count students on the dahboard from database
+def Count_Student(request):
+    count_students =Student.objects.all().count()
+    count_teachers =Teachers.objects.all().count()
+    support_staff_count =Supportstaff.objects.all().count()
+    context ={
+        'count_students': count_students,
+        'count_teachers': count_teachers,
+        'support_staff_count': support_staff_count
+        
+    }
+    return render(request,'frontend/dashboard.html', context)
+
+
 # teachers views
 def teacherAdd(request):
     return render(request,'frontend/staff/teacherAdd.html')
@@ -184,6 +198,19 @@ def DeleteTeacher(request, teacherid):
     messages.success(request, "The data deleted successfully")
     return redirect("Teachers List")
 
+#count the teachers to render to dashboard
+def Count_Teacher(request):
+    #retrieve the count of the support staff from the database 
+    count_teachers =Teachers.objects.all().count()
+    count_students =Student.objects.all().count()
+    support_staff_count =Supportstaff.objects.all().count()
+    context ={
+        'count_teachers' : count_teachers,
+        'count_students': count_students,
+        'support_staff_count': support_staff_count
+        
+    }
+    return render(request, 'frontend/dashboard.html', context)
 # users views
 def addUsers(request):
     return render(request,'frontend/users/addUsers.html')
@@ -253,6 +280,22 @@ def DeleteSupportStaff(request, id):
     support_staff.delete()
     messages.success(request, "Data deleted successfully")
     return redirect("Support staff List")
+
+#count the support staff to render to dashboard
+def Support_Staff_list_View(request):
+    #retrieve the count of the support staff from the database 
+    support_staff =Supportstaff.objects.all()
+    support_staff_count =support_staff.count()
+    count_teachers =Teachers.objects.all().count()
+    count_students =Student.objects.all().count()
+    context ={
+        'support_staff_count' : support_staff_count,
+        'count_teachers' : count_teachers,
+        'count_students' : count_students
+        
+    }
+    return render(request, 'frontend/dashboard.html', context)
+    
 
 def showsubjects(request):
     subjects = Subjects.objects.all()

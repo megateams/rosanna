@@ -6,29 +6,27 @@
 <!-- inner-content -->
 <div class="inner-content pl-4 pr-4">
     <div class="dashboard">
-        <!-- cards -->
-      <div class="row cards">
-        <div class="col-lg-3 col-md-3">
-            <div class="card session_card animate__animated animate__fadeIn">
-                <div class="row">
-                    <div class="col-8 cbody">
-                        <h4>Term 1</h4>
-                        <p>Current Session</p>
-                    </div>
-                    <div class="col-4 icon">
-                        <i class="fas fa-book    "></i>
+        <!-- cards -->     
+        <div class="row cards">
+            <div class="col-lg-3 col-md-3">
+                <div class="card session_card animate__animated animate__fadeIn">
+                    <div class="row">
+                        <div class="col-8 cbody">
+                            <h4>Term 1</h4>
+                            <p>Current Session</p>
+                        </div>
+                        <div class="col-4 icon">
+                            <i class="fas fa-book    "></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-      
-
         <div class="col-lg-3 col-md-3">
-            <a href="/studentslist" style="text-decoration: none;">
+            <a href="{% url 'count_student' %}" style="text-decoration: none;">
                 <div class="card stud_card">
                     <div class="row">
                         <div class="col-8 cbody">
-                            <h4>500+</h4>
+                            <h4>{{count_students}}</h4>
                             <p>Students</p>
                         </div >
     
@@ -41,11 +39,11 @@
         </div>
 
         <div class=" col-lg-3 col-md-3">
-            <a href="/teacherlist" style="text-decoration: none;">
+            <a href="{% url 'count_teacher' %}" style="text-decoration: none;">
                 <div class="card trcard">
                     <div class="row">
                         <div class="col-8 cbody" >
-                            <h4>45</h4>
+                            <h4>{{count_teachers}}</h4>
                             <p>Teachers</p>
                         </div>
                         <div class="col-4 icon">
@@ -57,11 +55,11 @@
         </div>
 
         <div class="col-lg-3 col-md-3">
-            <a href="/support-staff-list" style="text-decoration: none;">
+            <a href="{% url 'supportstafflistview' %}" style="text-decoration: none;">
                 <div class="card staff-card ">
                     <div class="row ">
                         <div class="col-8 cbody">
-                            <h4>16</h4>
+                            <h4>{{support_staff_count}}</h4>
                             <p>Support Staff</p>
                         </div>
                         <div class="col-4  icon">
@@ -72,6 +70,8 @@
             </a>
         </div>
       </div>
+
+      
         <!-- cards -->
 
         <!-- donut and bargraph-->
