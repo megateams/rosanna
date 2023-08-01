@@ -21,12 +21,15 @@ urlpatterns = [
     path('addstudent/', views.studentsAdd, name="Add Students"),
     path('export-excel', views.export_to_excel, name="export_excel"),
     path('deletestudent/<stdnumber>', views.DeleteStudent, name="deleteStudent"),
+    path('countstudent/', views.Count_Student, name="count_student"),
+    
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
     path('showteacher/<teacherId>', views.showteacher, name=" ShowTeacher"),
     path('addteacher/submit/', views.teachers, name="Teachers"),
     path('teacher_export_excel/', views.teacher_export_to_excel, name="teacher_export_excel"),
     path('deleteteacher/<teacherid>', views.DeleteTeacher, name="delete_teacher"),
+    path('countteacher/', views.Count_Teacher, name="count_teacher"),
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
@@ -49,6 +52,8 @@ urlpatterns = [
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     path('support-export-excel/', views.support_staff_export_to_excel, name='support_export_excel'),
     path('deletesupportstaff/<int:id>', views.DeleteSupportStaff, name ="deleteSupportStaff"),
+    path('supportstafflistview/', views.Support_Staff_list_View, name ="supportstafflistview"),
+    
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
 
     path('staff/', views.staff, name="Staff"),
