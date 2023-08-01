@@ -11,19 +11,24 @@
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
-        <!-- Success message after data has been sent  -->
         {% if messages %}
         <ul class="messages">
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>{{ message }}</strong> 
-            </div>
-        {% endfor %}
+            {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong> 
+              </div>
+              
+              <script>
+                $(".alert").alert();
+              </script>
+            {% endfor %}
         </ul>
         {% endif %}
+
+        
         <table class="table" id="table">
             <thead>
                 <tr>

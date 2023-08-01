@@ -2,13 +2,12 @@
 {% block  title %} Add Subject {% endblock title %}
 {% block  pagetitle %} Add Subject {% endblock pagetitle %}
 
-{% block  main %} 
+{% block  main %}
 
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/subjectlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Subjects</a>
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
-               
     <!-- form-section -->
     <form action=""  method='POST' class="form ml-3 p-3 shadow rounded bg-light">
         {% csrf_token %}
@@ -44,19 +43,12 @@
                     <input type="text" name="classlevel" class="form-control">
                 </div>
             </div>
-            
-            
-
-            
         </div>
 
         <!-- button -->
         <div class="form-group">
             <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
         </div>
-        
-
-        
     </form>
     <!-- form-section -->
 

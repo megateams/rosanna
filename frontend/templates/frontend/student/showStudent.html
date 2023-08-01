@@ -1,5 +1,13 @@
-
+{% extends 'frontend/base.html' %}
 {% load static %}
+
+{% block  title %} Students List {% endblock title %}
+{% block  pagetitle %} Students List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
 <div class="student-details mt-3">
     <div class="row">
         <div class="col-md-5">
@@ -12,31 +20,33 @@
         <div class="col-md-7">
             <!-- student data -->
             <div class=" row student-data">
-                <table class="table col-md-6">
+                <table class="table col-md-6" >
+                    {% for student in showstudents %}
                     <tbody class="p-3 mr-3">
+                        
                         <tr>
                             <td><h6><b>Full Name: </b></h6></td>
-                            <td><p>Mukisa Junior</p></td>
+                            <td><p>{{ student.childname }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Student Number: </b></h6></td>
-                            <td><p>RS001</p></td>
+                            <td><p>{{ student.stdnumber }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Gender: </b></h6></td>
-                            <td><p>Male</p></td>
+                            <td><p>{{ student.gender }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Date of Birth: </b></h6></td>
-                            <td><p>17/08/2013</p></td>
+                            <td><p>{{ student.dob }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Address: </b></h6></td>
-                            <td><p>Nansana</p></td>
+                            <td><p>{{ student.address }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Class: </b></h6></td>
-                            <td><p>P.4</p></td>
+                            <td><p>{{ student.studentclass }}</p></td>
                         </tr>
                         
                     </tbody>
@@ -45,37 +55,39 @@
                     <tbody>
                         <tr>
                             <td><h6><b>Father: </b></h6></td>
-                            <td><p>Mukisa Henry</p></td>
+                            <td><p>{{ student.fathername }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Father's Contact: </b></h6></td>
-                            <td><p>0756529218</p></td>
+                            <td><p>{{ student.fcontact }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Father's Occupation: </b></h6></td>
-                            <td><p>Business Man</p></td>
+                            <td><p>{{ student.foccupation }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Mother: </b></h6></td>
-                            <td><p>Kwagala Suzan</p></td>
+                            <td><p>{{ student.mothername }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Mother's Contact: </b></h6></td>
-                            <td><p>0776481096</p></td>
+                            <td><p>{{ student.mcontact }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Mother's Occupation: </b></h6></td>
-                            <td><p>Nurse</p></td>
+                            <td><p>{{ student.moccupation }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Guardian: </b></h6></td>
-                            <td><p></p></td>
+                            <td><p>{{ student.guardianname }}</p></td>
                         </tr>
                         <tr>
                             <td><h6><b>Guardian Contact: </b></h6></td>
-                            <td><p></p></td>
+                            <td><p>{{ student.gcontact }}</p></td>
                         </tr>
+                        
                     </tbody>
+                    {% endfor %} 
                 </table>
             </div>
             <!-- student data -->
@@ -83,3 +95,5 @@
     </div>
 
 </div>
+
+{% endblock main %}

@@ -7,14 +7,30 @@
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Teachers</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+    <a href="#" onclick="confirmDownload()" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel<a/>
 
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
+        
         <div class="title">
             <h5 class="text-uppercase text-center">Register Teachers</h5>
             <hr>
         </div>
+
+         <!-- Success message after data has been sent  -->
+         {% if messages %}
+         <ul class="messages">
+         {% for message in messages %}
+             <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+               <strong>{{ message }}</strong> 
+             </div>
+         {% endfor %}
+         </ul>
+         {% endif %}
 
         <!-- student info section -->
         <div class="teacher-info">
@@ -25,19 +41,19 @@
                 <!-- regno -->
                 <div class="form-group col-md-6">
                     <label for="">Teacher ID: </label>
-                    <input type="text" name="teacherid" class="form-control">
+                    <input type="text" name="teacherid" class="form-control" required>
                 </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
                     <label for="">Teacher Fullname: </label>
-                    <input type="text" name="teachernames" class="form-control">
+                    <input type="text" name="teachernames" class="form-control" required>
                 </div>
             </div>
             <div class="row">
                 <!-- gender -->
                 <div class="form-group col-md-4">
                     <label for="">Gender: </label>
-                    <select name="gender" id="" class="form-control pr-2">
+                    <select name="gender" id="" class="form-control pr-2" required>
                         <option value="">---</option>
                         <option value="Male">Male</option>
                         <option value="Female ">Female</option>
@@ -46,13 +62,13 @@
                 <!-- dob -->
                 <div class="form-group col-md-4">
                     <label for="">Date Of Birth </label>
-                    <input type="date" name="dob" class="form-control">
+                    <input type="date" name="dob" class="form-control" required>
                 </div>
 
                 <!-- contact -->
                 <div class="form-group col-md-4">
                     <label for="">Contact </label>
-                    <input type="text" name="contact" class="form-control">
+                    <input type="text" name="contact" class="form-control" required>
                 </div>
             </div>
             <div class="row">
@@ -71,7 +87,7 @@
                 <!-- joining date -->
                 <div class="form-group col-md-4">
                     <label for="">Joining Date </label>
-                    <input type="date" name="joining date" class="form-control">
+                    <input type="date" name="joiningdate" class="form-control" required>
                 </div>
             </div>
         </div>
@@ -155,12 +171,12 @@
                 <!-- username-->
                 <div class="form-group col-md-4">
                     <label for="">Username </label>
-                    <input type="text" name="username" class="form-control">
+                    <input type="text" name="username" class="form-control" required>
                 </div>
                 <!-- password -->
                 <div class="form-group col-md-4">
                     <label for="">Password </label>
-                    <input type="text" name="password" class="form-control">
+                    <input type="text" name="password" class="form-control" required>
                 </div>
             </div>
             
@@ -180,5 +196,11 @@
 
 </div>
 <!-- inner-content -->
-
+<script>
+    function confirmDownload(){
+        if(confirm("Are you sure you want to export the data to an Excel file?")){
+            window.location.href = "{% url 'teacher_export_excel' %}"
+        }
+    }
+</script>
 {% endblock main %}

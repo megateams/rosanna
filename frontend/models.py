@@ -18,7 +18,7 @@ TERM_CHOICES = [
     ('III' , 'III'),
 ]
 
-CLASS_CHOICES =[
+CLASS_CHOICES =(
     ('baby' , 'baby'),
     ('middle' , 'middle'),
     ('top' , 'top'),
@@ -29,7 +29,7 @@ CLASS_CHOICES =[
     ('P.5' , 'P.5'),
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
-]
+)
 
 #students model
 class Student(models.Model):
@@ -40,7 +40,7 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
+    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None, verbose_name="Class choices")
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
@@ -75,11 +75,15 @@ class Schoolclasses(models.Model):
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     classlevel = models.CharField(max_length =20 , verbose_name="Class Level" , blank=True)
     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classteacher = models.CharField(max_length = 10 , verbose_name = "Classteacher")
+    classlevel = models.CharField(max_length = 100 , verbose_name = "Classlevel", blank=True)
+    classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
 
     Display_schoolclasses = [
-        'classname' , 'classid' ,'classteacher', 'classteacher' , 'numofstds'
+
+        'classname' , 'classid' ,'classteacher', 'classteacher' , 'numofstds' ,
+        'classname' , 'classid', 'classlevel' , 'classteacher' , 'numofstds'
+
     ]
 
 class Teachers(models.Model):
@@ -93,12 +97,12 @@ class Teachers(models.Model):
     contact = models.CharField(max_length=10 , verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=20 , verbose_name='Address')
-    classes = models.CharField(max_length=50 , verbose_name="Classes Taught")
+    classes = models.CharField(max_length=50 ,blank=True, verbose_name="Classes Taught")
     joiningdate = models.DateField(default=None , verbose_name='Joining Date')
     position = models.CharField(max_length=20 , verbose_name='Position')
-    subject = models.CharField(max_length=20 , verbose_name='Subject')
-    qualification = models.CharField(max_length=20 , verbose_name='Academic Qualifications')
-    username = models.CharField(max_length=20 , verbose_name='Username')
+    subject = models.CharField(max_length=20 , blank=True, verbose_name='Subject')
+    qualification = models.CharField(max_length=20 , blank=True,  verbose_name='Academic Qualifications')
+    username = models.CharField(max_length=20 , blank=True, verbose_name='Username')
     password = models.CharField(max_length=20 , verbose_name='Password')
 
     Display_Teachers = [

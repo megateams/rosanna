@@ -1,6 +1,6 @@
 {% extends 'frontend/base.html' %}
-{% block  title %} Add Classes {% endblock title %}
-{% block  pagetitle %} Add Classes {% endblock pagetitle %}
+{% block  title %} Add Subjects {% endblock title %}
+{% block  pagetitle %} Add Subjects {% endblock pagetitle %}
 
 {% block  main %} 
 
@@ -8,21 +8,21 @@
 <!-- {% if messages %}
   <ul class="messages">
     {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
   </ul>
 {% endif %} -->
 
 <!-- inner-content -->
 <div class="inner-content">
-    <a href="/showclasses" class="btn btn-sm add-btn text-white mb-2 ml-3">View Classes</a>
+    <a href="/showsubjects" class="btn btn-sm add-btn text-white mb-2 ml-3">View Subjects</a>
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form method='POST' action="/sendclasses/" class="form ml-3 p-3 shadow rounded bg-light">
+    <form method='POST' action="/addsubject/" class="form ml-3 p-3 shadow rounded bg-light">
         {%csrf_token %}
         <div class="title">
-            <h5 class="text-uppercase text-center">Add a Class</h5>
+            <h5 class="text-uppercase text-center">Add a Subject</h5>
             <hr>
         </div>
         {% if messages %}
@@ -46,13 +46,13 @@
             <div class="row">
                 <!-- name -->
                 <div class="form-group col-md-6">
-                    <label for="">Class Name: </label>
-                    <input type="text" name="classname" class="form-control">
+                    <label for="">Subject Name: </label>
+                    <input type="text" name="subjectname" class="form-control">
                 </div>
                 <!-- staff contact -->
                 <div class="form-group col-md-6">
-                    <label for="">Class id: </label>
-                    <input type="text" name="classid" class="form-control">
+                    <label for="">Subject id: </label>
+                    <input type="text" name="subjectid" class="form-control">
                 </div>
             </div>
             <div class="row">
@@ -63,17 +63,10 @@
                 </div>
                 <!-- Address -->
                 <div class="form-group col-md-6">
-                    <label for="">Classteacher: </label>
-                    <input type="text" name="classteacher" class="form-control">
+                    <label for="">Subject Head: </label>
+                    <input type="text" name="subjecthead" class="form-control">
                 </div>
-
-                <div class="form-group col-md-6">
-                    <label for="">Number of Pupils: </label>
-                    <input type="text" name="numofstds" class="form-control">
-                </div>
-
             </div>
-
         </div>
         
         <!-- student info section -->
