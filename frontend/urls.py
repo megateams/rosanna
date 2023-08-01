@@ -29,7 +29,7 @@ urlpatterns = [
     #path('classlist/', views.classList, name=" View Classes"), 
 
     path('addsubject/', views.addSubject, name="Add Subject"),
-    path('subjectlist/', views.subjectList, name=" View Subjects"),
+    path('subjectlist/', views.subjectList, name="Subjects"),
 
     path('addmarks/', views.addmarks, name="Add Marks"),
     path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),
@@ -49,5 +49,7 @@ urlpatterns = [
     path('addsubject/' , views.addsubject , name = 'addsubject'),
     path('showclasses/' , views.showclasses , name='showclasses'),
     path('sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
-    path('showclasses/addclasses/' , views.addclasses , name='showclasses'),
+    path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
+    path('subjectlist/delete_subject/<subjectid>' , views.deletesubject , name='deletesubject'),
+    path('showclasses/delete_class/<classid>' , views.deleteclass , name='deleteclass'),
 ]

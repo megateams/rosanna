@@ -8,6 +8,18 @@ from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 # creating views for dashboard
+def deleteclass(request, classid):
+    classes = Schoolclasses.objects.filter(classid = classid)
+    classes.delete()
+    messages.success(request, 'Class deleted')
+    return redirect("showclasses")
+
+def deletesubject(request , subjectid):
+    subject = Subjects.objects.filter(subjectid = subjectid)
+    subject.delete()
+    messages.success(request, 'Subject deleted')
+    return redirect("Subjects")
+    
 def home(request):
     if request.session.get('logged_out', False):
         messages.warning(request, "You need to login to access the dashboard")
