@@ -4,19 +4,10 @@
 
 {% block  main %} 
 
-<!-- Success message after data has been sent  -->
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/support-staff-list" class="btn btn-sm add-btn text-white mb-2 ml-3">View Support staff</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+    <button onclick="confirmDownload()" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</button>
 
     <!-- form-section -->
     <form method='POST', action="submit/" class="form ml-3 p-3 shadow rounded bg-light">
@@ -25,6 +16,24 @@
             <h5 class="text-uppercase text-center">Add Support Staff</h5>
             <hr>
         </div>
+        <!-- Success message after data has been sent  -->
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>{{ message }}</strong> 
+        </div>
+
+        <script>
+          $(".alert").alert();
+        </script>      
+    
+        {% endfor %}
+        </ul>
+        {% endif %}
 
         <!-- student info section -->
         <div class="stud-info">
@@ -34,13 +43,13 @@
             <div class="row">
                 <!-- name -->
                 <div class="form-group col-md-6">
-                    <label for="">Fullname: </label>
-                    <input type="text" name="fullname" class="form-control">
+                    <label for="">Fullname: <span class="text-danger">*</span></label>
+                    <input type="text" name="fullname" class="form-control" required>
                 </div>
                 <!-- staff contact -->
                 <div class="form-group col-md-6">
-                    <label for="">Phone contact: </label>
-                    <input type="text" name="contact" class="form-control" pattern="0\d{9}" max_length="10" title="Please enter a 10-digit phone number starting with 0" required>
+                    <label for="">Phone contact: <span class="text-danger">*</span></label>
+                    <input type="text" name="contact" class="form-control" pattern="0\d{9}" max_length="10" title="Please enter a 10-digit phone number starting with 0" required >
                 </div>
             </div>
             <div class="row">
@@ -51,15 +60,15 @@
                 </div>
                 <!-- Address -->
                 <div class="form-group col-md-6">
-                    <label for="">Address: </label>
-                    <input type="text" name="address" class="form-control">
+                    <label for="">Address: <span class="text-danger">*</span></label>
+                    <input type="text" name="address" class="form-control" required>
                 </div>
             </div>
             <div class="row">
                 <!-- gender -->
                 <div class="form-group col-md-6">
-                    <label for="">Gender: </label>
-                    <select name="gender" id="" class="form-control pr-2">
+                    <label for="">Gender: <span class="text-danger">*</span></label>
+                    <select name="gender" id="" class="form-control pr-2" required>
                         <option value="">---</option>
                         <option value="m">Male</option>
                         <option value="f ">Female</option>
@@ -67,21 +76,21 @@
                 </div>
                 <!-- date of birth -->
                 <div class="form-group col-md-6">
-                    <label for="">Date Of Birth </label>
-                    <input type="date" name="dob" class="form-control">
+                    <label for="">Date Of Birth <span class="text-danger">*</span></label>
+                    <input type="date" name="dob" class="form-control" required>
                 </div>
 
             </div>
             <div class="row">
                 <!-- qualification -->
                 <div class="form-group col-md-6">
-                    <label for="">Qualificatiions: </label>
-                    <input type="text" name="qualification" id="" class="form-control pr-2">
+                    <label for="">Qualificatiions: <span class="text-danger">*</span></label>
+                    <input type="text" name="qualification" id="" class="form-control pr-2" required>
                 </div>
                 <!-- position -->
                 <div class="form-group col-md-6">
-                    <label for="">Position </label>
-                    <input type="text" name="position" class="form-control">
+                    <label for="">Position <span class="text-danger">*</span></label>
+                    <input type="text" name="position" class="form-control" required>
                 </div>
 
             </div>
@@ -104,4 +113,17 @@
 </div>
 <!-- inner-content -->
 
+#javascript code to alert the user before exporting the file
+<script>
+    function confirmDownload(){
+        if(confirm("Are you sure you want to export the data to an Excel file?")){
+            window.location.href = "{% url 'support_export_excel' %}"
+        }
+    }
+</script>
 {% endblock main %}
+
+    
+    
+    
+    

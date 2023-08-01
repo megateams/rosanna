@@ -4,8 +4,8 @@
     new DataTable("#table", {
         // responsive: true,
         // scrollX: true,
-        "aLengthMenu" : [[3,5,10,25,-1],[3,5,10,25,'All']],
-        "iDisplayLength": 3,
+        "aLengthMenu" : [[10,25,-1],[10,25,'All']],
+        "iDisplayLength": 10,
         
     });
 // });
@@ -101,10 +101,10 @@ $(".livingwith").change(function (e) {
             e.preventDefault();
             $(".table-section").hide();
             var studentId = $(this).attr('id');
-            // alert(studentId);
+            alert(studentId);
             $.ajax({
                 url: '/showstudent',  // Replace with the appropriate URL
-                type: 'GET',
+                type: 'POST',
                 data: { studentId: studentId },
                 success: function(response) {
                     $('.show_student').html(response);
