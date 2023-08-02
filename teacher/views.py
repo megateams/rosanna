@@ -6,3 +6,6 @@ def dashboard(request):
 
 def profile(request):
     return render(request, 'teacher/profile.html')    
+
+def paymenthistory(request):
+    return render(request, 'teacher/paymenthistory.html')   
