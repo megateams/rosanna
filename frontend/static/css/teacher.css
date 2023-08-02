@@ -1,16 +1,18 @@
 .inner-content .welcome-message{
     padding: 30px 40px; 
     color: #0a0a0a; 
-    background-color: #FFFA85;
+    background-color: #e7e4e484;
     /* display: none; */
+    border-radius: 15px;
+    border: 2px solid rgba(129, 127, 127, 0.961);
 }
 .card.classcard{
     background-color: red;
     color: white;
-    align-items: center;
-    margin-left: 20px;
-    margin-right: 20px;
-    width: 80%;
+    /* align-items: center; */
+    /* margin-left: 20px;
+    margin-right: 20px; */
+    width: 90%;
     height : 100%;
     
 }
@@ -18,11 +20,26 @@
     width: 60%;
     height: 60%;
     border-radius: 50%;
+    border: 1px solid;
     
 }
 .profile{
-    background-color: grey;
+    background-color: ;
     
 }
+
+.current-term .btn-h, .current-year .btn-h{
+    background-color: rgb(42, 42, 42);
+    color: white;
+    padding: 10px 20px;
+}
+
+.current-term .btn-d, .current-year .btn-d{
+    background-color: gold;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    font-weight: 700;
+}
+
 
 
