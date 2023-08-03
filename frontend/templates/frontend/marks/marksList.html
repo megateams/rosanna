@@ -10,6 +10,20 @@
         <a href="/addmarks" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Marks</a>
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
+
+    {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>{{ message }}</strong> 
+        </div>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
     <div class="table-section" style="font-size: 14px;"> 
         
         <table class="table" id="table">
@@ -47,7 +61,7 @@
                     <td>
                         <div>
                             <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                            <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                            <a href="deletemarks/{{showmarks.id}}" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
                         </div>
                     </td>
                 </tr>

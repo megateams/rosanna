@@ -22,7 +22,7 @@ urlpatterns = [
     path('export-excel', views.export_to_excel, name="export_excel"),
     path('deletestudent/<stdnumber>', views.DeleteStudent, name="deleteStudent"),
     path('countstudent/', views.Count_Student, name="count_student"),
-    
+
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
     path('showteacher/<teacherId>', views.showteacher, name=" ShowTeacher"),
@@ -40,18 +40,18 @@ urlpatterns = [
     path('addsubject/', views.addSubject, name="Add Subject"),
     path('subjectlist/', views.subjectList, name="Subjects"),
 
-    path('addmarks/', views.addmarks, name="Add Marks"),
     path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),
     path('addmarks/', views.addmarks, name="Add Marks"),
-    path('markslist/', views.marksList, name=" View Marks"),    
+    path('markslist/', views.marksList, name="viewmarks"),    
 
-    path('showstudent/', views.showStudent, name="Student details"),
+    #path('showstudent/', views.showStudent, name="Student details"),
 
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     path('support-export-excel/', views.support_staff_export_to_excel, name='support_export_excel'),
     path('deletesupportstaff/<int:id>', views.DeleteSupportStaff, name ="deleteSupportStaff"),
+    path('markslist/deletemarks/<id>' , views.deletemarks , name='deletemarks'),
     path('supportstafflistview/', views.Support_Staff_list_View, name ="supportstafflistview"),
     
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),

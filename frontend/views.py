@@ -9,6 +9,12 @@ import openpyxl
 
 # Create your views here.
 # creating views for dashboard
+def deletemarks(request , id):
+    marks = Marks.objects.filter(id = id)
+    marks.delete()
+    messages.success(request , 'Marks Deleted')
+    return redirect('viewmarks')
+
 def deleteclass(request, classid):
     classes = Schoolclasses.objects.filter(classid = classid)
     classes.delete()

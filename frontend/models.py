@@ -40,7 +40,7 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None, verbose_name="Class choices")
+    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None)
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
@@ -73,16 +73,14 @@ class Subjects(models.Model):
 class Schoolclasses(models.Model):
     subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
-    classlevel = models.CharField(max_length =20 , verbose_name="Class Level" , blank=True)
+    classlevels = models.CharField(max_length =20 , verbose_name="Class Levels" , blank=True)
     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classlevel = models.CharField(max_length = 100 , verbose_name = "Classlevel", blank=True)
     classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
 
     Display_schoolclasses = [
 
-        'classname' , 'classid' ,'classteacher', 'classteacher' , 'numofstds' ,
-        'classname' , 'classid', 'classlevel' , 'classteacher' , 'numofstds'
+        'classname' , 'classid' ,'classteacher', 'numofstds', 'classlevels' 
 
     ]
 
