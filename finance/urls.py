@@ -20,5 +20,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
     path('fees/', views.Fees, name="Fees"),
+    path('finance/', views.financedashboard, name=""),
+
 ]

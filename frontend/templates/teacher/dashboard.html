@@ -1,10 +1,84 @@
 {% extends 'teacher/base.html' %}
 {% block  title %} Dashboard {% endblock title %}
-
+{% load static %}
 {% block  main %}
 <div class="inner-content">
-    <div class="welcome-message shadow">
-        <h3 class="text-left "> Your Welcome to this Platform our Dearest Teacher </h3>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="welcome-message shadow">
+                <h3 class="text-left "> Your Welcome our Dearest Teacher </h3>
+            </div>
+            
+            <div class="row ml-2" style="margin: 30px 0;">
+                <div class="current-term mr-4">
+                    <a class=" btn-md btn-h text-white">Current Term: </a>
+                    <a  class=" btn-md btn-d text-white">Term I </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-md btn-h text-white">Current Year: </a>
+                    <a class=" btn-md btn-d text-white">2023 </a>
+                </div>
+            </div>
+            <hr>
+            <div class="header mt-5 ml-2">
+                <h5> YOUR CLASSES:</h5>
+            </div>
+            <div class="row">
+                
+                <div class="col-md-6 ">
+                    <a href="" style="text-decoration: none;">
+                        <div class="card classcard p-4">
+                            <div class="row">
+                                <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                </div>
+                                <div class="col-7 ">
+                                    <h3 class="text-center"> P.2</h3> 
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 ">
+                    <a href="" style="text-decoration: none;">
+                        <div class="card classcard p-4">
+                            <div class="row">
+                                <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                </div>
+                                <div class="col-7 ">
+                                    <h3 class="text-center"> P.2</h3> 
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+            <div class=" profile pt-4 pb-4 shadow bg-white">
+                <div>
+                    <h4>Teacher's Profile</h4>
+                    <hr>
+                </div>
+                <div class="teacher-image ">
+                    <center>
+                        <img src="{% static 'images/person.jpg' %}"   alt="Person image">
+                    </center>
+                </div>
+                <div class="teacher-details">
+                    <h4>Teacher's Name</h4>
+                    <p>@teacher_username</p>
+                </div>
+                <div>
+                    <!-- <button class="btn btn-md btn-outline-warning">More Details</button> -->
+                    <a href="/teacherprofile" class="btn btn-outline-warning btn-md">More Details</a>
+                </div>
+            </div>
+            
+        </div>
     </div>
     
 </div> 

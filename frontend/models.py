@@ -89,19 +89,19 @@ class Teachers(models.Model):
     subjectrelationship = models.ManyToManyField(Subjects)
 
     teacherid = models.CharField(primary_key=True , max_length= 10 , verbose_name='Teacher id')
-    teachernames = models.CharField(max_length=25 , verbose_name='Teachers Names')
+    teachernames = models.CharField(max_length=255, verbose_name='Teachers Names')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
     gender = models.CharField(max_length=1 , choices=GENDER_CHOICES , verbose_name='Gender')
-    contact = models.CharField(max_length=10 , verbose_name='Contact')
+    contact = models.CharField(max_length=255 , verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
-    address = models.CharField(max_length=20 , verbose_name='Address')
+    address = models.CharField(max_length=255 , verbose_name='Address')
     classes = models.CharField(max_length=50 ,blank=True, verbose_name="Classes Taught")
     joiningdate = models.DateField(default=None , verbose_name='Joining Date')
-    position = models.CharField(max_length=20 , verbose_name='Position')
-    subject = models.CharField(max_length=20 , blank=True, verbose_name='Subject')
-    qualification = models.CharField(max_length=20 , blank=True,  verbose_name='Academic Qualifications')
-    username = models.CharField(max_length=20 , blank=True, verbose_name='Username')
-    password = models.CharField(max_length=20 , verbose_name='Password')
+    position = models.CharField(max_length=255 , verbose_name='Position')
+    subject = models.CharField(max_length=255 , blank=True, verbose_name='Subject')
+    qualification = models.CharField(max_length=255 , blank=True,  verbose_name='Academic Qualifications')
+    username = models.CharField(max_length=255 , blank=True, verbose_name='Username')
+    password = models.CharField(max_length=255 , verbose_name='Password')
 
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'classes' , 'joiningdate',
