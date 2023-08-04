@@ -21,5 +21,13 @@ from . import views
 
 urlpatterns = [
     path('finance/', views.financedashboard, name=""),
+
+    path('financeaddfees/', views.financeaddFees, name="Add Fees"),
+    path('financefeeslist/', views.financefeesList, name="Fees List"),
    
+   path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
+    path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
+
+    path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
+    path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
 ]
