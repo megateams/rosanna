@@ -24,6 +24,9 @@ urlpatterns = [
 
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
+
+    path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
+    path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
    
    path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),

@@ -13,6 +13,14 @@ def financefeesList(request):
     return render(request,'finance/fees/financefeesList.html')
 # fees views
 
+# feesstructure views
+def financeaddFeesstructure(request):
+    return render(request,'finance/feesstructure/financeaddFeesstructure.html')
+
+def financefeesstructureList(request):
+    return render(request,'finance/feesstructure/financefeesstructureList.html')
+# feesstructure views
+
 # staffpayments views
 def financeaddStaffpayments(request):
     return render(request,'finance/staffpayments/financeaddStaffpayments.html')

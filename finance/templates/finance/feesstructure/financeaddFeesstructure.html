@@ -1,0 +1,66 @@
+{% extends 'finance/base.html' %}
+{% block  title %} Add Fees Structure{% endblock title %}
+{% block  pagetitle %} Add Fees Structure {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/financefeesstructurelist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Fees Structure</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+               
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Fees</h5>
+            <hr>
+        </div>
+
+        <!-- fees structures info section -->
+        <div class="fees-info">
+            <div class="row">
+                <!-- feesstructureid -->
+                <div class="form-group col-md-6">
+                    <label for="">Fees Structure ID: </label>
+                    <input type="text" name="feesstructureid" class="form-control">
+                </div>
+                <!-- class -->
+                <div class="form-group col-md-6">
+                    <label for=""> Class </label>
+                    <input type="text" name="class" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- amount -->
+                <div class="form-group col-md-6">
+                    <label for="">Amount </label>
+                    <input type="text" name="amount" class="form-control">
+                </div>
+                <!--  -->
+                <div class="form-group col-md-6">
+                    
+                </div>
+            </div>
+
+            
+            
+            
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}
