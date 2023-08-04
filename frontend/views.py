@@ -249,6 +249,7 @@ def usersList(request):
 # marks views
 def addmarks(request):
     studentdata = Student.objects.all()
+    studentnumber = Student.objects.filter(stdnumber)
     return render(request,'frontend/marks/addMarks.html', {'students': studentdata})
 
 def submitmarks(request):
@@ -288,7 +289,6 @@ def marksList(request):
     return render(request,'frontend/marks/marksList.html' , {'marks':marks})
 # marks views
 
-<<<<<<< HEAD
 
 # subjects views
 def addSubject(request):
@@ -312,31 +312,6 @@ def subjectList(request):
     subjects = Subjects.objects.all
     return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects})
 # classes views
-=======
-# fees views
-def addFees(request):
-    return render(request,'frontend/fees/addFees.html')
-
-def feesList(request):
-    return render(request,'frontend/fees/feesList.html')
-# fees views
-
-# staffpayments views
-def addStaffpayments(request):
-    return render(request,'frontend/staffpayments/addStaffpayments.html')
-
-def staffpaymentsList(request):
-    return render(request,'frontend/staffpayments/staffpaymentsList.html')
-# staffpayments views
-
-# expenses views
-def addExpenses(request):
-    return render(request,'frontend/expenses/addExpenses.html')
-
-def expensesList(request):
-    return render(request,'frontend/expenses/expensesList.html')
-# expenses views
->>>>>>> ce5469f01d5fcae0a165a8c14673b82339181c8d
 
 def showStudent(request):
     return render(request, 'frontend/student/showStudent.html')
@@ -498,13 +473,13 @@ def subjects(request):
     if request.method == 'POST':
         subjectnames = request.POST.get('subjectname')
         subjectids = request.POST.get('subjectid')
-        classlevels = request.POST.get('classlevel')
+        classlevel = request.POST.get('classlevel')
         subjectheads = request.POST.get('subjecthead')
     
         Subjects.objects.create(
             subjectname = subjectnames , 
             subjectid = subjectids , 
-            classlevel = classlevels , 
+            classlevel = classlevel , 
             subjecthead = subjectheads
         )
     

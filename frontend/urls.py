@@ -37,16 +37,16 @@ urlpatterns = [
 
     #path('addclass/', views.addClass, name="Add Class"),
     #path('classlist/', views.classList, name=" View Classes"), 
-    path('addfees/', views.addFees, name="Add Fees"),
-    path('feeslist/', views.feesList, name="Fees List"),
+    # path('addfees/', views.addFees, name="Add Fees"),
+    # path('feeslist/', views.feesList, name="Fees List"),
 
-    path('addexpenses/', views.addExpenses, name="Add Expenses"),
-    path('expenseslist/', views.expensesList, name="Expenses List"),
+    # path('addexpenses/', views.addExpenses, name="Add Expenses"),
+    # path('expenseslist/', views.expensesList, name="Expenses List"),
 
-    path('addstaffpayments/', views.addStaffpayments, name="Add Staffpayments"),
-    path('staffpaymentslist/', views.staffpaymentsList, name="Staffpayments List"),
+    # path('addstaffpayments/', views.addStaffpayments, name="Add Staffpayments"),
+    # path('staffpaymentslist/', views.staffpaymentsList, name="Staffpayments List"),
 
-    path('addmarks/', views.addMarks, name="Add Marks"),
+    # path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),    
 
     path('addsubject/', views.addSubject, name="Add Subject"),
