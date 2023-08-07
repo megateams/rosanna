@@ -58,3 +58,10 @@ def dashboard(request):
     except Teachers.DoesNotExist:
         teacher = None
     return render(request, 'teacher/dashboard.html',{'teacher': teacher})
+
+def profile(request,teacher_id):
+    teachers = Teachers.objects.get(teacherid = teacher_id)
+    return render(request, 'teacher/profile.html', {'teacher': teachers})    
+
+def paymenthistory(request):
+    return render(request, 'teacher/paymenthistory.html')   

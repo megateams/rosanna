@@ -2,17 +2,13 @@
 from django.shortcuts import render, HttpResponse
 
 # Create your views here.
-
-# def Fees(request):
-#     return render(request, "finance/index.html")
-
 def financedashboard(request):
     return render(request, "finance/financedashboard.html")
 
-# Create your views here.
+# fees views
+def financeaddFees(request):
+    return render(request,'finance/fees/financeaddFees.html')
 
-def staffpayments(request):
-    return render(request , 'staffpayments.html')
 def financefeesList(request):
     return render(request,'finance/fees/financefeesList.html')
 # fees views
