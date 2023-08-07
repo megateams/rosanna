@@ -50,3 +50,28 @@
     padding: 10px 20px;
     font-weight: 700;
 }
+/* responsivenes */
+/* small screens */
+
+@media (max-width: 770px){
+    .inner-content .current-term{
+        margin-left: 10px;
+    }
+    .inner-content .current-year{
+        margin-top: 40px;
+        margin-left: 10px;
+    }
+    .inner-content .feescard, .inner-content .spaymentscard, .inner-content .expensecard {
+        margin-left: 10px;
+        margin-right: 15px;
+    }
+    .donut-chart{
+        margin-top: 30px;
+    }
+    .table-section{
+        overflow-x: scroll;
+    }
+}
+
+/* small screens */
+
