@@ -128,6 +128,9 @@ document.addEventListener("DOMContentLoaded", function() {
           x: {
             grid: {
               display: false
+            },
+            ticks: {
+              color:"black",
             }
           },
           y: {
@@ -136,13 +139,17 @@ document.addEventListener("DOMContentLoaded", function() {
               color: "#999"
             },
             ticks: {
-              stepSize: 500
+              stepSize: 500,
+              color: "black",
             }
           }
         },
         plugins: {
           legend: {
-            position: "top"
+            position: "top",
+            labels: {
+              color: "black"
+            }
           },
           title: {
             display: true,
