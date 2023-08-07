@@ -19,12 +19,9 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form method='POST' action="/sendclasses/" class="form ml-3 p-3 shadow rounded bg-light">
-        {%csrf_token %}
-        <div class="title">
-            <h5 class="text-uppercase text-center">Add a Class</h5>
-            <hr>
-        </div>
+    
+    <form method="post" action="sendclasses/">
+        {% csrf_token %}
         {% if messages %}
         <ul class="messages">
         {% for message in messages %}
@@ -37,56 +34,22 @@
         {% endfor %}
         </ul>
         {% endif %}
-
-        <!-- student info section -->
-        <div class="stud-info">
-            <!-- <div class="sub-heading">
-                <h5>Support Staff Information</h5>
-            </div> -->
-            <div class="row">
-                <!-- name -->
-                <div class="form-group col-md-6">
-                    <label for="">Class Name: </label>
-                    <input type="text" name="classname" class="form-control">
-                </div>
-                <!-- staff contact -->
-                <div class="form-group col-md-6">
-                    <label for="">Class id: </label>
-                    <input type="text" name="classid" class="form-control">
-                </div>
-            </div>
-            <div class="row">
-                <!-- email -->
-                <div class="form-group col-md-6">
-                    <label for="">Class Level: </label>
-                    <input type="text" name="classlevel" class="form-control">
-                </div>
-                <!-- Address -->
-                <div class="form-group col-md-6">
-                    <label for="">Classteacher: </label>
-                    <input type="text" name="classteacher" class="form-control">
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="">Number of Pupils: </label>
-                    <input type="text" name="numofstds" class="form-control">
-                </div>
-
-            </div>
-
-        </div>
-        
-        <!-- student info section -->
-
-        
-
-        <!-- button -->
         <div class="form-group">
-            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+            <label for="class_name">Class Name:</label>
+            <input type="text" class="form-control" id="class_name" name="class_name" required>
         </div>
-        
-
-        
+        <div class="form-group">
+            <label>Subjects:</label>
+            {% for subject in subjects %}
+            <div class="subject">
+                <input type="checkbox" class="" id="subject_{{ forloop.counter }}" name="subjects" value="{{ subject.subjectname }}">
+                <label for="subject_{{ forloop.counter }}">{{ subject.subjectname }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
     </form>
     <!-- form-section -->
 

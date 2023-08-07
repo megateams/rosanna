@@ -18,7 +18,7 @@ TERM_CHOICES = [
     ('III' , 'III'),
 ]
 
-CLASS_CHOICES =(
+CLASS_CHOICES =[
     ('baby' , 'baby'),
     ('middle' , 'middle'),
     ('top' , 'top'),
@@ -29,18 +29,38 @@ CLASS_CHOICES =(
     ('P.5' , 'P.5'),
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
-)
+]
+class Subjects(models.Model):
+    subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
+    subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
+    classlevel = models.CharField(max_length = 25 , verbose_name = 'Class Level')
+    subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
+
+    Display_Subjects = [
+        'subjectname' , 'subjectid' , 'classlevel' , 'subjecthead'
+    ]
+
+
+class Schoolclasses(models.Model):
+    classid = models.AutoField(primary_key=True, verbose_name="Class id")
+    subjects = models.ManyToManyField(Subjects)
+    classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+    
+    Display_schoolclasses = [
+        'classid','classname' 
+    ]
 
 #students model
 class Student(models.Model):
     stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number' , blank= True)
     regdate = models.DateField(verbose_name='Date', default=None, blank=True )
     childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
+    stdclass = models.ForeignKey(Schoolclasses, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Class')
     gender = models.CharField(max_length=10 , verbose_name="Child's Gender" , blank=True)
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None, verbose_name="Class choices")
+    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
@@ -56,57 +76,33 @@ class Student(models.Model):
     gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
 
     Display_Fields = [
-        'stdnumber','childname' , 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
+        'stdnumber','childname' ,'stdclass', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
     , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
     ]
 
-class Subjects(models.Model):
-    subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
-    subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
-    classlevel = models.CharField(max_length = 25 , verbose_name = 'Class Level')
-    subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
-
-    Display_Subjects = [
-        'subjectname' , 'subjectid' , 'classlevel' , 'subjecthead'
-    ]
-
-class Schoolclasses(models.Model):
-    subjects = models.ManyToManyField(Subjects)
-    classname = models.CharField(max_length =20 , verbose_name = "Class Name")
-    classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classlevel = models.CharField(max_length = 100 , verbose_name = "Classlevel", blank=True)
-    classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
-    numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
-
-    Display_schoolclasses = [
-        'classname' , 'classid', 'classlevel' , 'classteacher' , 'numofstds'
-    ]
-
 class Teachers(models.Model):
-    classrelationship = models.ManyToManyField(Schoolclasses)
-    subjectrelationship = models.ManyToManyField(Subjects)
 
-    teacherid = models.CharField(primary_key=True , max_length= 10 , verbose_name='Teacher id')
-    teachernames = models.CharField(max_length=255, verbose_name='Teachers Names')
+    teacherid = models.CharField(primary_key=True, max_length=20, verbose_name='Teacher id')
+    teachernames = models.CharField(max_length=100, verbose_name='Teachers Names')
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES , verbose_name='Gender')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
-    gender = models.CharField(max_length=1 , choices=GENDER_CHOICES , verbose_name='Gender')
-    contact = models.CharField(max_length=255 , verbose_name='Contact')
+    contact = models.CharField(max_length=15, verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
-    address = models.CharField(max_length=255 , verbose_name='Address')
-    classes = models.CharField(max_length=50 ,blank=True, verbose_name="Classes Taught")
+    address = models.CharField(max_length=200, verbose_name='Address')
     joiningdate = models.DateField(default=None , verbose_name='Joining Date')
-    position = models.CharField(max_length=255 , verbose_name='Position')
-    subject = models.CharField(max_length=255 , blank=True, verbose_name='Subject')
-    qualification = models.CharField(max_length=255 , blank=True,  verbose_name='Academic Qualifications')
-    username = models.CharField(max_length=255 , blank=True, verbose_name='Username')
-    password = models.CharField(max_length=255 , verbose_name='Password')
+    classes = models.ManyToManyField(Schoolclasses)  # Replace 'YourAppClassName' with the actual class name for classes.
+    subjects = models.ManyToManyField(Subjects)  # Replace 'YourAppSubjectName' with the actual class name for subjects.
+    position = models.CharField(max_length=50, verbose_name='Position')
+    qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
+    username = models.CharField(max_length=50 , verbose_name='Username')
+    password = models.CharField(max_length=100, verbose_name='Password')
 
     Display_Teachers = [
-        'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'classes' , 'joiningdate',
-        'position' , 'subject' , 'qualification' , 'username' , 'password' 
+        'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate',
+        'position' , 'qualification' , 'username' , 'password' 
     ]
 
-
+ 
 class Marks(models.Model):
     stdnum = models.ForeignKey(Student , on_delete=models.CASCADE , default='std_000')
     term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I')
@@ -122,6 +118,15 @@ class Marks(models.Model):
     displaymarks = [
         'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'
     ]
+
+class Mark(models.Model):
+    class_name = models.ForeignKey(Schoolclasses, on_delete=models.CASCADE)
+    student_name = models.CharField(max_length=100)
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
+    marks_obtained = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.class_name.classname} - {self.student_name} - {self.subject.subjectname} - Marks: {self.marks_obtained}"
 
 #login model
 class Login(models.Model):

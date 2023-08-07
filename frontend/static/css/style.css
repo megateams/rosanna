@@ -10,7 +10,7 @@
 .main{
     display: flex;
     width: 100%;
-    /* position: fixed; */
+    position: fixed;
 
 }
 .sidebar{
@@ -330,3 +330,4 @@
    
 }
 /* small screen */
+

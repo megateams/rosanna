@@ -1,65 +1,108 @@
+<!-- frontend/marks/addMarks.html -->
 {% extends 'frontend/base.html' %}
-{% block  title %} Add Marks {% endblock title %}
-{% block  pagetitle %} Add Marks  {% endblock pagetitle %}
+{% block title %}Add Marks{% endblock title %}
+{% block pagetitle %}Add Marks{% endblock pagetitle %}
 
-{% block  main %} 
-
+{% block main %}
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/markslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Marks</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
-               
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2">Import excel</a>
+
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
-        <div class="title">
-            <h5 class="text-uppercase text-center">Register Marks</h5>
-            <hr>
-        </div>
-
-        <!-- marks info section -->
-        <div class="marks-info">
-            <div class="row">
-                <!-- classid -->
-                <div class="form-group col-md-6">
-                    <label for="">Class ID: </label>
-                    <input type="text" name="classid" class="form-control">
-                </div>
-                <!-- name -->
-                <div class="form-group col-md-6">
-                    <label for=""> Class Name: </label>
-                    <input type="text" name="classname" class="form-control">
-                </div>
+    <form class="col-6" id="marks-form" method="post" action="/addmarks/">
+        {% csrf_token %}
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
             </div>
-
-            <div class="row">
-                <!-- classteacher -->
-                <div class="form-group col-md-6">
-                    <label for="">Class Teacher </label>
-                    <input type="text" name="classteacher" class="form-control">
-                </div>
-                <!-- numbr of pupils -->
-                <div class="form-group col-md-6">
-                    <label for=""> Number of Pupils </label>
-                    <input type="text" name="numofstds" class="form-control">
-                </div>
-            </div>
-            
-            
-
-            
-        </div>
-
-        <!-- button -->
+        {% endfor %}
+        </ul>
+        {% endif %}
         <div class="form-group">
-            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+            <label for="class_name">Select Class:</label>
+            <select id="class_name" name="class_name" class="form-control" required>
+                <option value="">---</option>
+                {% for class_obj in classes %}
+                    <option value="{{ class_obj.classid }}">{{ class_obj.classname }}</option>
+                {% endfor %}
+            </select>
         </div>
-        
-
-        
+        <div class="form-group" id="students_div" style="display: none;">
+            <label for="student_name">Select Student:</label>
+            <select id="student_name" name="student_name" class="form-control" required>
+                <option value="">---</option>
+                <!-- Students will be dynamically populated based on the selected class -->
+            </select>
+        </div>
+        <div class="form-group" id="subjects_div" style="display: none;">
+            <label for="subject">Select Subject:</label>
+            <select id="subject" name="subject" class="form-control" required>
+                <option value="">---</option>
+                <!-- Subjects will be dynamically populated based on the selected class and student -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="score">Score:</label>
+            <input type="number" id="score" name="score" class="form-control" min="0" max="100" required>
+        </div>
+        <div class="form-group">
+            <button type="submit">Save</button>
+        </div>
     </form>
     <!-- form-section -->
-
 </div>
 <!-- inner-content -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const classSelect = document.getElementById("class_name");
+        const studentDiv = document.getElementById("students_div");
+        const studentSelect = document.getElementById("student_name");
+        const subjectDiv = document.getElementById("subjects_div");
+        const subjectSelect = document.getElementById("subject");
+
+        // Function to fetch students and populate the student select options based on the selected class
+        function fetchStudentsAndSubjects() {
+            const classId = classSelect.value;
+            // alert(classId);
+            if (classId) {
+                fetch(`/get_students_by_class/${classId}/`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Clear previous options and populate students
+                        studentSelect.innerHTML = '<option value="">---</option>';
+                        data.students.forEach((student) => {
+                            const option = document.createElement("option");
+                            option.value = student.childname;
+                            option.textContent = student.childname;
+                            studentSelect.appendChild(option);
+                        });
+                        // Populate subjects for the selected class and student (you may modify this logic)
+                        subjectSelect.innerHTML = '<option value="">---</option>';
+                        data.subjects.forEach((subject) => {
+                            const option = document.createElement("option");
+                            option.value = subject.pk;
+                            option.textContent = subject.subject_name;
+                            subjectSelect.appendChild(option);
+                        });
+                    });
+                studentDiv.style.display = "block";
+                subjectDiv.style.display = "block";
+            } else {
+                studentDiv.style.display = "none";
+                subjectDiv.style.display = "none";
+            }
+        }
+
+        // Event listener to trigger the fetchStudentsAndSubjects function on class selection change
+        classSelect.addEventListener("change", fetchStudentsAndSubjects);
+    });
+</script>
 
 {% endblock main %}

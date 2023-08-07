@@ -25,7 +25,6 @@
             }
         });
         // donut
-        
 
         // bargraph
         var barCtx = document.getElementById("genderBarChart").getContext("2d");
@@ -152,14 +151,6 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         }
       }
-
-
-      
     });
-
-    
-
   });
 // line graph
-
-

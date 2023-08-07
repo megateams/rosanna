@@ -1,67 +1,40 @@
+<!-- frontend/marks/displayMarks.html -->
 {% extends 'frontend/base.html' %}
-{% block  title %} Marks List {% endblock title %}
-{% block  pagetitle %} Marks List {% endblock pagetitle %}
+{% block title %}Marks List{% endblock title %}
+{% block pagetitle %}Marks List{% endblock pagetitle %}
 
-{% block  main %} 
-
+{% block main %}
 <!-- inner-content -->
 <div class="inner-content">
     <div class="btns">
         <a href="/addmarks" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Marks</a>
-        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2">Export excel</a>
     </div>
-    <div class="table-section" style="font-size: 14px;"> 
-        
+    <div class="table-section" style="font-size: 14px;">
         <table class="table" id="table">
             <thead>
                 <tr>
-                    <th>Marks ID</th>
-                    <th>Student Number</th>
-                    <th>Term</th>
-                    <th>Year</th>
-                    <th>Student Class</th>
-                    <th>Mathematics</th>
-                    <th>English</th>
-                    <th>Science</th>
-                    <th>S.ST</th>
-                    <th>Religious Education</th>
-                    <th>Computer</th>
-                    <th>Actions</th>
-                    
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Score</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>M001</th>
-                    <th>RS1</th>
-                    <th>Term 1</th>
-                    <th>2024</th>
-                    <th>Primary Two</th>
-                    <th>45</th>
-                    <th>56</th>
-                    <th>78</th>
-                    <th>67</th>
-                    <th> 86</th>
-                    <th>34</th> 
-                   <td>
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
-                </tr>
-
-                
-                
-                
-                
+                {% for mark in marks %}
+                    <tr>
+                        <td>{{ mark.student_name }}</td>
+                        <td>{{ mark.class_name.classname }}</td>
+                        <td>{{ mark.subject.subjectname }}</td>
+                        <td>{{ mark.marks_obtained }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
     <!-- student show -->
     <div class="show_user">
-        
+
     </div>
 </div>
 <!-- inner-content -->

@@ -101,10 +101,10 @@ $(".livingwith").change(function (e) {
             e.preventDefault();
             $(".table-section").hide();
             var studentId = $(this).attr('id');
-            alert(studentId);
+            // alert(studentId);
             $.ajax({
                 url: '/showstudent',  // Replace with the appropriate URL
-                type: 'POST',
+                type: 'GET',
                 data: { studentId: studentId },
                 success: function(response) {
                     $('.show_student').html(response);

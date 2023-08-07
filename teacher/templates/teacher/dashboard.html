@@ -1,0 +1,19 @@
+{% extends 'teacher/base.html' %}
+{% block  title %} Dashboard {% endblock title %}
+
+{% block  main %}
+<div class="inner-content">
+    <div class="welcome-message shadow">
+        <h3 class="text-left "> Your Welcome to this Platform our Dearest Teacher </h3>
+
+        
+    </div>
+
+    {% for class in teacher.classes.all %}
+        <div class="card bg-danger col-2 mb-3">
+            {{ class.classname }}
+        </div>
+    {% endfor %}
+    
+</div> 
+{% endblock main %} 
