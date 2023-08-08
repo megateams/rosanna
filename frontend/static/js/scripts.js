@@ -2,8 +2,8 @@
 // datatables
 // $(document).ready(function() {
     new DataTable("#table", {
-        responsive: true,
-        scrollX: true,
+        // responsive: true,
+        // scrollX: true,
         "aLengthMenu" : [[10,25,-1],[10,25,'All']],
         "iDisplayLength": 10,
         

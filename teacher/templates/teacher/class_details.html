@@ -1,0 +1,61 @@
+{% extends 'teacher/base.html' %}
+{% block title %} Class Details {% endblock title %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block main %}
+<div class="inner-content">
+    <div class="header d-flex"  style="margin-bottom: 10px;">
+        <div class="d-flex mr-4" >
+            <h4 class="mr-3">Class:</h4>
+            <h4>{{ schoolclass.classname }}</h4>
+        </div>
+        <div class="class-btns">
+            <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-outline-danger">View Marks</a>
+            {% for subject in subjects %}
+                <a href="/teacher/class_details/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}/{{ subject.subjectid }}" class="btn btn-sm btn-outline-danger">Add {{ subject.subjectname }} Marks</a>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- <hr> -->
+
+    <!-- students for this class -->
+    <div class="students-list">
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Reg Number</th>
+                    <th>Name</th>
+                    {% for subject in subjects %}
+                        <th>{{ subject.subjectname }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <!-- class_details.html -->
+            <!-- ... -->
+            <tbody>
+                {% for student, marks_dict in student_marks.items %}
+                    <tr>
+                        <td>{{ student.stdnumber }}</td>
+                        <td>{{ student.childname }}</td>
+                        {% for subject in subjects %}
+                            <td>
+                                {% with marks=marks_dict|get_item:subject %}
+                                    {% if marks %}
+                                        {{ marks.marks_obtained }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <!-- ... -->
+
+        </table>
+    </div>
+</div>
+{% endblock main %}
