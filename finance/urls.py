@@ -33,4 +33,7 @@ urlpatterns = [
 
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
+
+    path('financereports/', views.financeReports, name =" Reports"),
+    path('financestatistics/', views.financeStatistics, name =" Statistics"),
 ]

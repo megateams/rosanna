@@ -70,11 +70,11 @@
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
-                    <a class="" href=''><i class="fas fa-book  mr-2  "></i><span>Reports</span></a>    
+                    <a class="" href='/financereports'><i class="fas fa-book  mr-2  "></i><span>Reports</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
-                    <a class="" href=''><i class="fas fa-bars  mr-2  "></i><span>Statistics</span></a>    
+                    <a class="" href='/financestatistics'><i class="fas fa-bars  mr-2  "></i><span>Statistics</span></a>    
                 </li>
                 <hr color="#fff">
                 
@@ -142,6 +142,12 @@
     <script src="{% static 'js/charts.js' %}"></script>
     <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
     <script src="{% static 'js/script.js' %}"></script>
+
+    <!-- Include jsPDF and jsPDF AutoTable libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.14/dist/jspdf.plugin.autotable.min.js"></script>
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
