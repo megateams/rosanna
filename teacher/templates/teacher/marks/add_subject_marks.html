@@ -3,9 +3,15 @@
 {% block main %}
 <div class="inner-content">
     <div class="header d-flex">
-        <h5 class="mr-4">Class: {{ schoolclass.classname }}</h5>
-        <h5>Subject: {{ subject.subjectname }}</h5>
+        <div class="d-flex mr-4">
+            <h5 class="mr-4">Class: {{ schoolclass.classname }}</h5>
+            <h5>Subject: {{ subject.subjectname }}</h5>
+        </div>
+        <div class="class-btns">
+            <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-outline-danger">View Marks</a>
+        </div>
     </div>
+    <!-- <p>Teacher ID: {{ teacher_id }}</p> -->
     <form action="" method="post" class="p-4 shadow rounded col-6 m-2 bg-white">
         {% csrf_token %}
 
@@ -35,7 +41,9 @@
             <select name="studentname" id="" class="form-control">
                 <option value="" selected disabled>---</option>
                 {% for student in students %}
-                <option value="{{student.stdnumber}}">{{student.childname}}</option>
+                    {% if student.childname not in student_marks %}
+                        <option value="{{ student.stdnumber }}">{{ student.childname }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
@@ -44,8 +52,7 @@
             <label for="">Enter Mark obtained</label>
             <input type="text" name="mark_obtained" class="form-control">
         </div>
-            
-        
+
         <button type="submit" class="btn btn-dark btn-sm">Submit Marks</button>
     </form>
 </div>

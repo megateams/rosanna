@@ -159,6 +159,12 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
+    # Get the marks for the current subject
+    marks = Mark.objects.filter(class_name=schoolclass, subject=subject)
+
+    # Create a set of student names whose marks have been added for the current subject
+    marks_students = set(mark.student_name for mark in marks)
+
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
@@ -180,15 +186,17 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
 
             # Add a success message to inform the user that marks have been added
             messages.success(request, 'Subject marks added successfully.')
-            return redirect('Add Subject marks', class_id=class_id, teacher_id=teacher_id,subject_id=subject_id)
+            return redirect('Add Subject marks', class_id=class_id, teacher_id=teacher_id, subject_id=subject_id)
 
     # If the request method is GET, render the form for adding subject marks
     return render(request, 'teacher/marks/add_subject_marks.html', {
         'schoolclass': schoolclass,
         'subject': subject,
-        'students': students,
+        'students': students.exclude(childname__in=marks_students),
         'mark_types': mark_types,
+        'teacher_id': teacher_id,  # Include the teacher_id in the context
     })
+
 
 
 
