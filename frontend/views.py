@@ -142,8 +142,9 @@ def marksList(request):
     return render(request,'frontend/marks/marksList.html', {'marks': Mark.objects.all()})
 # marks views
 
-def showStudent(request):
-    return render(request, 'frontend/student/showStudent.html')
+def showStudent(request,stdnumber):
+    student = Student.objects.get(stdnumber = stdnumber)
+    return render(request, 'frontend/student/showStudent.html', {'student': student})
 # students views
 
 # support staff views
