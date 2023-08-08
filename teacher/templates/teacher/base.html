@@ -51,12 +51,14 @@
                 <li class="sidebar-item active">
                     <a class="" href='/teacher/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>   
                 </li>
-                
+
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/teacher/marks'><i class="fas fa-book-open    mr-2"></i> <span>Marks</span></a>   
+                </li>
                 <hr color="#fff">
                 <li>
-                    
                     <a class="" href='/teacher/paymenthistory/'><i class="fas fa-money-bill-wave    mr-2"></i><span>Payment History</span></a>    
-                       
                 </li>
                 <hr color="#fff">
                 <li>
@@ -128,7 +130,33 @@
 
 
     <script>
-        
+        $(document).ready(function() {
+            $('#class_name').on('change', function() {
+                const classId = $(this).val();
+                const subjectSelect = $('#subject');
+                console.log('Selected Class ID:', classId);
+
+                // Fetch subjects for the selected class using AJAX
+                $.ajax({
+                    url: `/get_subjects/${classId}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        subjectSelect.empty(); // Clear previous options
+                        $.each(data, function(index, subject) {
+                            subjectSelect.append($('<option>', {
+                                value: subject.subjectid,
+                                text: subject.subjectname
+                            }));
+                        });
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
     </script>
 </body>
 

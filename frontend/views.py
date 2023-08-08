@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .decorators import admin_required
+# from .decorators import admin_required
 
 # Create your views here.
 # creating views for dashboard
@@ -17,7 +17,12 @@ def home(request):
         messages.warning(request, "You need to login to access the dashboard")
         return redirect("login")
     
-    return render(request,'frontend/dashboard.html')
+    teachers_count = Teachers.objects.count()
+    students_count = Student.objects.count()
+    support_staff_count = Supportstaff.objects.count()
+
+    
+    return render(request,'frontend/dashboard.html', {'students_count': students_count, 'teachers_count': teachers_count, 'support_staff_count': support_staff_count})
 #register details for the user (admin)
 def register(request):
     if request.method == "POST":

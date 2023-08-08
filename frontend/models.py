@@ -118,15 +118,32 @@ class Marks(models.Model):
     displaymarks = [
         'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'
     ]
-
 class Mark(models.Model):
+    MARK_TYPES = (
+        ('Test', 'Test'),
+        ('BOT', 'BOT Exams'),
+        ('MOT', 'MOT Exams'),
+        ('EOT', 'EOT Exams'),
+        # Add other types as needed
+    )
+
     class_name = models.ForeignKey(Schoolclasses, on_delete=models.CASCADE)
     student_name = models.CharField(max_length=100)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     marks_obtained = models.IntegerField()
+    mark_type = models.CharField(max_length=20, default=None, choices=MARK_TYPES)
 
     def __str__(self):
-        return f"{self.class_name.classname} - {self.student_name} - {self.subject.subjectname} - Marks: {self.marks_obtained}"
+        return f"{self.class_name.classname} - {self.student_name} - {self.subject.subjectname} - Marks: {self.marks_obtained} - Type: {self.mark_type}"
+
+# class Mark(models.Model):
+#     class_name = models.ForeignKey(Schoolclasses, on_delete=models.CASCADE)
+#     student_name = models.CharField(max_length=100)
+#     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
+#     marks_obtained = models.IntegerField()
+
+#     def __str__(self):
+#         return f"{self.class_name.classname} - {self.student_name} - {self.subject.subjectname} - Marks: {self.marks_obtained}"
 
 #login model
 class Login(models.Model):
