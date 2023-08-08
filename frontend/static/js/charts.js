@@ -1,29 +1,8 @@
 // donut and bar graph
     //   donut
-    document.addEventListener("DOMContentLoaded", function() {
-        var donutCtx = document.getElementById("genderDonutChart").getContext("2d");
-        var donutData = {
-            labels: ["Boys", "Girls"],
-            datasets: [{
-                data: [65, 35], // Replace with your actual data
-                backgroundColor: ["red", "#f9b855"],
-            }]
-        };
-        var donutChart = new Chart(donutCtx, {
-            type: "doughnut",
-            data: donutData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: "bottom"
-                },
-                title: {
-                    display: true,
-                    text: "Gender Distribution"
-                }
-            }
-        });
+    // document.addEventListener("DOMContentLoaded", function() {
+        
+        
         // donut
         
 
@@ -80,7 +59,7 @@
             }
         });
         // bargraph
-    });  
+    // });  
 // donut and bar graph
 
 // line graph

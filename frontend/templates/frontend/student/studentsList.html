@@ -41,52 +41,10 @@
                     <td>{{ student.house }}</td>
                     <td>{{ student.fathername }}</td>
                     <td>{{ student.mothername }}</td>
-                     <td>   <a href="/showstudent" class="btn btn-sm btn-primary ">More ...</a>
-                        
+                     <td>   
+                        <a href="/showstudent/{{student.stdnumber}}" class="btn btn-sm btn-primary ">More ...</a> 
                     </td>
                 </tr>
-                {% comment %} <tr>
-                    <td>RS001</td>
-                    <td>Mukisa Junior</td>
-                    <td>Male</td>
-                    <td>17/08/2013</td>
-                    <td>Nansana</td>
-                    <td>P.4</td>
-                    <td>Orange</td>
-                    <td>Mukisa Henry</td>
-                    <td>Kwagala Suzan</td>
-                    <td>
-                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
-                    </td>
-                </tr> {% endcomment %}
-                {% comment %} <tr>
-                    <td>RS002</td>
-                    <td>Mukisa Junior</td>
-                    <td>Male</td>
-                    <td>17/08/2013</td>
-                    <td>Nansana</td>
-                    <td>P.4</td>
-                    <td>Orange</td>
-                    <td>Mukisa Henry</td>
-                    <td>Kwagala Suzan</td>
-                    <td>
-                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
-                    </td>
-                </tr> {% endcomment %}
-                {% comment %} <tr>
-                    <td>RS003</td>
-                    <td>Mukisa Junior</td>
-                    <td>Male</td>
-                    <td>17/08/2013</td>
-                    <td>Nansana</td>
-                    <td>P.4</td>
-                    <td>Orange</td>
-                    <td>Mukisa Henry</td>
-                    <td>Kwagala Suzan</td>
-                    <td>
-                        <a href="" id="RS001" class="btn btn-sm btn-primary more">More ...</a>
-                    </td>
-                </tr> {% endcomment %}
                 {% endfor %}  
             </tbody>
         </table>

@@ -16,13 +16,23 @@ def home(request):
     if request.session.get('logged_out', False):
         messages.warning(request, "You need to login to access the dashboard")
         return redirect("login")
-    
-    teachers_count = Teachers.objects.count()
-    students_count = Student.objects.count()
+
+    boys_count = Student.objects.filter(gender='m').count()
+    girls_count = Student.objects.filter(gender='f').count()
+
+    teacher_count = Teachers.objects.count()
+    student_count = Student.objects.count()
     support_staff_count = Supportstaff.objects.count()
 
-    
-    return render(request,'frontend/dashboard.html', {'students_count': students_count, 'teachers_count': teachers_count, 'support_staff_count': support_staff_count})
+    context = {
+        'boys_count' : boys_count,
+        'girls_count': girls_count,
+        'teacher_count': teacher_count,
+        'student_count': student_count,
+        'support_staff_count': support_staff_count,
+    }
+    return render(request,'frontend/dashboard.html',context)
+
 #register details for the user (admin)
 def register(request):
     if request.method == "POST":
@@ -132,8 +142,9 @@ def marksList(request):
     return render(request,'frontend/marks/marksList.html', {'marks': Mark.objects.all()})
 # marks views
 
-def showStudent(request):
-    return render(request, 'frontend/student/showStudent.html')
+def showStudent(request,stdnumber):
+    student = Student.objects.get(stdnumber = stdnumber)
+    return render(request, 'frontend/student/showStudent.html', {'student': student})
 # students views
 
 # support staff views
@@ -310,10 +321,94 @@ def schoolclasses(request):
             newclass.subjects.add(subject)
 
         messages.success(request, 'Class successfully added!')
-        return redirect("AddClasses")  # Redirect to a success page after successful form submission
-    else:
-        subjects = Subjects.objects.all()
-        return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects})
+        return redirect("AddClasses")
+    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})   
+
+#Export the data in excel in the students model
+def export_to_excel(request):
+    #fetch all the data from the database
+        data =Student.objects.all().values_list(
+            'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'studentclass', 'regdate', 'fathername','fcontact','foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname','gcontact'
+            )
+        
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        # field_names = Student._meta.get_fields()
+        # header_row = [field.name for field in field_names]
+        # ws.append(header_row)
+        
+        #write data to the worksheet
+        ws.append(['Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date', "Father's name",'Father\'s Contact','Foccupation', 'Mother\'s Name', 'Mother\'s contact', 'Moccupation', 'Livingwith', 'Guardian\'s Name','gcontact'])
+        for row_data in data:
+            ws.append(row_data)
+            
+        # Set the filename and content type for the response
+        filename = 'exported_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response
+#Export the data in excel in the support staff model
+def support_staff_export_to_excel(request):
+    #fetch all the data from the database
+        data =Supportstaff.objects.all().values()
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        field_names = Supportstaff._meta.get_fields()
+        header_row = [field.name for field in field_names]
+        ws.append(header_row)
+        
+        #write data to the worksheet
+        for row_data in data:
+            ws.append(list(row_data.values()))
+            
+        # Set the filename and content type for the response
+        filename = 'exported_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response
+
+
+#Export the data in excel in the Teacher's model
+def teacher_export_to_excel(request):
+    #fetch all the data from the database
+        data =Teachers.objects.all().values_list(
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subject', 'qualification'
+            )
+        
+        #create new workbook and add in a worksheet
+        wb =openpyxl.Workbook()
+        ws =wb.active
+        
+        #write field names to the worksheet as headers
+        # field_names = Student._meta.get_fields()
+        # header_row = [field.name for field in field_names]
+        # ws.append(header_row)
+        
+        #write data to the worksheet
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subject', 'Qualification'])
+        for row_data in data:
+            ws.append(row_data)
+            
+        # Set the filename and content type for the response
+        filename = 'teacher\'s_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #save the workboot to the response
+        wb.save(response)
+        
+        return response
 
         
     # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})

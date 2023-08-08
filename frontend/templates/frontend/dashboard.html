@@ -6,6 +6,7 @@
 <!-- inner-content -->
 <div class="inner-content pl-4 pr-4">
     <div class="dashboard">
+
         <!-- cards -->
       <div class="row cards">
         <div class="col-lg-3 col-md-3">
@@ -28,7 +29,7 @@
                 <div class="card stud_card">
                     <div class="row">
                         <div class="col-8 cbody">
-                            <h4>{{students_count}}+</h4>
+                            <h4>{{student_count}}+</h4>
                             <p>Students</p>
                         </div >
     
@@ -45,7 +46,7 @@
                 <div class="card trcard">
                     <div class="row">
                         <div class="col-8 cbody" >
-                            <h4>{{teachers_count}}</h4>
+                            <h4>{{teacher_count}}</h4>
                             <p>Teachers</p>
                         </div>
                         <div class="col-4 icon">
@@ -57,6 +58,7 @@
         </div>
 
         <div class="col-lg-3 col-md-3">
+            <a href="" style="text-decoration: none;">
             <a href="/support-staff-list" style="text-decoration: none;">
                 <div class="card staff-card ">
                     <div class="row ">
@@ -104,7 +106,34 @@
 </div>
 <!-- inner-content -->
 
-
-  
+<!-- charts.js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const boysCount = {{boys_count}}
+    const girlsCount = {{girls_count}}
+    var donutCtx = document.getElementById("genderDonutChart").getContext("2d");
+    var donutData = {
+        labels: ["Boys", "Girls"],
+        datasets: [{
+            data: [boysCount, girlsCount], // Replace with your actual data
+            backgroundColor: ["red", "#f9b855"],
+        }]
+    };
+    var donutChart = new Chart(donutCtx, {
+        type: "doughnut",
+        data: donutData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: "bottom"
+            },
+            title: {
+                display: true,
+                text: "Gender Distribution"
+            }
+        }
+    });
+</script>
 
 {% endblock main %}
