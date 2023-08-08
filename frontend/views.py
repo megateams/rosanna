@@ -13,8 +13,23 @@ def home(request):
     if request.session.get('logged_out', False):
         messages.warning(request, "You need to login to access the dashboard")
         return redirect("login")
+
+    boys_count = Student.objects.filter(gender='m').count()
+    girls_count = Student.objects.filter(gender='f').count()
+
+    teacher_count = Teachers.objects.count()
+    student_count = Student.objects.count()
+    support_staff_count = Supportstaff.objects.count()
+
+    context = {
+        'boys_count' : boys_count,
+        'girls_count': girls_count,
+        'teacher_count': teacher_count,
+        'student_count': student_count,
+        'support_staff_count': support_staff_count,
+    }
+    return render(request,'frontend/dashboard.html',context)
     
-    return render(request,'frontend/dashboard.html')
 #register details for the user (admin)
 def register(request):
     if request.method == "POST":
@@ -539,5 +554,7 @@ def teacher_export_to_excel(request):
         wb.save(response)
         
         return response
+        
+
 
         
