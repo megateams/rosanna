@@ -24,7 +24,7 @@ urlpatterns = [
     path('fees/', views.Fees, name="Fees"),
     path('finance/', views.financedashboard, name=""),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
-    path('financefeeslist/', views.financefeesList, name="Fees List"),
+    path('financefeeslist/', views.financefeesList, name="financefeeslist"),
    
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),

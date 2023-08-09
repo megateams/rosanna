@@ -295,13 +295,13 @@ def addSubject(request):
     if request.method == 'POST':
         subjectname = request.POST.get('subjectname')
         subjectid = request.POST.get('subjectid')
-        classlevel = request.POST.get('classlevel')
+        level = request.POST.get('classlevel')
         subjecthead = request.POST.get('subjecthead')
         
         Subjects.objects.create(
             subjectname = subjectname ,
             subjectid = subjectid ,
-            classlevel = classlevel ,
+            level = classlevel ,
             subjecthead = subjecthead ,
         )
         
@@ -492,21 +492,21 @@ def showclasses(request):
 
 def addclasses(request):
     return render(request , 'frontend/academics/addclasses.html')
-    classes = Schoolclasses.objects.all()
-    return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
+    # classes = Schoolclasses.objects.all()
+    # return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
     
 def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST.get('classname')
         classid = request.POST.get('classid')
         classteacher = request.POST.get('classteacher')
-        classlevel = request.POST.get('classlevel')
+        classlevels = request.POST.get('classlevel')
         numofstds = request.POST.get('numofstds')
     
         Schoolclasses.objects.create(
             classname = classname ,
             classid = classid ,
-            classlevel = classlevel ,
+            classlevels = classlevels ,
             classteacher = classteacher ,
             numofstds = numofstds 
         )

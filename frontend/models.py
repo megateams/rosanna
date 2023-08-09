@@ -63,7 +63,7 @@ class Student(models.Model):
 class Subjects(models.Model):
     subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
     subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
-    classlevel = models.CharField(max_length = 25 , verbose_name = 'Class Level')
+    classlevel = models.CharField(max_length = 25 , verbose_name = 'level' , blank=True)
     subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
 
     Display_Subjects = [
@@ -73,7 +73,7 @@ class Subjects(models.Model):
 class Schoolclasses(models.Model):
     subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
-    classlevel = models.CharField(max_length =20 , verbose_name="Class Levels" , blank=True)
+    classlevel = models.CharField(max_length =20 , verbose_name="Levels" , blank=True)
     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
     classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
