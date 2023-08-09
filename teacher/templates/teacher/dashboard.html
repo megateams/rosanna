@@ -24,37 +24,24 @@
                 <h5> YOUR CLASSES:</h5>
             </div>
             <div class="row">
-                
-                <div class="col-md-6 ">
-                    <a href="" style="text-decoration: none;">
-                        <div class="card classcard p-4">
-                            <div class="row">
-                                <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
-                                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                {% for class in teacher.classes.all %}
+                    <div class="col-md-6 ">
+                        <a href="/teacher/class_details/{{class.classid}}/{{teacher.teacherid}}" style="text-decoration: none;">
+                            <div class="card classcard p-4">
+                                <div class="row">
+                                    <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                        <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <div class="col-7 ">
+                                        <h5 class="text-center"> {{class.classname}}</h3> 
+                                    </div>
                                 </div>
-                                <div class="col-7 ">
-                                    <h3 class="text-center"> P.2</h3> 
-                                </div>
+                            
                             </div>
-                           
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-6 ">
-                    <a href="" style="text-decoration: none;">
-                        <div class="card classcard p-4">
-                            <div class="row">
-                                <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
-                                    <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
-                                </div>
-                                <div class="col-7 ">
-                                    <h3 class="text-center"> P.2</h3> 
-                                </div>
-                            </div>
-                           
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                {% endfor %}
+              
             </div>
         </div>
         <div class="col-md-4" style="text-align: center;">
@@ -69,12 +56,13 @@
                     </center>
                 </div>
                 <div class="teacher-details">
-                    <h4>Teacher's Name</h4>
-                    <p>@teacher_username</p>
+                    <h4>{{teacher.teachernames}}</h4>
+                    <p>{{teacher.email}}</p>
+                    <!-- <p>@{{teacher.username}}</p> -->
                 </div>
                 <div>
                     <!-- <button class="btn btn-md btn-outline-warning">More Details</button> -->
-                    <a href="/teacherprofile" class="btn btn-outline-warning btn-md">More Details</a>
+                    <a href="/teacher/profile/{{teacher.teacherid}}" class="btn btn-outline-warning btn-md">More Details</a>
                 </div>
             </div>
             

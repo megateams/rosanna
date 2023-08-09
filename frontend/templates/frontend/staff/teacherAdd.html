@@ -7,7 +7,7 @@
 <!-- inner-content -->
 <div class="inner-content">
     <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Teachers</a>
-    <a href="#" onclick="confirmDownload()" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel<a/>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
     <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light">
@@ -38,149 +38,103 @@
                 <h5>Teacher Information</h5>
             </div> -->
             <div class="row">
-                <!-- regno -->
-                <div class="form-group col-md-6">
-                    <label for="">Teacher ID: </label>
-                    <input type="text" name="teacherid" class="form-control" required>
-                </div>
                 <!-- name -->
                 <div class="form-group col-md-6">
                     <label for="">Teacher Fullname: </label>
-                    <input type="text" name="teachernames" class="form-control" required>
+                    <input type="text" name="teachernames" class="form-control">
                 </div>
-            </div>
-            <div class="row">
                 <!-- gender -->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Gender: </label>
-                    <select name="gender" id="" class="form-control pr-2" required>
+                    <select name="gender" id="" class="form-control pr-2">
                         <option value="">---</option>
                         <option value="Male">Male</option>
                         <option value="Female ">Female</option>
                     </select>
                 </div>
+            </div>
+            <div class="row">
                 <!-- dob -->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Date Of Birth </label>
-                    <input type="date" name="dob" class="form-control" required>
+                    <input type="date" name="dob" class="form-control">
                 </div>
 
                 <!-- contact -->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Contact </label>
-                    <input type="text" name="contact" class="form-control" required>
+                    <input type="text" name="contact" class="form-control">
                 </div>
             </div>
             <div class="row">
                 
                 <!-- email -->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Email Address </label>
                     <input type="email" name="email" class="form-control">
                 </div>
                 <!-- address -->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for=""> Address </label>
                     <input type="text" name="address" class="form-control">
                 </div>
                 
-                <!-- joining date -->
-                <div class="form-group col-md-4">
-                    <label for="">Joining Date </label>
-                    <input type="date" name="joiningdate" class="form-control" required>
-                </div>
+                
             </div>
         </div>
         
 
 
         <div class="parent-info">
-            
             <div class="row">
-                <!-- class -->
-                <div class="form-group col-md-4">
-                    <label for="class-checkbox">Attached Classes:</label>
-                    <div>
-                        <input type="checkbox" name="classes" id="class-checkbox" value="p.1">
-                        <label for="class-checkbox">Primary One</label>
-                    </div>
-                    <div>
-                    <input type="checkbox" name="classes" id="class-checkbox" value="p.2">
-                    <label for="class-checkbox">Primary Two</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="classes" id="class-checkbox" value="p.3">
-                        <label for="class-checkbox">Primary Three</label>
-                    </div>
-                    <div>
-                    <input type="checkbox" name="classes" id="class-checkbox" value="p.4">
-                    <label for="class-checkbox">Primary Four</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="classes" id="class-checkbox" value="p.5">
-                        <label for="class-checkbox">Primary Five</label>
-                    </div>
-                    <div>
-                    <input type="checkbox" name="classes" id="class-checkbox1" value="p.6">
-                    <label for="class-checkbox2">Primary Six</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="classes" id="class-checkbox" value="p.7">
-                        <label for="class-checkbox">Primary Seven</label>
-                    </div>
-                    
-                    
+                <!-- joining date -->
+                <div class="form-group col-md-6">
+                    <label for="">Joining Date </label>
+                    <input type="date" name="joiningdate" class="form-control">
                 </div>
-                <!-- Subject -->
-                <div class="form-group col-md-4">
-                    <label for="">Subject </label>
-                    <div>
-                        <input type="checkbox" name="subject" id="subject-checkbox" value="">
-                        <label for="subject-checkb   ox">English</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="subject" id="subject-checkbox" value="">
-                        <label for="subject-checkbox">Mathematics</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="subject" id="subject-checkbox" value="">
-                        <label for="subject-checkbox">S.ST</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="subject" id="subject-checkbox" value="">
-                        <label for="subject-checkbox">Science</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="subject" id="subject-checkbox" value="">
-                        <label for="subject-checkbox">Literacy</label>
-                    </div>
-                    
-                </div>
-                <!-- position -->
-                <div class="form-group col-md-4">
-                    <label for="">Position </label>
-                    <input type="text" name="position" class="form-control">
-                </div>
-            </div>
-            <div class="row">
                 <!-- qualification-->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Academic Qualification </label>
                     <input type="text" name="qualification" class="form-control">
                 </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="">Position </label>
+                    <input type="text" name="position" class="form-control">
+                </div>
                 <!-- username-->
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="">Username </label>
-                    <input type="text" name="username" class="form-control" required>
+                    <input type="text" name="username" class="form-control">
                 </div>
-                <!-- password -->
-                <div class="form-group col-md-4">
-                    <label for="">Password </label>
-                    <input type="text" name="password" class="form-control" required>
-                </div>
+                
             </div>
             
 
+            
+        </div>
+        <div class="row">
+            <!-- class -->
+            <div class="form-group col-md-6">
+                <label for="class-checkbox">Attached Classes:</label><br>
+                {% for class in classes %}
+                    <input type="checkbox" name="classes" id="" value="{{class.classid}}">
+                    <label for="class-checkbox">{{class.classname}}</label>
+                    <br>
+                {% endfor %}  
+            </div>
+            <!-- Subject -->
+            <div class="form-group col-md-6">
+                <label for="class-checkbox">Attached Subjects:</label><br>
+                {% for subject in subjects %}
+                    <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
+                    <label for="class-checkbox">{{subject.subjectname}}</label>
+                    <br>
+                {% endfor %}  
+            </div>
+            <!-- position -->
             
         </div>
 
@@ -196,11 +150,5 @@
 
 </div>
 <!-- inner-content -->
-<script>
-    function confirmDownload(){
-        if(confirm("Are you sure you want to export the data to an Excel file?")){
-            window.location.href = "{% url 'teacher_export_excel' %}"
-        }
-    }
-</script>
+
 {% endblock main %}

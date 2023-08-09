@@ -129,6 +129,14 @@ def financefeesList(request):
     return render(request,'finance/fees/financefeesList.html')
 # fees views
 
+# feesstructure views
+def financeaddFeesstructure(request):
+    return render(request,'finance/feesstructure/financeaddFeesstructure.html')
+
+def financefeesstructureList(request):
+    return render(request,'finance/feesstructure/financefeesstructureList.html')
+# feesstructure views
+
 # staffpayments views
 def financeaddStaffpayments(request):
     return render(request,'finance/staffpayments/financeaddStaffpayments.html')
@@ -144,6 +152,12 @@ def financeaddExpenses(request):
 def financeexpensesList(request):
     return render(request,'finance/expenses/financeexpensesList.html')
 # expenses views
+
+def financeReports(request):
+    return render(request, 'finance/financeReports.html')
+
+def financeStatistics(request):
+    return render(request, 'finance/financeStatistics.html')
 
 
 

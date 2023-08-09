@@ -8,7 +8,7 @@
 <div class="inner-content">
 
     <div class="btns ">
-        <a href="addclasses/" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Class</a>
+        <a href="/addclasses" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Class</a>
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
 
@@ -18,14 +18,12 @@
             <thead>
                 <tr>
                     <th>Class Name</th>
-                    <th>Class id</th>
-                    <th>Class Level</th>
-                    <th>Classteacher</th>
-                    <th>Number of students</th>
-                    <th>Actions</th>
+                    <th>subjects</th>
+                    <!-- <th>Actions</th> -->
                 </tr>
             </thead>
             <tbody>
+<<<<<<< HEAD
                 {% for showclass in classes %}
                 <tr>
                     <td>{{ showclass.classname }}</td>
@@ -39,6 +37,20 @@
                     </td>
                 </tr>
                 {% endfor %}
+=======
+                {% for class_obj in classes %}
+            <tr>
+                <td>{{ class_obj.classname }}</td>
+                <td>
+                    <ul style="list-style-type: none;" class="d-flex">
+                        {% for subject in class_obj.subjects.all %}
+                        <li>{{ subject.subjectname }}</li> <span class="mr-2"> , </span>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+>>>>>>> 58beb7021a7a25e052e203b814a2694329acad16
             </tbody>
         </table>
     </div>

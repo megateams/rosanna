@@ -24,12 +24,19 @@ urlpatterns = [
     path('fees/', views.Fees, name="Fees"),
     path('finance/', views.financedashboard, name=""),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
+
     path('financefeeslist/', views.financefeesList, name="financefeeslist"),
+    path('financefeeslist/', views.financefeesList, name="Fees List"),
+
+    path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
+    path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
    
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
 
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
+    path('financereports/', views.financeReports, name =" Reports"),
+    path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
 ]
