@@ -134,6 +134,57 @@
             }
         }
     });
+   
+
 </script>
+<script>
+    // ... other code ...
+
+    var barCtx = document.getElementById("genderBarChart").getContext("2d");
+
+    var barData = {
+        labels: {{ class_names|safe }},  // Pass class names as labels
+        datasets: [{
+            label: "Boys",
+            data: {{ boys_count_by_class|safe }},
+            backgroundColor: "blue",
+            borderWidth: 1
+        },
+        {
+            label: "Girls",
+            data: {{ girls_count_by_class|safe }},
+            backgroundColor: "green",
+            borderWidth: 1
+        }]
+    };
+
+    var barChart = new Chart(barCtx, {
+        type: "bar",
+        data: barData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: true
+                    }
+                },
+            },
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Gender Distribution by Class"
+                }
+            }
+        }
+    });
+
+</script>
+
+
 
 {% endblock main %}
