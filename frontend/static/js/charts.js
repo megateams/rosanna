@@ -7,57 +7,7 @@
         
 
         // bargraph
-        var barCtx = document.getElementById("genderBarChart").getContext("2d");
-        var barData = {
-            labels: ["Baby", "Middle","Top","P.1", "P.2", "P.3", "P.4", "P.5", "P.6", "P.7"],
-            datasets: [{
-                label: "Boys",
-                data: [20,15,27,30, 35, 40, 45, 50, 55, 60], // Replace with your actual data for boys
-                backgroundColor: "blue",
-                // borderColor: "rgba(54, 162, 235, 1)",
-                borderWidth: 1
-            },
-            {
-                label: "Girls",
-                data: [19,32,11,25, 30, 35, 40, 45, 50, 55], // Replace with your actual data for girls
-                backgroundColor: "green",
-                // borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1
-            }]
-        };
-        var barChart = new Chart(barCtx, {
-            type: "bar",
-            data: barData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: "rgba(0,0,0,0.1)"
-                        },
-                        ticks: {
-                            stepSize: 10
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: "top"
-                    },
-                    title: {
-                        display: true,
-                        text: "Gender Distribution by Class"
-                    }
-                }
-            }
-        });
+        
         // bargraph
     // });  
 // donut and bar graph
