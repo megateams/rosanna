@@ -31,8 +31,11 @@ urlpatterns = [
    path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
 
-    path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
-    path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
+    path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+
+    path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
 
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),

@@ -1,13 +1,13 @@
 {% extends 'finance/base.html' %}
-{% block  title %} Staff Payments List {% endblock title %}
-{% block  pagetitle %} Staff Payments List {% endblock pagetitle %}
+{% block  title %} Teacher Payments List {% endblock title %}
+{% block  pagetitle %} Teacher Payments List {% endblock pagetitle %}
 
 {% block  main %} 
 
 <!-- inner-content -->
 <div class="inner-content">
     <div class="btns">
-        <a href="/financeaddstaffpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Staff Payments</a>
+        <a href="/financeaddteacherpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Teacher Payments</a>
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
@@ -15,13 +15,13 @@
         <table class="table" id="table">
             <thead>
                 <tr>
-                    <th>Staff ID</th>
-                    <th>Staff Name</th>
-                    <th> Date Paid</th>
+                    <th>Teacher ID</th>
+                    <th>Teacher Name</th>
+                    <th> Payment Date</th>
                     <th>Salary</th>
                     <th>Amount Paid</th>
                     <th>Balance</th>
-                    <th>Position</th>
+                    <th>Payment Method</th>
                     <th>Bank Account No.</th>
                     
                     <th>Actions</th>
@@ -35,7 +35,7 @@
                     <th>500,000</th>
                     <th>400,000</th>
                     <th>100,000</th>
-                    <th>Teacher</th>
+                    <th>Bank</th>
                     <th>AC43000000</th>
 
                    <td>
