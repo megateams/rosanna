@@ -15,13 +15,13 @@ urlpatterns = [
 
     path('students/', views.students, name="Students"),
     # path('save_registration/', save_registration, name='save_registration')
-    path('studentslist/', views.studentsList, name="Students List"),
+    path('studentslist/', views.studentsList, name="Studentslist"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     #path('addstudent/submit/', views.studentReg, name="studentReg"),
     path('addstudent/', views.studentsAdd, name="Add Students"),
     path('export-excel', views.export_to_excel, name="export_excel"),
     path('deletestudent/<stdnumber>', views.DeleteStudent, name="deleteStudent"),
-    path('countstudent/', views.Count_Student, name="count_student"),
+    #path('countstudent/', views.Count_Student, name="count_student"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
     # path('addstudent/', views.studentsAdd, name="Add Students"),
     path('addteacher/', views.teacherAdd, name="Add Teacher"),

@@ -1,5 +1,5 @@
 from django.db import models
-from frontend.models import Student,Teachers
+from frontend.models import Student,Teachers , Supportstaff
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -78,8 +78,34 @@ class Receipts(models.Model):
     ]
     
 
-
-
+class Teacherspayment(models.Model):
+    teacherid = models.ForeignKey(Teachers , on_delete=models.CASCADE , default = None)
+    paymentid = models.CharField(max_length = 25 , verbose_name='Payment id')
+    paymentdate = models.DateField(verbose_name='Payment Date')
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    balance = models.IntegerField(verbose_name='Balance')
+    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displayteacherpayment = [
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+    ]
+    
+    
+class Supportstaffpayment(models.Model):
+    supportataffid = models.ForeignKey(Supportstaff , on_delete= models.CASCADE , default = None)
+    paymentid =  models.CharField(max_length = 25 , verbose_name='Payment id')
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    balance = models.IntegerField(verbose_name='Balance')
+    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displaysupportstaffpayment = [
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+    ]
+    
 
 
 

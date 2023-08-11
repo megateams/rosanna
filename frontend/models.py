@@ -43,7 +43,7 @@ class Subjects(models.Model):
 
 class Schoolclasses(models.Model):
     classid = models.AutoField(primary_key=True, verbose_name="Class id")
-    subjects = models.ManyToManyField(Subjects)
+    #subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     
     Display_schoolclasses = [
@@ -95,19 +95,19 @@ class Subjects(models.Model):
         'subjectname' , 'subjectid' , 'classlevel' , 'subjecthead'
     ]
 
-class Schoolclasses(models.Model):
-    subjects = models.ManyToManyField(Subjects)
-    classname = models.CharField(max_length =20 , verbose_name = "Class Name")
-    classlevel = models.CharField(max_length =20 , verbose_name="Levels" , blank=True)
-    classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
-    classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
-    numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
+# class Schoolclasses(models.Model):
+#     subjects = models.ManyToManyField(Subjects)
+#     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+#     classlevel = models.CharField(max_length =20 , verbose_name="Levels" , blank=True)
+#     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
+#     classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
+#     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
 
-    Display_schoolclasses = [
+#     Display_schoolclasses = [
 
-        'classname' , 'classid' ,'classteacher', 'numofstds', 'classlevel' 
+#         'classname' , 'classid' ,'classteacher', 'numofstds', 'classlevel' 
 
-    ]
+#     ]
 
 
 class Teachers(models.Model):
@@ -124,12 +124,14 @@ class Teachers(models.Model):
     subjects = models.ManyToManyField(Subjects)  # Replace 'YourAppSubjectName' with the actual class name for subjects.
     position = models.CharField(max_length=50, verbose_name='Position')
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
+    salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
+    bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
     username = models.CharField(max_length=50 , verbose_name='Username')
     password = models.CharField(max_length=100, verbose_name='Password')
 
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate',
-        'position' , 'qualification' , 'username' , 'password' 
+        'position' , 'qualification' , 'salary' , 'bankaccnum' , 'username' , 'password' 
     ]
 
  

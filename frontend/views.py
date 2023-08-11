@@ -18,6 +18,22 @@ def deletemarks(request , id):
     messages.success(request , 'Marks Deleted')
     return redirect('viewmarks')
 
+def DeleteStudent(request , stdnumber):
+    student = Student.objects.filter(stdnumber = stdnumber)
+    student.delete()
+    messages.success(request, 'Student Deleted Successfully')
+    return redirect('Studentslist')
+
+def DeleteSupportStaff(request , id):
+    supportstaff = Supportstaff.objects.filter(id = id)
+    supportstaff.delete()
+    messages.success(request, 'Support stuff deleted')
+    return redirect('deleteSupportStuff')
+
+def Support_Staff_list_View(request):
+    supportstafflist = Supportstaff.objects.all()
+    return render(request , 'frontend/staff/supportstaffList.html' , {'supportstafflist':supportstafflist})
+
 def deleteclass(request, classid):
     classes = Schoolclasses.objects.filter(classid = classid)
     classes.delete()
@@ -193,7 +209,7 @@ def addSubject(request):
         Subjects.objects.create(
             subjectname = subjectname ,
             subjectid = subjectid ,
-            level = classlevel ,
+            classlevel = level ,
             subjecthead = subjecthead ,
         )
         

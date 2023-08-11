@@ -65,9 +65,7 @@ def profile(request,teacher_id):
     return render(request, 'teacher/profile.html', {'teacher': teachers})    
 
 def paymenthistory(request):
-<<<<<<< HEAD
     return render(request, 'teacher/paymenthistory.html')   
-=======
     return render(request, 'teacher/paymenthistory.html')  
 
 
@@ -205,5 +203,5 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
 
 
 
->>>>>>> 58beb7021a7a25e052e203b814a2694329acad16
+
 
