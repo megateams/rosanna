@@ -262,6 +262,7 @@ def his_class(request, class_id, teacher_id):
     })
 
 # view marks
+
 def view_marks(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
@@ -270,40 +271,52 @@ def view_marks(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
-    # Get the subjects taught by the teacher for this class
+    # Get all subjects
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
 
     mark_types = Mark.MARK_TYPES
+    # Create a dictionary to hold the total and average marks for each subject for each student
+    subjects_marks_data = {}
+    subjects_total_marks = {subject: 0 for subject in subjects}
+    subjects_marks_count = {subject: 0 for subject in subjects}
 
-    # Create a dictionary to hold the marks for each student and subject combination
-    student_marks = {}
     for student in students:
-        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
-        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+        student_subjects_data = []
+        for subject in subjects:
+            total_marks = 0
+            marks_count = 0
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            for mark in marks:
+                total_marks += mark.marks_obtained
+                marks_count += 1
+                subjects_total_marks[subject] += mark.marks_obtained
+                subjects_marks_count[subject] += 1
 
-    # Calculate total marks and average marks for each student
-    for student, marks_dict in student_marks.items():
-        total_marks = 0
-        total_subjects = 0
-        for marks in marks_dict.values():
-            if marks:
-                total_marks += marks.marks_obtained
-                total_subjects += 1
-        if total_subjects > 0:
-            student.total_marks = total_marks
-            student.average_marks = total_marks / total_subjects
-        else:
-            student.total_marks = 0
-            student.average_marks = 0
+            average_marks = total_marks / marks_count if marks_count > 0 else 0
+            student_subjects_data.append({
+                'subject': subject,
+                'total_marks': total_marks,
+                'average_marks': average_marks,
+            })
 
-    return render(request, 'teacher/marks/view_marks.html', {
+        subjects_marks_data[student] = student_subjects_data
+
+    # Calculate average marks for each subject across all students
+    subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
+                              for subject, total_marks in subjects_total_marks.items()}
+
+    
+
+    return render(request, 'teacher/marks/view_all_marks.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
         'students': students,
         'subjects': subjects,
-        'student_marks': student_marks,
-        'mark_types' :mark_types,
+        'mark_types': mark_types,
+        'subjects_marks_data': subjects_marks_data,
     })
+
+
 
 # views.py
 
