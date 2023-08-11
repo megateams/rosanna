@@ -58,12 +58,29 @@ def home(request):
     student_count = Student.objects.count()
     support_staff_count = Supportstaff.objects.count()
 
+    classes = Schoolclasses.objects.all()
+
+    # Calculate the number of boys and girls in each class and store in lists
+    boys_count_by_class = []
+    girls_count_by_class = []
+    class_names = []
+    for class_obj in classes:
+        b_count = Student.objects.filter(stdclass=class_obj, gender='m').count()
+        g_count = Student.objects.filter(stdclass=class_obj, gender='f').count()
+        boys_count_by_class.append(b_count)
+        girls_count_by_class.append(g_count)
+        class_names.append(class_obj.classname)
+        
     context = {
         'boys_count' : boys_count,
         'girls_count': girls_count,
         'teacher_count': teacher_count,
         'student_count': student_count,
         'support_staff_count': support_staff_count,
+
+        'boys_count_by_class': boys_count_by_class,
+        'girls_count_by_class': girls_count_by_class,
+        'class_names': class_names,
     }
     return render(request,'frontend/dashboard.html',context)
 

@@ -137,13 +137,20 @@ def financefeesstructureList(request):
     return render(request,'finance/feesstructure/financefeesstructureList.html')
 # feesstructure views
 
-# staffpayments views
-def financeaddStaffpayments(request):
-    return render(request,'finance/staffpayments/financeaddStaffpayments.html')
+# teacherpayments views
+def financeaddTeacherpayments(request):
+    return render(request,'finance/staffpayments/financeaddTeacherpayments.html')
 
-def financestaffpaymentsList(request):
-    return render(request,'finance/staffpayments/financestaffpaymentsList.html')
-# staffpayments views
+def financeteacherpaymentsList(request):
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html')
+# teacherpayments views
+# supportstaffpayments views
+def financeaddsupportstaffpayments(request):
+    return render(request,'finance/staffpayments/financeaddsupportstaffpayments.html')
+
+def financesupportstaffpaymentsList(request):
+    return render(request,'finance/staffpayments/financesupportstaffpaymentsList.html')
+# supportstaffpayments views
 
 # expenses views
 def financeaddExpenses(request):

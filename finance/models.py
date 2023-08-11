@@ -94,7 +94,7 @@ class Teacherspayment(models.Model):
     
     
 class Supportstaffpayment(models.Model):
-    supportataffid = models.ForeignKey(Supportstaff , on_delete= models.CASCADE , default = None)
+    supportstaffid = models.ForeignKey(Supportstaff , on_delete= models.CASCADE , default = None)
     paymentid =  models.CharField(max_length = 25 , verbose_name='Payment id')
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')

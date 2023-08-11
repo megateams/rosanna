@@ -34,8 +34,17 @@ urlpatterns = [
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
 
+<<<<<<< HEAD
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
+=======
+    path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+
+    path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
+
+>>>>>>> 070204e56b2e9a0e98e5cceb3d298644d2d7a050
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
