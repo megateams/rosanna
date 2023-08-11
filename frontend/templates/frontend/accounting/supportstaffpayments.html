@@ -1,13 +1,13 @@
-{% extends 'finance/base.html' %}
-{% block  title %} Teacher Payments List {% endblock title %}
-{% block  pagetitle %} Teacher Payments List {% endblock pagetitle %}
+{% extends 'frontend/base.html' %}
+{% block  title %} Support Staff Payments List {% endblock title %}
+{% block  pagetitle %} Support Staff Payments List {% endblock pagetitle %}
 
 {% block  main %} 
 
 <!-- inner-content -->
 <div class="inner-content">
     <div class="btns">
-        <a href="/financeaddteacherpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Teacher Payments</a>
+        <!-- <a href="/financeaddsupportstaffpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Support Staff Payments</a> -->
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
@@ -15,8 +15,8 @@
         <table class="table" id="table" border="1">
             <thead>
                 <tr>
-                    <th>Teacher ID</th>
-                    <th>Teacher Name</th>
+                    <th>SStaff ID</th>
+                    <th>SStaff Name</th>
                     <th> Payment Date</th>
                     <th>Salary</th>
                     <th>Amount Paid</th>

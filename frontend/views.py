@@ -487,4 +487,16 @@ def supportstaffList(request):
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+
+# Accounting
+def feesstructure(request):
+    return render(request, 'frontend/accounting/feesstructure.html')
+def fees(request):
+    return render(request, 'frontend/accounting/fees.html')
+def teacherspayments(request):
+    return render(request, 'frontend/accounting/teacherspayments.html')
+def supportstaffpayments(request):
+    return render(request, 'frontend/accounting/supportstaffpayments.html')
+def expenses(request):
+    return render(request, 'frontend/accounting/expenses.html')
         
