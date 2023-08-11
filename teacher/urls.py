@@ -11,11 +11,15 @@ urlpatterns = [
     path('teacher/paymenthistory/', views.paymenthistory, name="Payment History"),
 
     # marks urls
-    path('teacher/marks/', views.addmarks, name="Add Marks"),
+    path('teacher/his_class/addmarks/<class_id>/<teacher_id>', views.addmarks, name="Add Marks"),
+    path('teacher/his_class/view_marks/<class_id>/<teacher_id>', views.view_marks, name="View Marks"),
+    path('teacher/his_class/view_mark/<int:class_id>/<str:teacher_id>/', views.view_marks_by_marktype, name='view_marks_by_marktype'),
+    
     path('get_students_by_class/<int:class_id>/', views.get_students_by_class, name='get_students_by_class'),
     path('get_subjects/<int:class_id>/', views.get_subjects, name='get_subjects'), 
 
     # class details url
     path('teacher/class_details/<int:class_id>/<teacher_id>', views.class_details, name='Class Details'),
+    path('teacher/his_class/<int:class_id>/<teacher_id>', views.his_class, name=''),
     path('teacher/class_details/addmarks/<int:class_id>/<teacher_id>/<subject_id>', views.addsubjectmarks, name= 'Add Subject marks'),
 ]

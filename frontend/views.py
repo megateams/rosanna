@@ -318,20 +318,28 @@ def subjects(request):
         Subjects.save
     return HttpResponse(subjectnames)
 
+from django.shortcuts import render
+from .models import Schoolclasses, Teachers
+
 def showclasses(request):
     classes = Schoolclasses.objects.all()
-    return render(request , 'frontend/academics/showclasses.html' , {'classes':classes})
+    # Retrieve the teacher names based on teacherid matching classname
+    teachers = Teachers.objects.all()
+    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
 
 def addclasses(request):
     subjects = Subjects.objects.all()
-    return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects})
+    teachers = Teachers.objects.all()
+    return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects, 'teachers':teachers})
     
 def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
+        classteacher = request.POST['classteacher']
+        class_level = request.POST['class_level']
 
-        newclass = Schoolclasses.objects.create(classname=classname)
+        newclass = Schoolclasses.objects.create(classname=classname,classteacher=classteacher,class_level=class_level)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
@@ -487,4 +495,4 @@ def supportstaffList(request):
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
-        
+

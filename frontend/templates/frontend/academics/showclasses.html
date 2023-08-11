@@ -19,22 +19,31 @@
                 <tr>
                     <th>Class Name</th>
                     <th>subjects</th>
-                    <!-- <th>Actions</th> -->
+                    <th>Class Level</th>
+                    <th>Class Teacher</th>
                 </tr>
             </thead>
             <tbody>
                 {% for class_obj in classes %}
-            <tr>
-                <td>{{ class_obj.classname }}</td>
-                <td>
-                    <ul style="list-style-type: none;" class="d-flex">
-                        {% for subject in class_obj.subjects.all %}
-                        <li>{{ subject.subjectname }}</li> <span class="mr-2"> , </span>
+                <tr>
+                    <td>{{ class_obj.classname }}</td>
+                    <td>
+                        <ul style="list-style-type: none;" class="d-flex">
+                            {% for subject in class_obj.subjects.all %}
+                            <li>{{ subject.subjectname }}</li> <span class="mr-2"> , </span>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{class_obj.class_level}}</td>
+                    <td>
+                        {% for teacher in teachers %}
+                            {% if teacher.teacherid == class_obj.classteacher %}
+                                {{ teacher.teachernames }}
+                            {% endif %}
                         {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

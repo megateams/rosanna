@@ -51,13 +51,14 @@ def dashboard(request):
 
     # Get the teacher ID from the session
     teacher_id = request.session['teacher_id']
-
+    
     # Query the database to get the teacher's information
     try:
         teacher = Teachers.objects.get(teacherid=teacher_id)
+        his_class = Schoolclasses.objects.get(classteacher = teacher_id)
     except Teachers.DoesNotExist:
         teacher = None
-    return render(request, 'teacher/dashboard.html',{'teacher': teacher})
+    return render(request, 'teacher/dashboard.html',{'teacher': teacher ,'his_class':his_class})
 
 def profile(request,teacher_id):
     teachers = Teachers.objects.get(teacherid = teacher_id)
@@ -68,31 +69,7 @@ def paymenthistory(request):
 
 
 # marks logic
-def addmarks(request):
-    # frontend/views.py
-    if request.method == 'POST':
-        std_id = request.POST['student_name']
-        class_id = request.POST['class_name']
-        subject_id = request.POST['subject']
-        score = request.POST['score']
 
-        # std_obj = Student.objects.get(pk=std_id)
-        class_obj = Schoolclasses.objects.get(pk=class_id)
-        subject_obj = Subjects.objects.get(pk=subject_id)
-
-        Mark.objects.create(
-            class_name=class_obj,
-            student_name=std_id,
-            subject=subject_obj,
-            marks_obtained=score
-        )
-        Mark.save
-        messages.success(request, 'Data successfully added!')
-        return redirect('Add Marks')  # Redirect to the same form page after successful form submission
-    else:
-        selected_students =Student.objects.all()
-        # messages.success(request, 'Data not added!')
-        return render(request,'teacher/marks/addMarks.html',{'classes': Schoolclasses.objects.all() ,'students': selected_students})
 
 def get_students_by_class(request, class_id):
     try:
@@ -170,6 +147,7 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
         mark_type = request.POST.get('marktype')
         student_number = request.POST.get('studentname')
         marks_obtained = request.POST.get('mark_obtained')
+        
 
         if mark_type and student_number and marks_obtained:
             # Get the student object
@@ -197,7 +175,174 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
         'teacher_id': teacher_id,  # Include the teacher_id in the context
     })
 
+def addmarks(request, class_id, teacher_id):
+    # Check if the teacher is authenticated (if you are using sessions)
+    if 'teacher_id' not in request.session or request.session['teacher_id'] != teacher_id:
+        # If the teacher is not logged in or the session teacher_id doesn't match, redirect to the login page
+        return redirect('login')  # Replace 'login' with the name/url of your login view
 
+    # Retrieve the class object
+    schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
+
+    # Retrieve the students related to the class
+    students = Student.objects.filter(stdclass=schoolclass)
+
+    # Retrieve the subjects that are associated with this class
+    subjects = schoolclass.subjects.all()
+
+    # Retrieve the mark types for the dropdown
+    mark_types = Mark.MARK_TYPES
+
+    # Handle form submission to add subject marks
+    if request.method == 'POST':
+        mark_type = request.POST.get('marktype')
+        student_number = request.POST.get('studentname')
+        marks_obtained = request.POST.get('mark_obtained')
+        subject_id = request.POST.get('subject')
+
+        # Check if the mark already exists for the given student, mark type, and subject
+        if Mark.objects.filter(class_name=schoolclass, student_name=student_number, subject_id=subject_id, mark_type=mark_type).exists():
+            messages.error(request, 'Mark already added for this student')
+        else:
+            # Create a new Mark object to save the marks
+            Mark.objects.create(
+                class_name=schoolclass,
+                student_name=student_number,
+                subject_id=subject_id,
+                mark_type=mark_type,
+                marks_obtained=int(marks_obtained),
+            )
+            messages.success(request, 'Subject marks added successfully.')
+
+        return redirect('Add Marks', class_id=class_id, teacher_id=teacher_id)
+
+    # If the request method is GET, render the form for adding subject marks
+    return render(request, 'teacher/marks/addMarks.html', {
+        'schoolclass': schoolclass,
+        'subjects': subjects,
+        'mark_types': mark_types,
+        'teacher_id': teacher_id,
+        'students': students,
+    })
+
+
+# class teacher class
+def his_class(request, class_id, teacher_id):
+    schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
+    teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+
+    # Get the students for this class taught by the teacher
+    students = Student.objects.filter(stdclass=schoolclass)
+
+    # Get the subjects taught by the teacher for this class
+    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+
+    # Get the teachers who teach that class
+    teachers_in_class = Teachers.objects.filter(classes=schoolclass)
+    # print (teachers_in_class)
+    # Calculate the number of boys and girls in the class
+    num_boys = students.filter(gender='m').count()
+    num_girls = students.filter(gender='f').count()
+
+    # Create a dictionary to hold the marks for each student and subject combination
+    student_marks = {}
+    for student in students:
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
+        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+
+    return render(request, 'teacher/his_class.html', {
+        'schoolclass': schoolclass,
+        'teacher': teacher,
+        'students': students,
+        'subjects': subjects,
+        'student_marks': student_marks,
+        'teachers_in_class': teachers_in_class,
+        'num_girls': num_girls,
+        'num_boys': num_boys,
+    })
+
+# view marks
+def view_marks(request, class_id, teacher_id):
+    # Retrieve the class and teacher objects based on the provided IDs
+    schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
+    teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+
+    # Get the students for this class taught by the teacher
+    students = Student.objects.filter(stdclass=schoolclass)
+
+    # Get the subjects taught by the teacher for this class
+    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+
+    mark_types = Mark.MARK_TYPES
+
+    # Create a dictionary to hold the marks for each student and subject combination
+    student_marks = {}
+    for student in students:
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
+        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+
+    # Calculate total marks and average marks for each student
+    for student, marks_dict in student_marks.items():
+        total_marks = 0
+        total_subjects = 0
+        for marks in marks_dict.values():
+            if marks:
+                total_marks += marks.marks_obtained
+                total_subjects += 1
+        if total_subjects > 0:
+            student.total_marks = total_marks
+            student.average_marks = total_marks / total_subjects
+        else:
+            student.total_marks = 0
+            student.average_marks = 0
+
+    return render(request, 'teacher/marks/view_marks.html', {
+        'schoolclass': schoolclass,
+        'teacher': teacher,
+        'students': students,
+        'subjects': subjects,
+        'student_marks': student_marks,
+        'mark_types' :mark_types,
+    })
+
+# views.py
+
+def view_marks_by_marktype(request, class_id, teacher_id):
+    schoolclass = Schoolclasses.objects.get(classid=class_id)
+    teacher = Teachers.objects.get(teacherid=teacher_id)
+    mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
+    
+    students = Student.objects.filter(stdclass=schoolclass)
+    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+    mark_types = Mark.MARK_TYPES
+    student_marks = {}
+    for student in students:
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, mark_type=mark_type)
+        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+
+    # Calculate total marks and average marks for each student
+    for student, marks_dict in student_marks.items():
+        total_marks = 0
+        total_subjects = 0
+        for marks in marks_dict.values():
+            if marks:
+                total_marks += marks.marks_obtained
+                total_subjects += 1
+        if total_subjects > 0:
+            student.total_marks = total_marks
+            student.average_marks = total_marks / total_subjects
+        else:
+            student.total_marks = 0
+            student.average_marks = 0
+    return render(request, 'teacher/marks/view_marks.html', {
+        'schoolclass': schoolclass,
+        'teacher': teacher,
+        'students': students,
+        'subjects': subjects,
+        'student_marks': student_marks,
+        'mark_types' :mark_types,
+        'mark_type' :mark_type,
+    })
 
 
 
