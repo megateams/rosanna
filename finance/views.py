@@ -1,5 +1,8 @@
 
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
+from .models import *
+from django.contrib import messages
+
 
 # Create your views here.
 def financedashboard(request):
@@ -14,11 +17,35 @@ def financefeesList(request):
 # fees views
 
 # feesstructure views
+
 def financeaddFeesstructure(request):
-    return render(request,'finance/feesstructure/financeaddFeesstructure.html')
+    if request.method == 'POST':
+        classname = request.POST.get('classname')
+        amount = request.POST.get('amount')
+        Feesstructure.objects.create(classname=classname, amount=amount)
+        # messages.success(request, 'Fees Structure added successfully!')
+
+        # Check if the class already exists in the database
+        if Feesstructure.objects.filter(classname=classname).exists():
+            messages.error(request, f"Class '{classname}' already exists in the Fees Structure.")
+        else:
+            # If class does not exist, create and save the new Fees Structure entry
+            fees_structure = Feesstructure(classname=classname, amount=amount)
+            fees_structure.save()
+            messages.success(request, f"Fees Structure for class '{classname}' added successfully.")
+
+        return redirect('Add Fees Structure')
+    
+    return render(request, 'finance/feesstructure/financeaddFeesstructure.html')
 
 def financefeesstructureList(request):
-    return render(request,'finance/feesstructure/financefeesstructureList.html')
+    fees_list = Feesstructure.objects.all()
+    context = {
+        'fees_list': fees_list,
+    }
+
+    return render(request, 'finance/feesstructure/financefeesstructureList.html', context)
+
 # feesstructure views
 
 # teacherpayments views

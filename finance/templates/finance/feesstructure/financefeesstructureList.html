@@ -15,30 +15,23 @@
         <table class="table" id="table">
             <thead>
                 <tr>
-                    <th>Fees Structure ID</th>
                     <th> Class</th>
                     <th>Amount</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for Feesstructure in fees_list %}
                 <tr>
-                    <th>ST001</th>
-                    <th>P.6</th>
-                    <th>860,000</th>    
+                    <td>{{ Feesstructure.classname }}</td>
+                    <td>{{ Feesstructure.amount }}</td>   
                    <td>
-                    <div>
-                        <a href="" class="text-primary"><i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
-                </tr>
+                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>    
+                    </td>
 
-                
-                
-                
-                
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

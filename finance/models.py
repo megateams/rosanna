@@ -13,6 +13,14 @@ CLASS_CHOICES =[
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
 ]
+
+# feesstructure models
+class Feesstructure(models.Model):
+    feesstructureid = models.AutoField(primary_key=True)
+    classname = models.CharField(max_length=20)
+    amount = models.IntegerField()
+# feesstructure models
+
 class Fees(models.Model):
     paymentid =models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
     stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Student ID")
