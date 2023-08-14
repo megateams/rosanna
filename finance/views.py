@@ -1,13 +1,17 @@
 
 from django.shortcuts import render, HttpResponse,redirect
 from .models import *
+from django.db.models import Sum
 from django.contrib import messages
 from frontend.models import Schoolclasses
 
 
 # Create your views here.
 def financedashboard(request):
-    return render(request, "finance/financedashboard.html")
+    expenses = ExpenseRecord.objects.all()
+    total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    return render(request, "finance/financedashboard.html", {'total_amount_paid': total_amount_paid})
+
 
 # fees views
 def financeaddFees(request):
@@ -115,8 +119,13 @@ def financeaddExpenses(request):
     return render(request, 'finance/expenses/financeaddExpenses.html')
 
 def financeexpensesList(request):
+    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
-    return render(request, 'finance/expenses/financeexpensesList.html', {'expenses': expenses})
+    context = {
+        'expenses': expenses,
+        'total_amount_paid': total_amount_paid,
+    }
+    return render(request, 'finance/expenses/financeexpensesList.html', context)
 
 def delete_expense(request, expenseid):
     try:
