@@ -2,6 +2,7 @@
 from django.shortcuts import render, HttpResponse,redirect
 from .models import *
 from django.contrib import messages
+from frontend.models import Schoolclasses
 
 
 # Create your views here.
@@ -22,21 +23,17 @@ def financeaddFeesstructure(request):
     if request.method == 'POST':
         classname = request.POST.get('classname')
         amount = request.POST.get('amount')
-        Feesstructure.objects.create(classname=classname, amount=amount)
-        # messages.success(request, 'Fees Structure added successfully!')
 
-        # Check if the class already exists in the database
-        if Feesstructure.objects.filter(classname=classname).exists():
-            messages.error(request, f"Class '{classname}' already exists in the Fees Structure.")
+        this_class = Feesstructure.objects.filter(classname = classname)
+        if(this_class):
+            messages.success(request, "This class already exists")
         else:
-            # If class does not exist, create and save the new Fees Structure entry
-            fees_structure = Feesstructure(classname=classname, amount=amount)
+            fees_structure = Feesstructure.objects.create(classname=classname, amount=amount)
             fees_structure.save()
             messages.success(request, f"Fees Structure for class '{classname}' added successfully.")
-
         return redirect('Add Fees Structure')
-    
-    return render(request, 'finance/feesstructure/financeaddFeesstructure.html')
+    classes = Schoolclasses.objects.all()
+    return render(request, 'finance/feesstructure/financeaddFeesstructure.html',{"classes":classes})
 
 def financefeesstructureList(request):
     fees_list = Feesstructure.objects.all()
@@ -95,10 +92,70 @@ def financesupportstaffpaymentsList(request):
 
 # expenses views
 def financeaddExpenses(request):
-    return render(request,'finance/expenses/financeaddExpenses.html')
+    success_message = None
+    
+    if request.method == 'POST':
+        expenseid = request.POST.get('expenseid')
+        category = request.POST.get('category')
+        amountrequired = request.POST.get('amountrequired')
+        expensedate = request.POST.get('expensedate')
+        amountpaid = request.POST.get('amountpaid')
+        balance = request.POST.get('balance')
+        
+        expense_record = ExpenseRecord(
+            expenseid=expenseid,
+            category=category,
+            amountrequired=amountrequired,
+            expensedate=expensedate,
+            amountpaid=amountpaid,
+            balance=balance
+        )
+        expense_record.save()
+        messages.success(request, 'Expense added successfully.')  # Display a success message
+        return redirect('Expenses List')  # Redirect to expenses list page
+    
+    return render(request, 'finance/expenses/financeaddExpenses.html')
 
 def financeexpensesList(request):
-    return render(request,'finance/expenses/financeexpensesList.html')
+    expenses = ExpenseRecord.objects.all()
+    return render(request, 'finance/expenses/financeexpensesList.html', {'expenses': expenses})
+
+def delete_expense(request, expenseid):
+    try:
+        expense = ExpenseRecord.objects.get(expenseid=expenseid)
+        expense.delete()
+        messages.success(request, 'Expense deleted successfully.')
+    except ExpenseRecord.DoesNotExist:
+        messages.error(request, 'Expense not found.')
+
+    return redirect('Expenses List')
+
+def edit_expense(request, expenseid):
+    try:
+        expense = ExpenseRecord.objects.get(expenseid=expenseid)
+        
+        if request.method == 'POST':
+            updated_category = request.POST.get('category')
+            updated_amountrequired = request.POST.get('amountrequired')
+            updated_expensedate = request.POST.get('expensedate')
+            updated_amountpaid = request.POST.get('amountpaid')
+            updated_balance = request.POST.get('balance')
+            
+            expense.category = updated_category
+            expense.amountrequired = updated_amountrequired
+            expense.expensedate = updated_expensedate
+            expense.amountpaid = updated_amountpaid
+            expense.balance = updated_balance
+            expense.save()
+            messages.success(request, 'Expense updated successfully.')
+            return redirect('Expenses List')
+        
+        context = {'expense': expense}
+        return render(request, 'finance/expenses/edit_expense.html', context)
+    
+    except ExpenseRecord.DoesNotExist:
+        messages.error(request, 'Expense not found.')
+        return redirect('Expenses List')
 # expenses views
 
 def financeReports(request):

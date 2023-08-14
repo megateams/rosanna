@@ -31,8 +31,10 @@ urlpatterns = [
     path('deletefeesstructure/<int:feesstructureid>/', views.deletefeesstructure, name='deletefeesstructure'),
 
    
-   path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
+    path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
+    path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
+    path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
     path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
