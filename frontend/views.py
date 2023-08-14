@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
+from finance.models import Feesstructure
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -496,3 +497,16 @@ def supportstaffList(request):
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
 
+# Accounting
+def feesstructure(request):
+    feesstructure = Feesstructure.objects.all()
+    return render(request, 'frontend/accounting/feesstructure.html',{"feesstructure": feesstructure})
+
+def fees(request):
+    return render(request, 'frontend/accounting/fees.html')
+def teacherspayments(request):
+    return render(request, 'frontend/accounting/teacherspayments.html')
+def supportstaffpayments(request):
+    return render(request, 'frontend/accounting/supportstaffpayments.html')
+def expenses(request):
+    return render(request, 'frontend/accounting/expenses.html')

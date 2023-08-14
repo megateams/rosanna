@@ -47,4 +47,11 @@ urlpatterns = [
     path('showclasses/' , views.showclasses , name='showclasses'),
     path('addclasses/sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
     path('addclasses/' , views.addclasses , name='AddClasses'),
+
+    # accounting 
+    path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
+    path('feeslist/', views.fees, name='Fees '),
+    path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
+    path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
+    path('expenseslist/', views.expenses, name='Expenses '),
 ]
