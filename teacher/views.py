@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
-
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+import os
+from xhtml2pdf import pisa
+from django.conf import settings
 # Create your views here.
 
 # view for the login page
@@ -263,6 +267,7 @@ def his_class(request, class_id, teacher_id):
 
 # view marks
 
+
 def view_marks(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
@@ -273,6 +278,7 @@ def view_marks(request, class_id, teacher_id):
 
     # Get all subjects
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+    subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
     # Create a dictionary to hold the total and average marks for each subject for each student
@@ -282,6 +288,7 @@ def view_marks(request, class_id, teacher_id):
 
     for student in students:
         student_subjects_data = []
+        total_average_marks = 0  # Initialize total_average_marks for each student
         for subject in subjects:
             total_marks = 0
             marks_count = 0
@@ -293,6 +300,9 @@ def view_marks(request, class_id, teacher_id):
                 subjects_marks_count[subject] += 1
 
             average_marks = total_marks / marks_count if marks_count > 0 else 0
+            total_average_marks += average_marks
+            final_average = total_average_marks / subjects_count if marks_count > 0 else 0
+              # Accumulate average marks for the student
             student_subjects_data.append({
                 'subject': subject,
                 'total_marks': total_marks,
@@ -300,13 +310,17 @@ def view_marks(request, class_id, teacher_id):
             })
 
         subjects_marks_data[student] = student_subjects_data
-
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+        student.final_average = final_average
     # Calculate average marks for each subject across all students
     subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
                               for subject, total_marks in subjects_total_marks.items()}
+    # Sort the students based on their final average marks in descending order
+    students = sorted(students, key=lambda student: student.final_average, reverse=True)
 
-    
-
+    # Assign ranks to students based on their position in the sorted list
+    for rank, student in enumerate(students, start=1):
+        student.rank = rank
     return render(request, 'teacher/marks/view_all_marks.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
@@ -319,7 +333,6 @@ def view_marks(request, class_id, teacher_id):
 
 
 # views.py
-
 def view_marks_by_marktype(request, class_id, teacher_id):
     schoolclass = Schoolclasses.objects.get(classid=class_id)
     teacher = Teachers.objects.get(teacherid=teacher_id)
@@ -356,6 +369,31 @@ def view_marks_by_marktype(request, class_id, teacher_id):
         'mark_types' :mark_types,
         'mark_type' :mark_type,
     })
+
+
+# generation of a report card
+
+def generate_report(request, student_id):
+   # Retrieve student and other data here
+    student = Student.objects.get(pk=student_id)
+    
+    # Construct the URL for the image using STATIC_URL
+    image_url = request.build_absolute_uri(settings.STATIC_URL + 'images/rosannalogo.png')
+
+    # Render the report template
+    context = {
+        "student": student,
+        "image_url": image_url,  # Pass the image URL to the template
+    }
+    html = render_to_string("teacher/reports/report_card.html", context)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'filename="report.pdf"'
+
+    # Generate PDF using xhtml2pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    return response
+
 
 
 

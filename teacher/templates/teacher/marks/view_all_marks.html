@@ -32,8 +32,10 @@
                         <th>{{ subject.subjectname|slice:":3" }}</th>
                         <th>Grade</th>
                     {% endfor %}
-                    <!-- <th>Total</th>
-                    <th>Average</th> -->
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>Position</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -66,8 +68,12 @@
                                 {% endif %}
                             </td>
                         {% endfor %}
-                        <!-- <td><b>{{ total_average_marks }}</b></td>
-                        <td><b>{{ overall_average_mark|floatformat:2 }}</b></td> -->
+                        <td><b>{{ student.total_average_marks|floatformat:0 }}</b></td>
+                        <td><b>{{ student.final_average|floatformat:2 }}</b></td>
+                        <td>{{student.rank}}</td>
+                        <td>
+                            <button class="btn btn-primary generate-report" data-student="{{ student.pk }}">Generate</button>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -75,4 +81,13 @@
     </div>
     
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".generate-report").click(function() {
+            var studentId = $(this).data("student");
+            window.location.href = `/teacher/report_card/${studentId}`;  // Replace with your URL pattern
+        });
+    });
+</script>
 {% endblock main %}

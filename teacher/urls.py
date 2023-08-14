@@ -22,4 +22,7 @@ urlpatterns = [
     path('teacher/class_details/<int:class_id>/<teacher_id>', views.class_details, name='Class Details'),
     path('teacher/his_class/<int:class_id>/<teacher_id>', views.his_class, name=''),
     path('teacher/class_details/addmarks/<int:class_id>/<teacher_id>/<subject_id>', views.addsubjectmarks, name= 'Add Subject marks'),
+
+    # generate report card
+    path('teacher/report_card/<student_id>', views.generate_report, name='Student report card'),
 ]
