@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
-from finance.models import Feesstructure
+from finance.models import Feesstructure, ExpenseRecord
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -500,6 +500,8 @@ def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
 def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
+    
 def expenses(request):
-    return render(request, 'frontend/accounting/expenses.html')
+    expenses = ExpenseRecord.objects.all()
+    return render(request, 'frontend/accounting/expenses.html',{"expenses": expenses})
         

@@ -34,7 +34,7 @@ class Fees(models.Model):
     Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
     
 class ExpenseRecord(models.Model):
-    expenseid =models.CharField( max_length =50, primary_key=True, verbose_name="Expense ID")
+    expenseid = models.AutoField(primary_key=True)
     category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
     amountrequired =models.CharField(max_length=20, blank=True, verbose_name="Amount required")
     expensedate =models.DateField(verbose_name="Date of Expense")

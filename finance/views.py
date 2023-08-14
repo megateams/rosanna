@@ -92,10 +92,9 @@ def financesupportstaffpaymentsList(request):
 
 # expenses views
 def financeaddExpenses(request):
-    success_message = None
+    
     
     if request.method == 'POST':
-        expenseid = request.POST.get('expenseid')
         category = request.POST.get('category')
         amountrequired = request.POST.get('amountrequired')
         expensedate = request.POST.get('expensedate')
@@ -103,7 +102,6 @@ def financeaddExpenses(request):
         balance = request.POST.get('balance')
         
         expense_record = ExpenseRecord(
-            expenseid=expenseid,
             category=category,
             amountrequired=amountrequired,
             expensedate=expensedate,
@@ -112,7 +110,7 @@ def financeaddExpenses(request):
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
-        return redirect('Expenses List')  # Redirect to expenses list page
+        return redirect('Add Expenses')  # Redirect to expenses list page
     
     return render(request, 'finance/expenses/financeaddExpenses.html')
 
@@ -148,7 +146,7 @@ def edit_expense(request, expenseid):
             expense.balance = updated_balance
             expense.save()
             messages.success(request, 'Expense updated successfully.')
-            return redirect('Expenses List')
+            return redirect('Add Expenses')
         
         context = {'expense': expense}
         return render(request, 'finance/expenses/edit_expense.html', context)

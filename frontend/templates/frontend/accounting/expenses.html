@@ -21,32 +21,19 @@
                     <th>Expense Date</th>
                     <th>Amount Paid</th>
                     <th>Balance</th>
-                    
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for expense in expenses %}
                 <tr>
-                    <th>E001</th>
-                    <th>Buying Books</th>
-                    <th>200,000</th>
-                    <th>27-08-22</th>
-                    <th>45000</th>
-                    <th>00000</th>
-
-                   <td>
-                    <div>
-                        <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
+                    <td>{{ expense.expenseid }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.amountrequired }}</td>
+                    <td>{{ expense.expensedate }}</td>
+                    <td>{{ expense.amountpaid }}</td>
+                    <td>{{ expense.balance }}</td>
                 </tr>
-
-                
-                
-                
-                
+                {% endfor %}   
             </tbody>
         </table>
     </div>
