@@ -46,6 +46,36 @@ def financefeesstructureList(request):
 
     return render(request, 'finance/feesstructure/financefeesstructureList.html', context)
 
+def deletefeesstructure(request, feesstructureid):
+    try:
+        fees_structure = Feesstructure.objects.get(pk=feesstructureid)
+        fees_structure.delete()
+        messages.success(request, 'Fees Structure deleted successfully.')
+    except Feesstructure.DoesNotExist:
+        messages.error(request, 'Fees Structure not found.')
+    
+    return redirect('Fees Structure List')
+
+def editfeesstructure(request, feesstructureid):
+    try:
+        fees_structure = Feesstructure.objects.get(pk=feesstructureid)
+        if request.method == 'POST':
+            updated_classname = request.POST.get('classname')
+            updated_amount = request.POST.get('amount')
+            
+            fees_structure.classname = updated_classname
+            fees_structure.amount = updated_amount
+            fees_structure.save()
+            messages.success(request, 'Fees Structure updated successfully.')
+            return redirect('Fees Structure List')
+            
+        context = {'fees_structure': fees_structure}
+        return render(request, 'finance/feesstructure/editfeesstructure.html', context)
+    except Feesstructure.DoesNotExist:
+        messages.error(request, 'Fees Structure not found.')
+        return redirect('Fees Structure List')
+
+
 # feesstructure views
 
 # teacherpayments views

@@ -12,6 +12,21 @@
     </div>
     <div class="table-section" style="font-size: 14px;"> 
         
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+
         <table class="table" id="table">
             <thead>
                 <tr>
@@ -26,8 +41,9 @@
                     <td>{{ Feesstructure.classname }}</td>
                     <td>{{ Feesstructure.amount }}</td>   
                    <td>
-                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>    
+                        <!-- <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a> -->
+                        <a href="{% url 'editfeesstructure' Feesstructure.feesstructureid %}" class="text-primary"><i class="fas fa-edit mr-2"></i></a>
+                        <a href="{% url 'deletefeesstructure' Feesstructure.feesstructureid %}" class="text-danger"><i class="fa fa-trash"></i></a>
                     </td>
 
                 </tr>
