@@ -6,7 +6,7 @@ from django.contrib import messages
 from frontend.models import Schoolclasses, Student
 from django.shortcuts import render, HttpResponse , redirect
 from django.contrib import messages
-from .models import Supportstaff , Staffpayments , ExpenseRecord , Fees , Bankdetails , Receipts , Supportstaffpayment , Teacherspayment , Teachers
+# from .models import Supportstaff , Staffpayments , ExpenseRecord , Fees , Bankdetails , Receipts , Supportstaffpayment , Teacherspayment , Teachers
 
 # Create your views here.
 #  Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
