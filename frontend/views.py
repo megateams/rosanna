@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
+from django.db.models import Sum
 from finance.models import Feesstructure, ExpenseRecord
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
@@ -502,6 +503,11 @@ def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
     
 def expenses(request):
+    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
-    return render(request, 'frontend/accounting/expenses.html',{"expenses": expenses})
+    context = {
+        'expenses': expenses,
+        'total_amount_paid': total_amount_paid,
+        }
+    return render(request, 'frontend/accounting/expenses.html',context)
         

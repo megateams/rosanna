@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse,redirect
 from .models import *
 from django.db.models import Sum
 from django.contrib import messages
-from frontend.models import Schoolclasses
+from frontend.models import Schoolclasses, Student
 
 
 # Create your views here.
@@ -15,10 +15,39 @@ def financedashboard(request):
 
 # fees views
 def financeaddFees(request):
-    return render(request,'finance/fees/financeaddFees.html')
+    if request.method == 'POST':
+        stdnumber = request.POST.get('stdnumber')
+        stdname = Student.objects.get(stdnumber=stdnumber).childname  # Get student name
+        studentclass = request.POST.get('studentclass')
+        classfees = request.POST.get("classfees")
+        amount = request.POST.get("amount") # Get amount from fees structure
+        balance = int(classfees) - int(amount)
+        modeofpayment = request.POST.get('modeofpayment')
+        date = request.POST.get('date')
+        
+        # Create a new Fees object and save it to the database
+        fees = Fees(
+            stdnumber_id=stdnumber,
+            stdname=stdname,
+            studentclass=studentclass,
+            amount=amount,
+            balance=balance,
+            modeofpayment=modeofpayment,
+            date=date
+        )
+        fees.save()
+
+        messages.success(request, 'Fees registered successfully.')
+        return redirect('Add Fees')
+
+    students = Student.objects.all()
+    fees_structures = Feesstructure.objects.all()
+    return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
+
 
 def financefeesList(request):
-    return render(request,'finance/fees/financefeesList.html')
+    fees_list = Fees.objects.all()
+    return render(request,'finance/fees/financefeesList.html',{'fees_list': fees_list})
 # fees views
 
 # feesstructure views
@@ -170,6 +199,26 @@ def financeReports(request):
 
 def financeStatistics(request):
     return render(request, 'finance/financeStatistics.html')
+
+
+from django.core import serializers
+from django.http import JsonResponse
+
+def get_stdclass(request, stdnumber):
+    try:
+        student = Student.objects.get(stdnumber=stdnumber)
+        classname =  student.stdclass.classname
+
+        fees_structure = Feesstructure.objects.get(classname = classname)
+        amount = fees_structure.amount
+        
+        class_data = {
+            'classname': classname,
+            'amount': amount
+        }
+        return JsonResponse(class_data)
+    except Student.DoesNotExist:
+        return JsonResponse({}, status=404)
 
 
 

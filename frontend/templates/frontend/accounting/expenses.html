@@ -10,6 +10,8 @@
         <!-- <a href="/financeaddexpenses" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Expenses</a> -->
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
+    <!-- Display the total amount paid -->
+    <h3>Total Amount Paid: {{ total_amount_paid|default:"0" }}</h3>
     <div class="table-section" style="font-size: 14px;"> 
         
         <table class="table" id="table" border="1">

@@ -44,4 +44,7 @@ urlpatterns = [
 
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
+    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
+
+    
 ]

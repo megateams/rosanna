@@ -10,7 +10,8 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
                
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Fees</h5>
             <hr>
@@ -20,28 +21,33 @@
         <div class="fees-info">
             <div class="row">
                 <!-- paymentid -->
-                <div class="form-group col-md-6">
+                <!-- <div class="form-group col-md-6">
                     <label for="">Payment ID: </label>
                     <input type="text" name="paymentid" class="form-control">
-                </div>
+                </div> -->
                 <!-- studentno -->
+                <!-- student select -->
                 <div class="form-group col-md-6">
-                    <label for=""> Student Number </label>
-                    <input type="text" name="stdnumber" class="form-control">
+                    <label for="stdnumber">Select Student:</label>
+                    <select name="stdnumber" id="stdnumber" class="form-control">
+                        <option value="" selected disabled>Select Student</option>
+                        {% for student in students %}
+                            <option value="{{ student.stdnumber }}" data-name="{{ student.childname }}">{{ student.childname }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
 
             <div class="row">
-                <!-- stdname -->
                 <div class="form-group col-md-6">
-                    <label for="">Student Name </label>
-                    <input type="text" name="stdname" class="form-control">
+                    <label for="studentclass">Student Class:</label>
+                    <input type="text" id="studentclass" name="studentclass" class="form-control" readonly>
                 </div>
-                <!-- student class -->
                 <div class="form-group col-md-6">
-                    <label for=""> Student Class </label>
-                    <input type="text" name="studentclass" class="form-control">
+                    <label for="studentclass">Class Fees:</label>
+                    <input type="text" id="classfees" name="classfees" class="form-control" readonly>
                 </div>
+
             </div>
 
             <div class="row">
@@ -79,8 +85,6 @@
         <div class="form-group">
             <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
         </div>
-        
-
         
     </form>
     <!-- form-section -->
