@@ -10,7 +10,23 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
                
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="" method='POST' class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
+
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
+
         <div class="title">
             <h5 class="text-uppercase text-center">Register Supportstaffpayments</h5>
             <hr>
@@ -21,12 +37,16 @@
             <div class="row">
                 <!-- teacherid -->
                 <div class="form-group col-md-6">
-                    <label for="">SStaff ID: </label>
-                    <input type="text" name="support-staffid" class="form-control">
+                    <label for="">Support Staff ID: </label>
+                    <select name="support-staffid" class="form-control">
+                        {% for id in ids %}
+                        <option>{{ id.supportstaffid }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <!-- staffname-->
                 <div class="form-group col-md-6">
-                    <label for=""> SStaff Name </label>
+                    <label for=""> Support Staff Name </label>
                     <input type="text" name="support-staffname" class="form-control">
                 </div>
             </div>

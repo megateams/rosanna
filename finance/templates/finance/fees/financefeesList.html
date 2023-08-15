@@ -29,6 +29,7 @@
             <tbody>
                 {% for fee in fees_list %}
                 <tr>
+ 
                     <td>{{ fee.paymentid }}</td>
                     <td>{{ fee.stdnumber.stdnumber }}</td>
                     <td>{{ fee.stdname }}</td>
@@ -37,6 +38,7 @@
                     <td>{{ fee.balance }}</td>
                     <td>{{ fee.modeofpayment }}</td>
                     <td>{{ fee.date }}</td>
+
                    <td>
                         <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>

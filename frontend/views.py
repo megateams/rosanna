@@ -14,6 +14,40 @@ from django.utils.decorators import method_decorator
 
 # Create your views here.
 # creating views for dashboard
+def deletemarks(request , id):
+    marks = Marks.objects.filter(id = id)
+    marks.delete()
+    messages.success(request , 'Marks Deleted')
+    return redirect('viewmarks')
+
+def DeleteStudent(request , stdnumber):
+    student = Student.objects.filter(stdnumber = stdnumber)
+    student.delete()
+    messages.success(request, 'Student Deleted Successfully')
+    return redirect('Studentslist')
+
+def DeleteSupportStaff(request , id):
+    supportstaff = Supportstaff.objects.filter(id = id)
+    supportstaff.delete()
+    messages.success(request, 'Support stuff deleted')
+    return redirect('deleteSupportStuff')
+
+def Support_Staff_list_View(request):
+    supportstafflist = Supportstaff.objects.all()
+    return render(request , 'frontend/staff/supportstaffList.html' , {'supportstafflist':supportstafflist})
+
+def deleteclass(request, classid):
+    classes = Schoolclasses.objects.filter(classid = classid)
+    classes.delete()
+    messages.success(request, 'Class deleted')
+    return redirect("showclasses")
+
+def deletesubject(request , subjectid):
+    subject = Subjects.objects.filter(subjectid = subjectid)
+    subject.delete()
+    messages.success(request, 'Subject deleted')
+    return redirect("Subjects")
+    
 def home(request):
     if request.session.get('logged_out', False):
         messages.warning(request, "You need to login to access the dashboard")
@@ -130,7 +164,84 @@ def get_subjects(request, class_id):
     subjects = class_obj.subjects.all().values('subjectid', 'subjectname')
     return JsonResponse(list(subjects), safe=False)
 
+# classes views
+# def addClass(request):
+#     return render(request,'frontend/classes/addClass.html')
+
+# def classList(request):
+#     return render(request,'frontend/classes/classList.html')
+# classes views
+
 # marks views
+
+def addmarks(request):
+    studentdata = Student.objects.all()
+    studentnumber = Student.objects.filter(stdnumber)
+    return render(request,'frontend/marks/addMarks.html', {'students': studentdata})
+
+def submitmarks(request):
+    # studentnumbers = Marks.objects.values_list('stdnum_id')
+    #render(request, 'frontend/marks/addmarks.html' , {'stdnumbers':studentnumbers})
+    if request.method == 'POST':
+        stdnum = request.POST.get('stdnum')
+        term = request.POST.get('term')
+        year = request.POST.get('year')
+        studentclass = request.POST.get('studentclass')
+        math = request.POST.get('math')
+        eng = request.POST.get('eng')
+        sci = request.POST.get('sci')
+        sst = request.POST.get('sst')
+        re = request.POST.get('re')
+        computer = request.POST.get('computer')
+        
+        Marks.objects.create(
+            stdnum = stdnum ,
+            term = term ,
+            year = year ,
+            studentclass = studentclass ,
+            math = math ,
+            eng = eng ,
+            sci = sci ,
+            sst = sst ,
+            re = re ,
+            computer = computer 
+        )
+        
+        Marks.save
+    marks = Marks.objects.all()
+    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
+
+def marksList(request):
+    marks = Marks.objects.all()
+    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
+# marks views
+
+
+# subjects views
+def addSubject(request):
+    if request.method == 'POST':
+        subjectname = request.POST.get('subjectname')
+        subjectid = request.POST.get('subjectid')
+        level = request.POST.get('classlevel')
+        subjecthead = request.POST.get('subjecthead')
+        
+        Subjects.objects.create(
+            subjectname = subjectname ,
+            subjectid = subjectid ,
+            classlevel = level ,
+            subjecthead = subjecthead ,
+        )
+        
+        Subjects.save
+    return render(request,'frontend/subjects/addSubject.html')
+
+def subjectList(request):
+    subjects = Subjects.objects.all
+    return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects})
+# classes views
+
+def showStudent(request):
+    return render(request, 'frontend/student/showStudent.html')
 def addMarks(request):
     # frontend/views.py
     if request.method == 'POST':
@@ -307,13 +418,13 @@ def subjects(request):
     if request.method == 'POST':
         subjectnames = request.POST.get('subjectname')
         subjectids = request.POST.get('subjectid')
-        classlevels = request.POST.get('classlevel')
+        classlevel = request.POST.get('classlevel')
         subjectheads = request.POST.get('subjecthead')
     
         Subjects.objects.create(
             subjectname = subjectnames , 
             subjectid = subjectids , 
-            classlevel = classlevels , 
+            classlevel = classlevel , 
             subjecthead = subjectheads
         )
     
@@ -329,7 +440,78 @@ def showclasses(request):
     teachers = Teachers.objects.all()
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
 
+    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+
+
 def addclasses(request):
+    return render(request , 'frontend/academics/addclasses.html')
+    # classes = Schoolclasses.objects.all()
+    # return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
+    
+def schoolclasses(request):
+    if request.method == 'POST':
+        classname = request.POST.get('classname')
+        classid = request.POST.get('classid')
+        classteacher = request.POST.get('classteacher')
+        classlevels = request.POST.get('classlevel')
+        numofstds = request.POST.get('numofstds')
+    
+        Schoolclasses.objects.create(
+            classname = classname ,
+            classid = classid ,
+            classlevels = classlevels ,
+            classteacher = classteacher ,
+            numofstds = numofstds 
+        )
+    
+        Schoolclasses.save
+        classes = Schoolclasses.objects.all()
+    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+    
+def teachers(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        teachernames = request.POST.get('teachernames')
+        dob = request.POST.get('dob')
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        classes = request.POST.get('classes')
+        joiningdate = request.POST.get('joiningdate')
+        position = request.POST.get('position')
+        subject = request.POST.get('subject')
+        qualification = request.POST.get('qualification')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        Teachers.objects.create(
+            teacherid = teacherid ,
+            teachernames = teachernames ,
+            dob = dob ,
+            gender = gender ,
+            contact = contact ,
+            email = email ,
+            address = address ,
+            classes = classes ,
+            joiningdate = joiningdate ,
+            position = position ,
+            subject = subject , 
+            qualification = qualification ,
+            username = username , 
+            password = password
+        )
+        supportStaffReg.save()
+        messages.success(request, f" Your data, {fullname} has been successfully added!")
+                
+        # Redirect to the registration page for support staff after successful data addition
+        return redirect('AddSupportstaff')
+   
+def supportstaffList(request):
+    # Retrieve all support staff data from the database
+    all_support_staff = Supportstaff.objects.all()
+    # Pass the data to the template for rendering
+    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
     return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects, 'teachers':teachers})
@@ -436,7 +618,6 @@ def teacher_export_to_excel(request):
         wb.save(response)
         
         return response
-
         
     # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})
     
@@ -519,4 +700,5 @@ def expenses(request):
         }
     return render(request, 'frontend/accounting/expenses.html',context)
         
-    return render(request, 'frontend/accounting/expenses.html')
+    
+
