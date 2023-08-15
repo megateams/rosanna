@@ -25,21 +25,24 @@ def financeaddFees(request):
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
         
-        # Create a new Fees object and save it to the database
-        fees = Fees(
-            stdnumber_id=stdnumber,
-            stdname=stdname,
-            studentclass=studentclass,
-            amount=amount,
-            balance=balance,
-            modeofpayment=modeofpayment,
-            date=date
-        )
-        fees.save()
+        if amount >= classfees:
+            # Create a new Fees object and save it to the database
+            fees = Fees(
+                stdnumber_id=stdnumber,
+                stdname=stdname,
+                studentclass=studentclass,
+                amount=amount,
+                balance=balance,
+                modeofpayment=modeofpayment,
+                date=date
+            )
+            fees.save()
 
-        messages.success(request, 'Fees registered successfully.')
-        return redirect('Add Fees')
-
+            messages.success(request, 'Fees registered successfully.')
+            return redirect('Add Fees')
+        
+        else:
+            messages.error(request, 'Amount is greater than the class fees. Please try again')
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})

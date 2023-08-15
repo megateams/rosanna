@@ -312,11 +312,11 @@ def view_marks(request, class_id, teacher_id):
         subjects_marks_data[student] = student_subjects_data
         student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-    # Calculate average marks for each subject across all students
-    subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                              for subject, total_marks in subjects_total_marks.items()}
-    # Sort the students based on their final average marks in descending order
-    students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        # Calculate average marks for each subject across all students
+        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
+                                for subject, total_marks in subjects_total_marks.items()}
+        # Sort the students based on their final average marks in descending order
+        students = sorted(students, key=lambda student: student.final_average, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
