@@ -20,7 +20,7 @@
 
     <!-- form-section -->
     
-    <form method="post" action="sendclasses/">
+    <form method="post" class="shadow p-3 bg-white rounded" action="sendclasses/">
         {% csrf_token %}
         {% if messages %}
         <ul class="messages">
@@ -34,11 +34,26 @@
         {% endfor %}
         </ul>
         {% endif %}
-        <div class="form-group">
+
+        <div class="row">
+          <div class="form-group col-6">
             <label for="class_name">Class Name:</label>
             <input type="text" class="form-control" id="class_name" name="class_name" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="class_level">Class Level:</label>
+            <select class="form-control" id="class_name" name="class_level" required>
+              <option value="" selected disabled>---</option>
+              <option value="upper-primary">Upper Primary</option>
+              <option value="lower-primary">Lower Primary</option>
+              <option value="nursery">Nursery</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
+        
+        <div class="row">
+          
+          <div class="form-group col-6">
             <label>Subjects:</label>
             {% for subject in subjects %}
             <div class="subject">
@@ -46,9 +61,20 @@
                 <label for="subject_{{ forloop.counter }}">{{ subject.subjectname }}</label>
             </div>
             {% endfor %}
+          </div>
+          <div class="form-group col-6">
+            <label for="classteacher">Class Teacher:</label>
+            <select type="text" class="form-control" id="classteacher" name="classteacher" required>
+              <option value="" selected disabled>---</option>
+              {% for teacher in teachers %}
+              <option value="{{teacher.teacherid}}">{{teacher.teachernames}}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
+        
         <div class="form-group">
-            <button type="submit">Save</button>
+            <button type="submit" class="btn btn-sm btn-dark" style="width: 150px;">Save</button>
         </div>
     </form>
     <!-- form-section -->

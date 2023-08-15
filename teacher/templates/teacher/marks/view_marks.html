@@ -1,0 +1,94 @@
+    {% extends 'teacher/base.html' %}
+    {% block title %} View Class {% endblock title %}
+    {% load static %}
+    {% load custom_filters %}
+
+    {% block main %}
+    <div class="inner-content">
+        <div class="header d-flex" style="margin-bottom: 10px;">
+            <div class="class-btns" pr-5>
+                <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
+                <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
+                <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+            </div>
+        </div>
+        {% for mark_type in mark_types %}
+            <a href="/teacher/his_class/view_mark/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_type.0 }}"
+            class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
+                {{ mark_type.1 }} Results
+            </a>
+        {% endfor %}
+        <div class="header">
+            <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
+        </div>
+        <div class="students-list" style="font-size: 14px;">
+            <table class="table bg-white" id="table" border="1">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th>Reg Number</th>
+                        <th>Name</th>
+                        {% for subject in subjects %}
+                            <th>{{ subject.subjectname|slice:":3" }}</th>
+                            <th>Grade</th>
+                        {% endfor %}
+                        <th>Total</th>
+                        <th>Average</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student, marks_dict in student_marks.items %}
+                        <tr>
+                            <td>{{ student.stdnumber }}</td>
+                            <td>{{ student.childname }}</td>
+                            {% for subject in subjects %}
+                                <td>
+                                    {% with marks=marks_dict|get_item:subject %}
+                                        {% if marks %}
+                                            {{ marks.marks_obtained }}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {% with marks=marks_dict|get_item:subject %}
+                                        {% if marks %}
+                                            {% if marks.marks_obtained >= 80 %}
+                                                <p>D1</p>
+                                            {% elif marks.marks_obtained >= 75 %}
+                                                <p>D2</p>
+                                            {% elif marks.marks_obtained >= 70 %}
+                                                <p>C3</p>
+                                            {% elif marks.marks_obtained >= 65 %}
+                                                <p>C4</p>
+                                            {% elif marks.marks_obtained >= 60 %}
+                                                <p>C5</p>
+                                            {% elif marks.marks_obtained >= 50 %}
+                                                <p>C6</p>
+                                            {% elif marks.marks_obtained >= 45 %}
+                                                <p>P7</p>
+                                            {% elif marks.marks_obtained >= 40 %}
+                                                <p>P8</p>
+                                            {% else %}
+                                                <p>F9</p>
+                                            {% endif %}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td>{{ student.total_marks }}</td>
+                            <td>{{ student.average_marks|floatformat:1 }}</td>
+                            <td>
+                                <a href="" class="btn btn-sm text-primary"><i class="fas fa-edit    "></i></a>
+                                <a href="" class="btn btn-sm text-danger"><i class="fas fa-trash    "></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock main %}

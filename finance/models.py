@@ -13,11 +13,20 @@ CLASS_CHOICES =[
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
 ]
+
+# feesstructure models
+class Feesstructure(models.Model):
+    feesstructureid = models.AutoField(primary_key=True)
+    classname = models.CharField(max_length=20)
+    amount = models.IntegerField()
+# feesstructure models
+
 class Fees(models.Model):
-    paymentid = models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
+    #paymentid = models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
+    paymentid = models.AutoField(primary_key=True)
     stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Student ID")
     stdname = models.CharField(max_length=255, blank =True, verbose_name="Student name")
-    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='Class' , blank=True)
+    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=20 , verbose_name='Class' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment = models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
@@ -26,7 +35,7 @@ class Fees(models.Model):
     Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
     
 class ExpenseRecord(models.Model):
-    expenseid =models.CharField( max_length =50, primary_key=True, verbose_name="Expense ID")
+    expenseid = models.AutoField(primary_key=True)
     category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
     amountrequired =models.CharField(max_length=20, blank=True, verbose_name="Amount required")
     expensedate =models.DateField(verbose_name="Date of Expense")

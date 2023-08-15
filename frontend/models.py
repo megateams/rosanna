@@ -45,9 +45,12 @@ class Schoolclasses(models.Model):
     classid = models.AutoField(primary_key=True, verbose_name="Class id")
     #subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+    classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+    class_level = models.CharField(max_length =20 ,default=None, verbose_name = "Class Level")
+    classteacher = models.CharField(max_length =20 ,default=None, verbose_name = "Class teacher")
     
     Display_schoolclasses = [
-        'classid','classname' 
+        'classid','classname','class_level','classteacher' 
     ]
 
 #students model

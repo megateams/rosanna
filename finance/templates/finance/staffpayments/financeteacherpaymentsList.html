@@ -11,6 +11,7 @@
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
+
         {% if messages %}
         <ul class="messages">
         {% for message in messages %}
@@ -24,6 +25,7 @@
         </ul>
         {% endif %}
         <table class="table" id="table">
+        <table class="table" id="table" border="1">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -56,6 +58,8 @@
                     <div>
                         <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="deleteteacherpayment/{{ teacher.id }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
+                        <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
                         
                     </div> </td>
     

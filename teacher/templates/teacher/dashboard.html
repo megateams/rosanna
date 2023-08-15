@@ -7,6 +7,8 @@
         <div class="col-md-8">
             <div class="welcome-message shadow">
                 <h3 class="text-left "> Your Welcome our Dearest Teacher </h3>
+                
+                
             </div>
             
             <div class="row ml-2" style="margin: 30px 0;">
@@ -20,26 +22,66 @@
                 </div>
             </div>
             <hr>
-            <div class="header mt-5 ml-2">
+            <div class="header mt-3 ml-2">
                 <h5> YOUR CLASSES:</h5>
             </div>
             <div class="row">
                 {% for class in teacher.classes.all %}
-                    <div class="col-md-6 ">
-                        <a href="/teacher/class_details/{{class.classid}}/{{teacher.teacherid}}" style="text-decoration: none;">
-                            <div class="card classcard p-4">
-                                <div class="row">
-                                    <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
-                                        <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                    {% if teacher.position == 'classteacher' %}
+                        {% if class.classname == his_class.classname %}
+                        <div class="col-md-6 mb-3">
+                            <a href="/teacher/his_class/{{class.classid}}/{{teacher.teacherid}}" style="text-decoration: none;">
+                                <div class="card classcard bg-primary p-4">
+                                    <div class="row">
+                                        <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                            <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <div class="col-7 ">
+                                            <h5 class="text-center"> {{class.classname}}</h3> 
+                                        </div>
                                     </div>
-                                    <div class="col-7 ">
-                                        <h5 class="text-center"> {{class.classname}}</h3> 
-                                    </div>
+                                
                                 </div>
-                            
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6 mb-3">
+                            <a href="/teacher/class_details/{{class.classid}}/{{teacher.teacherid}}" style="text-decoration: none;">
+                                <div class="card classcard p-4">
+                                    <div class="row">
+                                        <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                            <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <div class="col-7 ">
+                                            <h5 class="text-center"> {{class.classname}}</h3> 
+                                            
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="col-md-6 mb-3">
+                            <a href="/teacher/class_details/{{class.classid}}/{{teacher.teacherid}}" style="text-decoration: none;">
+                                <div class="card classcard p-4">
+                                    <div class="row">
+                                        <div class="col-5 text-center pt-2" style="border-right: 2px solid #fff;">
+                                            <i class="fas fa-chalkboard-teacher" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <div class="col-7 ">
+                                            <h5 class="text-center"> {{class.classname}}</h3> 
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </a>
+                        </div>
+                        
+                    {% endif %}
+                    
+                    
                 {% endfor %}
               
             </div>
@@ -67,6 +109,7 @@
             </div>
             
         </div>
+
     </div>
     
 </div> 

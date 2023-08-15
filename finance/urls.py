@@ -30,9 +30,14 @@ urlpatterns = [
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
+    path('editfeesstructure/<int:feesstructureid>/', views.editfeesstructure, name='editfeesstructure'),
+    path('deletefeesstructure/<int:feesstructureid>/', views.deletefeesstructure, name='deletefeesstructure'),
+
    
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
+    path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
+    path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     #path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
@@ -44,7 +49,10 @@ urlpatterns = [
     path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsList"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
+
     
-    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments')
+    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
+
+    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
 
 ]

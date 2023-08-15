@@ -1,66 +1,48 @@
 {% extends 'finance/base.html' %}
-{% block  title %} Add Fees Structure{% endblock title %}
-{% block  pagetitle %} Add Fees Structure {% endblock pagetitle %}
+{% block title %} Add Fees Structure {% endblock title %}
+{% block pagetitle %} Add Fees Structure {% endblock pagetitle %}
+{% block main %}
 
-{% block  main %} 
-
-<!-- inner-content -->
 <div class="inner-content">
     <a href="/financefeesstructurelist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Fees Structure</a>
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
-               
-    <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form method="post">
         <div class="title">
-            <h5 class="text-uppercase text-center">Register Fees</h5>
+            <h5 class="text-uppercase text-center">Register Fees Structure</h5>
             <hr>
         </div>
-
-        <!-- fees structures info section -->
-        <div class="fees-info">
-            <div class="row">
-                <!-- feesstructureid -->
-                <div class="form-group col-md-6">
-                    <label for="">Fees Structure ID: </label>
-                    <input type="text" name="feesstructureid" class="form-control">
+     
+     <!-- Error message if class already exists -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ message }}</strong>
                 </div>
-                <!-- class -->
-                <div class="form-group col-md-6">
-                    <label for=""> Class </label>
-                    <input type="text" name="class" class="form-control">
-                </div>
-            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-            <div class="row">
-                <!-- amount -->
-                <div class="form-group col-md-6">
-                    <label for="">Amount </label>
-                    <input type="text" name="amount" class="form-control">
-                </div>
-                <!--  -->
-                <div class="form-group col-md-6">
-                    
-                </div>
-            </div>
 
-            
-            
-            
-
-            
+        {% csrf_token %}
+        <div class="form-group col-md-6">
+            <label for=""> Class </label>
+            <select type="text" name="classname" class="form-control">
+                <option value="" selected disabled> --- </option>
+                {% for class in classes %}
+                <option value="{{class.classname}}"> {{class.classname}}</option>
+                {% endfor %}
+            </select>
         </div>
-
-        <!-- button -->
-        <div class="form-group">
-            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        <div class="form-group col-md-6">
+            <label for="">Amount </label>
+            <input type="text" name="amount" class="form-control">
         </div>
-        
-
-        
+        <button type="submit" class="btn btn-sm bg-dark text-white w-25">Submit</button>
     </form>
-    <!-- form-section -->
-
 </div>
-<!-- inner-content -->
 
 {% endblock main %}

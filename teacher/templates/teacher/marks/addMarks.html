@@ -1,102 +1,67 @@
-<!-- frontend/marks/addMarks.html -->
 {% extends 'teacher/base.html' %}
-{% block title %}Add Marks{% endblock title %}
-{% block pagetitle %}Add Marks{% endblock pagetitle %}
-
+{% block title %} Add Marks {% endblock title %}
 {% block main %}
-<!-- inner-content -->
 <div class="inner-content">
-    <a href="/markslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Marks</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2">Import excel</a>
-
-    <!-- form-section -->
-    <form class="col-6" id="marks-form" method="post" action="/addmarks/">
+    <div class="header d-flex">
+        <div class="class-btns" pr-5>
+            <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Class Information</a>
+            <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">View Exam Results</a>
+          
+            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Add Marks</a>
+            
+        </div>
+    </div>
+    <!-- <p>Teacher ID: {{ teacher_id }}</p> -->
+    <form action="" method="post" class="p-4 shadow rounded col-6 m-2 bg-white">
         {% csrf_token %}
+
         {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>{{ message }}</strong> 
-            </div>
-        {% endfor %}
-        </ul>
+            <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong> 
+                </div>
+            {% endfor %}
+            </ul>
         {% endif %}
         <div class="form-group">
-            <label for="class_name">Select Class:</label>
-            <select id="class_name" name="class_name" class="form-control" required>
-                <option value="">---</option>
-                {% for class_obj in classes %}
-                    <option value="{{ class_obj.classid }}">{{ class_obj.classname }}</option>
+            <label for="">Select Type of Mark: </label>
+            <select name="marktype" class="form-control">
+                <option value="" selected disabled>---</option>
+                {% for mark_type in mark_types %}
+                    <option value="{{ mark_type.0 }}">{{ mark_type.1 }}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group" id="students_div" style="display: none;">
-            <label for="student_name">Select Student:</label>
-            <select id="student_name" name="student_name" class="form-control" required>
-                <option value="">---</option>
-                <!-- Students will be dynamically populated based on the selected class -->
+        <div class="form-group mt-4">
+            <label for="">Select Student: </label>
+            <select name="studentname" id="" class="form-control">
+                <option value="" selected disabled>---</option>
+                {% for student in students %}
+                    <option value="{{ student.childname }}">{{ student.childname }}</option>
+                {% endfor %}
             </select>
         </div>
-        <div class="form-group" id="subjects_div" style="display: none;">
-            <label for="subject">Select Subject:</label>
-            <select id="subject" name="subject" class="form-control" required>
-                <option value="">---</option>
-                <!-- Subjects will be dynamically populated based on the selected class and student -->
+        <div class="form-group mt-4">
+            <label for="">Select Subject: </label>
+            <select name="subject" id="" class="form-control">
+                <option value="" selected disabled>---</option>
+                {% for subject in subjects %}
+                    <option value="{{ subject.subjectid }}">{{ subject.subjectname }}</option>
+                    
+                {% endfor %}
             </select>
         </div>
-        <div class="form-group">
-            <label for="score">Score:</label>
-            <input type="number" id="score" name="score" class="form-control" min="0" max="100" required>
+
+        <div class="form-group mt-4">
+            <label for="">Enter Mark obtained</label>
+            <input type="text" name="mark_obtained" class="form-control">
         </div>
-        <div class="form-group">
-            <button type="submit">Save</button>
-        </div>
+
+        <button type="submit" class="btn btn-dark btn-sm">Submit Marks</button>
     </form>
-    <!-- form-section -->
 </div>
-<!-- inner-content -->
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const classSelect = document.getElementById("class_name");
-        const studentDiv = document.getElementById("students_div");
-        const studentSelect = document.getElementById("student_name");
-        const subjectDiv = document.getElementById("subjects_div");
-        const subjectSelect = document.getElementById("subject");
-
-        // Function to fetch students and populate the student select options based on the selected class
-        function fetchStudentsAndSubjects() {
-            const classId = classSelect.value;
-            // alert(classId);
-            if (classId) {
-                fetch(`/get_students_by_class/${classId}/`)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Clear previous options and populate students
-                        
-                        studentSelect.innerHTML = '<option value="">---</option>';
-                        data.students.forEach((student) => {
-                            const option = document.createElement("option");
-                            option.value = student.childname;
-                            option.textContent = student.childname;
-                            studentSelect.appendChild(option);
-                        });
-                        
-                    });
-                studentDiv.style.display = "block";
-                subjectDiv.style.display = "block";
-            } else {
-                studentDiv.style.display = "none";
-                subjectDiv.style.display = "none";
-            }
-        }
-
-        // Event listener to trigger the fetchStudentsAndSubjects function on class selection change
-        classSelect.addEventListener("change", fetchStudentsAndSubjects);
-    });
-</script>
-
 {% endblock main %}

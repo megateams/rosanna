@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
+from django.db.models import Sum
+from finance.models import Feesstructure, ExpenseRecord
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -429,9 +431,16 @@ def subjects(request):
         Subjects.save
     return HttpResponse(subjectnames)
 
+from django.shortcuts import render
+from .models import Schoolclasses, Teachers
+
 def showclasses(request):
     classes = Schoolclasses.objects.all()
     return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+
+    # Retrieve the teacher names based on teacherid matching classname
+    teachers = Teachers.objects.all()
+    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
 
 def addclasses(request):
     return render(request , 'frontend/academics/addclasses.html')
@@ -503,14 +512,17 @@ def supportstaffList(request):
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
     subjects = Subjects.objects.all()
-    return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects})
+    teachers = Teachers.objects.all()
+    return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects, 'teachers':teachers})
     
 def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
+        classteacher = request.POST['classteacher']
+        class_level = request.POST['class_level']
 
-        newclass = Schoolclasses.objects.create(classname=classname)
+        newclass = Schoolclasses.objects.create(classname=classname,classteacher=classteacher,class_level=class_level)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
@@ -665,4 +677,27 @@ def supportstaffList(request):
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+
+# Accounting
+def feesstructure(request):
+    feesstructure = Feesstructure.objects.all()
+    return render(request, 'frontend/accounting/feesstructure.html',{"feesstructure": feesstructure})
+
+def fees(request):
+    return render(request, 'frontend/accounting/fees.html')
+def teacherspayments(request):
+    return render(request, 'frontend/accounting/teacherspayments.html')
+def supportstaffpayments(request):
+    return render(request, 'frontend/accounting/supportstaffpayments.html')
     
+def expenses(request):
+    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    expenses = ExpenseRecord.objects.all()
+    context = {
+        'expenses': expenses,
+        'total_amount_paid': total_amount_paid,
+        }
+    return render(request, 'frontend/accounting/expenses.html',context)
+        
+    return render(request, 'frontend/accounting/expenses.html')
+

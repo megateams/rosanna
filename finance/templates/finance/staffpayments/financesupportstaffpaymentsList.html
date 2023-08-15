@@ -25,7 +25,10 @@
         </ul>
         {% endif %}
         
+
         <table class="table" id="table">
+
+        <table class="table" id="table" border="1">
 
             <thead>
                 <tr>
@@ -56,11 +59,20 @@
                     <th>{{ supportstaff.bankaccnum }}</th>
 
                    <td>
+
                         <div>
                             <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                             <a href="deletesupportstaffpayment/{{  supportstaff.paymentid  }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
                         </div> 
                     </td>
+
+                    <div>
+                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        
+                    </div> </td>
+    
+
                 </tr>
                 {% endfor %}
             </tbody>
