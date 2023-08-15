@@ -37,7 +37,8 @@ urlpatterns = [
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     #path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslist"),
+    path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
 
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
     path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsList"),

@@ -10,6 +10,11 @@ from .models import Supportstaff , Staffpayments , ExpenseRecord , Fees , Bankde
 #'staffname' , 'bankname' , 'accnum' , 'accname'
 #'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
 
+def deleteteacherpayment(request , id):
+    teacherpayment = Teacherspayment.objects.filter(id = id)
+    teacherpayment.delete()
+    messages.success(request , 'Payment Deleted Successfully')
+    return redirect('teacherpaymentslist')
     
 def deletesupportstaffpayment(request , paymentid):
     payid = Supportstaffpayment.objects.filter(paymentid = paymentid)
