@@ -10,7 +10,7 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2">Import excel</a>
 
     <!-- form-section -->
-<<<<<<< HEAD
+
     <form action='submitmarks/' method="POST" class="form ml-3 p-3 shadow rounded bg-light">
         {% csrf_token %}
         <div class="title">
@@ -106,7 +106,7 @@
         </div>
 
         <!-- button -->
-=======
+
     <form class="col-6" id="marks-form" method="post" action="/addmarks/">
         {% csrf_token %}
         {% if messages %}
@@ -121,7 +121,6 @@
         {% endfor %}
         </ul>
         {% endif %}
->>>>>>> 58beb7021a7a25e052e203b814a2694329acad16
         <div class="form-group">
             <label for="class_name">Select Class:</label>
             <select id="class_name" name="class_name" class="form-control" required>

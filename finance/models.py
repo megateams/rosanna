@@ -79,7 +79,8 @@ class Receipts(models.Model):
     
 
 class Teacherspayment(models.Model):
-    teacherid = models.ForeignKey(Teachers , on_delete=models.CASCADE , default = None)
+    teacherid = models.CharField(max_length=20 , verbose_name='Teacher id')
+    teachername = models.CharField(max_length=30 , verbose_name='Teacher Name' , default=None) 
     paymentid = models.CharField(max_length = 25 , verbose_name='Payment id')
     paymentdate = models.DateField(verbose_name='Payment Date')
     salary = models.IntegerField(verbose_name='Salary')
@@ -94,16 +95,18 @@ class Teacherspayment(models.Model):
     
     
 class Supportstaffpayment(models.Model):
-    supportstaffid = models.ForeignKey(Supportstaff , on_delete= models.CASCADE , default = None)
-    paymentid =  models.CharField(max_length = 25 , verbose_name='Payment id')
+    paymentid = models.AutoField(primary_key=True)
+    supportstaffid = models.CharField(max_length=20 , verbose_name='Support Staff')
+    staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
     balance = models.IntegerField(verbose_name='Balance')
     paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
     bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
     
     displaysupportstaffpayment = [
-        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
     ]
     
 

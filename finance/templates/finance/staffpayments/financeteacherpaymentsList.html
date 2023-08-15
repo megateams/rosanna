@@ -28,29 +28,26 @@
                 </tr>
             </thead>
             <tbody>
+                {% for teacher in teachers %}
                 <tr>
-                    <th>SP001</th>
-                    <th>MARTHA NASSIMBA</th>
-                    <th>27-08-22</th>
-                    <th>500,000</th>
-                    <th>400,000</th>
-                    <th>100,000</th>
-                    <th>Bank</th>
-                    <th>AC43000000</th>
+                    <th> {{ teacher.teacherid }} </th>
+                    <th> {{ teacher.teachername }} </th>
+                    <th> {{ teacher.paymentdate }} </th>
+                    <th> {{ teacher.salary }} </th>
+                    <th> {{ teacher.amountpaid }} </th>
+                    <th> {{ teacher.balance }} </th>
+                    <th> {{ teacher.paymentmethod }} </th>
+                    <th> {{ teacher.bankaccnum }} </th>
 
                    <td>
                     <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
                         
                     </div> </td>
     
                 </tr>
-
-                
-                
-                
-                
+                {% endfor %}
             </tbody>
         </table>
     </div>
