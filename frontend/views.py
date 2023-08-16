@@ -325,9 +325,14 @@ from .models import Schoolclasses, Teachers
 
 def showclasses(request):
     classes = Schoolclasses.objects.all()
+
+
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
+    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+
+
 
 def addclasses(request):
     subjects = Subjects.objects.all()
@@ -498,6 +503,7 @@ def supportstaffList(request):
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
 
+
 # Accounting
 def feesstructure(request):
     feesstructure = Feesstructure.objects.all()
@@ -505,10 +511,12 @@ def feesstructure(request):
 
 def fees(request):
     return render(request, 'frontend/accounting/fees.html')
+    
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
 def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
+
     
 def expenses(request):
     total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -519,4 +527,4 @@ def expenses(request):
         }
     return render(request, 'frontend/accounting/expenses.html',context)
         
-    return render(request, 'frontend/accounting/expenses.html')
+    

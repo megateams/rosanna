@@ -11,8 +11,19 @@
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
-        
         <table class="table" id="table" border="1">
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
             <thead>
                 <tr>
                     <th>Teacher ID</th>
@@ -39,18 +50,12 @@
                     <th>AC43000000</th>
 
                    <td>
-                    <div>
-                        <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
+                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="deleteteacherpayment/{{ teacher.id }}" class="text-danger"><i class="fa fa-trash    "> </i></a>   
+                    </td>
     
                 </tr>
-
-                
-                
-                
-                
+  
             </tbody>
         </table>
     </div>

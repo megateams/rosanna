@@ -5,6 +5,133 @@ from django.db.models import Sum
 from django.contrib import messages
 from frontend.models import Schoolclasses, Student
 
+from .models import Fees
+
+# Create your views here.
+#  Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
+#Display_ExpenseRecords =['expenseid', 'category', 'amountrequired', 'expensedate', 'amountpaid', 'balance']
+#displaystaffpayments = ['staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum']
+#'staffname' , 'bankname' , 'accnum' , 'accname'
+#'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
+
+def deleteteacherpayment(request , id):
+    teacherpayment = Teacherspayment.objects.filter(id = id)
+    teacherpayment.delete()
+    messages.success(request , 'Payment Deleted Successfully')
+    return redirect('teacherpaymentslist')
+    
+def deletesupportstaffpayment(request , paymentid):
+    payid = Supportstaffpayment.objects.filter(paymentid = paymentid)
+    payid.delete()
+    messages.success(request , "Payment deleted successfully")
+    supportstaffinfo = Supportstaffpayment.objects.all()
+    return redirect('SupportstaffpaymentsList')
+    
+    
+def financeaddStaffpayments(request):
+    if request.method == 'POST':
+        supportstaffid = request.POST.get('support-staffid')
+        supportstaffname = request.POST.get('support-staffname')
+        paymentdate = request.POST.get('datepaid')
+        salary = request.POST.get('salary')
+        amount = request.POST.get('amount')
+        balance = request.POST.get('balance')
+        paymentmethod = request.POST.get('paymentmethod')
+        bankaccnum = request.POST.get('bankaccnum')
+        
+        Supportstaffpayment.objects.create(
+            supportstaffid = supportstaffid ,
+            salary = salary ,
+            amountpaid = amount ,
+            balance = balance ,
+            paymentmethod = paymentmethod ,
+            bankaccnum = bankaccnum
+        )
+        Supportstaffpayment.save()
+    return render(request , 'finance/staffpayments/financesupportstaffpaymentsList.html')
+        
+def receipts(request):
+    if request.method == 'POST':
+        receiptnum = request.POST.get('receiptnum')
+        transactiondate = request.POST.get('transactiondate')
+        amountpaid = request.POST.get('amountpaid')
+        item = request.POST.get('item')
+        balance = request.POST.get('balance')
+        payername = request.POST.get('payername')
+        
+        Receipts.objects.create(
+            receiptnum = receiptnum ,
+            transactiondate = transactiondate ,
+            amountpaid = amountpaid ,
+            item = item ,
+            balance = balance ,
+            payername = payername ,
+        )
+        
+        Receipts.save()
+    return render(request, 'finace/financedashboard.html')
+
+def bankdetails(request):
+    if request.method == 'POST':
+        staffname = request.POST.get('staffname')
+        bankname = request.POST.get('bankname')
+        accnum = request.POST.get('accnum')
+        accname = request.POST.get('accname')
+        
+        Bankdetails.objects.create(
+            staffname = staffname ,
+            bankname = bankname ,
+            accnum = accnum ,
+            accname = accname
+        )
+        
+        Bankdetails.save()
+    return render(request , 'finance/financedashboard.html')
+
+def staffpayments(request):
+    if request.method == 'POST':
+        staffname = request.POST.get('staffname')
+        datepaid = request.POST.get('datepaid')
+        salary = request.POST.get('salary')
+        amountpaid = request.POST,get('amountpaid')
+        balance = request.POST.get('balance')
+        position = request.POST.get('position')
+        bankaccnum = request.POST.get('bankaccnum')
+        
+        Staffpayments.objects.create(
+            staffname = staffname ,
+            datepaid = datepaid ,
+            salary = salary ,
+            amountpaid = amountpaid ,
+            balance = balance ,
+            position = position ,
+            bankaccnum = bankaccnum
+        )
+        
+        Staffpayments.save()
+    return render(request , 'finace/financedashboard.html')
+        
+def expenserecords(request):
+    if request.method == 'POST':
+        expenseid = request.POST.get('expenseid')
+        category = request.POST.get('category')
+        amountrequired = request.POST.get('amountrequired')
+        expensedate = request.POST.get('expensedate')
+        amountpaid = request.POST,get('amountpaid')
+        balance = request.POST.get('balance')
+        
+        ExpenseRecord.objects.create(
+            expenseid = expenseid ,
+            category = category ,
+            amountrequired = amountrequired ,
+            expensedate = expensedate ,
+            amountpaid = amountpaid ,
+            balance = balance
+        )
+        
+        ExpenseRecord.save()
+    return render(request , 'finance/financedashboard.html')
+
 
 # Create your views here.
 def financedashboard(request):
@@ -27,7 +154,7 @@ def financeaddFees(request):
         
         if amount >= classfees:
             # Create a new Fees object and save it to the database
-            fees = Fees(
+            fees = Fees.objects.create(
                 stdnumber_id=stdnumber,
                 stdname=stdname,
                 studentclass=studentclass,
@@ -50,6 +177,7 @@ def financeaddFees(request):
 
 def financefeesList(request):
     fees_list = Fees.objects.all()
+
     return render(request,'finance/fees/financefeesList.html',{'fees_list': fees_list})
 # fees views
 

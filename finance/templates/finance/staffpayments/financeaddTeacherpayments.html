@@ -23,11 +23,16 @@
                 <div class="form-group col-md-6">
                     <label for="">Teacher ID: </label>
                     <input type="text" name="teacherid" class="form-control">
+                    <select name="teachername" class="form-control">
+                        {% for teacherinfo in teachers %}
+                        <option>{{ teacherinfo.teachernames }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <!-- staffname-->
                 <div class="form-group col-md-6">
                     <label for=""> Teacher Name </label>
-                    <input type="text" name="teachername" class="form-control">
+                    <input type="text" class="form-control">
                 </div>
             </div>
 

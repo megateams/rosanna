@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
 from xhtml2pdf import pisa
@@ -106,6 +106,7 @@ def class_details(request, class_id, teacher_id):
     # Get the subjects taught by the teacher for this class
     subjects = teacher.subjects.filter(schoolclasses=schoolclass)
 
+    mark_types = Mark.MARK_TYPES
     # Create a dictionary to hold the marks for each student and subject combination
     student_marks = {}
     for student in students:
@@ -118,9 +119,46 @@ def class_details(request, class_id, teacher_id):
         'students': students,
         'subjects': subjects,
         'student_marks': student_marks,
+        'mark_types': mark_types,
     })
 
+# views.py
+def class_marks_by_marktype(request, class_id, teacher_id):
+    schoolclass = Schoolclasses.objects.get(classid=class_id)
+    teacher = Teachers.objects.get(teacherid=teacher_id)
+    mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
+    
+    students = Student.objects.filter(stdclass=schoolclass)
+    subjects = teacher.subjects.filter(schoolclasses=schoolclass)
+    mark_types = Mark.MARK_TYPES
+    student_marks = {}
+    for student in students:
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, mark_type=mark_type)
+        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
 
+    # Calculate total marks and average marks for each student
+    for student, marks_dict in student_marks.items():
+        total_marks = 0
+        total_subjects = 0
+        for marks in marks_dict.values():
+            if marks:
+                total_marks += marks.marks_obtained
+                total_subjects += 1
+        if total_subjects > 0:
+            student.total_marks = total_marks
+            student.average_marks = total_marks / total_subjects
+        else:
+            student.total_marks = 0
+            student.average_marks = 0
+    return render(request, 'teacher/class_details.html', {
+        'schoolclass': schoolclass,
+        'teacher': teacher,
+        'students': students,
+        'subjects': subjects,
+        'student_marks': student_marks,
+        'mark_types' :mark_types,
+        'mark_type' :mark_type,
+    })
 
 # from django.shortcuts import get_object_or_404
 
@@ -134,9 +172,9 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     subject = get_object_or_404(Subjects, subjectid=subject_id)
 
+    
     # Retrieve the students related to the class
     students = Student.objects.filter(stdclass=schoolclass)
-
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
@@ -156,7 +194,7 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
         if mark_type and student_number and marks_obtained:
             # Get the student object
             student = Student.objects.get(stdnumber=student_number)
-
+            print(student.childname)
             # Create a new Mark object to save the marks
             Mark.objects.create(
                 class_name=schoolclass,
@@ -174,7 +212,7 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     return render(request, 'teacher/marks/add_subject_marks.html', {
         'schoolclass': schoolclass,
         'subject': subject,
-        'students': students.exclude(childname__in=marks_students),
+        'students': students,
         'mark_types': mark_types,
         'teacher_id': teacher_id,  # Include the teacher_id in the context
     })
@@ -370,6 +408,57 @@ def view_marks_by_marktype(request, class_id, teacher_id):
         'mark_type' :mark_type,
     })
 
+
+
+
+def edit_all_marks(request):
+    if request.method == "POST":
+        student_id = request.POST.get("student_id")
+        student = Student.objects.get(stdnumber=student_id)
+        new_marks = {}
+
+        # Get the list of subjects for the class
+        schoolclass = student.stdclass
+        subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+
+        for subject in subjects:
+            subject_id = subject.subjectid
+            new_marks[subject_id] = request.POST.get("subject_" + str(subject_id))
+
+            mark = Mark.objects.get(class_name=schoolclass, student_name=student.childname, subject=subject)
+            mark.marks_obtained = new_marks[subject_id]
+            mark.save()
+
+        messages.success(request, "Marks edited successfully")
+        return HttpResponseRedirect("/teacher/his_class/view_marks/{}/{}/".format(schoolclass.classid, teacher.teacherid)) 
+
+    return JsonResponse({})
+
+
+
+def edit_teacher_profile(request, teacher_id):
+    teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+    
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+        
+        if new_pass == confirm_pass:
+            # Update teacher's password (replace this with your actual password update logic)
+            teacher.password = new_pass
+            teacher.username = username
+            teacher.save()
+            
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+            
+        return redirect("Teacher Profile", teacher_id=teacher_id)
+    
+    return render(request, 'teacher/profile.html', {'teacher': teacher})
+
+    
 
 # generation of a report card
 

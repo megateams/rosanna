@@ -1,7 +1,4 @@
 from django.db import models
-
-
-
 GENDER_CHOICES = (
     ('m', 'Male'),
     ('f', 'Female')
@@ -83,12 +80,47 @@ class Student(models.Model):
     , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
     ]
 
+
+
+
+# class Schoolclasses(models.Model):
+#     subjects = models.ManyToManyField(Subjects)
+#     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
+#     classlevel = models.CharField(max_length =20 , verbose_name="Levels" , blank=True)
+#     classid = models.CharField(primary_key=True , max_length = 10 , verbose_name = "Class id")
+#     classteacher = models.CharField(max_length = 100 , verbose_name = "Classteacher")
+#     numofstds = models.CharField(max_length = 4 , verbose_name = 'Number of Students')
+
+#     Display_schoolclasses = [
+
+#         'classname' , 'classid' ,'classteacher', 'numofstds', 'classlevel' 
+
+#     ]
+class Supportstaff(models.Model):
+    supportstaffid = models.CharField(primary_key=True , max_length=20 , verbose_name='Support Stuff id')
+    supportstaffnames = models.CharField(max_length=30 , verbose_name='Suppot Staff Names' , default=None)
+    gender = models.CharField(max_length=7 , verbose_name='Gender' , default=None)
+    dob = models.DateField(verbose_name='Date of Birth' , default=None)
+    contact = models.CharField(verbose_name='Contact' , max_length=13 , default=None)
+    email = models.EmailField(verbose_name='Email Address' , default=None)
+    address = models.CharField(verbose_name='Address' , max_length=20 , default=None)
+    joiningdate = models.DateField(verbose_name='Joining Date' , default=None)
+    position = models.CharField(verbose_name='Position' , max_length=20 , default=None)
+    qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications' , default=None)
+    salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
+    bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
+    username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
+    password = models.CharField(max_length=100, verbose_name='Password' , default=None)
+    
+    Display_Supportstaff =['supportstaffid','supportstaffnames','gender','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
+
 class Teachers(models.Model):
 
     teacherid = models.CharField(primary_key=True, max_length=20, verbose_name='Teacher id')
     teachernames = models.CharField(max_length=100, verbose_name='Teachers Names')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES , verbose_name='Gender')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
+    
     contact = models.CharField(max_length=15, verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=200, verbose_name='Address')
@@ -176,19 +208,19 @@ class Admin_Model(models.Model):
     
     Display_Admins =['id','name','username','contact','email', 'gender','address','dob', 'role']
     
-#support staff model
-class Supportstaff(models.Model):
-    id =models.AutoField(primary_key=True, verbose_name='Staff Number')
-    fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
-    contact =models.CharField(max_length=20, blank=True, verbose_name='Phone contact')
-    email=models.EmailField(max_length=50, blank=True, verbose_name='Email')
-    address=models.CharField(max_length=255, blank=True, verbose_name='Address')
-    gender =models.CharField(max_length=1, choices=GENDER_CHOICES, default=None, verbose_name="Gender")
-    dob=models.DateField(default=None, verbose_name='Date of Birth')
-    qualification=models.CharField(max_length=255, blank=True, verbose_name='Qualification')
-    position=models.CharField(max_length=255, blank=True, verbose_name='Position')
+# #support staff model
+# class Supportstaff(models.Model):
+#     id =models.AutoField(primary_key=True, verbose_name='Staff Number')
+#     fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
+#     contact =models.CharField(max_length=20, blank=True, verbose_name='Phone contact')
+#     email=models.EmailField(max_length=50, blank=True, verbose_name='Email')
+#     address=models.CharField(max_length=255, blank=True, verbose_name='Address')
+#     gender =models.CharField(max_length=1, choices=GENDER_CHOICES, default=None, verbose_name="Gender")
+#     dob=models.DateField(default=None, verbose_name='Date of Birth')
+#     qualification=models.CharField(max_length=255, blank=True, verbose_name='Qualification')
+#     position=models.CharField(max_length=255, blank=True, verbose_name='Position')
     
-    Display_Supportstaff =['id','fullname','contact','email','address','dob','gender','dob','qualification', 'position']
+#     Display_Supportstaff =['id','fullname','contact','email','address','dob','gender','dob','qualification', 'position']
 
 
     
