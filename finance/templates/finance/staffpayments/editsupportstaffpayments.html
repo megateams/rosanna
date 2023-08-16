@@ -1,0 +1,85 @@
+{% extends 'finance/base.html' %}
+
+{% block title %} Edit Support Staff Payments {% endblock title %}
+{% block  pagetitle %} Edit Support Staff Payments  {% endblock pagetitle %}
+
+{% block main %}
+<div class="inner-content">
+    <h5>Edit Support Staff Payments</h5>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="classname">Support Staff id:</label>
+                <input type="text" name="supportstaffid" value="{{ staffpayment.supportstaffid }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Support Staff Name:</label>
+                <input type="text" name="staffname" value="{{ staffpayment.staffname }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Salary:</label>
+                <input type="number" name="salary" value="{{ staffpayment.salary }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Amount Paid:</label>
+                <input type="number" name="amountpaid" value="{{ staffpayment.amountpaid }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Balance:</label>
+                <input type="number" name="balance" value="{{ staffpayment.balance }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Payment Method:</label>
+                <input type="text" name="paymentmethod" value="{{ staffpayment.paymentmethod }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Bank Account Number:</label>
+                <input type="number" name="bankaccnum" value="{{ staffpayment.bankaccnum }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">Support Staff Name:</label>
+                <input type="date" name="paymentdate" value="{{ staffpayment.paymentdate }}" class="form-control" required>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Update</button>
+    </form>
+</div>
+{% endblock main %}

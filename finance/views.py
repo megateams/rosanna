@@ -14,6 +14,59 @@ from frontend.models import *
 #'staffname' , 'bankname' , 'accnum' , 'accname'
 #'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
 
+def editteacherpayments(request , id):
+    teacherpayment = Teacherspayment.objects.get(id = id)
+    if request.method == 'POST':
+        salary = request.POST.get('salary')
+        amountpaid = request.POST.get('amountpaid')
+        balance = request.POST.get('balance')
+        paymentmethod = request.POST.get('paymentmethod')
+        bankaccnum = request.POST.get('bankaccnum')
+        teacherid = request.POST.get('teacherid')
+        teachername = request.POST.get('teachername')
+        
+        teacherpayment.salary = salary 
+        teacherpayment.amountpaid = amountpaid 
+        teacherpayment.balance = balance 
+        teacherpayment.paymentmethod = paymentmethod 
+        teacherpayment.bankaccnum = bankaccnum 
+        teacherpayment.teacherid = teacherid 
+        teacherpayment.teachername = teachername 
+        
+        teacherpayment.save()
+        messages.success(request , "Teacher Payment Edit Successfull")
+        
+        return redirect('teacherpaymentslist')
+        
+    return render(request , 'finance/staffpayments/editteacherpayments.html' , {'teacherpayment' : teacherpayment})
+
+def editsupportstaffpayment(request , paymentid):
+    staffpayment = Supportstaffpayment.objects.get(paymentid = paymentid)
+    if request.method == 'POST':
+        supportstaffid = request.POST.get('supportstaffid')
+        salary = request.POST.get('salary')
+        amountpaid = request.POST.get('amountpaid')
+        balance = request.POST.get('balance')
+        paymentmethod = request.POST.get('paymentmethod')
+        bankaccnum = request.POST.get('bankaccnum')
+        paymentdate = request.POST.get('paymentdate')
+        staffname = request.POST.get('staffname')
+        
+        staffpayment.supportstaffid = supportstaffid
+        staffpayment.salary = salary
+        staffpayment.amountpaid = amountpaid 
+        staffpayment.balance = balance 
+        staffpayment.paymentmethod = paymentmethod
+        staffpayment.bankaccnum = bankaccnum
+        staffpayment.paymentdate = paymentdate 
+        staffpayment.staffname = staffname 
+        
+        staffpayment.save()
+        
+        messages.success(request , 'Edited Successfully')
+        return redirect('SupportstaffpaymentsList')
+    return render(request , 'finance/staffpayments/editsupportstaffpayments.html' , {'staffpayment': staffpayment})
+
 def deleteteacherpayment(request , id):
     teacherpayment = Teacherspayment.objects.filter(id = id)
     teacherpayment.delete()
@@ -331,8 +384,6 @@ def financesupportstaffpaymentsList(request):
 
 # expenses views
 def financeaddExpenses(request):
-    
-    
     if request.method == 'POST':
         category = request.POST.get('category')
         amountrequired = request.POST.get('amountrequired')

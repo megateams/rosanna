@@ -54,5 +54,8 @@ urlpatterns = [
     path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
 
     path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
-
+    path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
+    path('editsupportstaffpayments' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
+    
+    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment')
 ]
