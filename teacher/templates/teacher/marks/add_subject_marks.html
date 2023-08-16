@@ -41,9 +41,8 @@
             <select name="studentname" id="" class="form-control">
                 <option value="" selected disabled>---</option>
                 {% for student in students %}
-                    {% if student.childname not in student_marks %}
                         <option value="{{ student.stdnumber }}">{{ student.childname }}</option>
-                    {% endif %}
+                    
                 {% endfor %}
             </select>
         </div>

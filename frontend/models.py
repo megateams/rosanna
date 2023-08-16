@@ -1,7 +1,4 @@
 from django.db import models
-
-
-
 GENDER_CHOICES = (
     ('m', 'Male'),
     ('f', 'Female')
@@ -89,6 +86,7 @@ class Teachers(models.Model):
     teachernames = models.CharField(max_length=100, verbose_name='Teachers Names')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES , verbose_name='Gender')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
+    
     contact = models.CharField(max_length=15, verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=200, verbose_name='Address')

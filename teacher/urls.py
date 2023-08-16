@@ -14,6 +14,7 @@ urlpatterns = [
     path('teacher/his_class/addmarks/<class_id>/<teacher_id>', views.addmarks, name="Add Marks"),
     path('teacher/his_class/view_marks/<class_id>/<teacher_id>', views.view_marks, name="View Marks"),
     path('teacher/his_class/view_mark/<int:class_id>/<str:teacher_id>/', views.view_marks_by_marktype, name='view_marks_by_marktype'),
+    path('teacher/class_marks/<int:class_id>/<str:teacher_id>/', views.class_marks_by_marktype, name='class_marks_by_marktype'),
     
     path('get_students_by_class/<int:class_id>/', views.get_students_by_class, name='get_students_by_class'),
     path('get_subjects/<int:class_id>/', views.get_subjects, name='get_subjects'), 
@@ -25,4 +26,6 @@ urlpatterns = [
 
     # generate report card
     path('teacher/report_card/<student_id>', views.generate_report, name='Student report card'),
+    path('teacher/profile/edit-profile/<teacher_id>', views.edit_teacher_profile, name='Edit Teacher Profile'),
+    path('teacher/edit_all_marks', views.edit_all_marks, name='edit_all_marks'),
 ]

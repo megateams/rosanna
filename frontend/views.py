@@ -504,6 +504,7 @@ def feesstructure(request):
 
 def fees(request):
     return render(request, 'frontend/accounting/fees.html')
+    
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
 def supportstaffpayments(request):
