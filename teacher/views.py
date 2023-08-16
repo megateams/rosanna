@@ -4,7 +4,7 @@ from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 import os
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 from django.conf import settings
 # Create your views here.
 

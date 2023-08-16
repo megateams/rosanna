@@ -2,7 +2,7 @@
 {% block  title %} Support Staff Payments List {% endblock title %}
 {% block  pagetitle %} Support Staff Payments List {% endblock pagetitle %}
 
-{% block  main %} 
+{% block  main %}
 
 <!-- inner-content -->
 <div class="inner-content">
@@ -11,7 +11,7 @@
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;">
-        
+
         {% if messages %}
         <ul class="messages">
         {% for message in messages %}
@@ -19,12 +19,12 @@
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <strong>{{ message }}</strong> 
+              <strong>{{ message }}</strong>
             </div>
         {% endfor %}
         </ul>
         {% endif %}
-        
+
 
         <table class="table" id="table">
 
@@ -41,7 +41,6 @@
                     <th>Balance</th>
                     <th>Payment Method</th>
                     <th>Bank Account No.</th>
-                    
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -63,15 +62,8 @@
                         <div>
                             <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                             <a href="deletesupportstaffpayment/{{  supportstaff.paymentid  }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        </div> 
+                        </div>
                     </td>
-
-                    <div>
-                        <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
 
                 </tr>
                 {% endfor %}
