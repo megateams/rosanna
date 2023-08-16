@@ -1,7 +1,4 @@
 from django.db import models
-
-
-
 GENDER_CHOICES = (
     ('m', 'Male'),
     ('f', 'Female')
@@ -88,15 +85,6 @@ class Student(models.Model):
     ]
 
 
-class Subjects(models.Model):
-    subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
-    subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
-    classlevel = models.CharField(max_length = 25 , verbose_name = 'level' , blank=True)
-    subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
-
-    Display_Subjects = [
-        'subjectname' , 'subjectid' , 'classlevel' , 'subjecthead'
-    ]
 
 # class Schoolclasses(models.Model):
 #     subjects = models.ManyToManyField(Subjects)
@@ -136,6 +124,7 @@ class Teachers(models.Model):
     teachernames = models.CharField(max_length=100, verbose_name='Teachers Names')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES , verbose_name='Gender')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
+    
     contact = models.CharField(max_length=15, verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=200, verbose_name='Address')

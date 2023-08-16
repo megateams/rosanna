@@ -8,22 +8,30 @@
 <div class="inner-content">
     <div class="header d-flex"  style="margin-bottom: 10px;">
         <div class="d-flex mr-4" >
-            <h4 class="mr-3">Class:</h4>
-            <h4>{{ schoolclass.classname }}</h4>
+            <h5 class="mr-3">Class:</h5>
+            <h5>{{ schoolclass.classname }}</h5>
         </div>
         <div class="class-btns">
-            <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-outline-danger">View Marks</a>
+            <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Marks</a>
             {% for subject in subjects %}
-                <a href="/teacher/class_details/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}/{{ subject.subjectid }}" class="btn btn-sm btn-outline-danger">Add {{ subject.subjectname }} Marks</a>
+                <a href="/teacher/class_details/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}/{{ subject.subjectid }}" class="btn btn-sm btn-danger">Add {{ subject.subjectname }} Marks</a>
             {% endfor %}
         </div>
     </div>
     <!-- <hr> -->
-
+    {% for mark_type in mark_types %}
+        <a href="/teacher/class_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_type.0 }}"
+        class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
+            {{ mark_type.1 }} Results
+        </a>
+    {% endfor %}
+    <div class="header">
+        <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
+    </div>
     <!-- students for this class -->
-    <div class="students-list">
-        <table class="table" id="table">
-            <thead>
+    <div class="students-list" style="font-size: 14px;">
+        <table class="table" id="table" border="1">
+            <thead class="bg-dark text-white">
                 <tr>
                     <th>Reg Number</th>
                     <th>Name</th>
@@ -45,7 +53,7 @@
                                     {% if marks %}
                                         {{ marks.marks_obtained }}
                                     {% else %}
-                                        N/A
+                                        --
                                     {% endif %}
                                 {% endwith %}
                             </td>
