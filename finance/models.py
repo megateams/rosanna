@@ -1,5 +1,5 @@
 from django.db import models
-from frontend.models import Student,Teachers
+from frontend.models import Student,Teachers , Supportstaff
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -22,16 +22,16 @@ class Feesstructure(models.Model):
 # feesstructure models
 
 class Fees(models.Model):
-    paymentid =models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
+    paymentid = models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
     stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Student ID")
     stdname = models.CharField(max_length=255, blank =True, verbose_name="Student name")
     studentclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='Class' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
-    modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
-    date =models.DateField(verbose_name="Date of Payment")
+    modeofpayment = models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
+    date = models.DateField(verbose_name="Date of Payment")
     
-    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
+    Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
     
 class ExpenseRecord(models.Model):
     expenseid =models.CharField( max_length =50, primary_key=True, verbose_name="Expense ID")
@@ -86,8 +86,37 @@ class Receipts(models.Model):
     ]
     
 
-
-
+class Teacherspayment(models.Model):
+    teacherid = models.CharField(max_length=20 , verbose_name='Teacher id')
+    teachername = models.CharField(max_length=30 , verbose_name='Teacher Name' , default=None) 
+    paymentid = models.CharField(max_length = 25 , verbose_name='Payment id')
+    paymentdate = models.DateField(verbose_name='Payment Date')
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    balance = models.IntegerField(verbose_name='Balance')
+    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displayteacherpayment = [
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+    ]
+    
+    
+class Supportstaffpayment(models.Model):
+    paymentid = models.AutoField(primary_key=True)
+    supportstaffid = models.CharField(max_length=20 , verbose_name='Support Staff')
+    staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
+    balance = models.IntegerField(verbose_name='Balance')
+    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displaysupportstaffpayment = [
+        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+    ]
+    
 
 
 

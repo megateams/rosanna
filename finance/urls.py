@@ -20,9 +20,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('finance/', views.financedashboard, name=""),
 
+    path('fees/', views.Fees, name="Fees"),
+    path('finance/', views.financedashboard, name=""),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
+
+    path('financefeeslist/', views.financefeesList, name="financefeeslist"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
@@ -36,12 +39,17 @@ urlpatterns = [
     path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
     path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
+    path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
+    #path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslist"),
+    path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
 
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
-
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsList"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
+    
+    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments')
+
 ]

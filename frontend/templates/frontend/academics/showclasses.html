@@ -24,6 +24,21 @@
                 </tr>
             </thead>
             <tbody>
+
+                {% for showclass in classes %}
+                <tr>
+                    <td>{{ showclass.classname }}</td>
+                    <td>{{ showclass.classid }}</td>
+                    <td>{{ showclass.classlevel }}</td>
+                    <td>{{ showclass.classteacher }}</td>
+                    <td>{{ showclass.numofstds }}</td>
+                    <td>
+                        <a href="" class="text-primary"> <i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"> <i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+
                 {% for class_obj in classes %}
                 <tr>
                     <td>{{ class_obj.classname }}</td>
@@ -44,6 +59,7 @@
                     </td>
                 </tr>
                 {% endfor %}
+
             </tbody>
         </table>
     </div>
