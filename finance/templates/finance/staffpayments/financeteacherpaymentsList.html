@@ -11,27 +11,10 @@
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
-<<<<<<< HEAD
         
         <table class="table" id="table" border="1">
-=======
-        {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>{{ message }}</strong> 
-            </div>
-        {% endfor %}
-        </ul>
-        {% endif %}
-        <table class="table" id="table">
->>>>>>> 8ae9d16f4ba0876ebd79f58464e6d66919e771f3
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Teacher ID</th>
                     <th>Teacher Name</th>
                     <th> Payment Date</th>
@@ -45,32 +28,29 @@
                 </tr>
             </thead>
             <tbody>
-                {% for teacher in teachers %}
                 <tr>
-                    <th> {{ teacher.id }} </th>
-                    <th> {{ teacher.teacherid }} </th>
-                    <th> {{ teacher.teachername }} </th>
-                    <th> {{ teacher.paymentdate }} </th>
-                    <th> {{ teacher.salary }} </th>
-                    <th> {{ teacher.amountpaid }} </th>
-                    <th> {{ teacher.balance }} </th>
-                    <th> {{ teacher.paymentmethod }} </th>
-                    <th> {{ teacher.bankaccnum }} </th>
+                    <th>SP001</th>
+                    <th>MARTHA NASSIMBA</th>
+                    <th>27-08-22</th>
+                    <th>500,000</th>
+                    <th>400,000</th>
+                    <th>100,000</th>
+                    <th>Bank</th>
+                    <th>AC43000000</th>
 
                    <td>
                     <div>
-<<<<<<< HEAD
                         <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-=======
-                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="deleteteacherpayment/{{ teacher.id }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
->>>>>>> 8ae9d16f4ba0876ebd79f58464e6d66919e771f3
                         
                     </div> </td>
     
                 </tr>
-                {% endfor %}
+
+                
+                
+                
+                
             </tbody>
         </table>
     </div>

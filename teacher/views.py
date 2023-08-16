@@ -6,7 +6,6 @@ from django.template.loader import render_to_string
 import os
 from xhtml2pdf import pisa
 from django.conf import settings
-
 # Create your views here.
 
 # view for the login page
@@ -70,7 +69,6 @@ def profile(request,teacher_id):
     return render(request, 'teacher/profile.html', {'teacher': teachers})    
 
 def paymenthistory(request):
-    return render(request, 'teacher/paymenthistory.html')   
     return render(request, 'teacher/paymenthistory.html')  
 
 
@@ -395,7 +393,6 @@ def generate_report(request, student_id):
     pisa_status = pisa.CreatePDF(html, dest=response)
     
     return response
-
 
 
 
