@@ -23,8 +23,7 @@
                     {% comment %} <th>Class</th> {% endcomment %}
                     <th>Registration Date </th>
                     <th>House</th>
-                    <th>Father</th>
-                    <th>Mother</th>
+                    <th>Class</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -39,8 +38,7 @@
                     {% comment %} <td>{{ student.stdclass }}</td> {% endcomment %}
                     <td>{{ student.regdate }}</td>
                     <td>{{ student.house }}</td>
-                    <td>{{ student.fathername }}</td>
-                    <td>{{ student.mothername }}</td>
+                    <td>{{ student.stdclass.classname }}</td>
                      <td>   
                         <a href="/showstudent/{{student.stdnumber}}" class="btn btn-sm btn-primary ">More ...</a> 
                     </td>

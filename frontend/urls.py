@@ -27,26 +27,16 @@ urlpatterns = [
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
     path('addteacher/submit/', views.teachers, name="Teachers"),
+    path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
 
-    #path('addclass/', views.addClass, name="Add Class"),
-    #path('classlist/', views.classList, name=" View Classes"), 
-    # path('addfees/', views.addFees, name="Add Fees"),
-    # path('feeslist/', views.feesList, name="Fees List"),
-
-    # path('addexpenses/', views.addExpenses, name="Add Expenses"),
-    # path('expenseslist/', views.expensesList, name="Expenses List"),
-
-    # path('addstaffpayments/', views.addStaffpayments, name="Add Staffpayments"),
-    # path('staffpaymentslist/', views.staffpaymentsList, name="Staffpayments List"),
-
     # path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),    
 
-    path('addsubject/', views.addSubject, name="Add Subject"),
-    path('subjectlist/', views.subjectList, name="Subjects"),
+    # path('addsubject/', views.addSubject, name="Add Subject"),
+    path('subjectlist/', views.subjectList, name="Subjects List"),
 
     path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),
     path('addmarks/', views.addmarks, name="Add Marks"),
@@ -60,7 +50,7 @@ urlpatterns = [
     path('get_students_by_class/<int:class_id>/', views.get_students_by_class, name='get_students_by_class'),
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
-    path('showteacher/<teacherId>', views.showteacher, name=" Show Teacher"),
+    path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     path('support-export-excel/', views.support_staff_export_to_excel, name='support_export_excel'),
     path('deletesupportstaff/<int:id>', views.DeleteSupportStaff, name ="deleteSupportStaff"),
@@ -68,19 +58,23 @@ urlpatterns = [
     path('supportstafflistview/', views.Support_Staff_list_View, name ="supportstafflistview"),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('staff/', views.staff, name="Staff"),
-    path('showsubjects/' , views.showsubjects , name='showsubjects'),
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
     path('addsubject/' , views.addsubject , name = 'addsubject'),
+    path('assign_subjecthead/' , views.assign_subjecthead , name = 'assign_subjecthead'),
+    path('edit_subject/' , views.edit_subject , name = 'edit_subject'),
+    path('delete_subject/' , views.delete_subject , name = 'delete_subject'),
     path('showclasses/' , views.showclasses , name='showclasses'),
     path('sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
 
-    path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
+    # path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
     path('subjectlist/delete_subject/<subjectid>' , views.deletesubject , name='deletesubject'),
     path('showclasses/delete_class/<classid>' , views.deleteclass , name='deleteclass'),
 
-    path('showclasses/addclasses/' , views.addclasses , name='AddClasses'),
+    # path('showclasses/addclasses/' , views.addclasses , name='AddClasses'),
     path('addclasses/sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
     path('addclasses/' , views.addclasses , name='AddClasses'),
+    path('edit_class/' , views.edit_class , name='edit_class'),
+    path('delete_class/' , views.delete_class , name='delete_class'),
 
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),

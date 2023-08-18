@@ -9,7 +9,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-# from .decorators import admin_required
+from datetime import datetime
+from django.db.models import Max
 
 # Create your views here.
 # creating views for dashboard
@@ -130,8 +131,8 @@ def students(request):
 # students views
 def studentsList(request):
     #retrieve all the selected students data from the database
-    selected_students =Student.objects.values('stdnumber', 'childname','stdclass', 'gender', 'dob', 'address', 'house', 'regdate', 'fathername', 'mothername')
-    # all_students_list =Student.objects.all()
+    # selected_students =Student.objects.values('stdnumber', 'childname','stdclass', 'gender', 'dob', 'address', 'house', 'regdate', 'fathername', 'mothername')
+    selected_students =Student.objects.all()
     #pass the data to template for rendering
     return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
 
@@ -217,26 +218,28 @@ def marksList(request):
 
 
 # subjects views
-def addSubject(request):
-    if request.method == 'POST':
-        subjectname = request.POST.get('subjectname')
-        subjectid = request.POST.get('subjectid')
-        level = request.POST.get('classlevel')
-        subjecthead = request.POST.get('subjecthead')
+# def addSubject(request):
+#     if request.method == 'POST':
+#         subjectname = request.POST.get('subjectname')
+#         subjectid = request.POST.get('subjectid')
+#         level = request.POST.get('classlevel')
+#         subjecthead = request.POST.get('subjecthead')
         
-        Subjects.objects.create(
-            subjectname = subjectname ,
-            subjectid = subjectid ,
-            classlevel = level ,
-            subjecthead = subjecthead ,
-        )
+#         Subjects.objects.create(
+#             subjectname = subjectname ,
+#             subjectid = subjectid ,
+#             classlevel = level ,
+#             subjecthead = subjecthead ,
+#         )
         
-        Subjects.save
-    return render(request,'frontend/subjects/addSubject.html')
+#         Subjects.save
+#     return render(request,'frontend/subjects/addSubject.html')
 
 def subjectList(request):
-    subjects = Subjects.objects.all
-    return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects})
+    subjects = Subjects.objects.all()
+    teachers = Teachers.objects.all()
+    # print(teachers)
+    return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects, 'teachers':teachers})
 # classes views
 
 def showStudent(request):
@@ -309,32 +312,74 @@ def supportstaffreg(request):
                 
         # Redirect to the registration page for support staff after successful data addition
         return redirect('AddSupportstaff')
-    
-def showsubjects(request):
-    subjects = Subjects.objects.all()
-    return render(request , 'frontend/academics/subjects.html' , {'subjects' : subjects})
 
 def addsubjectsform(request):
-    return render(request, 'frontend/academics/addsubjects.html')
+    return render(request, 'frontend/subjects/addSubject.html')
 
 def addsubject(request):
     if request.method == 'POST':
-        subjectname = request.POST.get('subjectname')
-        subjectid = request.POST.get('subjectid')
+        subjectnames = request.POST.get('subjectname')
         classlevel = request.POST.get('classlevel')
-        subjecthead = request.POST.get('subjecthead')
+        # subjectheads = request.POST.get('subjecthead')
+        
+        # Find the last subject ID to determine the next one
+        last_subject = Subjects.objects.order_by('-subjectid').first()
+        if last_subject:
+            last_subject_id = last_subject.subjectid
+            next_subject_number = int(last_subject_id[3:]) + 1
+        else:
+            next_subject_number = 1
+
+        # Generate the new subject ID
+        subjectids = 'SUB{:02d}'.format(next_subject_number)
         
         Subjects.objects.create(
-            subjectname = subjectname ,
-            subjectid = subjectid ,
-            classlevel = classlevel ,
-            subjecthead = subjecthead ,
+            subjectname=subjectnames,
+            subjectid=subjectids,
+            classlevel=classlevel,
+            # subjecthead=subjectheads
         )
-        
         Subjects.save
         messages.success(request, 'Subject successfully added!')
         return redirect("addsubjectsform")
     # return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
+
+# assign subject head
+def assign_subjecthead(request):
+    if request.method == 'POST':
+        subject_id = request.POST.get("subject_id")
+        subject_head = request.POST.get("subject_head")
+        that_subject = Subjects.objects.get(pk=subject_id)
+
+        that_subject.subjecthead = subject_head
+        that_subject.save()
+        messages.success(request,"Subject Head assigned successfully")
+        return redirect("Subjects List")
+
+# edit subject view
+def edit_subject(request):
+    if request.method == 'POST':
+        subject_id = request.POST.get("subject_id")
+        subjectname = request.POST.get("subjectname")
+        classlevel = request.POST.get("classlevel")
+        subject_head = request.POST.get("subject_head")
+        that_subject = Subjects.objects.get(pk=subject_id)
+
+        that_subject.subjectname = subjectname
+        that_subject.classlevel = classlevel
+        that_subject.subjecthead = subject_head
+        that_subject.save()
+        messages.success(request,"Subject edited successfully")
+        return redirect("Subjects List")
+
+# delete subject view
+def delete_subject(request):
+    if request.method == 'POST':
+        subject_id = request.POST.get("subject_id")
+        that_subject = Subjects.objects.get(pk=subject_id)
+        that_subject.delete()
+        messages.success(request,"Subject deleted successfully")
+        return redirect("Subjects List")
 
 def supportstaffList(request):
     # Retrieve all support staff data from the database
@@ -344,7 +389,9 @@ def supportstaffList(request):
     
 def showteacher(request,teacherId):
     teachers = Teachers.objects.filter(teacherid=teacherId)
-    return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers})
+    classes = Schoolclasses.objects.all()
+    subjects = Subjects.objects.all()
+    return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers, 'classes':classes, 'subjects':subjects})
 # support staff views
 
 def staff(request):
@@ -355,17 +402,22 @@ def staff(request):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
-        stdnumber = request.POST.get('stdnumber')
+        # Find the maximum stdnumber in the database
+        max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
+
+        # Generate the next stdnumber
+        if max_stdnumber:
+            new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
+        else:
+            new_stdnumber = 'STD001'
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
-        # stdclass = request.POST.get('stdclass')
         class_id = request.POST['stdclass']
         selected_class = Schoolclasses.objects.get(pk=class_id)
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
-        # studentclass = request.POST.get('studentclass')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -376,7 +428,7 @@ def studentReg(request):
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
         student =Student.objects.create(
-            stdnumber =stdnumber,            
+            stdnumber =new_stdnumber,            
             regdate = regdate ,
             childname = childname ,
             stdclass=selected_class,
@@ -384,7 +436,6 @@ def studentReg(request):
             dob = dob ,
             address = address ,
             house = house ,
-            # studentclass = studentclass , 
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -413,25 +464,6 @@ def get_students_by_class(request, class_id):
         data = {'error': 'Class not found'}
         return JsonResponse(data, status=404)
 
-def subjects(request):
-    if request.method == 'POST':
-        subjectnames = request.POST.get('subjectname')
-        subjectids = request.POST.get('subjectid')
-        classlevel = request.POST.get('classlevel')
-        subjectheads = request.POST.get('subjecthead')
-    
-        Subjects.objects.create(
-            subjectname = subjectnames , 
-            subjectid = subjectids , 
-            classlevel = classlevel , 
-            subjecthead = subjectheads
-        )
-    
-        Subjects.save
-    return HttpResponse(subjectnames)
-
-from django.shortcuts import render
-from .models import Schoolclasses, Teachers
 
 def showclasses(request):
     classes = Schoolclasses.objects.all()
@@ -439,73 +471,13 @@ def showclasses(request):
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
-    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+    # return render(request , 'frontend/classes/classList.html' , {'classes':classes})
 
 
 def addclasses(request):
-    return render(request , 'frontend/academics/addclasses.html')
-    # classes = Schoolclasses.objects.all()
-    # return render(request , 'frontend/academics/addclasses.html' , {'classes':classes})
-    
-def schoolclasses(request):
-    if request.method == 'POST':
-        classname = request.POST.get('classname')
-        classid = request.POST.get('classid')
-        classteacher = request.POST.get('classteacher')
-        classlevels = request.POST.get('classlevel')
-        numofstds = request.POST.get('numofstds')
-    
-        Schoolclasses.objects.create(
-            classname = classname ,
-            classid = classid ,
-            classlevels = classlevels ,
-            classteacher = classteacher ,
-            numofstds = numofstds 
-        )
-    
-        Schoolclasses.save
-        classes = Schoolclasses.objects.all()
-    return render(request , 'frontend/classes/classList.html' , {'classes':classes})
-    
-def teachers(request):
-    if request.method == 'POST':
-        teacherid = request.POST.get('teacherid')
-        teachernames = request.POST.get('teachernames')
-        dob = request.POST.get('dob')
-        gender = request.POST.get('gender')
-        contact = request.POST.get('contact')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        classes = request.POST.get('classes')
-        joiningdate = request.POST.get('joiningdate')
-        position = request.POST.get('position')
-        subject = request.POST.get('subject')
-        qualification = request.POST.get('qualification')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        Teachers.objects.create(
-            teacherid = teacherid ,
-            teachernames = teachernames ,
-            dob = dob ,
-            gender = gender ,
-            contact = contact ,
-            email = email ,
-            address = address ,
-            classes = classes ,
-            joiningdate = joiningdate ,
-            position = position ,
-            subject = subject , 
-            qualification = qualification ,
-            username = username , 
-            password = password
-        )
-        supportStaffReg.save()
-        messages.success(request, f" Your data, {fullname} has been successfully added!")
-                
-        # Redirect to the registration page for support staff after successful data addition
-        return redirect('AddSupportstaff')
-   
+    subjects = Subjects.objects.all()
+    return render(request , 'frontend/academics/addclasses.html' , {"subjects":subjects})
+
 def supportstaffList(request):
     # Retrieve all support staff data from the database
     all_support_staff = Supportstaff.objects.all()
@@ -514,15 +486,15 @@ def supportstaffList(request):
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
     return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects, 'teachers':teachers})
-    
+
+#add classes view 
 def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
-        classteacher = request.POST['classteacher']
         class_level = request.POST['class_level']
 
-        newclass = Schoolclasses.objects.create(classname=classname,classteacher=classteacher,class_level=class_level)
+        newclass = Schoolclasses.objects.create(classname=classname, class_level=class_level)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
@@ -530,7 +502,30 @@ def schoolclasses(request):
 
         messages.success(request, 'Class successfully added!')
         return redirect("AddClasses")
-    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})   
+
+
+# edit class view
+def edit_class(request):
+    if request.method == 'POST':
+        classid = request.POST.get("classid")
+        classname = request.POST.get("classname")
+        classteacher = request.POST.get("classteacher")
+
+        that_class = Schoolclasses.objects.get(pk=classid)
+        that_class.classname = classname
+        that_class.classteacher = classteacher
+        that_class.save()
+        messages.success(request,"Class edited successfully")
+        return redirect("showclasses")
+
+# modal for deleting class
+def delete_class(request):
+    if request.method == 'POST':
+        classid = request.POST.get("classid")
+        that_class = Schoolclasses.objects.get(pk=classid)
+        that_class.delete()
+        messages.success(request,"Class deleted successfully")
+        return redirect("showclasses")
 
 #Export the data in excel in the students model
 def export_to_excel(request):
@@ -642,6 +637,8 @@ def teachers(request):
         position = request.POST.get('position')
         qualification = request.POST.get('qualification')
         username = request.POST.get('username')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
         # password = request.POST.get('password')
 
 
@@ -657,6 +654,8 @@ def teachers(request):
             joiningdate=joiningdate,
             position=position,
             qualification=qualification,
+            salary=salary,
+            bankaccnum=bankaccnum,
             username=username,
             password=default_password
         )
@@ -671,6 +670,50 @@ def teachers(request):
 
         # Redirect the user to a different page (e.g., teacherlist page)
         return redirect('Add Teacher')
+
+# edit teacher view
+def edit_teacher(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get("teacherid")
+        teachernames = request.POST.get('teachernames')
+        gender = request.POST.get('gender')
+        
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        classes = request.POST.getlist('classes')  # Get a list of selected classes
+        subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
+        position = request.POST.get('position')
+        qualification = request.POST.get('qualification')
+        username = request.POST.get('username')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
+
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        print(teacherid)
+
+         # Update teacher attributes
+        that_teacher.teachernames = teachernames
+        that_teacher.gender = gender
+        that_teacher.contact = contact
+        that_teacher.email = email
+        that_teacher.address = address
+        that_teacher.position = position
+        that_teacher.qualification = qualification
+        that_teacher.username = username
+        that_teacher.salary = salary
+        that_teacher.bankaccnum = bankaccnum
+
+        # Update related fields (classes and subjects)
+        that_teacher.classes.set(classes)
+        that_teacher.subjects.set(subjects)
+
+        # Save the updated teacher
+        that_teacher.save()
+
+        messages.success(request,"Teacher edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
+
    
 def supportstaffList(request):
     # Retrieve all support staff data from the database

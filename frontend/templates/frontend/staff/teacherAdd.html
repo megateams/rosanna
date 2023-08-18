@@ -118,6 +118,21 @@
         <div class="row">
             <!-- class -->
             <div class="form-group col-md-6">
+                <label for="class-checkbox">Salary:</label><br>
+                <input type="text" name="salary" id="" class="form-control" value="" required>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="class-checkbox">Bank Account Number:</label><br>
+                <input type="text" name="bankaccnum" id="" class="form-control" value="" required>
+            </div>
+
+            
+            <!-- position -->
+            
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
                 <label for="class-checkbox">Attached Classes:</label><br>
                 {% for class in classes %}
                     <input type="checkbox" name="classes" id="" value="{{class.classid}}">
@@ -126,7 +141,7 @@
                 {% endfor %}  
             </div>
             <!-- Subject -->
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
                 <label for="class-checkbox">Attached Subjects:</label><br>
                 {% for subject in subjects %}
                     <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
@@ -134,8 +149,6 @@
                     <br>
                 {% endfor %}  
             </div>
-            <!-- position -->
-            
         </div>
 
         <!-- button -->
