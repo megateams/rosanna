@@ -4,6 +4,7 @@ from .models import *
 from django.db.models import Sum
 from django.contrib import messages
 from frontend.models import Schoolclasses, Student
+from django.http import Http404
 
 from .models import Fees
 
@@ -194,6 +195,16 @@ def financefeesList(request):
         'total_amount': total_amount,
     }
     return render(request,'finance/fees/financefeesList.html',context)
+
+def delete_fee(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get("paymentid")
+        fee = Fees.objects.get(paymentid=paymentid)
+        fee.delete()
+        messages.success(request, f"Fee record {paymentid} has been deleted.")
+        return redirect('Fees List')  # Adjust this to the correct URL name
+
+    return redirect('Fees List')  # Adjust this to the correct URL name
 # fees views
 
 # feesstructure views
