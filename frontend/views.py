@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
 from django.db.models import Sum
-from finance.models import Feesstructure, ExpenseRecord
+from finance.models import Feesstructure, ExpenseRecord,Fees
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -510,7 +510,13 @@ def feesstructure(request):
     return render(request, 'frontend/accounting/feesstructure.html',{"feesstructure": feesstructure})
 
 def fees(request):
-    return render(request, 'frontend/accounting/fees.html')
+    total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
+    fees_list = Fees.objects.all()
+    context = {
+        'fees_list': fees_list,
+        'total_amount': total_amount,
+    }
+    return render(request, 'frontend/accounting/fees.html',context)
     
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')

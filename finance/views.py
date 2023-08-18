@@ -137,7 +137,18 @@ def expenserecords(request):
 def financedashboard(request):
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    return render(request, "finance/financedashboard.html", {'total_amount_paid': total_amount_paid})
+
+    fees = Fees.objects.all()
+    total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+
+    context = {
+        'total_amount_paid': total_amount_paid,
+        'total_amount': total_amount,
+
+    }
+    return render(request, "finance/financedashboard.html", context)
+
+    
 
 
 # fees views
@@ -176,9 +187,13 @@ def financeaddFees(request):
 
 
 def financefeesList(request):
+    total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
-
-    return render(request,'finance/fees/financefeesList.html',{'fees_list': fees_list})
+    context = {
+        'fees_list': fees_list,
+        'total_amount': total_amount,
+    }
+    return render(request,'finance/fees/financefeesList.html',context)
 # fees views
 
 # feesstructure views
