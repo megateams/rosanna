@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
 from django.db.models import Sum
-from finance.models import Feesstructure, ExpenseRecord
+from finance.models import *
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,14 @@ from django.utils.decorators import method_decorator
 
 # Create your views here.
 # creating views for dashboard
+def financeteacherpaymentsList(request):
+    teachers = Teacherspayment.objects.all()
+    return render(request,'frontend/accounting/teacherspayments.html' , {'teachers':teachers})
+
+def supportstaffpaymentsList(request):
+    supportstaffinfo = Supportstaffpayment.objects.all()
+    return render(request,'frontend/accounting/supportstaffpayments.html' , {'supportstaffdata':supportstaffinfo})
+# supportstaffpayments views
 def deletemarks(request , id):
     marks = Marks.objects.filter(id = id)
     marks.delete()

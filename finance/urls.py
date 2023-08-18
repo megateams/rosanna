@@ -42,11 +42,11 @@ urlpatterns = [
     path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
     #path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslist"),
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
     path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
 
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsList"),
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
 

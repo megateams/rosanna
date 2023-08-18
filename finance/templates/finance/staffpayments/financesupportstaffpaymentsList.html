@@ -53,13 +53,6 @@
                     <th>{{ supportstaff.balance }}</th>
                     <th>{{ supportstaff.paymentmethod }}</th>
                     <th>{{ supportstaff.bankaccnum }}</th>
-
-                   <td>
-                        <div>
-                            <a href="editsupportstaffpayment/{{ supportstaff.paymentid }}" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
-                            <a href="deletesupportstaffpayment/{{  supportstaff.paymentid  }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        </div>
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

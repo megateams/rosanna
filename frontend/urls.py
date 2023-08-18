@@ -85,7 +85,10 @@ urlpatterns = [
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
-    path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
-    path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
+    #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
+    #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
     path('expenseslist/', views.expenses, name='Expenses '),
+    
+    path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
+    path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
 ]
