@@ -44,7 +44,7 @@ class Schoolclasses(models.Model):
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     class_level = models.CharField(max_length =20 ,default=None, verbose_name = "Class Level")
-    classteacher = models.CharField(max_length =20 ,default=None, verbose_name = "Class teacher")
+    classteacher = models.CharField(max_length =20, null=True, blank=True, verbose_name = "Class teacher")
     
     Display_schoolclasses = [
         'classid','classname','class_level','classteacher' 
@@ -60,7 +60,6 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)

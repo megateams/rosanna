@@ -53,7 +53,7 @@
                 </li>
                 <hr color="#fff">
                 <li>
-                    <a class="" href='/teacher/paymenthistory/'><i class="fas fa-money-bill-wave    mr-2"></i><span>Payment History</span></a>    
+                    <a class="" href='/teacher/paymenthistory/{{teacher.teacherid}}'><i class="fas fa-money-bill-wave    mr-2"></i><span>Payment History</span></a>    
                 </li>
                 <hr color="#fff">
                 <li>
@@ -76,7 +76,7 @@
                 
                 <div class="right mr-5 d-flex mt-2">
                     <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{teacher.username}}</p>
-                    <a class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
+                    <a href="/teacher/logout/" class='ml-3 mr-2 text-danger' ><p class='ml-3 mr-2'><i class="fas fa-power-off   mr-2 "></i>Logout</p></a>   
 
                 </div>   
             </nav>

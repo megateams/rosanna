@@ -4,13 +4,9 @@ from django.contrib.auth import views as auth_views
 # from .views import save_registration
 
 urlpatterns = [
-    # Login and Logout URLs
-    # path("login/", auth_views.LoginView.as_view(template_name="frontend/login.html"), name="login"),
-    # path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("", views.user_login, name="login"),
-    path("logout/", views.user_logout, name="logout"),
+    path("", views.user_login, name="Admin Login"),
+    path("logout/", views.user_logout, name="user_logout"),
     path("register/", views.register, name="register"),
-    # path('', views.login, name="Login"),
     path('dashboard/', views.home, name="Dashboard"),
 
     path('students/', views.students, name="Students"),
@@ -22,9 +18,14 @@ urlpatterns = [
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
     path('addteacher/submit/', views.teachers, name="Teachers"),
+    path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
+    path('teacher_export/', views.teacher_export_to_excel, name="teacher_export"),
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
+    path('markslist/', views.marksList, name=" View Marks"),    
+
+    # path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),   
 
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),  
@@ -36,17 +37,27 @@ urlpatterns = [
 
     path('support-staff-list/', views.supportstaffList, name="Support staff List"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
-    path('showteacher/<teacherId>', views.showteacher, name=" Show Teacher"),
+    path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
 
     path('staff/', views.staff, name="Staff"),
-    path('showsubjects/' , views.showsubjects , name='showsubjects'),
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
     path('addsubject/' , views.addsubject , name = 'addsubject'),
+    path('assign_subjecthead/' , views.assign_subjecthead , name = 'assign_subjecthead'),
+    path('edit_subject/' , views.edit_subject , name = 'edit_subject'),
+    path('delete_subject/' , views.delete_subject , name = 'delete_subject'),
     path('showclasses/' , views.showclasses , name='showclasses'),
+    path('sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
+
+    # path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
+    # path('subjectlist/delete_subject/<subjectid>' , views.deletesubject , name='deletesubject'),
+    # path('showclasses/delete_class/<classid>' , views.deleteclass , name='deleteclass'),
+
     path('addclasses/sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
     path('addclasses/' , views.addclasses , name='AddClasses'),
+    path('edit_class/' , views.edit_class , name='edit_class'),
+    path('delete_class/' , views.delete_class , name='delete_class'),
 
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),

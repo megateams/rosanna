@@ -13,7 +13,18 @@
     </div>
 
     <div class="table-section" style="font-size: 14px;"> 
-        
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
         <table class="table" id="table">
             <thead>
                 <tr>
@@ -21,23 +32,10 @@
                     <th>subjects</th>
                     <th>Class Level</th>
                     <th>Class Teacher</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-
-                {% for showclass in classes %}
-                <tr>
-                    <td>{{ showclass.classname }}</td>
-                    <td>{{ showclass.classid }}</td>
-                    <td>{{ showclass.classlevel }}</td>
-                    <td>{{ showclass.classteacher }}</td>
-                    <td>{{ showclass.numofstds }}</td>
-                    <td>
-                        <a href="" class="text-primary"> <i class="fas fa-edit    "></i></a>
-                        <a href="" class="text-danger"> <i class="fas fa-trash    "></i></a>
-                    </td>
-                </tr>
-                {% endfor %}
                 {% for class_obj in classes %}
                 <tr>
                     <td>{{ class_obj.classname }}</td>
@@ -50,12 +48,89 @@
                     </td>
                     <td>{{class_obj.class_level}}</td>
                     <td>
-                        {% for teacher in teachers %}
-                            {% if teacher.teacherid == class_obj.classteacher %}
-                                {{ teacher.teachernames }}
-                            {% endif %}
-                        {% endfor %}
+                        {{class_obj.classteacher}}
                     </td>
+                    <td>
+                        <a href="#edit{{class_obj.classid}}" data-toggle="modal" class="text-primary mr-3"> <i class="fas fa-edit    "></i></a>
+                        <a href="#delete{{class_obj.classid}}" data-toggle="modal" class="text-danger"> <i class="fas fa-trash    "></i></a>
+                    </td>
+
+                    <!-- edit class modal -->
+                    <div class="modal fade" id="edit{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit {{class_obj.classname}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/edit_class/" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="classid" value="{{class_obj.classid}}">
+
+                                        <div class="form-group">
+                                            <label for="">Subject name:</label>
+                                            <input type="text" name="classname" value="{{class_obj.classname}}" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">level:</label>
+                                            <select type="text" name="classlevel" value="{{class_obj.classlevel}}" class="form-control">
+                                                <!-- <option value=""selected disabled>---</option> -->
+                                                <option value="lower-primary">Lower primary</option>
+                                                <option value="upper-primary">Upper primary</option>
+                                                <option value="nursery">Nursery</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Assign classteacher</label>
+                                            <select name="classteacher" id="" class="form-control" value="{{class_obj.classteacher}}">
+                                                <!-- <option value="" selected disabled>---</option> -->
+                                                {% for teacher in teachers %}
+                                                    <option value="{{teacher.teachernames}}">{{teacher.teachernames}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                            
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- delete modal -->
+                    <div class="modal fade" id="delete{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Class</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/delete_class/" method="post">
+                                        {% csrf_token %}
+
+                                        <input type="hidden" value="{{class_obj.classid}}" name="classid">
+                                        <p>Are You Sure you want to delete the class {{class_obj.classname}}</p>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-sm btn-success">Yes</button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">No</button>
+                                            
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </tr>
                 {% endfor %}
             </tbody>

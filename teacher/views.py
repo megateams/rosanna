@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
+from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
@@ -40,10 +41,8 @@ def teacher_login(request):
 def logout_view(request):
     # Clear session data
     request.session.clear()
-
     # Add a success message to inform the user about the successful logout
     messages.success(request, 'You have been logged out.')
-
     # Redirect to the login page
     return redirect('Login Page')
 
@@ -55,26 +54,22 @@ def dashboard(request):
 
     # Get the teacher ID from the session
     teacher_id = request.session['teacher_id']
-    
-    # Query the database to get the teacher's information
-    try:
-        teacher = Teachers.objects.get(teacherid=teacher_id)
-        his_class = Schoolclasses.objects.get(classteacher = teacher_id)
-    except Teachers.DoesNotExist:
-        teacher = None
-    return render(request, 'teacher/dashboard.html',{'teacher': teacher ,'his_class':his_class})
+
+    teacher = Teachers.objects.get(teacherid=teacher_id)    
+
+    return render(request, 'teacher/dashboard.html',{'teacher': teacher})
 
 def profile(request,teacher_id):
     teachers = Teachers.objects.get(teacherid = teacher_id)
     return render(request, 'teacher/profile.html', {'teacher': teachers})    
 
-def paymenthistory(request):
-    return render(request, 'teacher/paymenthistory.html')  
+
+def paymenthistory(request,teacher_id):
+    teacher = Teacherspayment.objects.get(teacherid=teacher_id)
+    return render(request, 'teacher/paymenthistory.html', {"teacher": teacher})  
 
 
 # marks logic
-
-
 def get_students_by_class(request, class_id):
     try:
         selected_class = Schoolclasses.objects.get(pk=class_id)
@@ -354,7 +349,7 @@ def view_marks(request, class_id, teacher_id):
         subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
                                 for subject, total_marks in subjects_total_marks.items()}
         # Sort the students based on their final average marks in descending order
-        students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
