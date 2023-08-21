@@ -50,6 +50,10 @@ urlpatterns = [
     path('showclasses/' , views.showclasses , name='showclasses'),
     path('sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
 
+    path('subjectlist/' , views.subjectList , name = 'subjectList'),
+
+
+
     # path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
     # path('subjectlist/delete_subject/<subjectid>' , views.deletesubject , name='deletesubject'),
     # path('showclasses/delete_class/<classid>' , views.deleteclass , name='deleteclass'),
