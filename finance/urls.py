@@ -38,14 +38,30 @@ urlpatterns = [
     path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+
+    # path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+
+    # path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
+    # path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
+
+    # path('financereports/', views.financeReports, name =" Reports"),
+    # path('financestatistics/', views.financeStatistics, name =" Statistics"),
+
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
+    path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
 
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
-
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
-    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
 
     
+    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
+
+    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
+    path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
+    path('editsupportstaffpayments' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
+
+    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment')
+
 ]

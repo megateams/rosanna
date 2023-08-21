@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
 from django.db.models import Sum
-from finance.models import Feesstructure, ExpenseRecord,Fees
+from finance.models import *
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -49,7 +49,6 @@ def user_logout(request):
     return redirect("Admin Login") # Redirect to the login page after logout
 # Create your views here.
 # creating views for dashboard
-
 
 @login_required
 def home(request):
@@ -392,7 +391,6 @@ def showclasses(request):
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
 
 
-
 def addclasses(request):
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
@@ -641,8 +639,6 @@ def supportstaffList(request):
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
-
-
 # Accounting
 def feesstructure(request):
     feesstructure = Feesstructure.objects.all()
@@ -659,10 +655,10 @@ def fees(request):
     
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
+
 def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
 
-    
 def expenses(request):
     total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
@@ -671,5 +667,12 @@ def expenses(request):
         'total_amount_paid': total_amount_paid,
         }
     return render(request, 'frontend/accounting/expenses.html',context)
-        
-    
+
+def financeteacherpaymentsList(request):
+    teachers = Teacherspayment.objects.all()
+    return render(request,'frontend/accounting/teacherspayments.html' , {'teachers':teachers})
+
+def supportstaffpaymentsList(request):
+    supportstaffinfo = Supportstaffpayment.objects.all()
+    return render(request,'frontend/accounting/supportstaffpayments.html' , {'supportstaffdata':supportstaffinfo})
+
