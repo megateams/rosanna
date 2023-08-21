@@ -10,7 +10,8 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
                
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Supportstaffpayments</h5>
             <hr>
@@ -21,52 +22,32 @@
             <div class="row">
                 <!-- teacherid -->
                 <div class="form-group col-md-6">
-                    <label for="">SStaff ID: </label>
-                    <input type="text" name="support-staffid" class="form-control">
-                </div>
-                <!-- staffname-->
-                <div class="form-group col-md-6">
-                    <label for=""> SStaff Name </label>
-                    <input type="text" name="support-staffname" class="form-control">
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- datepaid -->
-                <div class="form-group col-md-6">
-                    <label for="">Payment Date </label>
-                    <input type="date" name="datepaid" class="form-control">
+                    <label for="">Staff name: </label>
+                    <select type="text" id="support-staffid" name="support-staffid" class="form-control">
+                        <option value="" selected disabled>---</option>
+                        {% for staff in support_staff %}
+                            <option value="{{staff.supportstaffid}}"  >{{staff.supportstaffnames}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <!-- salary-->
                 <div class="form-group col-md-6">
                     <label for=""> Salary </label>
-                    <input type="text" name="salary" class="form-control">
-                </div>
+                    <input type="text" id="salary" name="salary" class="form-control" readonly>
+                </div>  
             </div>
 
             <div class="row">
                 <!-- amountpaid -->
                 <div class="form-group col-md-6">
                     <label for="">Amount Paid</label>
-                    <input type="text" name="amount" class="form-control">
+                    <input type="text" name="amountpaid" class="form-control">
                 </div>
-                <!-- Balance -->
+                
+                <!-- datepaid -->
                 <div class="form-group col-md-6">
-                    <label for=""> Balance </label>
-                    <input type="text" name="balance" class="form-control">
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- position -->
-                <div class="form-group col-md-6">
-                    <label for="">Payment Method</label>
-                    <input type="text" name="paymentmethod" class="form-control">
-                </div>
-                <!-- bankaccnum -->
-                <div class="form-group col-md-6">
-                    <label for=""> Bank Account No.</label>
-                    <input type="text" name="bankaccnum" class="form-control">
+                    <label for="">Payment Date </label>
+                    <input type="date" name="datepaid" class="form-control">
                 </div>
             </div>
 
@@ -77,10 +58,7 @@
         <!-- button -->
         <div class="form-group">
             <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
-        </div>
-        
-
-        
+        </div>  
     </form>
     <!-- form-section -->
 

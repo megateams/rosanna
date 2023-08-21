@@ -190,7 +190,7 @@ def supportstaffAdd(request):
 def supportstaffreg(request):
     # retrieve data from request
     if request.method == 'POST':
-        fullname =request.POST.get('fullname')
+        supportstaffnames =request.POST.get('supportstaffnames')
         contact =request.POST.get('contact')
         email =request.POST.get('email')
         address =request.POST.get('address')
@@ -198,17 +198,23 @@ def supportstaffreg(request):
         dob =request.POST.get('dob')
         qualification =request.POST.get('qualification')
         position =request.POST.get('position')
+        joiningdate =request.POST.get('joiningdate')
+        salary =request.POST.get('salary')
+        bankaccnum =request.POST.get('bankaccnum')
         
         #create support staff object and submit it in the database
         supportStaffReg =Supportstaff.objects.create(
-            fullname =fullname,
+            supportstaffnames =supportstaffnames,
             contact=contact,
             email=email,
             address=address,
             gender=gender,
             dob=dob,
             qualification=qualification,
-            position=position            
+            position=position,  
+            joiningdate=joiningdate,
+            salary=salary,
+            bankaccnum=bankaccnum,          
         )
         supportStaffReg.save()
         messages.success(request, 'Data successfully added!')

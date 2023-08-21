@@ -85,7 +85,36 @@ class Receipts(models.Model):
         'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
     ]
     
-
+class Teacherspayment(models.Model):
+    paymentid = models.AutoField(primary_key=True)
+    teacherid = models.CharField(max_length=20 , verbose_name='Teacher id')
+    teachername = models.CharField(max_length=30 , verbose_name='Teacher Name' , default=None) 
+    paymentdate = models.DateField(verbose_name='Payment Date')
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    balance = models.IntegerField(verbose_name='Balance')
+    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displayteacherpayment = [
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+    ]
+    
+    
+class Supportstaffpayment(models.Model):
+    paymentid = models.AutoField(primary_key=True)
+    supportstaffid = models.CharField(max_length=20 , verbose_name='Support Staff')
+    staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
+    salary = models.IntegerField(verbose_name='Salary')
+    amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
+    balance = models.IntegerField(verbose_name='Balance')
+    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    
+    displaysupportstaffpayment = [
+        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' 
+    ]
 
 
 

@@ -62,6 +62,7 @@ urlpatterns = [
     path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
     path('editsupportstaffpayments' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
 
-    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment')
+    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment'),
+    path('get_staff_salary/<id>/' , views.get_staff_salary , name = 'get_staff_salary'),
 
 ]

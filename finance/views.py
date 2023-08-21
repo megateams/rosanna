@@ -89,17 +89,16 @@ def financeaddStaffpayments(request):
         paymentdate = request.POST.get('datepaid')
         salary = request.POST.get('salary')
         amount = request.POST.get('amount')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
+        
         
         Supportstaffpayment.objects.create(
             supportstaffid = supportstaffid ,
             salary = salary ,
             amountpaid = amount ,
             balance = balance ,
-            paymentmethod = paymentmethod ,
-            bankaccnum = bankaccnum
+            supportstaffname = supportstaffname,
+            paymentdate = datepaid,
+            
         )
         Supportstaffpayment.save()
     return render(request , 'finance/staffpayments/financesupportstaffpaymentsList.html')
@@ -325,13 +324,32 @@ def financeaddTeacherpayments(request):
 def financeteacherpaymentsList(request):
     return render(request,'finance/staffpayments/financeteacherpaymentsList.html')
 # teacherpayments views
+
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
-    return render(request,'finance/staffpayments/financeaddsupportstaffpayments.html')
+    if request.method == 'POST':
+        support_staff_id = request.POST.get('support-staffid')
+        amount_paid = float(request.POST.get('amountpaid'))
+
+        # Fetch the support staff payment record
+        payment = Supportstaffpayment.objects.get(supportstaffid=support_staff_id)
+
+        # Update the payment record with the new amount paid and calculate the balance
+        payment.amountpaid += amount_paid
+        payment.balance = payment.salary - payment.amountpaid
+        payment.save()
+
+        return redirect('SupportstaffpaymentsLists')  # Redirect to the list page
+
+    context = {
+        'support_staff': Supportstaff.objects.all()
+    }
+    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
 
 def financesupportstaffpaymentsList(request):
-    support_staff_payments = Supp
-    return render(request,'finance/staffpayments/financesupportstaffpaymentsList.html')
+    support_staff_payments = Supportstaffpayment.objects.all()
+    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', {'supportstaffpayments': support_staff_payments})
+
 # supportstaffpayments views
 
 # expenses views
@@ -430,6 +448,16 @@ def get_stdclass(request, stdnumber):
         return JsonResponse({}, status=404)
 
 
+
+def get_staff_salary(request,id):
+    support_staff = Supportstaff.objects.get(pk=id)
+
+    salary = support_staff.salary
+
+    staff_data={
+        'salary':salary,
+    }
+    return JsonResponse(staff_data)
 
 
 

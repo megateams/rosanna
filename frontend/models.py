@@ -96,7 +96,7 @@ class Student(models.Model):
 
 #     ]
 class Supportstaff(models.Model):
-    supportstaffid = models.CharField(primary_key=True , max_length=20 , verbose_name='Support Stuff id')
+    supportstaffid = models.AutoField(primary_key=True)
     supportstaffnames = models.CharField(max_length=30 , verbose_name='Suppot Staff Names' , default=None)
     gender = models.CharField(max_length=7 , verbose_name='Gender' , default=None)
     dob = models.DateField(verbose_name='Date of Birth' , default=None)
@@ -108,8 +108,8 @@ class Supportstaff(models.Model):
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications' , default=None)
     salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
     bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
-    username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
-    password = models.CharField(max_length=100, verbose_name='Password' , default=None)
+    # username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
+    # password = models.CharField(max_length=100, verbose_name='Password' , default=None)
     
     Display_Supportstaff =['supportstaffid','supportstaffnames','gender','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
 
