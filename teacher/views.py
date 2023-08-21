@@ -7,7 +7,6 @@ from django.template.loader import render_to_string
 import os
 from xhtml2pdf import pisa
 from django.conf import settings
-
 # Create your views here.
 
 # view for the login page
@@ -42,10 +41,8 @@ def teacher_login(request):
 def logout_view(request):
     # Clear session data
     request.session.clear()
-
     # Add a success message to inform the user about the successful logout
     messages.success(request, 'You have been logged out.')
-
     # Redirect to the login page
     return redirect('Login Page')
 
@@ -66,14 +63,13 @@ def profile(request,teacher_id):
     teachers = Teachers.objects.get(teacherid = teacher_id)
     return render(request, 'teacher/profile.html', {'teacher': teachers})    
 
+
 def paymenthistory(request,teacher_id):
     teacher = Teacherspayment.objects.get(teacherid=teacher_id)
     return render(request, 'teacher/paymenthistory.html', {"teacher": teacher})  
 
 
 # marks logic
-
-
 def get_students_by_class(request, class_id):
     try:
         selected_class = Schoolclasses.objects.get(pk=class_id)
@@ -349,11 +345,11 @@ def view_marks(request, class_id, teacher_id):
         subjects_marks_data[student] = student_subjects_data
         student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-    # Calculate average marks for each subject across all students
-    subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                              for subject, total_marks in subjects_total_marks.items()}
-    # Sort the students based on their final average marks in descending order
-    students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        # Calculate average marks for each subject across all students
+        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
+                                for subject, total_marks in subjects_total_marks.items()}
+        # Sort the students based on their final average marks in descending order
+        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
@@ -481,7 +477,6 @@ def generate_report(request, student_id):
     pisa_status = pisa.CreatePDF(html, dest=response)
     
     return response
-
 
 
 

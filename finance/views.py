@@ -1,9 +1,12 @@
 
 from django.shortcuts import render, HttpResponse,redirect
 from .models import *
+from django.db.models import Sum
 from django.contrib import messages
-from frontend.models import Schoolclasses
-# from .models import Supportstaff , Staffpayments , ExpenseRecord , Fees , Bankdetails , Receipts , Supportstaffpayment , Teacherspayment , Teachers
+from frontend.models import Schoolclasses, Student
+from django.http import Http404
+
+from .models import Fees
 
 # Create your views here.
 #  Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
@@ -129,43 +132,79 @@ def expenserecords(request):
         
         ExpenseRecord.save()
     return render(request , 'finance/financedashboard.html')
-    
-def Fees(request):
-    if request.method == 'POST':
-        paymentid = request.POST.get('paymentid')
-        stdnumber = request.POST.get('stdnumber')
-        stdname = request.POST.get('stdname')
-        studentclass = request.POST.get('studentclass')
-        amount = request.POST.get('amount')
-        balance = request.POST.get('balance')
-        modeofpayment = request.POST.get('modeofpayment')
-        date = request.POST.get('date')
-        
-        Fees.objects.create(
-            paymentid = paymentid ,
-            stdnumber = stdnumber ,
-            stdname = stdname ,
-            studentclass = studentclass ,
-            amount = amount ,
-            balance = balance ,
-            modeofpayment = modeofpayment ,
-            date = date
-        )
-        
-        Fees.save()
-        
-    return render(request, "finance/index.html")
+
 
 # Create your views here.
 def financedashboard(request):
-    return render(request, "finance/financedashboard.html")
+    expenses = ExpenseRecord.objects.all()
+    total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
+    fees = Fees.objects.all()
+    total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+
+    context = {
+        'total_amount_paid': total_amount_paid,
+        'total_amount': total_amount,
+
+    }
+    return render(request, "finance/financedashboard.html", context)
+
+    
+
 
 # fees views
 def financeaddFees(request):
-    return render(request,'finance/fees/financeaddFees.html')
+    if request.method == 'POST':
+        stdnumber = request.POST.get('stdnumber')
+        stdname = Student.objects.get(stdnumber=stdnumber).childname  # Get student name
+        studentclass = request.POST.get('studentclass')
+        classfees = request.POST.get("classfees")
+        amount = request.POST.get("amount") # Get amount from fees structure
+        balance = int(classfees) - int(amount)
+        modeofpayment = request.POST.get('modeofpayment')
+        date = request.POST.get('date')
+        
+        if amount >= classfees:
+            # Create a new Fees object and save it to the database
+            fees = Fees.objects.create(
+                stdnumber_id=stdnumber,
+                stdname=stdname,
+                studentclass=studentclass,
+                amount=amount,
+                balance=balance,
+                modeofpayment=modeofpayment,
+                date=date
+            )
+            fees.save()
+
+            messages.success(request, 'Fees registered successfully.')
+            return redirect('Add Fees')
+        
+        else:
+            messages.error(request, 'Amount is greater than the class fees. Please try again')
+    students = Student.objects.all()
+    fees_structures = Feesstructure.objects.all()
+    return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
+
 
 def financefeesList(request):
-    return render(request,'finance/fees/financefeesList.html')
+    total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
+    fees_list = Fees.objects.all()
+    context = {
+        'fees_list': fees_list,
+        'total_amount': total_amount,
+    }
+    return render(request,'finance/fees/financefeesList.html',context)
+
+def delete_fee(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get("paymentid")
+        fee = Fees.objects.get(paymentid=paymentid)
+        fee.delete()
+        messages.success(request, f"Fee record {paymentid} has been deleted.")
+        return redirect('Fees List')  # Adjust this to the correct URL name
+
+    return redirect('Fees List')  # Adjust this to the correct URL name
 # fees views
 
 # feesstructure views
@@ -228,76 +267,24 @@ def editfeesstructure(request, feesstructureid):
 
 # teacherpayments views
 def financeaddTeacherpayments(request):
-    teacherdetails = Teachers.objects.all()
-    if request.method == 'POST':
-        teacherid = request.POST.get('teacherid')
-        teachername = request.POST.get('teachername')
-        paymentdate = request.POST.get('datepaid')
-        salary = request.POST.get('salary')
-        amountpaid = request.POST.get('amount')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
-        
-        Teacherspayment.objects.create(
-            teacherid = teacherid ,
-            teachername = teachername ,
-            paymentdate = paymentdate ,
-            salary = salary ,
-            amountpaid = amountpaid ,
-            balance = balance ,
-            paymentmethod = paymentmethod ,
-            bankaccnum = bankaccnum 
-        )
-        
-        Teacherspayment.save
-        messages.success(request , "Teacher Payments added successfully")
-        
-    return render(request,'finance/staffpayments/financeaddTeacherpayments.html'  , {'teachers':teacherdetails})
+    return render(request,'finance/staffpayments/financeaddTeacherpayments.html')
 
 def financeteacherpaymentsList(request):
-    teachers = Teacherspayment.objects.all()
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teachers})
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html')
 # teacherpayments views
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
-    supportstaffdetails = Supportstaff.objects.all()
-    if request.method == 'POST':
-        staffid = request.POST.get('support-staffid')
-        paymentdate = request.POST.get('datepaid')
-        salary = request.POST.get('salary')
-        amountpaid = request.POST.get('amount')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
-        staffname = request.POST.get('support-staffname')
-        
-        Supportstaffpayment.objects.create(
-            supportstaffid = staffid ,
-            staffname = staffname ,
-            paymentdate = paymentdate ,
-            salary = salary ,
-            amountpaid = amountpaid ,
-            balance = balance ,
-            paymentmethod = paymentmethod ,
-            bankaccnum = bankaccnum 
-        )
-        
-        Supportstaffpayment.save
-        messages.success(request , "Support Staff payment added Successfully")
-    return render(request,'finance/staffpayments/financeaddsupportstaffpayments.html' , {'ids':supportstaffdetails})
+    return render(request,'finance/staffpayments/financeaddsupportstaffpayments.html')
 
 def financesupportstaffpaymentsList(request):
-    supportstaffinfo = Supportstaffpayment.objects.all()
-    return render(request,'finance/staffpayments/financesupportstaffpaymentsList.html' , {'supportstaffdata':supportstaffinfo})
+    return render(request,'finance/staffpayments/financesupportstaffpaymentsList.html')
 # supportstaffpayments views
 
 # expenses views
 def financeaddExpenses(request):
-    success_message = None
+    
     
     if request.method == 'POST':
-        expenseid = request.POST.get('expenseid')
         category = request.POST.get('category')
         amountrequired = request.POST.get('amountrequired')
         expensedate = request.POST.get('expensedate')
@@ -305,7 +292,6 @@ def financeaddExpenses(request):
         balance = request.POST.get('balance')
         
         expense_record = ExpenseRecord(
-            expenseid=expenseid,
             category=category,
             amountrequired=amountrequired,
             expensedate=expensedate,
@@ -314,13 +300,18 @@ def financeaddExpenses(request):
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
-        return redirect('Expenses List')  # Redirect to expenses list page
+        return redirect('Add Expenses')  # Redirect to expenses list page
     
     return render(request, 'finance/expenses/financeaddExpenses.html')
 
 def financeexpensesList(request):
+    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
-    return render(request, 'finance/expenses/financeexpensesList.html', {'expenses': expenses})
+    context = {
+        'expenses': expenses,
+        'total_amount_paid': total_amount_paid,
+    }
+    return render(request, 'finance/expenses/financeexpensesList.html', context)
 
 def delete_expense(request, expenseid):
     try:
@@ -350,7 +341,7 @@ def edit_expense(request, expenseid):
             expense.balance = updated_balance
             expense.save()
             messages.success(request, 'Expense updated successfully.')
-            return redirect('Expenses List')
+            return redirect('Add Expenses')
         
         context = {'expense': expense}
         return render(request, 'finance/expenses/edit_expense.html', context)
@@ -366,6 +357,25 @@ def financeReports(request):
 def financeStatistics(request):
     return render(request, 'finance/financeStatistics.html')
 
+
+from django.core import serializers
+from django.http import JsonResponse
+
+def get_stdclass(request, stdnumber):
+    try:
+        student = Student.objects.get(stdnumber=stdnumber)
+        classname =  student.stdclass.classname
+
+        fees_structure = Feesstructure.objects.get(classname = classname)
+        amount = fees_structure.amount
+        
+        class_data = {
+            'classname': classname,
+            'amount': amount
+        }
+        return JsonResponse(class_data)
+    except Student.DoesNotExist:
+        return JsonResponse({}, status=404)
 
 
 

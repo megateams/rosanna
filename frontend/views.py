@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from .models import *
-from finance.models import Feesstructure
+from django.db.models import Sum
+from finance.models import Feesstructure, ExpenseRecord,Fees
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -45,43 +46,12 @@ def user_logout(request):
     logout(request)
     messages.success(request, "You have successfully logged out")
     request.session['logged_out'] = True # Set the session variable to True
-    return redirect("login") # Redirect to the login page after logout
+    return redirect("Admin Login") # Redirect to the login page after logout
 # Create your views here.
 # creating views for dashboard
-def deletemarks(request , id):
-    marks = Marks.objects.filter(id = id)
-    marks.delete()
-    messages.success(request , 'Marks Deleted')
-    return redirect('viewmarks')
 
-def DeleteStudent(request , stdnumber):
-    student = Student.objects.filter(stdnumber = stdnumber)
-    student.delete()
-    messages.success(request, 'Student Deleted Successfully')
-    return redirect('Studentslist')
 
-def DeleteSupportStaff(request , id):
-    supportstaff = Supportstaff.objects.filter(id = id)
-    supportstaff.delete()
-    messages.success(request, 'Support stuff deleted')
-    return redirect('deleteSupportStuff')
-
-def Support_Staff_list_View(request):
-    supportstafflist = Supportstaff.objects.all()
-    return render(request , 'frontend/staff/supportstaffList.html' , {'supportstafflist':supportstafflist})
-
-def deleteclass(request, classid):
-    classes = Schoolclasses.objects.filter(classid = classid)
-    classes.delete()
-    messages.success(request, 'Class deleted')
-    return redirect("showclasses")
-
-def deletesubject(request , subjectid):
-    subject = Subjects.objects.filter(subjectid = subjectid)
-    subject.delete()
-    messages.success(request, 'Subject deleted')
-    return redirect("Subjects")
-    
+@login_required
 def home(request):
     if request.session.get('logged_out', False):
         messages.warning(request, "You need to login to access the dashboard")
@@ -165,76 +135,7 @@ def get_subjects(request, class_id):
     subjects = class_obj.subjects.all().values('subjectid', 'subjectname')
     return JsonResponse(list(subjects), safe=False)
 
-# classes views
-# def addClass(request):
-#     return render(request,'frontend/classes/addClass.html')
 
-# def classList(request):
-#     return render(request,'frontend/classes/classList.html')
-# classes views
-
-# marks views
-
-def addmarks(request):
-    studentdata = Student.objects.all()
-    studentnumber = Student.objects.filter(stdnumber)
-    return render(request,'frontend/marks/addMarks.html', {'students': studentdata})
-
-def submitmarks(request):
-    # studentnumbers = Marks.objects.values_list('stdnum_id')
-    #render(request, 'frontend/marks/addmarks.html' , {'stdnumbers':studentnumbers})
-    if request.method == 'POST':
-        stdnum = request.POST.get('stdnum')
-        term = request.POST.get('term')
-        year = request.POST.get('year')
-        studentclass = request.POST.get('studentclass')
-        math = request.POST.get('math')
-        eng = request.POST.get('eng')
-        sci = request.POST.get('sci')
-        sst = request.POST.get('sst')
-        re = request.POST.get('re')
-        computer = request.POST.get('computer')
-        
-        Marks.objects.create(
-            stdnum = stdnum ,
-            term = term ,
-            year = year ,
-            studentclass = studentclass ,
-            math = math ,
-            eng = eng ,
-            sci = sci ,
-            sst = sst ,
-            re = re ,
-            computer = computer 
-        )
-        
-        Marks.save
-    marks = Marks.objects.all()
-    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
-
-def marksList(request):
-    marks = Marks.objects.all()
-    return render(request,'frontend/marks/marksList.html' , {'marks':marks})
-# marks views
-
-
-# subjects views
-# def addSubject(request):
-#     if request.method == 'POST':
-#         subjectname = request.POST.get('subjectname')
-#         subjectid = request.POST.get('subjectid')
-#         level = request.POST.get('classlevel')
-#         subjecthead = request.POST.get('subjecthead')
-        
-#         Subjects.objects.create(
-#             subjectname = subjectname ,
-#             subjectid = subjectid ,
-#             classlevel = level ,
-#             subjecthead = subjecthead ,
-#         )
-        
-#         Subjects.save
-#     return render(request,'frontend/subjects/addSubject.html')
 
 def subjectList(request):
     subjects = Subjects.objects.all()
@@ -245,6 +146,8 @@ def subjectList(request):
 
 def showStudent(request):
     return render(request, 'frontend/student/showStudent.html')
+
+
 def addMarks(request):
     # frontend/views.py
     if request.method == 'POST':
@@ -465,25 +368,32 @@ def get_students_by_class(request, class_id):
         data = {'error': 'Class not found'}
         return JsonResponse(data, status=404)
 
+def subjects(request):
+    if request.method == 'POST':
+        subjectnames = request.POST.get('subjectname')
+        subjectids = request.POST.get('subjectid')
+        classlevels = request.POST.get('classlevel')
+        subjectheads = request.POST.get('subjecthead')
+    
+        Subjects.objects.create(
+            subjectname = subjectnames , 
+            subjectid = subjectids , 
+            classlevel = classlevels , 
+            subjecthead = subjectheads
+        )
+    
+        Subjects.save
+    return HttpResponse(subjectnames)
 
 def showclasses(request):
     classes = Schoolclasses.objects.all()
-
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
-    # return render(request , 'frontend/classes/classList.html' , {'classes':classes})
+
 
 
 def addclasses(request):
-    subjects = Subjects.objects.all()
-    return render(request , 'frontend/academics/addclasses.html' , {"subjects":subjects})
-
-def supportstaffList(request):
-    # Retrieve all support staff data from the database
-    all_support_staff = Supportstaff.objects.all()
-    # Pass the data to the template for rendering
-    return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
     return render(request , 'frontend/academics/addclasses.html' , {'subjects':subjects, 'teachers':teachers})
@@ -622,6 +532,7 @@ def teacher_export_to_excel(request):
         wb.save(response)
         
         return response
+
         
     # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})
     
@@ -738,12 +649,27 @@ def feesstructure(request):
     return render(request, 'frontend/accounting/feesstructure.html',{"feesstructure": feesstructure})
 
 def fees(request):
-    return render(request, 'frontend/accounting/fees.html')
+    total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
+    fees_list = Fees.objects.all()
+    context = {
+        'fees_list': fees_list,
+        'total_amount': total_amount,
+    }
+    return render(request, 'frontend/accounting/fees.html',context)
     
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
 def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
-def expenses(request):
-    return render(request, 'frontend/accounting/expenses.html')
 
+    
+def expenses(request):
+    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    expenses = ExpenseRecord.objects.all()
+    context = {
+        'expenses': expenses,
+        'total_amount_paid': total_amount_paid,
+        }
+    return render(request, 'frontend/accounting/expenses.html',context)
+        
+    

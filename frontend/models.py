@@ -81,6 +81,7 @@ class Student(models.Model):
 
 
 
+
 # class Schoolclasses(models.Model):
 #     subjects = models.ManyToManyField(Subjects)
 #     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
@@ -112,7 +113,6 @@ class Supportstaff(models.Model):
     
     Display_Supportstaff =['supportstaffid','supportstaffnames','gender','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
 
-
 class Teachers(models.Model):
 
     teacherid = models.CharField(primary_key=True, max_length=20, verbose_name='Teacher id')
@@ -128,29 +128,26 @@ class Teachers(models.Model):
     subjects = models.ManyToManyField(Subjects)  # Replace 'YourAppSubjectName' with the actual class name for subjects.
     position = models.CharField(max_length=50, verbose_name='Position')
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
-    salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
-    bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
     username = models.CharField(max_length=50 , verbose_name='Username')
     password = models.CharField(max_length=100, verbose_name='Password')
 
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate',
-        'position' , 'qualification' , 'salary' , 'bankaccnum' , 'username' , 'password' 
+        'position' , 'qualification' , 'username' , 'password' 
     ]
 
  
 class Marks(models.Model):
-    #id = models.AutoField(primary_key=True)
-    stdnum = models.CharField(max_length=100 , verbose_name='Stud number' ,default='std_000' , blank=True)
-    term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I' , blank=True)
-    year = models.CharField(max_length=5 , verbose_name='Year' , default='2023' , blank=True)
-    studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7' , blank=True)
-    math = models.IntegerField(verbose_name='Math' , blank=True)
-    eng = models.IntegerField(verbose_name='Eng' , blank=True)
-    sci = models.IntegerField(verbose_name='Sci' , blank=True)
-    sst = models.IntegerField(verbose_name='SST' , blank=True)
-    re = models.IntegerField(verbose_name='Religious Education' , default=None , blank=True)
-    computer = models.IntegerField(verbose_name='Computer' , default=None , blank=True)
+    stdnum = models.ForeignKey(Student , on_delete=models.CASCADE , default='std_000')
+    term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I')
+    year = models.CharField(max_length=5 , verbose_name='Year' , default='2023')
+    studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7')
+    math = models.IntegerField(verbose_name='Math')
+    eng = models.IntegerField(verbose_name='Eng')
+    sci = models.IntegerField(verbose_name='Sci')
+    sst = models.IntegerField(verbose_name='SST')
+    re = models.IntegerField(verbose_name='Religious Education' , default=None)
+    computer = models.IntegerField(verbose_name='Computer' , default=None)
     
     displaymarks = [
         'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'
@@ -210,7 +207,7 @@ class Admin_Model(models.Model):
     
     Display_Admins =['id','name','username','contact','email', 'gender','address','dob', 'role']
     
-#support staff model
+# #support staff model
 # class Supportstaff(models.Model):
 #     id =models.AutoField(primary_key=True, verbose_name='Staff Number')
 #     fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
