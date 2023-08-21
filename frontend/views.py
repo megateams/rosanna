@@ -11,7 +11,41 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from datetime import datetime
 from django.db.models import Max
+import openpyxl
 
+#register details for the user (admin)
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")  # Redirect to the login page after successful registration
+    else:
+        form = UserCreationForm()
+    return render(request, "frontend/registration.html", {"form": form})
+
+# login views for the admin user
+def user_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            # Log the user in
+            user = form.get_user()
+            login(request, user)
+            request.session.pop('logged_out', None) # clear logout session variable in login
+            return redirect("Dashboard")
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, "frontend/login.html")
+
+@login_required
+def user_logout(request):
+    logout(request)
+    messages.success(request, "You have successfully logged out")
+    request.session['logged_out'] = True # Set the session variable to True
+    return redirect("login") # Redirect to the login page after logout
 # Create your views here.
 # creating views for dashboard
 def deletemarks(request , id):
@@ -86,39 +120,6 @@ def home(request):
     }
     return render(request,'frontend/dashboard.html',context)
 
-#register details for the user (admin)
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("login")  # Redirect to the login page after successful registration
-    else:
-        form = UserCreationForm()
-    return render(request, "frontend/registration.html", {"form": form})
-
-# login views for the admin user
-def user_login(request):
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            # Log the user in
-            user = form.get_user()
-            login(request, user)
-            request.session.pop('logged_out', None) # clear logout session variable in login
-            return redirect("Dashboard")
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
-    return render(request, "frontend/login.html")
-
-@login_required
-def user_logout(request):
-    logout(request)
-    messages.success(request, "You have successfully logged out")
-    request.session['logged_out'] = True # Set the session variable to True
-    return redirect("login") # Redirect to the login page after logout
 
 # def login(request):
     #retrieve the login crudentials from the database
@@ -528,34 +529,43 @@ def delete_class(request):
         return redirect("showclasses")
 
 #Export the data in excel in the students model
+# import openpyxl
+# from django.http import HttpResponse
+
 def export_to_excel(request):
-    #fetch all the data from the database
-        data =Student.objects.all().values_list(
-            'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'studentclass', 'regdate', 'fathername','fcontact','foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname','gcontact'
-            )
+    # Fetch all the data from the database
+    data = Student.objects.all().values_list(
+        'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'stdclass', 'regdate', 'fathername',
+        'fcontact', 'foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname', 'gcontact'
+    )
+    
+    # Create a new workbook and add a worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    
+    # Write field names to the worksheet as headers
+    field_names = [
+        'Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date',
+        "Father's name", "Father's Contact", 'Foccupation', "Mother's Name", "Mother's contact",
+        'Moccupation', 'Living with', "Guardian's Name", "Guardian's Contact"
+    ]
+    ws.append(field_names)
+    
+    # Write data to the worksheet
+    for row_data in data:
+        ws.append(row_data)
         
-        #create new workbook and add in a worksheet
-        wb =openpyxl.Workbook()
-        ws =wb.active
-        
-        #write field names to the worksheet as headers
-        # field_names = Student._meta.get_fields()
-        # header_row = [field.name for field in field_names]
-        # ws.append(header_row)
-        
-        #write data to the worksheet
-        ws.append(['Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date', "Father's name",'Father\'s Contact','Foccupation', 'Mother\'s Name', 'Mother\'s contact', 'Moccupation', 'Livingwith', 'Guardian\'s Name','gcontact'])
-        for row_data in data:
-            ws.append(row_data)
-            
-        # Set the filename and content type for the response
-        filename = 'exported_data.xlsx'
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        #save the workboot to the response
-        wb.save(response)
-        
-        return response
+    # Set the filename and content type for the response
+    filename = 'exported_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    # Save the workbook to the response
+    wb.save(response)
+    messages.success(request, 'Data successfully exported to Excel.')
+    return response
+
+
 #Export the data in excel in the support staff model
 def support_staff_export_to_excel(request):
     #fetch all the data from the database
@@ -587,7 +597,7 @@ def support_staff_export_to_excel(request):
 def teacher_export_to_excel(request):
     #fetch all the data from the database
         data =Teachers.objects.all().values_list(
-            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subject', 'qualification'
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subjects', 'qualification'
             )
         
         #create new workbook and add in a worksheet
@@ -600,7 +610,7 @@ def teacher_export_to_excel(request):
         # ws.append(header_row)
         
         #write data to the worksheet
-        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subject', 'Qualification'])
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subjects', 'Qualification'])
         for row_data in data:
             ws.append(row_data)
             

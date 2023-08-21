@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
 from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
+from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
@@ -56,22 +57,18 @@ def dashboard(request):
 
     # Get the teacher ID from the session
     teacher_id = request.session['teacher_id']
-    
-    # Query the database to get the teacher's information
-    try:
-        teacher = Teachers.objects.get(teacherid=teacher_id)
-        his_class = Schoolclasses.objects.get(classteacher = teacher_id)
-    except Teachers.DoesNotExist:
-        teacher = None
-    return render(request, 'teacher/dashboard.html',{'teacher': teacher ,'his_class':his_class})
+
+    teacher = Teachers.objects.get(teacherid=teacher_id)    
+
+    return render(request, 'teacher/dashboard.html',{'teacher': teacher})
 
 def profile(request,teacher_id):
     teachers = Teachers.objects.get(teacherid = teacher_id)
     return render(request, 'teacher/profile.html', {'teacher': teachers})    
 
-def paymenthistory(request):
-    return render(request, 'teacher/paymenthistory.html')   
-    return render(request, 'teacher/paymenthistory.html')  
+def paymenthistory(request,teacher_id):
+    teacher = Teacherspayment.objects.get(teacherid=teacher_id)
+    return render(request, 'teacher/paymenthistory.html', {"teacher": teacher})  
 
 
 # marks logic

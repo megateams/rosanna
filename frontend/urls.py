@@ -28,6 +28,7 @@ urlpatterns = [
     path('teacherlist/', views.teacherList, name="Teachers List"),
     path('addteacher/submit/', views.teachers, name="Teachers"),
     path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
+    path('teacher_export/', views.teacher_export_to_excel, name="teacher_export"),
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
