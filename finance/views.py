@@ -217,6 +217,13 @@ def financeaddFees(request):
         date = request.POST.get('date')
         print(amount)
         print(classfees)
+
+        # Check if the student with the same stdnumber is already added to the fees
+        if Fees.objects.filter(stdnumber=stdnumber).exists():
+            messages.error(request, 'This student has already been added to fees.')
+            students = Student.objects.all()
+            fees_structures = Feesstructure.objects.all()
+            return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
         
         if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database
