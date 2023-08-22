@@ -37,10 +37,11 @@
                     <th>Name</th>
                     {% for subject in subjects %}
                         <th>{{ subject.subjectname }}</th>
-                        <!-- <th>Average</th> Add the header for Average column -->
                     {% endfor %}
                 </tr>
             </thead>
+            <!-- class_details.html -->
+            <!-- ... -->
             <tbody>
                 {% for student, marks_dict in student_marks.items %}
                     <tr>
@@ -50,7 +51,7 @@
                             <td>
                                 {% with marks=marks_dict|get_item:subject %}
                                     {% if marks %}
-                                        {{ marks.average_marks|floatformat:1 }}
+                                        {{ marks.marks_obtained }}
                                     {% else %}
                                         --
                                     {% endif %}
@@ -60,8 +61,9 @@
                     </tr>
                 {% endfor %}
             </tbody>
+            <!-- ... -->
+
         </table>
-        
     </div>
 </div>
 {% endblock main %}
