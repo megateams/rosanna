@@ -392,17 +392,13 @@ def financesupportstaffpaymentsList(request):
 def financeaddExpenses(request):
     if request.method == 'POST':
         category = request.POST.get('category')
-        amountrequired = request.POST.get('amountrequired')
         expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
         
         expense_record = ExpenseRecord(
             category=category,
-            amountrequired=amountrequired,
             expensedate=expensedate,
             amountpaid=amountpaid,
-            balance=balance
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
@@ -419,15 +415,18 @@ def financeexpensesList(request):
     }
     return render(request, 'finance/expenses/financeexpensesList.html', context)
 
-def delete_expense(request, expenseid):
-    try:
-        expense = ExpenseRecord.objects.get(expenseid=expenseid)
-        expense.delete()
-        messages.success(request, 'Expense deleted successfully.')
-    except ExpenseRecord.DoesNotExist:
-        messages.error(request, 'Expense not found.')
+def delete_expense(request):
+    if request.method == 'POST':
+        expenseid = request.POST.get("expenseid")
+        try:
+            expense = ExpenseRecord.objects.get(expenseid=expenseid)
+            expense.delete()
+            messages.success(request, f"Expense record {expenseid} has been deleted.")
+        except ExpenseRecord.DoesNotExist:
+            messages.error(request, f"Expense record {expenseid} does not exist.")
 
-    return redirect('Expenses List')
+    return redirect('Expenses List')  # Adjust this to the correct URL name
+
 
 def edit_expense(request, expenseid):
     try:
@@ -435,16 +434,12 @@ def edit_expense(request, expenseid):
         
         if request.method == 'POST':
             updated_category = request.POST.get('category')
-            updated_amountrequired = request.POST.get('amountrequired')
             updated_expensedate = request.POST.get('expensedate')
             updated_amountpaid = request.POST.get('amountpaid')
-            updated_balance = request.POST.get('balance')
             
             expense.category = updated_category
-            expense.amountrequired = updated_amountrequired
             expense.expensedate = updated_expensedate
             expense.amountpaid = updated_amountpaid
-            expense.balance = updated_balance
             expense.save()
             messages.success(request, 'Expense updated successfully.')
             return redirect('Add Expenses')
