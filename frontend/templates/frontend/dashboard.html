@@ -1,0 +1,190 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Dashboard {% endblock title %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content pl-4 pr-4">
+    <div class="dashboard">
+
+        <!-- cards -->
+      <div class="row cards">
+        <div class="col-lg-3 col-md-3">
+            <div class="card session_card animate__animated animate__rubberBand">
+                <div class="row">
+                    <div class="col-8 cbody">
+                        <h4>Term 1</h4>
+                        <p>Current Session</p>
+                    </div>
+                    <div class="col-4 icon">
+                        <i class="fas fa-book    "></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+
+        <div class="col-lg-3 col-md-3">
+            <a href="/studentslist" style="text-decoration: none;">
+                <div class="card stud_card">
+                    <div class="row">
+                        <div class="col-8 cbody">
+                            <h4>{{student_count}}+</h4>
+                            <p>Students</p>
+                        </div >
+    
+                        <div class="col-4 icon">
+                            <i class="fa fa-users " aria-hidden="true"></i>
+                        </div> 
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class=" col-lg-3 col-md-3">
+            <a href="/teacherlist" style="text-decoration: none;">
+                <div class="card trcard">
+                    <div class="row">
+                        <div class="col-8 cbody" >
+                            <h4>{{teacher_count}}</h4>
+                            <p>Teachers</p>
+                        </div>
+                        <div class="col-4 icon">
+                            <i class="fas fa-user-graduate   "></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-3">
+            <a href="" style="text-decoration: none;">
+            <a href="/support-staff-list" style="text-decoration: none;">
+                <div class="card staff-card ">
+                    <div class="row ">
+                        <div class="col-8 cbody">
+                            <h4>{{support_staff_count}}</h4>
+                            <p>Support Staff</p>
+                        </div>
+                        <div class="col-4  icon">
+                            <i class="fas fa-people-carry    "></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+      </div>
+        <!-- cards -->
+
+        <!-- donut and bargraph-->
+        <div class="row mt-4">
+            <div class="col-md-4 ">
+                <div class="donut-chart shadow  bg-light pb-2">
+                    <canvas id="genderDonutChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-8 bar">
+
+                <div class="bar-chart shadow bg-light">
+                    <canvas id="genderBarChart"></canvas>
+                </div>                   
+            </div>
+        </div>
+         
+        <!-- calendar and line graph -->
+        <div class="row mt-4">
+            <div class="col-lg-7 bar">
+                <div class="line-chart ">
+                    <canvas id="paymentChart"></canvas>
+                </div>          
+            </div>
+            <div class="col-lg-5">
+                <!-- <div id="calendar" class="dycalendar-container"></div>  -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inner-content -->
+
+<!-- charts.js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const boysCount = {{boys_count}}
+    const girlsCount = {{girls_count}}
+    var donutCtx = document.getElementById("genderDonutChart").getContext("2d");
+    var donutData = {
+        labels: ["Boys", "Girls"],
+        datasets: [{
+            data: [boysCount, girlsCount], // Replace with your actual data
+            backgroundColor: ["red", "#f9b855"],
+        }]
+    };
+    var donutChart = new Chart(donutCtx, {
+        type: "doughnut",
+        data: donutData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: "bottom"
+            },
+            title: {
+                display: true,
+                text: "Gender Distribution"
+            }
+        }
+    });
+   
+
+</script>
+<script>
+    // ... other code ...
+
+    var barCtx = document.getElementById("genderBarChart").getContext("2d");
+
+    var barData = {
+        labels: {{ class_names|safe }},  // Pass class names as labels
+        datasets: [{
+            label: "Boys",
+            data: {{ boys_count_by_class|safe }},
+            backgroundColor: "blue",
+            borderWidth: 1
+        },
+        {
+            label: "Girls",
+            data: {{ girls_count_by_class|safe }},
+            backgroundColor: "green",
+            borderWidth: 1
+        }]
+    };
+
+    var barChart = new Chart(barCtx, {
+        type: "bar",
+        data: barData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: true
+                    }
+                },
+            },
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Gender Distribution by Class"
+                }
+            }
+        }
+    });
+
+</script>
+
+
+
+{% endblock main %}

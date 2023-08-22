@@ -1,0 +1,74 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Classes {% endblock title %}
+{% block  pagetitle %} Classes {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+
+    <div class="btns ">
+        <a href="/addclasses" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Class</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Class Name</th>
+                    <th>subjects</th>
+                    <th>Class Level</th>
+                    <th>Class Teacher</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for showclass in classes %}
+                <tr>
+                    <td>{{ showclass.classname }}</td>
+                    <td>{{ showclass.classid }}</td>
+                    <td>{{ showclass.classlevel }}</td>
+                    <td>{{ showclass.classteacher }}</td>
+                    <td>{{ showclass.numofstds }}</td>
+                    <td>
+                        <a href="" class="text-primary"> <i class="fas fa-edit    "></i></a>
+                        <a href="" class="text-danger"> <i class="fas fa-trash    "></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                {% for class_obj in classes %}
+                <tr>
+                    <td>{{ class_obj.classname }}</td>
+                    <td>
+                        <ul style="list-style-type: none;" class="d-flex">
+                            {% for subject in class_obj.subjects.all %}
+                            <li>{{ subject.subjectname }}</li> <span class="mr-2"> , </span>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{class_obj.class_level}}</td>
+                    <td>
+                        {% for teacher in teachers %}
+                            {% if teacher.teacherid == class_obj.classteacher %}
+                                {{ teacher.teachernames }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_support_staff">
+        
+    </div>
+</div>
+
+
+<!-- inner-content -->
+{% endblock main %}

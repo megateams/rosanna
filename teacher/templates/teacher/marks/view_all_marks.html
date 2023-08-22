@@ -1,0 +1,93 @@
+{% extends 'teacher/base.html' %}
+{% block title %} View Class {% endblock title %}
+{% load static %}
+{% load custom_filters %}
+
+{% block main %}
+<div class="inner-content">
+    <div class="header d-flex" style="margin-bottom: 10px;">
+        <div class="class-btns" pr-5>
+            <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
+            <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
+            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+        </div>
+    </div>
+    {% for mark_type in mark_types %}
+            <a href="/teacher/his_class/view_mark/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_type.0 }}"
+            class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
+                {{ mark_type.1 }} Results
+            </a>
+    {% endfor %}
+    <div class="header">
+        <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
+    </div>
+
+    <div class="students-list" style="font-size: 14px;">
+        <table class="table bg-white" id="table" border="1">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th>Reg Number</th>
+                    <th>Name</th>
+                    {% for subject in subjects %}
+                        <th>{{ subject.subjectname|slice:":3" }}</th>
+                        <th>Grade</th>
+                    {% endfor %}
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>Position</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student, subjects_data in subjects_marks_data.items %}
+                    <tr>
+                        <td>{{ student.stdnumber }}</td>
+                        <td>{{ student.childname }}</td>
+                        {% for subject_data in subjects_data %}
+                            <!-- <td>{{ subject_data.total_marks }}</td> -->
+                            <td>{{ subject_data.average_marks|floatformat:0 }}</td>
+                            <td>
+                                {% if subject_data.average_marks >= 80 %}
+                                    <p>D1</p>
+                                {% elif subject_data.average_marks >= 75 %}
+                                    <p>D2</p>
+                                {% elif subject_data.average_marks >= 70 %}
+                                    <p>C3</p>
+                                {% elif subject_data.average_marks >= 65 %}
+                                    <p>C4</p>
+                                {% elif subject_data.average_marks >= 60 %}
+                                    <p>C5</p>
+                                {% elif subject_data.average_marks >= 50 %}
+                                    <p>C6</p>
+                                {% elif subject_data.average_marks >= 45 %}
+                                    <p>P7</p>
+                                {% elif subject_data.average_marks >= 40 %}
+                                    <p>P8</p>
+                                {% else %}
+                                    <p>F9</p>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td><b>{{ student.total_average_marks|floatformat:0 }}</b></td>
+                        <td><b>{{ student.final_average|floatformat:2 }}</b></td>
+                        <td>{{student.rank}}</td>
+                        <td>
+                            <button class="btn btn-primary generate-report" data-student="{{ student.pk }}">Generate</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".generate-report").click(function() {
+            var studentId = $(this).data("student");
+            window.location.href = `/teacher/report_card/${studentId}`;  // Replace with your URL pattern
+        });
+    });
+</script>
+{% endblock main %}

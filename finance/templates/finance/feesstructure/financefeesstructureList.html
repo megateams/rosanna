@@ -1,0 +1,60 @@
+{% extends 'finance/base.html' %}
+{% block  title %} Fees Structure List {% endblock title %}
+{% block  pagetitle %} Fees Structure List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/financeaddfeesstructure" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Fees Structure</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th> Class</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Feesstructure in fees_list %}
+                <tr>
+                    <td>{{ Feesstructure.classname }}</td>
+                    <td>{{ Feesstructure.amount }}</td>   
+                   <td>
+                        <!-- <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a> -->
+                        <a href="{% url 'editfeesstructure' Feesstructure.feesstructureid %}" class="text-primary"><i class="fas fa-edit mr-2"></i></a>
+                        <a href="{% url 'deletefeesstructure' Feesstructure.feesstructureid %}" class="text-danger"><i class="fa fa-trash"></i></a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

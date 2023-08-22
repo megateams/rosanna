@@ -1,0 +1,83 @@
+<!-- frontend/marks/displayMarks.html -->
+{% extends 'frontend/base.html' %}
+{% block title %}Marks List{% endblock title %}
+{% block pagetitle %}Marks List{% endblock pagetitle %}
+
+{% block main %}
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/addmarks" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Marks</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2">Export excel</a>
+    </div>
+<<<<<<< HEAD
+
+    {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>{{ message }}</strong> 
+        </div>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="table-section" style="font-size: 14px;"> 
+        
+=======
+    <div class="table-section" style="font-size: 14px;">
+>>>>>>> 58beb7021a7a25e052e203b814a2694329acad16
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+<<<<<<< HEAD
+                <tr>
+                    {% for showmarks in marks %}
+                    <td>{{ showmarks.id }}</td>
+                    <td>{{ showmarks.stdnum }}</td>
+                    <td>{{ showmarks.term }}</td>
+                    <td>{{ showmarks.year }}</td>
+                    <td>{{ showmarks.studentclass }}</td>
+                    <td>{{ showmarks.math }}</td>
+                    <td>{{ showmarks.eng }}</td>
+                    <td>{{ showmarks.sci }}</td>
+                    <td>{{ showmarks.sst }}</td>
+                    <td>{{ showmarks.re }}</td>
+                    <td>{{ showmarks.computer }}</td>
+                    <td>
+                        <div>
+                            <a href="" class="text-primary"> Edit<i class="fas fa-edit  mr-5  "> </i></a>
+                            <a href="deletemarks/{{showmarks.id}}" class="text-danger">Delete<i class="fa fa-trash    "> </i></a>
+                        </div>
+                    </td>
+                </tr>
+=======
+                {% for mark in marks %}
+                    <tr>
+                        <td>{{ mark.student_name }}</td>
+                        <td>{{ mark.class_name.classname }}</td>
+                        <td>{{ mark.subject.subjectname }}</td>
+                        <td>{{ mark.marks_obtained }}</td>
+                    </tr>
+>>>>>>> 58beb7021a7a25e052e203b814a2694329acad16
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

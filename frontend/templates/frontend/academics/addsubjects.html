@@ -1,0 +1,89 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Add Subjects {% endblock title %}
+{% block  pagetitle %} Add Subjects {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- Success message after data has been sent  -->
+<!-- {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %} -->
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/showsubjects" class="btn btn-sm add-btn text-white mb-2 ml-3">View Subjects</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+
+    <!-- form-section -->
+    <form method='POST' action="/addsubject/" class="form ml-3 p-3 shadow rounded bg-light">
+        {%csrf_token %}
+        <div class="title">
+            <h5 class="text-uppercase text-center">Add a Subject</h5>
+            <hr>
+        </div>
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- student info section -->
+        <div class="stud-info">
+            <!-- <div class="sub-heading">
+                <h5>Support Staff Information</h5>
+            </div> -->
+            <div class="row">
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for="">Subject Name: </label>
+                    <input type="text" name="subjectname" class="form-control">
+                </div>
+                <!-- staff contact -->
+                <div class="form-group col-md-6">
+                    <label for="">Subject id: </label>
+                    <input type="text" name="subjectid" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <!-- email -->
+                <div class="form-group col-md-6">
+                    <label for="">Class Level: </label>
+                    <input type="text" name="classlevel" class="form-control">
+                </div>
+                <!-- Address -->
+                <div class="form-group col-md-6">
+                    <label for="">Subject Head: </label>
+                    <input type="text" name="subjecthead" class="form-control">
+                </div>
+            </div>
+        </div>
+        
+        <!-- student info section -->
+
+        
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

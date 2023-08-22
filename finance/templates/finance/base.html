@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
+    <!-- Required meta tags -->
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/finance.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/finances.css' %}">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
+    
+    <!-- jquery datatables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    
+    <style>
+        
+    </style>
+</head>
+  <body>
+    
+
+    <div class="main">
+        <!-- sidebar -->
+        <aside class="sidebar">
+            <div class="dismiss">
+                <i class="fas fa-bars    text-white"></i>
+            </div>
+            <div class='header text-center p-2 mb-2'>
+                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+
+                <h5 class="text-white"><b>Rosanna Schools</b></h5>
+            </div>
+            <hr color="#fff" style="height: 3px;">
+    
+            <ul class='sidebar-links pt-3 mr-2'>
+                
+                <li class="sidebar-item active">
+                    <a class="" href='/finance'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/financefeesstructurelist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Fees Structure</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/financefeeslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Fees</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <div class="main-menu d-flex justify-content-between">
+                    <a class="" href='/financestaffpaymentslist'><i class="fas fa-money-bill-alt  mr-2  "></i><span>Staff Payments</span></a>
+                    <div class="chevron ">
+                        <i class="fas fa-chevron-right text-white    mr-2"></i>
+                    </div>
+                    </div>
+                    <!-- sub menu -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers Payments</span></a>
+                        </li>
+                        <li>
+                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff Payments</span></a>
+                        </li>
+                    </ul>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/financeexpenseslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Expenses</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/financereports'><i class="fas fa-book  mr-2  "></i><span>Reports</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/financestatistics'><i class="fas fa-bars  mr-2  "></i><span>Statistics</span></a>    
+                </li>
+                <hr color="#fff">
+                
+            </ul>
+        </aside>
+
+        <!-- sidebar -->
+        <!-- content -->
+        <div class="content bg-light">
+
+            <!-- navbar -->
+            <nav class="navbar bg-light shadow align-items-center">
+                <div class='brand'>
+                    <i class="fas fa-bars " ></i>    
+                </div>
+                <div class="right mr-5 d-flex">
+                    {% if user.is_authenticated %}
+                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ user.username }}</p>
+                    {% endif %}
+                    <a class="ml-3 mr-2 text-danger" href="{% url 'logout' %}">
+                        <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
+                    </a>
+                </div>  
+            </nav>
+            <!-- navbar -->
+
+            <!-- page header -->
+            <div class="m-2 mt-3">
+                <a href="/dashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
+                <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
+            </div>
+            <!-- page header -->
+
+            <!-- extending to other pages -->
+            {% block main %}
+            {% endblock main %}
+            <!-- extending to other pages -->
+            <footer class="footer ">
+                <div class="container"><p class="text-center">All Rights Reserved | &copy; 2023 Rosanna Schools</p></div>
+
+            </footer>
+        </div>
+        <!-- content -->
+    </div>
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <!-- ajax -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- datatables -->
+    <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- custom js -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <!-- charts.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static 'js/charts.js' %}"></script>
+    <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <!-- Include jsPDF and jsPDF AutoTable libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.14/dist/jspdf.plugin.autotable.min.js"></script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the canvas context
+            var donutpaymentCtx = document.getElementById("paymentDonutChart").getContext("2d");
+    
+            // Define the data for the donut chart
+            var donutpaymentData = {
+                labels: ["Term1", "Term2", "Term3"],
+                datasets: [{
+                    data: [65, 35, 45], // Replace with your actual data
+                    backgroundColor: ["red", "blue","#f9b855"],
+                }]
+            };
+    
+            // Define the options for the chart
+            var donutpaymentOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: "bottom"
+                },
+                title: {
+                    display: true,
+                    text: "Annual Payments"
+                }
+            };
+    
+            // Create the donut chart
+            var donutpaymentChart = new Chart(donutpaymentCtx, {
+                type: "doughnut",
+                data: donutpaymentData,
+                options: donutpaymentOptions
+            });
+        });
+    </script>
+   
+</body>
+
+</html>

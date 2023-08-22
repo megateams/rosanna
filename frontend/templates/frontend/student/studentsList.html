@@ -1,0 +1,60 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Students List {% endblock title %}
+{% block  pagetitle %} Students List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
+        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Student number</th>
+                    <th>Child Fullname</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
+                    <th>Address</th>
+                    {% comment %} <th>Class</th> {% endcomment %}
+                    <th>Registration Date </th>
+                    <th>House</th>
+                    <th>Father</th>
+                    <th>Mother</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.stdnumber }}</td>
+                    <td>{{ student.childname }}</td>
+                    <td>{{ student.gender }}</td>
+                    <td>{{ student.dob }}</td>
+                    <td>{{ student.address }}</td>
+                    {% comment %} <td>{{ student.stdclass }}</td> {% endcomment %}
+                    <td>{{ student.regdate }}</td>
+                    <td>{{ student.house }}</td>
+                    <td>{{ student.fathername }}</td>
+                    <td>{{ student.mothername }}</td>
+                     <td>   
+                        <a href="/showstudent/{{student.stdnumber}}" class="btn btn-sm btn-primary ">More ...</a> 
+                    </td>
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_student">
+        
+    </div>
+</div>
+
+
+<!-- inner-content -->
+{% endblock main %}
