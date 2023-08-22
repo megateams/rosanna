@@ -26,8 +26,9 @@
         <table class="table" id="table" border="1">
             <thead>
                 <tr>
-                    <th>SStaff ID</th>
-                    <th>SStaff Name</th>
+                    <th>Support Staff ID</th>
+                    <th>Support Staff Name</th>
+                    <th> Payment id</th>
                     <th> Payment Date</th>
                     <th>Salary</th>
                     <th>Amount Paid</th>
@@ -38,17 +39,20 @@
             <tbody>
                 {% for supportstaff in supportstaffpayments %}
                 <tr>
-                    <td>{{ supportstaff.paymentid }}</td>
-                    <td>{{ supportstaff.supportstaffid.supportstaffnames }}</td>
+                    <td>{{ supportstaff.supportstaffid }}</td>
+                    <td>{{ supportstaff.staffname }}</td>
                     <!-- <th>{{ supportstaff.paymentid }}</th> -->
+                    <td>{{ supportstaff.paymentid }}</td>
                     <td>{{ supportstaff.paymentdate }}</td>
                     <td>{{ supportstaff.salary }}</td>
                     <td>{{ supportstaff.amountpaid }}</td>
                     <td>{{ supportstaff.balance }}</td>
+
                     <td>
-                        <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
+                        <a href="/editsupportstaffpayments/{{ supportstaff.paymentid }}" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="/deletesupportstaffpayment/{{ supportstaff.paymentid }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
                     </td>
+
                 </tr>
                 {% endfor %}
             </tbody>

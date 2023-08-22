@@ -73,3 +73,18 @@ urlpatterns = [
     path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

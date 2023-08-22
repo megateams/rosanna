@@ -47,25 +47,25 @@ def editsupportstaffpayment(request , paymentid):
         supportstaffid = request.POST.get('supportstaffid')
         salary = request.POST.get('salary')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
+        #balance = request.POST.get('balance')
+        #paymentmethod = request.POST.get('paymentmethod')
+        #bankaccnum = request.POST.get('bankaccnum')
         paymentdate = request.POST.get('paymentdate')
         staffname = request.POST.get('staffname')
         
         staffpayment.supportstaffid = supportstaffid
         staffpayment.salary = salary
         staffpayment.amountpaid = amountpaid 
-        staffpayment.balance = balance 
-        staffpayment.paymentmethod = paymentmethod
-        staffpayment.bankaccnum = bankaccnum
+        staffpayment.balance = int(salary) - int(amountpaid)
+        #staffpayment.paymentmethod = paymentmethod
+        #staffpayment.bankaccnum = bankaccnum
         staffpayment.paymentdate = paymentdate 
         staffpayment.staffname = staffname 
         
         staffpayment.save()
         
         messages.success(request , 'Edited Successfully')
-        return redirect('SupportstaffpaymentsList')
+        return redirect('SupportstaffpaymentsLists')
     return render(request , 'finance/staffpayments/editsupportstaffpayments.html' , {'staffpayment': staffpayment})
 
 def deleteteacherpayment(request , id):
@@ -79,7 +79,7 @@ def deletesupportstaffpayment(request , paymentid):
     payid.delete()
     messages.success(request , "Payment deleted successfully")
     supportstaffinfo = Supportstaffpayment.objects.all()
-    return redirect('SupportstaffpaymentsList')
+    return redirect('SupportstaffpaymentsLists')
     
     
 def financeaddStaffpayments(request):
@@ -351,6 +351,7 @@ def financeaddsupportstaffpayments(request):
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amount_paid = float(request.POST.get('amountpaid'))
+        supportstaffrow = Supportstaff.objects.get(supportstaffid = support_staff_id)
         balance = salary - amount_paid
         # Fetch the support staff payment record
         # payment = Supportstaffpayment.objects.filter(supportstaffid=support_staff_id)
@@ -362,6 +363,7 @@ def financeaddsupportstaffpayments(request):
             salary = salary,
             paymentdate = paymentdate,
             balance = balance,
+            staffname = supportstaffrow.supportstaffnames
         )
         payment.save()
 
