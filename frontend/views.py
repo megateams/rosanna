@@ -301,6 +301,10 @@ def showteacher(request,teacherId):
     classes = Schoolclasses.objects.all()
     subjects = Subjects.objects.all()
     return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers, 'classes':classes, 'subjects':subjects})
+
+def showsupportstaff(request,supportstaffid):
+    supportstaffs = Supportstaff.objects.filter(supportstaffid=supportstaffid)
+    return render(request, 'frontend/staff/showsupportstaff.html',{'supportstaffs': supportstaffs})
 # support staff views
 
 def staff(request):

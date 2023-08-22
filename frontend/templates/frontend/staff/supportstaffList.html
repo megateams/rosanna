@@ -40,8 +40,9 @@
                     <td>{{ staff.qualification }}</td>
                     <td>{{ staff.position }}</td>
                     <td>
-                        <a href="" id={{ staff.id }} class="btn btn-sm btn-primary more_support_staff">More ...</a>
+                        <a href="/showsupportstaff/{{staff.supportstaffid}}" class="btn btn-sm btn-primary">More ...</a>
                     </td>
+                    
                 </tr>
                 {% endfor %}  
             </tbody>

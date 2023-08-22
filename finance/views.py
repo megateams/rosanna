@@ -363,7 +363,7 @@ def financeaddsupportstaffpayments(request):
         amount_paid = float(request.POST.get('amountpaid'))
         balance = salary - amount_paid
         # Fetch the support staff payment record
-        # payment = Supportstaffpayment.objects.filter(supportstaffid=support_staff_id)
+        supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
 
         # Update the payment record with the new amount paid and calculate the 
         payment = Supportstaffpayment.objects.create(
@@ -372,6 +372,7 @@ def financeaddsupportstaffpayments(request):
             salary = salary,
             paymentdate = paymentdate,
             balance = balance,
+            staffname = supportstaffrow.supportstaffnames
         )
         payment.save()
 

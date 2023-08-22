@@ -1,0 +1,100 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Show Support Staff {% endblock title %}
+{% block  pagetitle %} Show Support Staff {% endblock pagetitle %}
+
+{% block  main %} 
+
+{% load static %}
+<div class="staff-details mt-3">
+    <div class="row">
+        <div class="col-md-5">
+            <!-- image -->
+            <div class="image">
+               <img class="img-thumbnail" src="{% static 'images/student.jpg' %}" alt="support staff image"> 
+            </div>
+            <!-- image -->
+        </div>
+        <div class="col-md-7">
+            <!-- staff data -->
+            <!-- Success message after data has been updated -->
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ message }}</strong> 
+                </div>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class=" row teacher-data">
+                {% for staff in supportstaffs %}
+                <div class="col-md-6">
+                    <div class="d-flex mb-3">
+                        <h6><b>Full Name: </b></h6>
+                        <p class="ml-2">{{staff.supportstaffnames}}</p>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <h6><b>Contact: </b></h6>
+                        <p class="ml-2">{{staff.contact}}</p>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <h6><b>Email: </b></h6>
+                        <p class="ml-2">{{staff.email}}</p>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <h6><b>Address: </b></h6>
+                        <p class="ml-2">{{staff.address}}</p>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <h6><b>Gender: </b></h6>
+                        <p class="ml-2">{{staff.gender}}</p>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <h6><b>Date of Birth: </b></h6>
+                        <p class="ml-2">{{staff.dob}}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex mb-3">
+                        <h6><b>Staff Number: </b></h6>
+                        <p class="ml-2">{{staff.supportstaffid}}</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <h6><b>Qualifications: </b></h6>
+                        <p class="ml-2">{{staff.qualification}}</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <h6><b>Position: </b></h6>
+                        <p class="ml-2">{{staff.position}}</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <h6><b>Salary: </b></h6>
+                        <p class="ml-2">{{staff.salary}}</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <h6><b>Bank Acc Num: </b></h6>
+                        <p class="ml-2">{{staff.bankaccnum}}</p>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <h6><b>Joining Date: </b></h6>
+                        <p class="ml-2">{{staff.joiningdate}}</p>
+                    </div>
+                    <!-- More details from supportstaffList.html leaf -->
+                    <!-- Insert code from supportstaffList.html leaf here -->
+                </div>
+
+                <div class="btn ">
+                    <a href="" class="btn btn-md btn-primary" data-toggle="modal">Edit teacher</a>
+                    <!-- <a href="#delete{{teacher.teacherid}}" class="btn btn-md btn-danger" data-toggle="modal">Delete</a> -->
+                </div>
+
+                {% endfor %}
+            </div>
+            <!-- staff data -->
+        </div>
+    </div>
+</div>
+{% endblock main %}
