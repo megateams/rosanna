@@ -329,14 +329,21 @@ def financeteacherpaymentsList(request):
 def financeaddsupportstaffpayments(request):
     if request.method == 'POST':
         support_staff_id = request.POST.get('support-staffid')
+        paymentdate = request.POST.get('paymentdate')
+        salary = float(request.POST.get('salary'))
         amount_paid = float(request.POST.get('amountpaid'))
-
+        balance = salary - amount_paid
         # Fetch the support staff payment record
-        payment = Supportstaffpayment.objects.get(supportstaffid=support_staff_id)
+        # payment = Supportstaffpayment.objects.filter(supportstaffid=support_staff_id)
 
-        # Update the payment record with the new amount paid and calculate the balance
-        payment.amountpaid += amount_paid
-        payment.balance = payment.salary - payment.amountpaid
+        # Update the payment record with the new amount paid and calculate the 
+        payment = Supportstaffpayment.objects.create(
+            supportstaffid = support_staff_id,
+            amountpaid = amount_paid,
+            salary = salary,
+            paymentdate = paymentdate,
+            balance = balance,
+        )
         payment.save()
 
         return redirect('SupportstaffpaymentsLists')  # Redirect to the list page
