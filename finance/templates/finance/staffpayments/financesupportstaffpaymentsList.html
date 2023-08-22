@@ -38,17 +38,17 @@
             <tbody>
                 {% for supportstaff in supportstaffpayments %}
                 <tr>
-                    <th>{{ supportstaff.supportstaffid }}</th>
-                    <th>{{ supportstaff.staffname }}</th>
+                    <td>{{ supportstaff.paymentid }}</td>
+                    <td>{{ supportstaff.supportstaffid.supportstaffnames }}</td>
                     <!-- <th>{{ supportstaff.paymentid }}</th> -->
-                    <th>{{ supportstaff.paymentdate }}</th>
-                    <th>{{ supportstaff.salary }}</th>
-                    <th>{{ supportstaff.amountpaid }}</th>
-                    <th>{{ supportstaff.balance }}</th>
-                    <th>
+                    <td>{{ supportstaff.paymentdate }}</td>
+                    <td>{{ supportstaff.salary }}</td>
+                    <td>{{ supportstaff.amountpaid }}</td>
+                    <td>{{ supportstaff.balance }}</td>
+                    <td>
                         <a href="" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                    </th>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

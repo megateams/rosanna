@@ -130,10 +130,12 @@ class Teachers(models.Model):
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
     username = models.CharField(max_length=50 , verbose_name='Username')
     password = models.CharField(max_length=100, verbose_name='Password')
+    salary = models.CharField(max_length=100, default=None, verbose_name='Salary')
+    bankaccnum = models.CharField(max_length=100, default=None, verbose_name='Bank Account No.')
 
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate',
-        'position' , 'qualification' , 'username' , 'password' 
+        'position' , 'qualification' , 'username' , 'password', 'salary', 'bankaccnum', 
     ]
 
  

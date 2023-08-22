@@ -1,5 +1,5 @@
 from django.db import models
-from frontend.models import Student,Teachers
+from frontend.models import *
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -103,7 +103,7 @@ class Teacherspayment(models.Model):
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    supportstaffid = models.CharField(max_length=20 , verbose_name='Support Staff')
+    supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
