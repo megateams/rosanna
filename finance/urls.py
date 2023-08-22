@@ -36,19 +36,10 @@ urlpatterns = [
    
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
-    # path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
     path('delete_expense/', views.delete_expense, name='delete_expense'),
     path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-
-    # path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
-
-    # path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    # path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
-
-    # path('financereports/', views.financeReports, name =" Reports"),
-    # path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
     path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
     path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
