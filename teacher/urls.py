@@ -8,7 +8,7 @@ urlpatterns = [
     path('teacher/logout/', views.logout_view, name='logout'),
     path('teacher/dashboard/', views.dashboard, name="Teacher Dashboard"),
     path('teacher/profile/<teacher_id>', views.profile, name="Teacher Profile"),
-    path('teacher/paymenthistory/', views.paymenthistory, name="Payment History"),
+    path('teacher/paymenthistory/<teacher_id>', views.paymenthistory, name="Payment History"),
 
     # marks urls
     path('teacher/his_class/addmarks/<class_id>/<teacher_id>', views.addmarks, name="Add Marks"),

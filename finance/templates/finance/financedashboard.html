@@ -14,48 +14,64 @@
         </div>
     </div>
     <div class="row pt-4">
-        <div class="col-md-4">
-            <a href="" style="text-decoration: none;">
-                <div class="card feescard p-4">
+        <div class="col-md-3">
+            <a href="/financefeeslist" style="text-decoration: none;">
+                <div class="card feescard p-3">
                     <div class="row">
-                        <div class="col-3 text-center pt-2" style="border-right: 2px solid #fff;">
-                            <i class="fas fa-money-bill-wave icon" ></i>
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-wave icon circle-icon" ></i>
                         </div>
-                        <div class="col-9 ">
-                            <h3 class="text-center">10,345,000</h3>
-                            <h5 class="text-center"> Fees</h5> 
+                        <div class="col-8 ">
+                            <h4 class="text-center">{{ total_amount|default:"0" }}</h4>
+                            <p class="text-center"> Fees</p> 
                         </div>
                     </div>
                    
                 </div>
             </a>
         </div>
-        <div class="col-md-4">
-            <a href="" style="text-decoration: none;">
-                <div class="card spaymentscard p-4">
+        <div class="col-md-3">
+            <a href="/financeteacherpaymentslist" style="text-decoration: none;">
+                <div class="card trpaymentscard p-3">
                     <div class="row">
-                        <div class="col-3 text-center pt-2" style="border-right: 2px solid #fff;">
-                            <i class="fas fa-money-bill-alt icon" ></i>
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-alt icon circle-icon" ></i>
                         </div>
-                        <div class="col-9 ">
-                            <h3 class="text-center">8,000,000</h3>
-                            <h5 class="text-center"> Staff Payments</h5> 
+                        <div class="col-8 ">
+                            <h4 class="text-center">8,000,000</h4>
+                            <p class="text-center"> Teacher Payments</p> 
                         </div>
                     </div>
                    
                 </div>
             </a>
         </div>
-        <div class="col-md-4">
-            <a href="" style="text-decoration: none;">
-                <div class="card expensecard p-4">
+        <div class="col-md-3">
+            <a href="/financesupportstaffpaymentslist" style="text-decoration: none;">
+                <div class="card sspaymentscard p-3">
                     <div class="row">
-                        <div class="col-3 text-center pt-2" style="border-right: 2px solid #fff;">
-                            <i class="fas fa-money-bill-wave icon" ></i>
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-alt icon circle-icon" ></i>
                         </div>
-                        <div class="col-9 ">
-                            <h3 class="text-center">2,000,0000</h3> 
-                            <h5 class="text-center"> Expenses</h5> 
+                        <div class="col-8 ">
+                            <h4 class="text-center">8,000,000</h4>
+                            <p class="text-center">  S-Staff Payments</p> 
+                        </div>
+                    </div>
+                   
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/financeexpenseslist" style="text-decoration: none;">
+                <div class="card expensecard p-3">
+                    <div class="row">
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-wave icon circle-icon" ></i>
+                        </div>
+                        <div class="col-8 ">
+                            <h4 class="text-center">{{ total_amount_paid|default:"0" }}</h4> 
+                            <p class="text-center"> Expenses</p> 
                         </div>
                     </div>
                    

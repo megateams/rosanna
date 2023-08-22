@@ -40,11 +40,11 @@ class Subjects(models.Model):
 
 class Schoolclasses(models.Model):
     classid = models.AutoField(primary_key=True, verbose_name="Class id")
-    #subjects = models.ManyToManyField(Subjects)
+    subjects = models.ManyToManyField(Subjects)
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
     class_level = models.CharField(max_length =20 ,default=None, verbose_name = "Class Level")
-    classteacher = models.CharField(max_length =20 ,default=None, verbose_name = "Class teacher")
+    classteacher = models.CharField(max_length =20, null=True, blank=True, verbose_name = "Class teacher")
     
     Display_schoolclasses = [
         'classid','classname','class_level','classteacher' 
@@ -60,11 +60,6 @@ class Student(models.Model):
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
-
-    studentclass = models.CharField(max_length=10, blank=True, choices=CLASS_CHOICES, default=None)
-
-    # stdclass = models.CharField(max_length=10, blank=True, default=None, verbose_name='Class')
-
     regdate =models.DateField(verbose_name="Date of Registration")
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
@@ -86,6 +81,7 @@ class Student(models.Model):
 
 
 
+
 # class Schoolclasses(models.Model):
 #     subjects = models.ManyToManyField(Subjects)
 #     classname = models.CharField(max_length =20 , verbose_name = "Class Name")
@@ -100,7 +96,7 @@ class Student(models.Model):
 
 #     ]
 class Supportstaff(models.Model):
-    supportstaffid = models.CharField(primary_key=True , max_length=20 , verbose_name='Support Stuff id')
+    supportstaffid = models.AutoField(primary_key=True)
     supportstaffnames = models.CharField(max_length=30 , verbose_name='Suppot Staff Names' , default=None)
     gender = models.CharField(max_length=7 , verbose_name='Gender' , default=None)
     dob = models.DateField(verbose_name='Date of Birth' , default=None)
@@ -112,11 +108,10 @@ class Supportstaff(models.Model):
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications' , default=None)
     salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
     bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
-    username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
-    password = models.CharField(max_length=100, verbose_name='Password' , default=None)
+    # username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
+    # password = models.CharField(max_length=100, verbose_name='Password' , default=None)
     
     Display_Supportstaff =['supportstaffid','supportstaffnames','gender','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
-
 
 class Teachers(models.Model):
 
@@ -133,29 +128,28 @@ class Teachers(models.Model):
     subjects = models.ManyToManyField(Subjects)  # Replace 'YourAppSubjectName' with the actual class name for subjects.
     position = models.CharField(max_length=50, verbose_name='Position')
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
-    salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
-    bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
     username = models.CharField(max_length=50 , verbose_name='Username')
     password = models.CharField(max_length=100, verbose_name='Password')
+    salary = models.CharField(max_length=100, default=None, verbose_name='Salary')
+    bankaccnum = models.CharField(max_length=100, default=None, verbose_name='Bank Account No.')
 
     Display_Teachers = [
         'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate',
-        'position' , 'qualification' , 'salary' , 'bankaccnum' , 'username' , 'password' 
+        'position' , 'qualification' , 'username' , 'password', 'salary', 'bankaccnum', 
     ]
 
  
 class Marks(models.Model):
-    #id = models.AutoField(primary_key=True)
-    stdnum = models.CharField(max_length=100 , verbose_name='Stud number' ,default='std_000' , blank=True)
-    term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I' , blank=True)
-    year = models.CharField(max_length=5 , verbose_name='Year' , default='2023' , blank=True)
-    studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7' , blank=True)
-    math = models.IntegerField(verbose_name='Math' , blank=True)
-    eng = models.IntegerField(verbose_name='Eng' , blank=True)
-    sci = models.IntegerField(verbose_name='Sci' , blank=True)
-    sst = models.IntegerField(verbose_name='SST' , blank=True)
-    re = models.IntegerField(verbose_name='Religious Education' , default=None , blank=True)
-    computer = models.IntegerField(verbose_name='Computer' , default=None , blank=True)
+    stdnum = models.ForeignKey(Student , on_delete=models.CASCADE , default='std_000')
+    term = models.CharField(choices= TERM_CHOICES , max_length=3 , verbose_name="Term" , default='I')
+    year = models.CharField(max_length=5 , verbose_name='Year' , default='2023')
+    studentclass = models.CharField(max_length=10 , choices=CLASS_CHOICES , default='P.7')
+    math = models.IntegerField(verbose_name='Math')
+    eng = models.IntegerField(verbose_name='Eng')
+    sci = models.IntegerField(verbose_name='Sci')
+    sst = models.IntegerField(verbose_name='SST')
+    re = models.IntegerField(verbose_name='Religious Education' , default=None)
+    computer = models.IntegerField(verbose_name='Computer' , default=None)
     
     displaymarks = [
         'stdnum', 'year' , 'studentclass' , 'term' ,'math' , 'eng' , 'sci' , 'sst'
@@ -189,16 +183,16 @@ class Mark(models.Model):
 
 #login model
 class Login(models.Model):
-    username =models.CharField(max_length=25, blank=True, verbose_name="Username")
-    email =models.EmailField(max_length=254, default=None, verbose_name="Email")
-    password =models.CharField(max_length=255, verbose_name='Enter the password')
+    username = models.CharField(max_length=25, blank=True, verbose_name="Username")
+    email = models.EmailField(max_length=254, default=None, verbose_name="Email")
+    password = models.CharField(max_length=255, verbose_name='Enter the password')
     
-    Display_Login_Fields =['username','email','password']
+    Display_Login_Fields = ['username','email','password']
  #user roles model
 class Role_Model(models.Model):
     # id =models.CharField(max_length=10, verbose_name='Role ID')
-    rolename =models.CharField(max_length=255, verbose_name='Role Name')
-    Display_Roles =['rolename']    
+    rolename = models.CharField(max_length=255, verbose_name='Role Name')
+    Display_Roles = ['rolename']    
 
 #Admin model   
 class Admin_Model(models.Model):
@@ -215,7 +209,7 @@ class Admin_Model(models.Model):
     
     Display_Admins =['id','name','username','contact','email', 'gender','address','dob', 'role']
     
-#support staff model
+# #support staff model
 # class Supportstaff(models.Model):
 #     id =models.AutoField(primary_key=True, verbose_name='Staff Number')
 #     fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')

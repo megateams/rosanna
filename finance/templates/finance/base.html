@@ -63,7 +63,7 @@
                 <hr color="#fff">
                 <li class="sidebar-item active">
                     <div class="main-menu d-flex justify-content-between">
-                    <a class="" href='/financestaffpaymentslist'><i class="fas fa-money-bill-alt  mr-2  "></i><span>Staff Payments</span></a>
+                    <a class="" href=''><i class="fas fa-money-bill-alt  mr-2  "></i><span>Staff Payments</span></a>
                     <div class="chevron ">
                         <i class="fas fa-chevron-right text-white    mr-2"></i>
                     </div>
@@ -158,8 +158,8 @@
     <script src="{% static 'js/script.js' %}"></script>
 
     <!-- Include jsPDF and jsPDF AutoTable libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.14/dist/jspdf.plugin.autotable.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.14/dist/jspdf.plugin.autotable.min.js"></script> -->
 
 
 
@@ -195,6 +195,58 @@
                 type: "doughnut",
                 data: donutpaymentData,
                 options: donutpaymentOptions
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#stdnumber').on('change', function() {
+                const stdnumber = $(this).val();
+                // alert(stdnumber);
+                // const stdclass_fees = $('#class_fees');
+                console.log('Selected Student Number:', stdnumber);
+
+                // Fetch subjects for the selected class using AJAX
+                $.ajax({
+                    url: `/get_stdclass/${stdnumber}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#classfees').val(data.amount);
+                        $('#studentclass').val(data.classname);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+        $(document).ready(function() {
+            $('#support-staffid').on('change', function() {
+                const id = $(this).val();
+                // alert(id);
+                // const stdclass_fees = $('#class_fees');
+                console.log('Selected Student Number:', id);
+
+                // Fetch subjects for the selected class using AJAX
+                $.ajax({
+                    url: `/get_staff_salary/${id}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#salary').val(data.salary);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
             });
         });
     </script>

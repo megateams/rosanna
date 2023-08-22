@@ -21,12 +21,14 @@
                 </tr>
             </thead>
             <tbody>
-                
+                {% for fees in feesstructure %}
                 <tr>
-                    <th>ST001</th>
-                    <th>P.6</th>
-                    <th>860,000</th>
-                </tr>  
+                    <th>{{fees.feesstructureid}}</th>
+                    <th>{{fees.classname}}</th>
+                    <th>{{ fees.amount }}</th>
+                </tr>
+                {% endfor %}
+                  
             </tbody>
         </table>
     </div>

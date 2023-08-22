@@ -20,13 +20,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-
-    path('fees/', views.Fees, name="Fees"),
     path('finance/', views.financedashboard, name=""),
-    path('financeaddfees/', views.financeaddFees, name="Add Fees"),
 
-    path('financefeeslist/', views.financefeesList, name="financefeeslist"),
+    path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
+    path('delete_fee/', views.delete_fee, name='delete_fee'),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
@@ -39,17 +37,32 @@ urlpatterns = [
     path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
     path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
-    path('financeaddstaffpayments/', views.financeaddStaffpayments, name="Add Staffpayments"),
-    #path('financestaffpaymentslist/', views.financestaffpaymentsList, name="Staffpayments List"),
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="Add Teacherpayments"),
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslist"),
+
+    # path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
+
+    # path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
+    # path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
+
+    # path('financereports/', views.financeReports, name =" Reports"),
+    # path('financestatistics/', views.financeStatistics, name =" Statistics"),
+
+    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
     path('financeteacherpaymentslist/deleteteacherpayment/<id>' , views.deleteteacherpayment , name = 'deleteteacherpayments'),
 
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsList"),
+    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
+
     
-    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments')
+    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
+
+    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
+    path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
+    path('editsupportstaffpayments' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
+
+    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment'),
+    path('get_staff_salary/<id>/' , views.get_staff_salary , name = 'get_staff_salary'),
 
 ]

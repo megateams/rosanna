@@ -8,7 +8,7 @@
 <div class="inner-content">
     <div class="btns">
         <a href="/add-support-staff" class="btn btn-sm add-btn text-white mb-2 ml-3">Add support staff</a>
-        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        <a href="/support-export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
         
@@ -30,8 +30,8 @@
             <tbody>
                 {% for staff in support_staff %}
                 <tr>
-                    <td>{{ staff.id }}</td>
-                    <td>{{ staff.fullname }}</td>
+                    <td>{{ staff.supportstaffid }}</td>
+                    <td>{{ staff.supportstaffnames }}</td>
                     <td>{{ staff.contact }}</td>
                     <td>{{ staff.email }}</td>
                     <td>{{ staff.address }}</td>

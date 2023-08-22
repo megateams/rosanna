@@ -10,6 +10,8 @@
         <!-- <a href="/financeaddfees" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Fees</a> -->
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
+    <!-- Display the total amount  -->
+    <h3>Total Amount of Fees Paid: {{ total_amount|default:"0" }}</h3>
     <div class="table-section" style="font-size: 14px;" > 
         
         <table class="table" id="table" border="1">
@@ -19,36 +21,26 @@
                     <th>Student Number</th>
                     <th>Student Name</th>
                     <th>Student Class</th>
-                    <th>Amount</th>
+                    <th>Amount Paid</th>
                     <th>Balance</th>
                     <th>Mode of Payment</th>
                     <th>Date</th>
-                    <th>Actions</th>
+                    
                 </tr>
             </thead>
             <tbody>
+                {% for fee in fees_list %}
                 <tr>
-                    <th>F001</th>
-                    <th>S000001</th>
-                    <th>TRAM</th>
-                    <th>P.7 </th>
-                    <th>750,000</th>
-                    <th>00000</th>
-                    <th>Bank</th>
-                    <th>27-06-23</th>
-                   <td>
-                    <div>
-                        <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                        
-                    </div> </td>
-    
+                    <td>{{ fee.paymentid }}</td>
+                    <td>{{ fee.stdnumber.stdnumber }}</td>
+                    <td>{{ fee.stdname }}</td>
+                    <td>{{ fee.studentclass }}</td>
+                    <td>{{ fee.amount }}</td>
+                    <td>{{ fee.balance }}</td>
+                    <td>{{ fee.modeofpayment }}</td>
+                    <td>{{ fee.date }}</td>
                 </tr>
-
-                
-                
-                
-                
+                {% endfor %}      
             </tbody>
         </table>
     </div>

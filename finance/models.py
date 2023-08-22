@@ -1,5 +1,5 @@
 from django.db import models
-from frontend.models import Student,Teachers , Supportstaff
+from frontend.models import *
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -22,26 +22,26 @@ class Feesstructure(models.Model):
 # feesstructure models
 
 class Fees(models.Model):
-    paymentid = models.CharField(max_length= 50, primary_key=True, verbose_name= "Pyament ID")
+    paymentid = models.AutoField(primary_key=True)
     stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Student ID")
     stdname = models.CharField(max_length=255, blank =True, verbose_name="Student name")
-    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=6 , verbose_name='Class' , blank=True)
+    studentclass = models.CharField(choices=CLASS_CHOICES , max_length=20 , verbose_name='Class' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
-    modeofpayment = models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
-    date = models.DateField(verbose_name="Date of Payment")
+    modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
+    date =models.DateField(verbose_name="Date of Payment")
     
-    Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
+    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
     
 class ExpenseRecord(models.Model):
-    expenseid =models.CharField( max_length =50, primary_key=True, verbose_name="Expense ID")
-    category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
-    amountrequired =models.CharField(max_length=20, blank=True, verbose_name="Amount required")
-    expensedate =models.DateField(verbose_name="Date of Expense")
-    amountpaid =models.CharField(max_length=20, blank=True, verbose_name="Amount paid")
-    balance =models.CharField(max_length=20, blank=True, verbose_name="Balance")
+    expenseid = models.AutoField(primary_key=True)
+    category = models.CharField(max_length=255, blank=True, verbose_name="Expense category")
+    amountrequired = models.CharField(max_length=20, blank=True, verbose_name="Amount required")
+    expensedate = models.DateField(verbose_name="Date of Expense")
+    amountpaid = models.CharField(max_length=20, blank=True, verbose_name="Amount paid")
+    balance = models.CharField(max_length=20, blank=True, verbose_name="Balance")
     
-    Display_ExpenseRecords =['expenseid', 'category', 'amountrequired', 'expensedate', 'amountpaid', 'balance']
+    Display_ExpenseRecords = ['expenseid', 'category', 'amountrequired', 'expensedate', 'amountpaid', 'balance']
 
 
 # Create your models here.
@@ -54,7 +54,7 @@ class Staffpayments(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid' , blank=True)
     balance = models.IntegerField(verbose_name='Balance' , blank=True)
     position = models.CharField(max_length=15 , verbose_name='Position' , blank=True)
-    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True)
+    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True , default=None)
 
     displaystaffpayments = [
         'staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum'
@@ -85,17 +85,16 @@ class Receipts(models.Model):
         'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
     ]
     
-
 class Teacherspayment(models.Model):
+    paymentid = models.AutoField(primary_key=True)
     teacherid = models.CharField(max_length=20 , verbose_name='Teacher id')
     teachername = models.CharField(max_length=30 , verbose_name='Teacher Name' , default=None) 
-    paymentid = models.CharField(max_length = 25 , verbose_name='Payment id')
     paymentdate = models.DateField(verbose_name='Payment Date')
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     balance = models.IntegerField(verbose_name='Balance')
     paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
         'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
@@ -104,19 +103,20 @@ class Teacherspayment(models.Model):
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    supportstaffid = models.CharField(max_length=20 , verbose_name='Support Staff')
+    supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
     balance = models.IntegerField(verbose_name='Balance')
-    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
     
     displaysupportstaffpayment = [
-        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' 
     ]
-    
+
+
 
 
 
