@@ -215,13 +215,15 @@ def financeaddFees(request):
         balance = int(classfees) - int(amount)
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        
-        if amount < classfees:
+        print(amount)
+        print(classfees)
+        if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database
             fees = Fees.objects.create(
                 stdnumber_id=stdnumber,
                 stdname=stdname,
                 studentclass=studentclass,
+                classfees=classfees,
                 amount=amount,
                 balance=balance,
                 modeofpayment=modeofpayment,
@@ -257,6 +259,23 @@ def delete_fee(request):
         return redirect('Fees List')  # Adjust this to the correct URL name
 
     return redirect('Fees List')  # Adjust this to the correct URL name
+def edit_std_fees(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get("paymentid")
+        amount = float(request.POST.get("amount"))
+        modeofpayment = request.POST.get("modeofpayment")
+        date = request.POST.get("date")
+        fee = Fees.objects.get(paymentid=paymentid)
+        classfees = float(fee.classfees)
+        balance = classfees - amount
+
+        fee.amount = amount
+        fee.balance = balance
+        fee.modeofpayment = modeofpayment
+        fee.date = date
+        fee.save()
+        messages.success(request, f"Fee record {paymentid} has been edited.")
+        return redirect('Fees List')  # Adjust this to the correct URL name
 # fees views
 
 # feesstructure views

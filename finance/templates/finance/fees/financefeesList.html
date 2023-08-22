@@ -40,13 +40,71 @@
                     <td>{{ fee.modeofpayment }}</td>
                     <td>{{ fee.date }}</td>
                     <td>
+<<<<<<< HEAD
                         <a href="" class="text-primary"> <i class="fas fa-edit  mr-2  "></i></a>
+=======
+                        <a href="#edit{{fee.paymentid}}" data-toggle="modal" class="text-primary"> <i class="fas fa-edit  mr-2  "></i></a>
+>>>>>>> 04b1054607b4370615f9d4d2f8ed2ef9c00b1875
                         <a href="#delete{{fee.paymentid}}" class="text-danger" data-toggle="modal">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
 
+<<<<<<< HEAD
                     <!-- Modal for confirmation -->
+=======
+                    
+                    <!-- Modal for editing -->
+                    <div class="modal fade" id="edit{{fee.paymentid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Fees for {{fee.stdname}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/edit_std_fees/" method="post">
+                                        {% csrf_token %}
+                                        <div class="fees-info">
+                                            <input type="hidden" value="{{fee.paymentid}}" name="paymentid">
+                                
+                                            <div class="row">
+                                                <!-- amount -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Amount </label>
+                                                    <input type="text" name="amount"  value="{{fee.amount}}" class="form-control">
+                                                </div>
+                                            </div>
+                                
+                                            <div class="row">
+                                                <!-- modeofpayment -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Mode of Payment </label>
+                                                    <input type="text" name="modeofpayment" value="{{fee.modeofpayment}}" class="form-control">
+                                                </div>
+                                                <!-- date -->
+                                                <div class="form-group col-md-6">
+                                                    <label for=""> Date </label>
+                                                    <input type="date" name="date" value="{{fee.date}}" class="form-control">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for confirmation to delete-->
+>>>>>>> 04b1054607b4370615f9d4d2f8ed2ef9c00b1875
                     <div class="modal fade" id="delete{{fee.paymentid}}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
