@@ -10,7 +10,8 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
                
     <!-- form-section -->
-    <form action="" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light" method='POST'>
+        {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Teacherpayments</h5>
             <hr>
@@ -23,16 +24,16 @@
                 <div class="form-group col-md-6">
                     <label for="">Teacher ID: </label>
                     {% comment %} <input type="text" name="teacherid" class="form-control"> {% endcomment %}
-                    <select name="teachername" class="form-control">
+                    <select type="text" id='teachersid' name="teacherid" class="form-control">
+                        <option value="" selected disabled>---</option>
                         {% for teacherinfo in teachers %}
-                        <option>{{ teacherinfo.teachernames }}</option>
+                        <option value='{{ teacherinfo.teacherid }}'>{{ teacherinfo.teachernames }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <!-- staffname-->
                 <div class="form-group col-md-6">
-                    <label for=""> Teacher Name </label>
-                    <input type="text" class="form-control">
+                    <label for=""> Salary </label>
+                    <input id="teachersalary" type="text" name="salary" class="form-control" readonly>
                 </div>
             </div>
 
@@ -40,40 +41,35 @@
                 <!-- datepaid -->
                 <div class="form-group col-md-6">
                     <label for="">Payment Date </label>
-                    <input type="date" name="datepaid" class="form-control">
+                    <input type="date" name="paymentdate" class="form-control">
                 </div>
-                <!-- salary-->
+                <!-- amountpaid -->
                 <div class="form-group col-md-6">
-                    <label for=""> Salary </label>
-                    <input type="text" name="salary" class="form-control">
+                    <label for="">Amount Paid</label>
+                    <input id='amountpaid' type="number" name="amount" class="form-control">
                 </div>
             </div>
 
             <div class="row">
                 <!-- amountpaid -->
                 <div class="form-group col-md-6">
-                    <label for="">Amount Paid</label>
-                    <input type="text" name="amount" class="form-control">
+                    <label for=""> Balance </label>
+                    <input id='balance' type="number" name="balance" class="form-control" readonly>
                 </div>
                 <!-- Balance -->
-                <div class="form-group col-md-6">
-                    <label for=""> Balance </label>
-                    <input type="text" name="balance" class="form-control">
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- position -->
-                <div class="form-group col-md-6">
+                {% comment %} <div class="form-group col-md-6">
                     <label for="">Payment Method</label>
                     <input type="text" name="paymentmethod" class="form-control">
-                </div>
-                <!-- bankaccnum -->
+                </div> {% endcomment %}
+            </div>
+
+            {% comment %} <div class="row">
+                <!-- position -->
                 <div class="form-group col-md-6">
                     <label for=""> Bank Account No.</label>
                     <input type="text" name="bankaccnum" class="form-control">
                 </div>
-            </div>
+            </div> {% endcomment %}
 
 
             

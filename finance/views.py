@@ -8,29 +8,26 @@ from frontend.models import *
 from django.core import serializers
 from django.http import JsonResponse
 
-def editteacherpayments(request , id):
-    teacherpayment = Teacherspayment.objects.get(id = id)
+def editteacherpayments(request):
     if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        teacherpayment = Teacherspayment.objects.get(paymentid = paymentid)
         salary = request.POST.get('salary')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
+        balance = int(salary) - int(amountpaid)
         teacherid = request.POST.get('teacherid')
         teachername = request.POST.get('teachername')
 
         teacherpayment.salary = salary 
         teacherpayment.amountpaid = amountpaid 
         teacherpayment.balance = balance 
-        teacherpayment.paymentmethod = paymentmethod 
-        teacherpayment.bankaccnum = bankaccnum 
         teacherpayment.teacherid = teacherid 
         teacherpayment.teachername = teachername 
 
         teacherpayment.save()
         messages.success(request , "Teacher Payment Edit Successfull")
 
-        return redirect('teacherpaymentslist')
+        return redirect('teacherpaymentslists')
 
     return render(request , 'finance/staffpayments/editteacherpayments.html' , {'teacherpayment' : teacherpayment})
 
@@ -56,17 +53,19 @@ def editsupportstaffpayment(request):
         staffpayment.paymentdate = paymentdate 
         staffpayment.staffname = staffname 
 
-        staffpayment.save()
+        staffpayment.save
 
         messages.success(request , 'Edited Successfully')
         return redirect('SupportstaffpaymentsLists')
     return render(request , 'finance/staffpayments/editsupportstaffpayments.html' , {'staffpayment': staffpayment})
 
-def deleteteacherpayment(request , id):
-    teacherpayment = Teacherspayment.objects.filter(id = id)
-    teacherpayment.delete()
-    messages.success(request , 'Payment Deleted Successfully')
-    return redirect('teacherpaymentslist')
+def deleteteacherpayment(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        payid = Teacherspayment.objects.filter(paymentid = paymentid)
+        payid.delete()
+        messages.success(request , 'Payment Deleted Successfully')
+        return redirect('teacherpaymentslists')
 
 def deletesupportstaffpayment(request):
     if request.method == 'POST':
@@ -318,10 +317,37 @@ def editfeesstructure(request, feesstructureid):
 
 # teacherpayments views
 def financeaddTeacherpayments(request):
-    return render(request,'finance/staffpayments/financeaddTeacherpayments.html')
+    teachersdata = Teachers.objects.all()
+    
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        teachername = Teachers.objects.get(teacherid = teacherid).teachernames
+        paymentdate = request.POST.get('paymentdate')
+        salary = request.POST.get('salary')
+        amountpaid = request.POST.get('amount')
+        balance = request.POST.get('balance')
+        # paymentmethod = request.POST.get('paymentmethod')
+        # bankaccnum = request.POST.get('bankaccnum')
+        
+        Teacherspayment.objects.create(
+            teacherid = teacherid ,
+            teachername = teachername ,
+            paymentdate = paymentdate ,
+            salary = salary ,
+            amountpaid = amountpaid ,
+            balance = balance ,
+            # paymentmethod = paymentmethod ,
+            # bankaccnum = bankaccnum ,
+        )
+        
+        Teacherspayment.save
+        return redirect('teacherpaymentslists')
+        
+    return render(request,'finance/staffpayments/financeaddTeacherpayments.html' , {'teachers':teachersdata})
 
 def financeteacherpaymentsList(request):
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html')
+    teacherspayment = Teacherspayment.objects.all()
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
 # teacherpayments views
 
 # supportstaffpayments views
@@ -458,10 +484,18 @@ def get_staff_salary(request,id):
     }
     return JsonResponse(staff_data)
 
+def get_teacher_salary(request , id):
+    teacher = Teachers.objects.get(teacherid = id)
+    salary = teacher.salary
+    teachersalary = {
+        'salary' : salary,
+    }
+    return JsonResponse(teachersalary)
 
-
-
-
+def get_teacher_balance(request , id , amountpaid):
+    teacher = Teachers.objects.get(teacherid = id)
+    balance = int(teacher.salary) - int(amountpaid)
+    return JsonResponse({'balance' : balance})
 
 
 
