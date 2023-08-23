@@ -27,7 +27,6 @@ urlpatterns = [
     path('delete_fee/', views.delete_fee, name='delete_fee'),
     path('edit_std_fees/', views.edit_std_fees, name='edit_std_fees'),
 
-
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
     path('editfeesstructure/<int:feesstructureid>/', views.editfeesstructure, name='editfeesstructure'),
@@ -50,11 +49,11 @@ urlpatterns = [
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
     
-    path('financesupportstaffpaymentslist/deletesupportstaffpayment/<paymentid>' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
+    path('deletesupportstaffpayment/' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
 
     path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
     path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
-    path('editsupportstaffpayments' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
+    path('editsupportstaffpayments/' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
 
     path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment'),
     path('get_staff_salary/<id>/' , views.get_staff_salary , name = 'get_staff_salary'),

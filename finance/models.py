@@ -43,6 +43,7 @@ class ExpenseRecord(models.Model):
     Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid']
 
 
+
 # Create your models here.
         
 class Staffpayments(models.Model):
@@ -53,7 +54,7 @@ class Staffpayments(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid' , blank=True)
     balance = models.IntegerField(verbose_name='Balance' , blank=True)
     position = models.CharField(max_length=15 , verbose_name='Position' , blank=True)
-    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True)
+    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True , default=None)
 
     displaystaffpayments = [
         'staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum'
@@ -93,7 +94,7 @@ class Teacherspayment(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     balance = models.IntegerField(verbose_name='Balance')
     paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
         'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'

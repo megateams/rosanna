@@ -10,7 +10,7 @@
         <a href="/addsubjectsform" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Subject</a>
         <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
-    <div class="table-section" style="font-size: 14px;"> 
+    <div class="table-section" style="font-size: 14px;">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -157,11 +157,10 @@
                                         <input type="hidden" name="subject_id" value="{{subj.subjectid}}">
 
                                         <p>Are you sure you want to delete {{subj.subjectname}}</p>
-                                        
+
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-success">Yes</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                                            
                                         </div>
                                     </form>
                                 </div>
