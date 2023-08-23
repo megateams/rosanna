@@ -19,10 +19,8 @@
                 <tr>
                     <th>Expense ID</th>
                     <th>Category</th>
-                    <th>Amount Required</th>
                     <th>Expense Date</th>
                     <th>Amount Paid</th>
-                    <th>Balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,10 +28,8 @@
                 <tr>
                     <td>{{ expense.expenseid }}</td>
                     <td>{{ expense.category }}</td>
-                    <td>{{ expense.amountrequired }}</td>
                     <td>{{ expense.expensedate }}</td>
                     <td>{{ expense.amountpaid }}</td>
-                    <td>{{ expense.balance }}</td>
                 </tr>
                 {% endfor %}   
             </tbody>

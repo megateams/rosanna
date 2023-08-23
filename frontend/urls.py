@@ -41,6 +41,7 @@ urlpatterns = [
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
+    path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
 
 
     path('staff/', views.staff, name="Staff"),
@@ -66,11 +67,11 @@ urlpatterns = [
     path('delete_class/' , views.delete_class , name='delete_class'),
 
     # accounting 
-    path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
+    path('feesstructurelist', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
     #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
     #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
-    path('expenseslist/', views.expenses, name='Expenses '),
+    path('expenseslist', views.expenses, name='Expenses '),
     
     path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),

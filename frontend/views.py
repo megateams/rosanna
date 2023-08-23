@@ -643,6 +643,45 @@ def edit_teacher(request):
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
 
+def edit_supportstaff(request):
+    if request.method == 'POST':
+        supportstaffid = request.POST.get("supportstaffid")
+        supportstaffnames = request.POST.get('supportstaffnames')
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        position = request.POST.get('position')
+        qualification = request.POST.get('qualification')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
+        dob = request.POST.get('dob')
+        joiningdate = request.POST.get('joiningdate')
+
+
+        that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
+
+        # Update support staff attributes
+        that_support_staff.supportstaffnames = supportstaffnames
+        that_support_staff.gender = gender
+        that_support_staff.contact = contact
+        that_support_staff.email = email
+        that_support_staff.address = address
+        that_support_staff.position = position
+        that_support_staff.qualification = qualification
+        that_support_staff.salary = salary
+        that_support_staff.bankaccnum = bankaccnum
+        that_support_staff.dob = dob
+        that_support_staff.joiningdate = joiningdate
+
+        # Save the updated support staff
+        that_support_staff.save()
+
+        messages.success(request, "Support Staff edited successfully")
+        return redirect("show supportstaff", supportstaffid=supportstaffid)
+    # else:
+    #     return render(request, 'your_template_name.html')  # Render a form for editing if the request method is GET
+
    
 def supportstaffList(request):
     # Retrieve all support staff data from the database

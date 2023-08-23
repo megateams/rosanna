@@ -87,9 +87,86 @@
                 </div>
 
                 <div class="btn ">
-                    <a href="" class="btn btn-md btn-primary" data-toggle="modal">Edit teacher</a>
+                    <a href="#edit{{staff.supportstaffid}}" class="btn btn-md btn-primary" data-toggle="modal">Edit Support Staff</a>
                     <!-- <a href="#delete{{teacher.teacherid}}" class="btn btn-md btn-danger" data-toggle="modal">Delete</a> -->
                 </div>
+
+                <!-- Modals for editing support staff information -->
+                
+                <div class="modal fade" id="edit{{staff.supportstaffid }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Support Staff</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Add a form for editing support staff information -->
+                                <form method="post" action="/edit_supportstaff/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="supportstaffid" value="{{ staff.supportstaffid }}">
+                                    <div class="row">  
+                                        <div class="col-md-6">                                
+                                    <div class="form-group">
+                                        <label for="edit-supportstaffnames">Full Name</label>
+                                        <input type="text" class="form-control" id="edit-supportstaffnames" name="supportstaffnames" value="{{ staff.supportstaffnames }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-gender">Gender</label>
+                                        <input type="text" class="form-control" id="edit-gender" name="gender" value="{{ staff.gender }}">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edit-contact">Contact</label>
+                                        <input type="text" class="form-control" id="edit-contact" name="contact" value="{{ staff.contact }}">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edit-email">Email</label>
+                                        <input type="email" class="form-control" id="edit-email" name="email" value="{{ staff.email }}">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edit-address">Address</label>
+                                        <input type="text" class="form-control" id="edit-address" name="address" value="{{ staff.address }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="edit-position">Date of Birth</label>
+                                        <input type="date" class="form-control" id="edit-dob" name="dob" value="{{ staff.dob }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-position">Position</label>
+                                        <input type="text" class="form-control" id="edit-position" name="position" value="{{ staff.position }}">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edit-qualification">Qualifications</label>
+                                        <input type="text" class="form-control" id="edit-qualification" name="qualification" value="{{ staff.qualification }}">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edit-salary">Salary</label>
+                                        <input type="text" class="form-control" id="edit-salary" name="salary" value="{{ staff.salary }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-position">Joining Date</label>
+                                        <input type="date" class="form-control" id="edit-joiningdate" name="joiningdate" value="{{ staff.joiningdate }}">
+                                    </div>
+                                </div>
+                                </div> 
+                                    <!-- Add more form fields as needed -->
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- End of Modals -->
 
                 {% endfor %}
             </div>
