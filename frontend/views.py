@@ -134,8 +134,6 @@ def get_subjects(request, class_id):
     subjects = class_obj.subjects.all().values('subjectid', 'subjectname')
     return JsonResponse(list(subjects), safe=False)
 
-
-
 def subjectList(request):
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
@@ -145,7 +143,6 @@ def subjectList(request):
 
 def showStudent(request):
     return render(request, 'frontend/student/showStudent.html')
-
 
 def addMarks(request):
     # frontend/views.py
@@ -279,7 +276,7 @@ def edit_subject(request):
         that_subject.subjecthead = subject_head
         that_subject.save()
         messages.success(request,"Subject edited successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 # delete subject view
 def delete_subject(request):
@@ -288,7 +285,7 @@ def delete_subject(request):
         that_subject = Subjects.objects.get(pk=subject_id)
         that_subject.delete()
         messages.success(request,"Subject deleted successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 def supportstaffList(request):
     # Retrieve all support staff data from the database

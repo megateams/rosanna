@@ -22,7 +22,7 @@
                 <!-- teacherid -->
                 <div class="form-group col-md-6">
                     <label for="">Teacher ID: </label>
-                    <input type="text" name="teacherid" class="form-control">
+                    {% comment %} <input type="text" name="teacherid" class="form-control"> {% endcomment %}
                     <select name="teachername" class="form-control">
                         {% for teacherinfo in teachers %}
                         <option>{{ teacherinfo.teachernames }}</option>
