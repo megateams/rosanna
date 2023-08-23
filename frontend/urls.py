@@ -42,6 +42,8 @@ urlpatterns = [
     path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
+    path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
+
 
     path('staff/', views.staff, name="Staff"),
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),

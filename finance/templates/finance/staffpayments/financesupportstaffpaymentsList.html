@@ -38,8 +38,8 @@
             <tbody>
                 {% for supportstaff in supportstaffpayments %}
                 <tr>
-                    <td>{{ supportstaff.paymentid }}</td>
-                    <td>{{ supportstaff.supportstaffid.supportstaffnames }}</td>
+                    <td>{{ supportstaff.supportstaffid }}</td>
+                    <td>{{ supportstaff.staffname }}</td>
                     <!-- <th>{{ supportstaff.paymentid }}</th> -->
                     <td>{{ supportstaff.paymentdate }}</td>
                     <td>{{ supportstaff.salary }}</td>

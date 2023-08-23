@@ -25,42 +25,27 @@
         {% endif %}
         <div class="expenses-info">
             <div class="row">
-                <!-- expensesid -->
-                <!-- <div class="form-group col-md-6">
-                    <label for="">Expense ID: </label>
-                    <input type="text" name="expenseid" class="form-control" value="{{ expense.expenseid }}" readonly>
-                </div> -->
+                
                 <!-- category-->
                 <div class="form-group col-md-6">
                     <label for=""> Category </label>
                     <input type="text" name="category" class="form-control" value="{{ expense.category }}">
                 </div>
+                <!-- amount paid -->
+                <div class="form-group col-md-6">
+                    <label for="">Amount Paid</label>
+                    <input type="text" name="amountpaid" class="form-control" value="{{ expense.amountpaid }}">
+                </div>
             </div>
             <div class="row">
-                <!-- amount required -->
-                <div class="form-group col-md-6">
-                    <label for="">Amount Required </label>
-                    <input type="text" name="amountrequired" class="form-control" value="{{ expense.amountrequired }}">
-                </div>
+                
                 <!-- expense date -->
                 <div class="form-group col-md-6">
                     <label for=""> Expense Date </label>
                     <input type="date" name="expensedate" class="form-control" value="{{ expense.expensedate }}">
                 </div>
             </div>
-            <div class="row">
-                <!-- amount paid -->
-                <div class="form-group col-md-6">
-                    <label for="">Amount Paid</label>
-                    <input type="text" name="amountpaid" class="form-control" value="{{ expense.amountpaid }}">
-                </div>
-                <!-- Balance -->
-                <div class="form-group col-md-6">
-                    <label for=""> Balance </label>
-                    <input type="text" name="balance" class="form-control" value="{{ expense.balance }}">
-                </div>
-            </div>
-        </div>
+            
         <div class="form-group">
             <button type="submit" class="btn btn-sm bg-dark text-white w-25">SAVE</button>
         </div>

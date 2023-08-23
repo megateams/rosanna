@@ -37,12 +37,10 @@ class Fees(models.Model):
 class ExpenseRecord(models.Model):
     expenseid = models.AutoField(primary_key=True)
     category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
-    amountrequired =models.CharField(max_length=20, blank=True, verbose_name="Amount required")
     expensedate =models.DateField(verbose_name="Date of Expense")
     amountpaid =models.CharField(max_length=20, blank=True, verbose_name="Amount paid")
-    balance =models.CharField(max_length=20, blank=True, verbose_name="Balance")
     
-    Display_ExpenseRecords =['expenseid', 'category', 'amountrequired', 'expensedate', 'amountpaid', 'balance']
+    Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid']
 
 
 # Create your models here.
@@ -104,7 +102,7 @@ class Teacherspayment(models.Model):
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
+    supportstaffid = models.CharField(max_length = 23, verbose_name='Supportstaff id')
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
