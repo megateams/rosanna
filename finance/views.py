@@ -186,9 +186,13 @@ def financedashboard(request):
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
+    sspayments = Supportstaffpayment.objects.all()
+    total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
+        'total_sspayments' : total_sspayments,
 
     }
     return render(request, "finance/financedashboard.html", context)
@@ -364,8 +368,14 @@ def financeaddsupportstaffpayments(request):
     return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
 
 def financesupportstaffpaymentsList(request):
+    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     support_staff_payments = Supportstaffpayment.objects.all()
-    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', {'supportstaffpayments': support_staff_payments})
+    context = {
+        'supportstaffpayments': support_staff_payments,
+        'total_sspayments': total_sspayments,
+    }
+
+    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', context)
 
 # supportstaffpayments views
 

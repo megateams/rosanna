@@ -770,6 +770,11 @@ def financeteacherpaymentsList(request):
     return render(request,'frontend/accounting/teacherspayments.html' , {'teachers':teachers})
 
 def supportstaffpaymentsList(request):
+    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     supportstaffinfo = Supportstaffpayment.objects.all()
-    return render(request,'frontend/accounting/supportstaffpayments.html' , {'supportstaffdata':supportstaffinfo})
+    context = {
+     'supportstaffdata':supportstaffinfo,
+       'total_sspayments': total_sspayments,   
+    }
+    return render(request,'frontend/accounting/supportstaffpayments.html' ,context)
 
