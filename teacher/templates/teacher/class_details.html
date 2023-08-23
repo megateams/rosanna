@@ -50,7 +50,7 @@
                             <td>
                                 {% with marks=marks_dict|get_item:subject %}
                                     {% if marks %}
-                                        {{ marks.average_marks|floatformat:1 }}
+                                        {{ marks.average_marks|floatformat:0 }}
                                     {% else %}
                                         --
                                     {% endif %}

@@ -26,6 +26,7 @@ class Fees(models.Model):
     stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Student ID")
     stdname = models.CharField(max_length=255, blank =True, verbose_name="Student name")
     studentclass = models.CharField(choices=CLASS_CHOICES , max_length=20 , verbose_name='Class' , blank=True)
+    classfees = models.CharField(max_length= 20, verbose_name='Class Fees' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")

@@ -143,8 +143,6 @@ def subjectList(request):
     return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects, 'teachers':teachers})
 # classes views
 
-def showStudent(request):
-    return render(request, 'frontend/student/showStudent.html')
 
 
 def addMarks(request):
@@ -179,8 +177,61 @@ def marksList(request):
 
 def showStudent(request,stdnumber):
     student = Student.objects.get(stdnumber = stdnumber)
-    return render(request, 'frontend/student/showStudent.html', {'student': student})
+    classes = Schoolclasses.objects.all()
+    return render(request, 'frontend/student/showStudent.html', {'student': student, 'classes':classes})
 # students views
+
+
+# edit student
+def edit_student(request):
+    if request.method == "POST":
+        stdnumber = request.POST.get("stdnumber")
+        regdate = request.POST.get('regdate')
+        childname = request.POST.get('childname')
+        gender = request.POST.get('gender')
+        dob = request.POST.get('dob')
+        address = request.POST.get('address')
+        house = request.POST.get('house')
+        fathername = request.POST.get('fathername')
+        fcontact = request.POST.get('fcontact')
+        foccupation = request.POST.get('foccupation')
+        mothername = request.POST.get('mothername')
+        mcontact = request.POST.get('mcontact')
+        moccupation = request.POST.get('moccupation')
+        livingwith = request.POST.get('livingwith')
+        guardianname = request.POST.get('guardianname')
+        gcontact = request.POST.get('gcontact')
+
+        student = Student.objects.get(pk=stdnumber)
+        student.regdate = regdate
+        student.childname = childname
+        student.gender = gender
+        student.dob = dob
+        student.address = address
+        student.house = house
+        student.fathername = fathername
+        student.fcontact = fcontact
+        student.foccupation = foccupation
+        student.mothername = mothername
+        student.mcontact = mcontact
+        student.moccupation = moccupation
+        student.livingwith = livingwith
+        student.guardianname = guardianname
+        student.gcontact = gcontact
+
+        student.save()
+        messages.success(request, 'Student edited successfully')
+        return redirect("Student details", stdnumber=stdnumber)
+
+def delete_student(request):
+    if request.method == "POST":
+        stdnumber = request.POST.get("stdnumber")
+
+        student = Student.objects.get(pk=stdnumber)
+        student.delete()
+        messages.success(request, "Student has been deleted")
+
+        return redirect("Students List")
 
 # support staff views
 def supportstaffAdd(request):
