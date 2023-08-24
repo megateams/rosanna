@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
+
     path('markslist/', views.marksList, name=" View Marks"),    
 
     # path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),   
@@ -37,13 +38,14 @@ urlpatterns = [
     path('get_students_by_class/<int:class_id>/', views.get_students_by_class, name='get_students_by_class'),
 
 
-    path('support-staff-list/', views.supportstaffList, name="Support staff List"),
+    path('support-staff-list/', views.supportstaffList, name="SupportstaffList"),
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
     path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
     path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
+    path('delete_supportstaff/', views.delete_supportstaff, name="delete_supportstaff"),
 
 
     path('staff/', views.staff, name="Staff"),

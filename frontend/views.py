@@ -730,6 +730,15 @@ def edit_supportstaff(request):
     # else:
     #     return render(request, 'your_template_name.html')  # Render a form for editing if the request method is GET
 
+def delete_supportstaff(request):
+    if request.method == "POST":
+        supportstaffid = request.POST.get("supportstaffid")
+
+        supportstaff = Supportstaff.objects.get(pk=supportstaffid)
+        supportstaff.delete()
+        messages.success(request, "Supportstaff has been deleted")
+
+        return redirect("SupportstaffList")
    
 def supportstaffList(request):
     # Retrieve all support staff data from the database

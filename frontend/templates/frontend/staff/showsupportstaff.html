@@ -88,8 +88,36 @@
 
                 <div class="btn ">
                     <a href="#edit{{staff.supportstaffid}}" class="btn btn-md btn-primary" data-toggle="modal">Edit Support Staff</a>
-                    <!-- <a href="#delete{{teacher.teacherid}}" class="btn btn-md btn-danger" data-toggle="modal">Delete</a> -->
+                    <a href="#delete{{staff.supportstaffid}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Support Staff</a>
                 </div>
+
+                 <!-- delete -->
+            <div class="modal fade" id="delete{{staff.supportstaffid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete {{staff.supportstaffnames}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/delete_supportstaff/" method="post">
+                                {% csrf_token%}
+                                <input type="hidden" name="supportstaffid" value="{{staff.supportstaffid}}">
+                                <p>Are you sure you want to delete {{staff.supportstaffnames}}</p>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-success" data-dismiss="modal">no</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">yes</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
 
                 <!-- Modals for editing support staff information -->
                 
