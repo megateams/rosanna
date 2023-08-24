@@ -54,13 +54,13 @@
                         <a href="#edit{{ supportstaff.paymentid }}" data-toggle='modal' class="text-"><i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="#delete{{ supportstaff.paymentid }}" data-toggle = 'modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
                     </td>
-                    
+
                     <!-- Modal -->
                     <div class="modal fade" id="delete{{ supportstaff.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Modal title</h5>
+                                    <h5 class="modal-title">Delete Payment</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -71,6 +71,7 @@
 
                                         <div class="form-group col-md-6">
                                             <input type="hidden" name="paymentid" value="{{ supportstaff.paymentid }}" class="form-control" required>
+                                            <input type="hidden" name="supportstaffid" value="{{ supportstaff.supportstaffid }}" class="form-control" required>
                                         </div>
 
                                         <p>
@@ -94,7 +95,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Modal title</h5>
+                                    <h5 class="modal-title">Edit Support staff Payments</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -130,7 +131,7 @@
                                             </div>
                                         </div>
                                 
-                                        <div class="row">
+                                        {% comment %} <div class="row">
                                             <div class="form-group col-md-6">
                                                 <label for="amount">Payment Method:</label>
                                                 <input type="text" name="paymentmethod" value="{{ supportstaff.paymentmethod }}" class="form-control" required>
@@ -142,7 +143,8 @@
                                                 <label for="amount">Bank Account Number:</label>
                                                 <input type="number" name="bankaccnum" value="{{ supportstaff.bankaccnum }}" class="form-control" required>
                                             </div>
-                                        </div>
+                                        </div> {% endcomment %}
+
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save</button>

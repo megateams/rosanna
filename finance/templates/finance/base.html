@@ -249,6 +249,50 @@
 
             });
         });
+
+        $(document).ready(function() {
+
+            $('#teachersid').on('change', function() {
+                const id = $(this).val();
+                $.ajax({
+                    url: `/get_teacher_salary/${id}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#teachersalary').val(data.salary);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+
+        $(document).ready(function() {
+
+            $('#amountpaid').on('change', function() {
+                const id = $('#teachersid').val();
+                const amountpaid = $(this).val();
+                $.ajax({
+                    url: `/get_teacher_balance/${id}/${amountpaid}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#balance').val(data.balance);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+
     </script>
    
 </body>
