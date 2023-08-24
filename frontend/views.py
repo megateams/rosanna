@@ -13,6 +13,8 @@ from django.utils.decorators import method_decorator
 from datetime import datetime
 from django.db.models import Max
 import openpyxl
+from django.core.files.storage import FileSystemStorage
+
 
 #register details for the user (admin)
 def register(request):
@@ -703,7 +705,7 @@ def teacher_export_to_excel(request):
     
 def teachers(request):
     if request.method == 'POST':
-        
+        profile_image = request.FILES.get('profile_image')
         last_teacher = Teachers.objects.order_by('-teacherid').first()
 
         # Generate default ID and password
@@ -745,6 +747,10 @@ def teachers(request):
             username=username,
             password=default_password
         )
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            teacher.profile_image = image_filename
         teacher.save()
 
         # Add the selected classes and subjects to the teacher object
