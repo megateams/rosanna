@@ -105,28 +105,28 @@
                                         {% csrf_token %}
                                 
                                         <div class="row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group">
                                                 <input type="hidden" name="paymentid" value="{{ teacher.paymentid }}" class="form-control" required>
                                                 <input type="hidden" name="teacherid" value="{{ teacher.teacherid }}" class="form-control" required>
                                             </div>
                                         </div>
                                 
                                         <div class="row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="amount">Teacher Name:</label>
                                                 <input type="text" name="teachername" value="{{ teacher.teachername }}" class="form-control" required>
                                             </div>
                                         </div>
                                 
                                         <div class="row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="amount">Salary:</label>
-                                                <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" required>
+                                                <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" required readonly>
                                             </div>
                                         </div>
                                 
                                         <div class="row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label for="amount">Amount Paid:</label>
                                                 <input type="number" name="amountpaid" value="{{ teacher.amountpaid }}" class="form-control" required>
                                             </div>
