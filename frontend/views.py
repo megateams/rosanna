@@ -140,8 +140,10 @@ def subjectList(request):
     return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects, 'teachers':teachers})
 # classes views
 
-
 @login_required
+def showStudent(request):
+    return render(request, 'frontend/student/showStudent.html')
+
 def addMarks(request):
     # frontend/views.py
     if request.method == 'POST':
@@ -434,7 +436,7 @@ def edit_subject(request):
         that_subject.subjecthead = subject_head
         that_subject.save()
         messages.success(request,"Subject edited successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 # delete subject view
 def delete_subject(request):
@@ -443,7 +445,7 @@ def delete_subject(request):
         that_subject = Subjects.objects.get(pk=subject_id)
         that_subject.delete()
         messages.success(request,"Subject deleted successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 @login_required
 def supportstaffList(request):

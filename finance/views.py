@@ -5,83 +5,77 @@ from django.shortcuts import render, HttpResponse,redirect
 from .models import *
 from django.db.models import Sum
 from frontend.models import *
-# from .models import Supportstaff , Staffpayments , ExpenseRecord , Fees , Bankdetails , Receipts , Supportstaffpayment , Teacherspayment , Teachers
+from django.core import serializers
+from django.http import JsonResponse
 
-
-# Create your views here.
-#  Display_Fees = ['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
-#Display_ExpenseRecords =['expenseid', 'category', 'amountrequired', 'expensedate', 'amountpaid', 'balance']
-#displaystaffpayments = ['staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum']
-#'staffname' , 'bankname' , 'accnum' , 'accname'
-#'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
-
-def editteacherpayments(request , id):
-    teacherpayment = Teacherspayment.objects.get(id = id)
+def editteacherpayments(request):
     if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        teacherpayment = Teacherspayment.objects.get(paymentid = paymentid)
         salary = request.POST.get('salary')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
+        balance = int(salary) - int(amountpaid)
         teacherid = request.POST.get('teacherid')
         teachername = request.POST.get('teachername')
-        
+
         teacherpayment.salary = salary 
         teacherpayment.amountpaid = amountpaid 
         teacherpayment.balance = balance 
-        teacherpayment.paymentmethod = paymentmethod 
-        teacherpayment.bankaccnum = bankaccnum 
         teacherpayment.teacherid = teacherid 
         teacherpayment.teachername = teachername 
-        
+
         teacherpayment.save()
         messages.success(request , "Teacher Payment Edit Successfull")
-        
-        return redirect('teacherpaymentslist')
-        
+
+        return redirect('teacherpaymentslists')
+
     return render(request , 'finance/staffpayments/editteacherpayments.html' , {'teacherpayment' : teacherpayment})
 
-def editsupportstaffpayment(request , paymentid):
-    staffpayment = Supportstaffpayment.objects.get(paymentid = paymentid)
+def editsupportstaffpayment(request):
     if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        staffpayment = Supportstaffpayment.objects.get(paymentid = paymentid)
         supportstaffid = request.POST.get('supportstaffid')
         salary = request.POST.get('salary')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
-        paymentmethod = request.POST.get('paymentmethod')
-        bankaccnum = request.POST.get('bankaccnum')
+        #balance = request.POST.get('balance')
+        #paymentmethod = request.POST.get('paymentmethod')
+        #bankaccnum = request.POST.get('bankaccnum')
         paymentdate = request.POST.get('paymentdate')
         staffname = request.POST.get('staffname')
-        
+
         staffpayment.supportstaffid = supportstaffid
         staffpayment.salary = salary
         staffpayment.amountpaid = amountpaid 
-        staffpayment.balance = balance 
-        staffpayment.paymentmethod = paymentmethod
-        staffpayment.bankaccnum = bankaccnum
+        staffpayment.balance = int(salary) - int(amountpaid)
+        #staffpayment.paymentmethod = paymentmethod
+        #staffpayment.bankaccnum = bankaccnum
         staffpayment.paymentdate = paymentdate 
         staffpayment.staffname = staffname 
-        
-        staffpayment.save()
-        
+
+        staffpayment.save
+
         messages.success(request , 'Edited Successfully')
-        return redirect('SupportstaffpaymentsList')
+        return redirect('SupportstaffpaymentsLists')
     return render(request , 'finance/staffpayments/editsupportstaffpayments.html' , {'staffpayment': staffpayment})
 
-def deleteteacherpayment(request , id):
-    teacherpayment = Teacherspayment.objects.filter(id = id)
-    teacherpayment.delete()
-    messages.success(request , 'Payment Deleted Successfully')
-    return redirect('teacherpaymentslist')
-    
-def deletesupportstaffpayment(request , paymentid):
-    payid = Supportstaffpayment.objects.filter(paymentid = paymentid)
-    payid.delete()
-    messages.success(request , "Payment deleted successfully")
-    supportstaffinfo = Supportstaffpayment.objects.all()
-    return redirect('SupportstaffpaymentsList')
-    
-    
+def deleteteacherpayment(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        payid = Teacherspayment.objects.filter(paymentid = paymentid)
+        payid.delete()
+        messages.success(request , 'Payment Deleted Successfully')
+        return redirect('teacherpaymentslists')
+
+def deletesupportstaffpayment(request):
+    if request.method == 'POST':
+        paymentid = request.POST.get('paymentid')
+        payid = Supportstaffpayment.objects.filter(paymentid = paymentid)
+        payid.delete()
+        messages.success(request , "Payment deleted successfully")
+        supportstaffinfo = Supportstaffpayment.objects.all()
+        return redirect('SupportstaffpaymentsLists')
+
 def financeaddStaffpayments(request):
     if request.method == 'POST':
         supportstaffid = request.POST.get('support-staffid')
@@ -89,20 +83,18 @@ def financeaddStaffpayments(request):
         paymentdate = request.POST.get('datepaid')
         salary = request.POST.get('salary')
         amount = request.POST.get('amount')
-        
-        
+
         Supportstaffpayment.objects.create(
             supportstaffid = supportstaffid ,
             salary = salary ,
             amountpaid = amount ,
-            balance = balance ,
+            #balance = balance ,
             supportstaffname = supportstaffname,
-            paymentdate = datepaid,
-            
+            #paymentdate = datepaid,
         )
         Supportstaffpayment.save()
     return render(request , 'finance/staffpayments/financesupportstaffpaymentsList.html')
-        
+
 def receipts(request):
     if request.method == 'POST':
         receiptnum = request.POST.get('receiptnum')
@@ -111,7 +103,7 @@ def receipts(request):
         item = request.POST.get('item')
         balance = request.POST.get('balance')
         payername = request.POST.get('payername')
-        
+
         Receipts.objects.create(
             receiptnum = receiptnum ,
             transactiondate = transactiondate ,
@@ -120,7 +112,7 @@ def receipts(request):
             balance = balance ,
             payername = payername ,
         )
-        
+
         Receipts.save()
     return render(request, 'finace/financedashboard.html')
 
@@ -130,14 +122,14 @@ def bankdetails(request):
         bankname = request.POST.get('bankname')
         accnum = request.POST.get('accnum')
         accname = request.POST.get('accname')
-        
+
         Bankdetails.objects.create(
             staffname = staffname ,
             bankname = bankname ,
             accnum = accnum ,
             accname = accname
         )
-        
+
         Bankdetails.save()
     return render(request , 'finance/financedashboard.html')
 
@@ -185,7 +177,6 @@ def expenserecords(request):
         ExpenseRecord.save()
     return render(request , 'finance/financedashboard.html')
 
-
 # Create your views here.
 def financedashboard(request):
     expenses = ExpenseRecord.objects.all()
@@ -201,9 +192,6 @@ def financedashboard(request):
     }
     return render(request, "finance/financedashboard.html", context)
 
-    
-
-
 # fees views
 def financeaddFees(request):
     if request.method == 'POST':
@@ -215,15 +203,6 @@ def financeaddFees(request):
         balance = int(classfees) - int(amount)
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        print(amount)
-        print(classfees)
-
-        # Check if the student with the same stdnumber is already added to the fees
-        if Fees.objects.filter(stdnumber=stdnumber).exists():
-            messages.error(request, 'This student has already been added to fees.')
-            students = Student.objects.all()
-            fees_structures = Feesstructure.objects.all()
-            return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
         
         if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database
@@ -248,7 +227,6 @@ def financeaddFees(request):
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
 
-
 def financefeesList(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
@@ -267,7 +245,6 @@ def delete_fee(request):
         return redirect('Fees List')  # Adjust this to the correct URL name
 
     return redirect('Fees List')  # Adjust this to the correct URL name
-
 def edit_std_fees(request):
     if request.method == 'POST':
         paymentid = request.POST.get("paymentid")
@@ -285,10 +262,7 @@ def edit_std_fees(request):
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
-
 # fees views
-
-# feesstructure views
 
 def financeaddFeesstructure(request):
     if request.method == 'POST':
@@ -321,7 +295,6 @@ def deletefeesstructure(request, feesstructureid):
         messages.success(request, 'Fees Structure deleted successfully.')
     except Feesstructure.DoesNotExist:
         messages.error(request, 'Fees Structure not found.')
-    
     return redirect('Fees Structure List')
 
 def editfeesstructure(request, feesstructureid):
@@ -330,28 +303,50 @@ def editfeesstructure(request, feesstructureid):
         if request.method == 'POST':
             updated_classname = request.POST.get('classname')
             updated_amount = request.POST.get('amount')
-            
             fees_structure.classname = updated_classname
             fees_structure.amount = updated_amount
             fees_structure.save()
             messages.success(request, 'Fees Structure updated successfully.')
             return redirect('Fees Structure List')
-            
         context = {'fees_structure': fees_structure}
         return render(request, 'finance/feesstructure/editfeesstructure.html', context)
     except Feesstructure.DoesNotExist:
         messages.error(request, 'Fees Structure not found.')
         return redirect('Fees Structure List')
 
-
-# feesstructure views
-
 # teacherpayments views
 def financeaddTeacherpayments(request):
-    return render(request,'finance/staffpayments/financeaddTeacherpayments.html')
+    teachersdata = Teachers.objects.all()
+    
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        teachername = Teachers.objects.get(teacherid = teacherid).teachernames
+        paymentdate = request.POST.get('paymentdate')
+        salary = request.POST.get('salary')
+        amountpaid = request.POST.get('amount')
+        balance = request.POST.get('balance')
+        # paymentmethod = request.POST.get('paymentmethod')
+        # bankaccnum = request.POST.get('bankaccnum')
+        
+        Teacherspayment.objects.create(
+            teacherid = teacherid ,
+            teachername = teachername ,
+            paymentdate = paymentdate ,
+            salary = salary ,
+            amountpaid = amountpaid ,
+            balance = balance ,
+            # paymentmethod = paymentmethod ,
+            # bankaccnum = bankaccnum ,
+        )
+        
+        Teacherspayment.save
+        return redirect('teacherpaymentslists')
+        
+    return render(request,'finance/staffpayments/financeaddTeacherpayments.html' , {'teachers':teachersdata})
 
 def financeteacherpaymentsList(request):
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html')
+    teacherspayment = Teacherspayment.objects.all()
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
 # teacherpayments views
 
 # supportstaffpayments views
@@ -361,6 +356,7 @@ def financeaddsupportstaffpayments(request):
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amount_paid = float(request.POST.get('amountpaid'))
+        supportstaffrow = Supportstaff.objects.get(supportstaffid = support_staff_id)
         balance = salary - amount_paid
         # Fetch the support staff payment record
         supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
@@ -395,7 +391,6 @@ def financeaddExpenses(request):
         category = request.POST.get('category')
         expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
-        
         expense_record = ExpenseRecord(
             category=category,
             expensedate=expensedate,
@@ -404,7 +399,7 @@ def financeaddExpenses(request):
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
         return redirect('Add Expenses')  # Redirect to expenses list page
-    
+
     return render(request, 'finance/expenses/financeaddExpenses.html')
 
 def financeexpensesList(request):
@@ -432,22 +427,21 @@ def delete_expense(request):
 def edit_expense(request, expenseid):
     try:
         expense = ExpenseRecord.objects.get(expenseid=expenseid)
-        
+
         if request.method == 'POST':
             updated_category = request.POST.get('category')
             updated_expensedate = request.POST.get('expensedate')
             updated_amountpaid = request.POST.get('amountpaid')
-            
             expense.category = updated_category
             expense.expensedate = updated_expensedate
             expense.amountpaid = updated_amountpaid
             expense.save()
             messages.success(request, 'Expense updated successfully.')
             return redirect('Add Expenses')
-        
+
         context = {'expense': expense}
         return render(request, 'finance/expenses/edit_expense.html', context)
-    
+
     except ExpenseRecord.DoesNotExist:
         messages.error(request, 'Expense not found.')
         return redirect('Expenses List')
@@ -459,10 +453,6 @@ def financeReports(request):
 def financeStatistics(request):
     return render(request, 'finance/financeStatistics.html')
 
-
-from django.core import serializers
-from django.http import JsonResponse
-
 def get_stdclass(request, stdnumber):
     try:
         student = Student.objects.get(stdnumber=stdnumber)
@@ -470,7 +460,7 @@ def get_stdclass(request, stdnumber):
 
         fees_structure = Feesstructure.objects.get(classname = classname)
         amount = fees_structure.amount
-        
+
         class_data = {
             'classname': classname,
             'amount': amount
@@ -479,17 +469,37 @@ def get_stdclass(request, stdnumber):
     except Student.DoesNotExist:
         return JsonResponse({}, status=404)
 
-
-
 def get_staff_salary(request,id):
     support_staff = Supportstaff.objects.get(pk=id)
-
     salary = support_staff.salary
-
     staff_data={
         'salary':salary,
     }
     return JsonResponse(staff_data)
+
+def get_teacher_salary(request , id):
+    teacher = Teachers.objects.get(teacherid = id)
+    salary = teacher.salary
+    teachersalary = {
+        'salary' : salary,
+    }
+    return JsonResponse(teachersalary)
+
+def get_teacher_balance(request , id , amountpaid):
+    teacher = Teachers.objects.get(teacherid = id)
+    balance = int(teacher.salary) - int(amountpaid)
+    return JsonResponse({'balance' : balance})
+
+
+
+
+
+
+
+
+
+
+
 
 
 

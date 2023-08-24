@@ -43,6 +43,7 @@ class ExpenseRecord(models.Model):
     Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid']
 
 
+
 # Create your models here.
         
 class Staffpayments(models.Model):
@@ -53,7 +54,7 @@ class Staffpayments(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid' , blank=True)
     balance = models.IntegerField(verbose_name='Balance' , blank=True)
     position = models.CharField(max_length=15 , verbose_name='Position' , blank=True)
-    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True)
+    bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True , default=None)
 
     displaystaffpayments = [
         'staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum'
@@ -92,8 +93,8 @@ class Teacherspayment(models.Model):
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     balance = models.IntegerField(verbose_name='Balance')
-    paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
+    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
         'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
@@ -102,7 +103,8 @@ class Teacherspayment(models.Model):
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    supportstaffid = models.CharField(max_length = 23, verbose_name='Supportstaff id')
+    #supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
+    supportstaffid = models.CharField(max_length=10 , verbose_name='Support Staff id')
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')

@@ -25,9 +25,6 @@
         {% endfor %}
         </ul>
         {% endif %}
-
-        <table class="table" id="table">
-        <table class="table" id="table" border="1">
             <thead>
                 <tr>
                     <th>Teacher ID</th>
@@ -36,29 +33,118 @@
                     <th>Salary</th>
                     <th>Amount Paid</th>
                     <th>Balance</th>
-                    <th>Payment Method</th>
-                    <th>Bank Account No.</th>
+                    {% comment %} <th>Payment Method</th>
+                    <th>Bank Account No.</th> {% endcomment %}
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for teacher in teachers %}
                 <tr>
-                    <th>SP001</th>
-                    <th>MARTHA NASSIMBA</th>
-                    <th>27-08-22</th>
-                    <th>500,000</th>
-                    <th>400,000</th>
-                    <th>100,000</th>
-                    <th>Bank</th>
-                    <th>AC43000000</th>
+                    <td>{{ teacher.teacherid }}</td>
+                    <td>{{ teacher.teachername }}</td>
+                    <td>{{ teacher.paymentdate }}</td>
+                    <td>{{ teacher.salary }}</td>
+                    <td>{{ teacher.amountpaid }}</td>
+                    <td>{{ teacher.balance }}</td>
+                    {% comment %} <td>{{ teacher.paymentmethod }}</td>
+                    <td>{{ teacher.bankaccnum }}</td> {% endcomment %}
 
                    <td>
                     <div>
-                        <a href="editteacherpayment/{{ teacher.id }}" class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
-                        <a href="deleteteacherpayment/{{ teacher.id }}" class="text-danger"><i class="fa fa-trash    "> </i></a>
-                    </div> </td>
+                        <a href="#edit{{ teacher.paymentid }}" data-toggle='modal'  class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="#delete{{ teacher.paymentid }}" data-toggle='modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
+                    </div> 
+
+                    <div class="modal fade" id="delete{{ teacher.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Teacher Payment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action='/deleteteacherpayment/' method='POST'>
+                                        {% csrf_token %}
+
+                                        <div class="form-group col-md-6">
+                                            <input type="hidden" name="paymentid" value="{{ teacher.paymentid }}" class="form-control" required>
+                                        </div>
+
+                                        <p>
+                                            Are you sure you want to delete ?
+                                        </p>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+                                            <button type="submit" class="btn btn-danger">Yes</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="edit{{ teacher.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Teacher Payment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action='/editteacherpayments/'>
+                                        {% csrf_token %}
+                                
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <input type="hidden" name="paymentid" value="{{ teacher.paymentid }}" class="form-control" required>
+                                                <input type="hidden" name="teacherid" value="{{ teacher.teacherid }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="amount">Teacher Name:</label>
+                                                <input type="text" name="teachername" value="{{ teacher.teachername }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="amount">Salary:</label>
+                                                <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="amount">Amount Paid:</label>
+                                                <input type="number" name="amountpaid" value="{{ teacher.amountpaid }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                </td>
                 </tr>
-  
+                {% endfor %}
             </tbody>
         </table>
     </div>

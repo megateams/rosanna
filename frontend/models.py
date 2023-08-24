@@ -182,16 +182,16 @@ class Mark(models.Model):
 
 #login model
 class Login(models.Model):
-    username =models.CharField(max_length=25, blank=True, verbose_name="Username")
-    email =models.EmailField(max_length=254, default=None, verbose_name="Email")
-    password =models.CharField(max_length=255, verbose_name='Enter the password')
+    username = models.CharField(max_length=25, blank=True, verbose_name="Username")
+    email = models.EmailField(max_length=254, default=None, verbose_name="Email")
+    password = models.CharField(max_length=255, verbose_name='Enter the password')
     
-    Display_Login_Fields =['username','email','password']
+    Display_Login_Fields = ['username','email','password']
  #user roles model
 class Role_Model(models.Model):
     # id =models.CharField(max_length=10, verbose_name='Role ID')
-    rolename =models.CharField(max_length=255, verbose_name='Role Name')
-    Display_Roles =['rolename']    
+    rolename = models.CharField(max_length=255, verbose_name='Role Name')
+    Display_Roles = ['rolename']    
 
 #Admin model   
 class Admin_Model(models.Model):
