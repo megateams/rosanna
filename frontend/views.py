@@ -116,15 +116,7 @@ def teacherList(request):
     return render(request,'frontend/staff/teacherList.html', {'teachers': teachers})
 # teachers views
 
-# users views
-@login_required
-def addUsers(request):
-    return render(request,'frontend/users/addUsers.html')
 
-@login_required
-def usersList(request):
-    return render(request,'frontend/users/usersList.html')
-# users views
 @login_required
 def get_subjects(request, class_id):
     class_obj = get_object_or_404(Schoolclasses, pk=class_id)

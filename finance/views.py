@@ -519,8 +519,8 @@ def edit_expense(request, expenseid):
 def financeReports(request):
     return render(request, 'finance/financeReports.html')
 
-def financeStatistics(request):
-    return render(request, 'finance/financeStatistics.html')
+# def financeStatistics(request):
+#     return render(request, 'finance/financeStatistics.html')
 
 def get_stdclass(request, stdnumber):
     try:

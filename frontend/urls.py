@@ -24,9 +24,6 @@ urlpatterns = [
     path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
     path('teacher_export/', views.teacher_export_to_excel, name="teacher_export"),
 
-    path('addusers/', views.addUsers, name="Add User"),
-    path('userslist/', views.usersList, name="View List"),
-
     path('markslist/', views.marksList, name=" View Marks"),
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),  
