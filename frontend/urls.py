@@ -9,7 +9,9 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path('dashboard/', views.home, name="Dashboard"),
 
-    path('students/', views.students, name="Students"),
+
+    # path('students/', views.students, name="Students"),
+
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
@@ -28,6 +30,8 @@ urlpatterns = [
     path('markslist/', views.marksList, name=" View Marks"),
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),  
+    path('view_marks/<int:class_id>/', views.view_marks, name=" view_marks"),  
+    path('view_mark/<int:class_id>/', views.view_marks_by_type, name=" view_marks_by_type"),  
     path('get_subjects/<int:class_id>/', views.get_subjects, name='get_subjects'),  
 
     path('showstudent/<stdnumber>', views.showStudent, name="Student details"),
@@ -44,7 +48,6 @@ urlpatterns = [
     path('delete_teacher/', views.delete_teacher, name="delete_teacher"),
 
 
-    path('staff/', views.staff, name="Staff"),
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
     path('addsubject/' , views.addsubject , name = 'addsubject'),
     path('assign_subjecthead/' , views.assign_subjecthead , name = 'assign_subjecthead'),

@@ -261,7 +261,6 @@ def financeaddFees(request):
             students = Student.objects.all()
             fees_structures = Feesstructure.objects.all()
             return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
-        
 
         if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database

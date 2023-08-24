@@ -90,50 +90,49 @@ def home(request):
     return render(request,'frontend/dashboard.html',context)
 
 
-# def login(request):
-    #retrieve the login crudentials from the database
-    # login_details =Login.objects.all()
-    # return render(request, 'frontend/login.html')
-
-def students(request):
-    return render(request, 'frontend/students.html')
 
 # students views
+@login_required
 def studentsList(request):
     #retrieve all the selected students data from the database
-    # selected_students =Student.objects.values('stdnumber', 'childname','stdclass', 'gender', 'dob', 'address', 'house', 'regdate', 'fathername', 'mothername')
     selected_students =Student.objects.all()
     #pass the data to template for rendering
     return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
 
+@login_required
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html',{'classes': Schoolclasses.objects.all()})
 
-
 # teachers views
+@login_required
 def teacherAdd(request):
     classes = Schoolclasses.objects.all()
     subjects = Subjects.objects.all()
     return render(request,'frontend/staff/teacherAdd.html', {'classes': classes, 'subjects':subjects})
 
+@login_required
 def teacherList(request):
     teachers = Teachers.objects.all()
     return render(request,'frontend/staff/teacherList.html', {'teachers': teachers})
 # teachers views
 
 # users views
+@login_required
 def addUsers(request):
     return render(request,'frontend/users/addUsers.html')
 
+@login_required
 def usersList(request):
     return render(request,'frontend/users/usersList.html')
 # users views
-
+@login_required
 def get_subjects(request, class_id):
     class_obj = get_object_or_404(Schoolclasses, pk=class_id)
     subjects = class_obj.subjects.all().values('subjectid', 'subjectname')
     return JsonResponse(list(subjects), safe=False)
 
+
+@login_required
 def subjectList(request):
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
@@ -141,6 +140,9 @@ def subjectList(request):
     return render(request,'frontend/subjects/subjectList.html',{'subjects':subjects, 'teachers':teachers})
 # classes views
 
+@login_required
+def showStudent(request):
+    return render(request, 'frontend/student/showStudent.html')
 
 def addMarks(request):
     # frontend/views.py
@@ -168,10 +170,114 @@ def addMarks(request):
         # messages.success(request, 'Data not added!')
         return render(request,'frontend/marks/addMarks.html',{'classes': Schoolclasses.objects.all() ,'students': selected_students})
 
+
+@login_required
 def marksList(request):
-    return render(request,'frontend/marks/marksList.html', {'marks': Mark.objects.all()})
+    classes = Schoolclasses.objects.all()
+    return render(request,'frontend/marks/marksList.html', {'marks': Mark.objects.all(), 'classes':classes})
 # marks views
 
+
+@login_required
+def view_marks(request, class_id):
+    # Retrieve the class and teacher objects based on the provided IDs
+    schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
+
+    # Get the students for this class taught by the teacher
+    students = Student.objects.filter(stdclass=schoolclass)
+
+    # Get all subjects
+    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+    subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
+
+    mark_types = Mark.MARK_TYPES
+    # Create a dictionary to hold the total and average marks for each subject for each student
+    subjects_marks_data = {}
+    subjects_total_marks = {subject: 0 for subject in subjects}
+    subjects_marks_count = {subject: 0 for subject in subjects}
+
+    for student in students:
+        student_subjects_data = []
+        total_average_marks = 0  # Initialize total_average_marks for each student
+        for subject in subjects:
+            total_marks = 0
+            marks_count = 0
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            for mark in marks:
+                total_marks += mark.marks_obtained
+                marks_count += 1
+                subjects_total_marks[subject] += mark.marks_obtained
+                subjects_marks_count[subject] += 1
+
+            average_marks = total_marks / marks_count if marks_count > 0 else 0
+            total_average_marks += average_marks
+            final_average = total_average_marks / subjects_count if marks_count > 0 else 0
+              # Accumulate average marks for the student
+            student_subjects_data.append({
+                'subject': subject,
+                'total_marks': total_marks,
+                'average_marks': average_marks,
+            })
+
+        subjects_marks_data[student] = student_subjects_data
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+        student.final_average = final_average
+        # Calculate average marks for each subject across all students
+        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
+                                for subject, total_marks in subjects_total_marks.items()}
+        # Sort the students based on their final average marks in descending order
+        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
+
+    # Assign ranks to students based on their position in the sorted list
+    for rank, student in enumerate(students, start=1):
+        student.rank = rank
+
+    return render(request,"frontend/marks/view_marks.html",{
+        'schoolclass': schoolclass,
+        'students': students,
+        'subjects': subjects,
+        'mark_types': mark_types,
+        'subjects_marks_data': subjects_marks_data,
+    })
+
+@login_required
+def view_marks_by_type(request, class_id):
+    schoolclass = Schoolclasses.objects.get(classid=class_id)
+    mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
+    
+    students = Student.objects.filter(stdclass=schoolclass)
+    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
+    mark_types = Mark.MARK_TYPES
+    student_marks = {}
+    for student in students:
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, mark_type=mark_type)
+        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+
+    # Calculate total marks and average marks for each student
+    for student, marks_dict in student_marks.items():
+        total_marks = 0
+        total_subjects = 0
+        for marks in marks_dict.values():
+            if marks:
+                total_marks += marks.marks_obtained
+                total_subjects += 1
+        if total_subjects > 0:
+            student.total_marks = total_marks
+            student.average_marks = total_marks / total_subjects
+        else:
+            student.total_marks = 0
+            student.average_marks = 0
+    return render(request, 'frontend/marks/view_marks_by_type.html', {
+        'schoolclass': schoolclass,
+        'students': students,
+        'subjects': subjects,
+        'student_marks': student_marks,
+        'mark_types' :mark_types,
+        'mark_type' :mark_type,
+    })
+
+
+@login_required
 def showStudent(request,stdnumber):
     student = Student.objects.get(stdnumber = stdnumber)
     classes = Schoolclasses.objects.all()
@@ -180,6 +286,7 @@ def showStudent(request,stdnumber):
 
 
 # edit student
+@login_required
 def edit_student(request):
     if request.method == "POST":
         stdnumber = request.POST.get("stdnumber")
@@ -231,6 +338,7 @@ def delete_student(request):
         return redirect("Students List")
 
 # support staff views
+@login_required
 def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
@@ -270,6 +378,7 @@ def supportstaffreg(request):
         # Redirect to the registration page for support staff after successful data addition
         return redirect('AddSupportstaff')
 
+@login_required
 def addsubjectsform(request):
     return render(request, 'frontend/subjects/addSubject.html')
 
@@ -338,27 +447,26 @@ def delete_subject(request):
         messages.success(request,"Subject deleted successfully")
         return redirect("subjectList")
 
+@login_required
 def supportstaffList(request):
     # Retrieve all support staff data from the database
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
-    
+
+@login_required   
 def showteacher(request,teacherId):
     teachers = Teachers.objects.filter(teacherid=teacherId)
     classes = Schoolclasses.objects.all()
     subjects = Subjects.objects.all()
     return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers, 'classes':classes, 'subjects':subjects})
 
+
+@login_required
 def showsupportstaff(request,supportstaffid):
     supportstaffs = Supportstaff.objects.filter(supportstaffid=supportstaffid)
     return render(request, 'frontend/staff/showsupportstaff.html',{'supportstaffs': supportstaffs})
 # support staff views
-
-def staff(request):
-    return render(request, 'frontend/staff.html')
-
-
 
 #students registration views
 def studentReg(request):
@@ -442,13 +550,14 @@ def subjects(request):
         Subjects.save
     return HttpResponse(subjectnames)
 
+@login_required
 def showclasses(request):
     classes = Schoolclasses.objects.all()
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
     return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
 
-
+@login_required
 def addclasses(request):
     subjects = Subjects.objects.all()
     teachers = Teachers.objects.all()
@@ -750,16 +859,20 @@ def delete_supportstaff(request):
 
         return redirect("SupportstaffList")
    
+
 def supportstaffList(request):
     # Retrieve all support staff data from the database
     all_support_staff = Supportstaff.objects.all()
     # Pass the data to the template for rendering
     return render(request, 'frontend/staff/supportstaffList.html', {'support_staff': all_support_staff})
+
 # Accounting
+@login_required
 def feesstructure(request):
     feesstructure = Feesstructure.objects.all()
     return render(request, 'frontend/accounting/feesstructure.html',{"feesstructure": feesstructure})
 
+@login_required
 def fees(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
@@ -768,13 +881,16 @@ def fees(request):
         'total_amount': total_amount,
     }
     return render(request, 'frontend/accounting/fees.html',context)
-    
+
+@login_required
 def teacherspayments(request):
     return render(request, 'frontend/accounting/teacherspayments.html')
 
+@login_required
 def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
 
+@login_required
 def expenses(request):
     total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
@@ -784,6 +900,7 @@ def expenses(request):
         }
     return render(request, 'frontend/accounting/expenses.html',context)
 
+@login_required
 def financeteacherpaymentsList(request):
     total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teachers = Teacherspayment.objects.all()
@@ -793,6 +910,7 @@ def financeteacherpaymentsList(request):
     }
     return render(request,'frontend/accounting/teacherspayments.html' ,content)
 
+@login_required
 def supportstaffpaymentsList(request):
     total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     supportstaffinfo = Supportstaffpayment.objects.all()

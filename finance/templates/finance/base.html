@@ -230,7 +230,7 @@
                 const id = $(this).val();
                 // alert(id);
                 // const stdclass_fees = $('#class_fees');
-                console.log('Selected Student Number:', id);
+                // console.log('Selected Student Number:', id);
 
                 // Fetch subjects for the selected class using AJAX
                 $.ajax({
@@ -238,7 +238,7 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        console.log('Received Data:', data);
+                        // console.log('Received Data:', data);
                         $('#salary').val(data.salary);
                     },
                     error: function(error) {
