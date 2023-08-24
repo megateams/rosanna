@@ -88,13 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         }
       }
-
-
-      
     });
-
-    
-
   });
 // line graph
 

@@ -7,6 +7,7 @@ from django.db.models import Sum
 from frontend.models import *
 from django.core import serializers
 from django.http import JsonResponse
+from django.db.models.functions import ExtractMonth
 
 def editteacherpayments(request):
     if request.method == 'POST':
@@ -177,8 +178,48 @@ def expenserecords(request):
         ExpenseRecord.save()
     return render(request , 'finance/financedashboard.html')
 
+
+
+# def financedashboard(request):
+#     # Extract distinct months for each payment kind
+#     trpayments_months = Teacherspayment.objects.dates('paymentdate', 'month', order='ASC').distinct()
+#     sspayments_months = Supportstaffpayment.objects.dates('paymentdate', 'month', order='ASC').distinct()
+#     fees_months = Fees.objects.dates('date', 'month', order='ASC').distinct()
+#     expenses_months = ExpenseRecord.objects.dates('expensedate', 'month', order='ASC').distinct()
+
+#     # Extract expense data
+#     expenses_by_month = ExpenseRecord.objects.annotate(month=ExtractMonth('expensedate')).values('month').annotate(total_amount_paid=Sum('amountpaid')).order_by('month')
+
+#     # Extract and aggregate data for each payment kind per month
+#     fees_by_month = Fees.objects.annotate(month=ExtractMonth('date')).values('month').annotate(total_amount=Sum('amount')).order_by('month')
+
+#     # Extract support staff payment data
+#     sspayments_by_month = Supportstaffpayment.objects.annotate(month=ExtractMonth('paymentdate')).values('month').annotate(total_sspayments=Sum('amountpaid')).order_by('month')
+
+#     # Extract teacher payment data
+#     trpayments_by_month = Teacherspayment.objects.annotate(month=ExtractMonth('paymentdate')).values('month').annotate(total_trpayments=Sum('amountpaid')).order_by('month')
+
+  
+
+#     months = ["February", "March", "April", "May"]
+#     payments_total = [entry['total_trpayments'] for entry in trpayments_by_month]
+#     fees_total = [entry['total_amount'] for entry in fees_by_month]
+#     expenses_total = [entry['total_amount_paid'] for entry in expenses_by_month]
+
+#     context = {
+#         'trpayments_months' : trpayments_months,
+#         'fees_months' : trpayments_months,
+#         'expenses_months' : expenses_months,
+#         'payments_total' : payments_total,
+#         'fees_total': fees_total,
+#         'expenses_total': expenses_total
+#     }
+#     return render(request, "finance/financedashboard.html", context)
+
+
 # Create your views here.
 def financedashboard(request):
+    
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
 

@@ -691,6 +691,16 @@ def edit_teacher(request):
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
 
+def delete_teacher(request):
+    if request.method == "POST":
+        teacherid = request.POST.get("teacherid")
+
+        teacher = Teachers.objects.get(pk=teacherid)
+        teacher.delete()
+        messages.success(request, "Teacher has been deleted")
+
+        return redirect("Teachers List")
+
 def edit_supportstaff(request):
     if request.method == 'POST':
         supportstaffid = request.POST.get("supportstaffid")

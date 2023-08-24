@@ -10,7 +10,6 @@ urlpatterns = [
     path('dashboard/', views.home, name="Dashboard"),
 
     path('students/', views.students, name="Students"),
-    # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
@@ -26,10 +25,7 @@ urlpatterns = [
     path('addusers/', views.addUsers, name="Add User"),
     path('userslist/', views.usersList, name="View List"),
 
-    path('markslist/', views.marksList, name=" View Marks"),    
-
-    # path('addmarks/submitmarks/', views.submitmarks, name="Submit Marks"),   
-
+    path('markslist/', views.marksList, name=" View Marks"),
     path('addmarks/', views.addMarks, name="Add Marks"),
     path('markslist/', views.marksList, name=" View Marks"),  
     path('get_subjects/<int:class_id>/', views.get_subjects, name='get_subjects'),  
@@ -42,10 +38,10 @@ urlpatterns = [
     path('add-support-staff/', views.supportstaffAdd, name="AddSupportstaff"),
     path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
-    # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
     path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
     path('delete_supportstaff/', views.delete_supportstaff, name="delete_supportstaff"),
+    path('delete_teacher/', views.delete_teacher, name="delete_teacher"),
 
 
     path('staff/', views.staff, name="Staff"),
@@ -59,12 +55,6 @@ urlpatterns = [
 
     path('subjectlist/' , views.subjectList , name = 'subjectList'),
 
-
-
-    # path('showclasses/addclasses/' , views.addclasses , name='showclassesaddclass'),
-    # path('subjectlist/delete_subject/<subjectid>' , views.deletesubject , name='deletesubject'),
-    # path('showclasses/delete_class/<classid>' , views.deleteclass , name='deleteclass'),
-
     path('addclasses/sendclasses/' , views.schoolclasses , name = 'schoolclasses'),
     path('addclasses/' , views.addclasses , name='AddClasses'),
     path('edit_class/' , views.edit_class , name='edit_class'),
@@ -73,10 +63,7 @@ urlpatterns = [
     # accounting 
     path('feesstructurelist', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
-    #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
-    #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
     path('expenseslist', views.expenses, name='Expenses '),
-    
     path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
 ]
