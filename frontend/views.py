@@ -775,8 +775,13 @@ def expenses(request):
     return render(request, 'frontend/accounting/expenses.html',context)
 
 def financeteacherpaymentsList(request):
+    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teachers = Teacherspayment.objects.all()
-    return render(request,'frontend/accounting/teacherspayments.html' , {'teachers':teachers})
+    content = {
+        'teachers':teachers,
+        'total_trpayments': total_trpayments, 
+    }
+    return render(request,'frontend/accounting/teacherspayments.html' ,content)
 
 def supportstaffpaymentsList(request):
     total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']

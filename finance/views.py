@@ -188,10 +188,14 @@ def financedashboard(request):
     sspayments = Supportstaffpayment.objects.all()
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
+    trpayments = Teacherspayment.objects.all()
+    total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
         'total_sspayments' : total_sspayments,
+        'total_trpayments' : total_trpayments,
 
     }
     return render(request, "finance/financedashboard.html", context)
@@ -359,8 +363,13 @@ def financeaddTeacherpayments(request):
     return render(request,'finance/staffpayments/financeaddTeacherpayments.html' , {'teachers':teachersdata})
 
 def financeteacherpaymentsList(request):
+    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teacherspayment = Teacherspayment.objects.all()
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
+    context = {
+       'teachers':teacherspayment,
+       'total_trpayments': total_trpayments, 
+    }
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' ,context)
 # teacherpayments views
 
 # supportstaffpayments views
