@@ -61,4 +61,9 @@ urlpatterns = [
     path('get_teacher_salary/<id>/' , views.get_teacher_salary , name = 'get_teacher_salary'),
     path('get_teacher_balance/<id>/<amountpaid>/' , views.get_teacher_balance , name = 'get_teacher_balance'),
 
+    # path('export_excel/', views.export_to_excel, name='export_excel'),
+    path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
+    path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
+    path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
+
 ]
