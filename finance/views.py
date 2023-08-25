@@ -648,7 +648,67 @@ def export_expenses_to_excel(request):
 
     return response
 
+def export_teacher_payments_to_excel(request):
+    data = Teacherspayment.objects.all().values_list(
+        'teacherid', 'teachername', 'paymentdate', 'salary', 'amountpaid', 'balance'
+    )
 
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append(['Teacher ID', 'Teacher Name', 'Payment Date', 'Salary', 'Amount Paid', 'Balance'])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 15
+
+    filename = 'teacher_payments_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+
+    return response
+
+
+
+
+def export_support_staff_payments_to_excel(request):
+    data = Supportstaffpayment.objects.all().values_list(
+        'supportstaffid', 'staffname', 'paymentdate', 'salary', 'amountpaid', 'balance'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append([
+        'Staff ID', 'Staff Name', 'Payment Date', 'Salary', 'Amount Paid', 'Balance'
+    ])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 20
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 15
+
+    filename = 'support_staff_payments.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
 
 
 

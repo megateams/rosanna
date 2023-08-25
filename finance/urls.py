@@ -65,5 +65,7 @@ urlpatterns = [
     path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
     path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
+    path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
+    path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
 
 ]
