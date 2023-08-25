@@ -67,8 +67,8 @@ urlpatterns = [
     path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
 
-    # export
-    # path('export_fees/', views.export_fees_to_excel, name='export_fees_to_excel'),
+   path('export_subjects/', views.export_subjects_to_excel, name='export_subjects'),
+   path('export_classes/', views.export_classes_to_excel, name='export_classes'),
 
 
 
