@@ -66,6 +66,12 @@ urlpatterns = [
     path('expenseslist', views.expenses, name='Expenses '),
     path('supportstaffpaymentslist/', views.supportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('teacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
+
+    # export
+    # path('export_fees/', views.export_fees_to_excel, name='export_fees_to_excel'),
+
+
+
 ]
 
 
