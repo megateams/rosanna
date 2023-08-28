@@ -118,7 +118,15 @@ def teacherList(request):
     return render(request,'frontend/staff/teacherList.html', {'teachers': teachers})
 # teachers views
 
+# users views
+@login_required
+def addUsers(request):
+    return render(request,'frontend/users/addUsers.html')
 
+@login_required
+def usersList(request):
+    return render(request,'frontend/users/usersList.html')
+# users views
 @login_required
 def get_subjects(request, class_id):
     class_obj = get_object_or_404(Schoolclasses, pk=class_id)
@@ -798,66 +806,7 @@ def edit_teacher(request):
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
 
-def delete_teacher(request):
-    if request.method == "POST":
-        teacherid = request.POST.get("teacherid")
-
-        teacher = Teachers.objects.get(pk=teacherid)
-        teacher.delete()
-        messages.success(request, "Teacher has been deleted")
-
-        return redirect("Teachers List")
-
-def edit_supportstaff(request):
-    if request.method == 'POST':
-        supportstaffid = request.POST.get("supportstaffid")
-        supportstaffnames = request.POST.get('supportstaffnames')
-        gender = request.POST.get('gender')
-        contact = request.POST.get('contact')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        position = request.POST.get('position')
-        qualification = request.POST.get('qualification')
-        salary = request.POST.get('salary')
-        bankaccnum = request.POST.get('bankaccnum')
-        dob = request.POST.get('dob')
-        joiningdate = request.POST.get('joiningdate')
-
-
-        that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
-
-        # Update support staff attributes
-        that_support_staff.supportstaffnames = supportstaffnames
-        that_support_staff.gender = gender
-        that_support_staff.contact = contact
-        that_support_staff.email = email
-        that_support_staff.address = address
-        that_support_staff.position = position
-        that_support_staff.qualification = qualification
-        that_support_staff.salary = salary
-        that_support_staff.bankaccnum = bankaccnum
-        that_support_staff.dob = dob
-        that_support_staff.joiningdate = joiningdate
-
-        # Save the updated support staff
-        that_support_staff.save()
-
-        messages.success(request, "Support Staff edited successfully")
-        return redirect("show supportstaff", supportstaffid=supportstaffid)
-    # else:
-    #     return render(request, 'your_template_name.html')  # Render a form for editing if the request method is GET
-
-def delete_supportstaff(request):
-    if request.method == "POST":
-        supportstaffid = request.POST.get("supportstaffid")
-
-        supportstaff = Supportstaff.objects.get(pk=supportstaffid)
-        supportstaff.delete()
-        messages.success(request, "Supportstaff has been deleted")
-
-        return redirect("SupportstaffList")
-   
-
+@login_required
 def supportstaffList(request):
     # Retrieve all support staff data from the database
     all_support_staff = Supportstaff.objects.all()
@@ -900,21 +849,11 @@ def expenses(request):
 
 @login_required
 def financeteacherpaymentsList(request):
-    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teachers = Teacherspayment.objects.all()
-    content = {
-        'teachers':teachers,
-        'total_trpayments': total_trpayments, 
-    }
-    return render(request,'frontend/accounting/teacherspayments.html' ,content)
+    return render(request,'frontend/accounting/teacherspayments.html' , {'teachers':teachers})
 
 @login_required
 def supportstaffpaymentsList(request):
-    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     supportstaffinfo = Supportstaffpayment.objects.all()
-    context = {
-     'supportstaffdata':supportstaffinfo,
-       'total_sspayments': total_sspayments,   
-    }
-    return render(request,'frontend/accounting/supportstaffpayments.html' ,context)
+    return render(request,'frontend/accounting/supportstaffpayments.html' , {'supportstaffdata':supportstaffinfo})
 

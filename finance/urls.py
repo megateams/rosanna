@@ -45,7 +45,7 @@ urlpatterns = [
     path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
     path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('financereports/', views.financeReports, name =" Reports"),
-    # path('financestatistics/', views.financeStatistics, name =" Statistics"),
+    path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
     
     path('deletesupportstaffpayment/' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
