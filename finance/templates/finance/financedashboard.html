@@ -22,7 +22,7 @@
                             <i class="fas fa-money-bill-wave icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">{{ total_amount|default:"0" }}</h4>
+                            <h5 class="text-center">{{ total_amount|default:"0" }}</h5>
                             <p class="text-center"> Fees</p> 
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                             <i class="fas fa-money-bill-alt icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">8,000,000</h4>
+                            <h5 class="text-center">{{ total_trpayments|default:"0" }}</h5>
                             <p class="text-center"> Teacher Payments</p> 
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                             <i class="fas fa-money-bill-alt icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">8,000,000</h4>
+                            <h5 class="text-center">{{ total_sspayments|default:"0" }}</h5>
                             <p class="text-center">  S-Staff Payments</p> 
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                             <i class="fas fa-money-bill-wave icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">{{ total_amount_paid|default:"0" }}</h4> 
+                            <h5 class="text-center">{{ total_amount_paid|default:"0" }}</h5> 
                             <p class="text-center"> Expenses</p> 
                         </div>
                     </div>
@@ -95,4 +95,95 @@
     </div>
     
 </div> 
+
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // line graph
+    document.addEventListener("DOMContentLoaded", function() {
+  var ctx = document.getElementById("paymentChart").getContext("2d");
+
+  // Replace the static data arrays with context values
+  var paymentData = {
+    labels: {{fees_months|safe}},
+    datasets: [
+      {
+        label: "Payments",
+        data: {{ payments_total|safe }}, // Replace with the context variable
+        fill: false,
+        borderColor: "#007",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      {
+        label: "Fees",
+        data: {{ fees_total|safe }}, // Replace with the context variable
+        fill: false,
+        borderColor: "#0f0",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      {
+        label: "Expenses",
+        data: {{ expenses_total|safe }}, // Replace with the context variable
+        fill: false,
+        borderColor: "#f00",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+    ],
+  };
+
+  var paymentChart = new Chart(ctx, {
+    type: "line",
+    data: paymentData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "black",
+          },
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: "#999",
+          },
+          ticks: {
+            stepSize: 500,
+            color: "black",
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: {
+            color: "black",
+          },
+        },
+        title: {
+          display: true,
+          color: "black",
+          text: "Payment Overview",
+        },
+      },
+    },
+  });
+});
+
+// line graph
+
+</script>
 {% endblock main %} 

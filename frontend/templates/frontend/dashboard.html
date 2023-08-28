@@ -185,6 +185,102 @@
 
 </script>
 
+<script>
+    //  line graph
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById("paymentChart").getContext("2d");
+
+    // Extract total amounts from Django template context
+    var totalFees = parseFloat("{{ total_amount|default:'0' }}");
+    var totalTeacherPayments = parseFloat("{{ total_trpayments|default:'0' }}");
+    var totalSupportStaffPayments = parseFloat("{{ total_sspayments|default:'0' }}");
+    var totalExpenses = parseFloat("{{ total_amount_paid|default:'0' }}");
+
+    var paymentData = {
+      labels: ["February", "March", "April", "May"],
+      datasets: [{
+        label: "Payments",
+        data: [totalTeacherPayments + totalSupportStaffPayments], // Replace with your actual payment data
+        fill: false,
+        borderColor: "#007",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6
+      },
+      {
+        label: "Fees",
+        data: [totalFees], // Replace with your actual payment data
+        fill: false,
+        borderColor: "#0f0",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6
+      },
+      {
+        label: "Expenses",
+        data: [totalExpenses], // Replace with your actual payment data
+        fill: false,
+        borderColor: "#f00",
+        borderWidth: 1,
+        pointBackgroundColor: "#fff",
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    };
+    var paymentChart = new Chart(ctx, {
+      type: "line",
+      data: paymentData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color:"black",
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: "#999"
+            },
+            ticks: {
+              stepSize: 500,
+              color: "black",
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: "top",
+            labels: {
+              color: "black"
+            }
+          },
+          title: {
+            display: true,
+            color: 'black',
+            text: "Payment Overview"
+          }
+        }
+      }
+
+
+      
+    });
+
+    
+
+  });
+// line graph
+
+</script>
+
 
 
 {% endblock main %}
