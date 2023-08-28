@@ -11,7 +11,7 @@
 
     <!-- form-section -->
 
-    <form action="submit/" method="POST" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="submit/" method="POST" class="form ml-3 p-3 shadow rounded bg-light" enctype="multipart/form-data">
         {% csrf_token %}
 
  
@@ -88,6 +88,10 @@
                 <div class="form-group col-md-4">
                     <label for="">Registration Date </label>
                     <input type="date" name="regdate" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="">Profile Image</label>
+                    <input type="file" name="profile_image" class="form-control-file">
                 </div>
 
             </div>

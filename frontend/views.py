@@ -10,7 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from datetime import datetime
+from datetime import datetime,date
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
@@ -88,6 +88,7 @@ def home(request):
         'boys_count_by_class': boys_count_by_class,
         'girls_count_by_class': girls_count_by_class,
         'class_names': class_names,
+        'term_data' : Term.objects.filter(status=1)
     }
     return render(request,'frontend/dashboard.html',context)
 
@@ -473,6 +474,8 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
+        # capturing the profile image from the form
+        profile_image = request.FILES.get('profile_image')
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -516,7 +519,13 @@ def studentReg(request):
             livingwith = livingwith ,
             guardianname = guardianname ,
             gcontact = gcontact
-        )        
+        )
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            student.profile_image = image_filename
+
         student.save ()
         messages.success(request, 'Data successfully added!')
         return redirect("AddStudents")
@@ -913,3 +922,74 @@ def export_classes_to_excel(request):
     wb.save(response)
 
     return response
+
+# settings views
+@login_required
+def settings(request):
+    if request.method == "POST":
+        current_term = request.POST.get("term")
+        current_year = request.POST.get("year")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        # Check if the end_date of the previous term has been reached
+        previous_term = Term.objects.filter(status=1).first()
+        if previous_term and date.today() < previous_term.end_date:
+            messages.error(request, "Cannot add a new term before the current term ends.")
+            return redirect("settings")
+
+        # First, set the status of any existing terms to expired
+        Term.objects.update(status=0)
+        
+        # Create a new Term object and set its status to current
+        new_term = Term.objects.create(
+            current_term=current_term,
+            current_year=current_year,
+            start_date=start_date,
+            end_date=end_date,
+            status=1  # Set as current term
+        )
+        messages.success(request, "New term settings have been added successfully")
+
+        return redirect("settings")
+    
+    context = {
+        'term_data' : Term.objects.filter(status=1)
+    }
+    return render(request, "frontend/settings.html", context)
+
+# edit term
+def edit_term(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        term = request.POST.get("term")
+        # year = request.POST.get("year")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        this_term = Term.objects.get(id=id)
+
+        this_term.current_term = term
+        # this_term.current_year = year
+        this_term.start_date = start_date
+        this_term.end_date = end_date
+
+        this_term.save()
+        messages.success(request, "Academic term edit successfully")
+        return redirect("settings")
+
+# delete term
+def delete_term(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        this_term = Term.objects.get(id=id)
+
+        this_term.delete()
+        messages.success(request, "Academic term deleted successfully")
+        return redirect("settings")
+
+
+
+@login_required
+def school_info(request):
+    return render(request, "frontend/school_info.html")

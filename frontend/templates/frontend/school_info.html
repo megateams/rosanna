@@ -1,0 +1,28 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} School Information {% endblock title %}
+{% block  pagetitle %} School information {% endblock pagetitle %}
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
+            </li>
+            <li class="nav-item">
+                <!-- <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="#"><b>School information</b></a> -->
+            </li>
+            
+        </ul>
+    </nav>
+
+
+    <!--  -->
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

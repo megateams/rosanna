@@ -66,16 +66,13 @@
                                 <div class="modal-body">
                                     <form action='/deletesupportstaffpayment/' method='POST'>
                                         {% csrf_token %}
-
                                         <div class="form-group col-md-6">
                                             <input type="hidden" name="paymentid" value="{{ supportstaff.paymentid }}" class="form-control" required>
                                             <input type="hidden" name="supportstaffid" value="{{ supportstaff.supportstaffid }}" class="form-control" required>
                                         </div>
-
                                         <p>
                                             Are you sure you want to delete ?
                                         </p>
-
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
                                             <button type="submit" class="btn btn-danger">Yes</button>

@@ -81,6 +81,14 @@ urlpatterns = [
    path('export_classes/', views.export_classes_to_excel, name='export_classes'),
 
 
+    # settings urls
+   path('settings/enrollment/', views.settings, name='settings'),
+   path('settings/school_info/', views.school_info, name='School Information'),
+   path('edit_term/', views.edit_term, name='edit_term'),
+   path('delete_term/', views.delete_term, name='delete_term'),
+
+
+
 
 ]
 
