@@ -28,6 +28,18 @@ CLASS_CHOICES =[
     ('P.7' , 'P.7')
 ]
 
+class SchoolInfo(models.Model):
+    schoolname = models.CharField(max_length= 150, verbose_name="School name")
+    badge = models.ImageField(upload_to='school_badge/', blank=True, null=True)
+    contact = models.CharField(max_length=15 , verbose_name="Contact")
+    box_number = models.CharField(max_length=15 , verbose_name="Box Number")
+    email = models.EmailField(default= None, verbose_name="Email")
+    website = models.CharField(max_length= 100, verbose_name="Website")
+
+    Display_School = [
+        'schoolname', 'contact', 'box_number', 'email','website'
+    ]
+
 
 class Term(models.Model):
     current_term = models.CharField(max_length= 25, verbose_name = "Current Term")

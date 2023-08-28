@@ -989,7 +989,35 @@ def delete_term(request):
         return redirect("settings")
 
 
-
+# school information
 @login_required
 def school_info(request):
-    return render(request, "frontend/school_info.html")
+    if request.method == "POST":
+        badge = request.FILES.get('badge')
+        schoolname = request.POST.get("schoolname")
+        contact = request.POST.get("contact")
+        box_number = request.POST.get("box_number")
+        email = request.POST.get("email")
+        website = request.POST.get("website")
+
+        school = SchoolInfo.objects.create(
+            schoolname = schoolname,
+            contact = contact,
+            box_number = box_number,
+            email = email,
+            website = website,
+        )
+
+        if badge:
+            fs = FileSystemStorage()
+            image_filename = fs.save(badge.name, badge)
+            school.badge = image_filename
+        school.save()
+
+        messages.success(request, 'School added successfully!')
+        return redirect("School Information")
+    
+    context={
+        'school_data': SchoolInfo.objects.all()
+    }
+    return render(request, "frontend/school_info.html", context)
