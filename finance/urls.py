@@ -20,8 +20,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('finance/', views.financedashboard, name=""),
-
+    path('finance/', views.financelogin , name='financeloginpage'),
+    path('financedashboard/', views.financedashboard, name=""), 
+    
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
     path('delete_fee/', views.delete_fee, name='delete_fee'),

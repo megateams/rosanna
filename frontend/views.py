@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import *
 from django.db.models import Sum
 from finance.models import *
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,94 @@ from django.db.models import Max
 import openpyxl
 
 #register details for the user (admin)
+def editadministrator(request):
+    if request.method == 'POST':
+        adminid = request.POST.get('adminid')
+        fullname = request.POST.get('fullname')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        salary = request.POST.get('salary')
+        gender = request.POST.get('gender')
+        qualification = request.POST.get('qualification')
+        role = request.POST.get('role')
+        
+        admin = Administrators.objects.get(pk = adminid)
+        
+        admin.contact = contact
+        admin.email = email
+        admin.address = address
+        admin.salary = salary
+        admin.gender = gender
+        admin.qualification = qualification 
+        admin.role = role 
+        admin.fullname = fullname
+        
+        admin.save()
+        
+        messages.success(request , "Administrator Edited Successfully")
+        return redirect('adminslist')
+    
+    admins = Administrators.objects.all()
+    return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
+
+def deleteadmin(request):
+    if request.method == 'POST':
+        adminid = request.POST.get('adminid')
+        deladmin = Administrators.objects.get(id = adminid)
+        deladmin.delete()
+        messages.success(request , "Administrator Deleted Successfully")
+        return redirect("adminslist")
+    admins = Administrators.objects.all()
+    return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
+
+def adminslist(request):
+    admins = Administrators.objects.all()
+    return render(request , 'frontend/staff/administratorsList.html' , {'admins' : admins})
+
+def addadmins(request):
+    if request.method == 'POST':
+        fullname = request.POST.get('fullname')
+        gender = request.POST.get('gender')
+        address = request.POST.get('address')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        #profileimage = request.POST.get('profileimage')
+        role = request.POST.get('role')
+        qualification = request.POST.get('qualification')
+        bankaccnum = request.POST.get('bankaccnum')
+        salary = request.POST.get('salary')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        Administrators.objects.create(
+            fullname = fullname ,
+            gender = gender ,
+            address = address ,
+            contact = contact ,
+            email = email ,
+            role = role ,
+            qualification = qualification ,
+            bankaccnum =  bankaccnum ,
+            salary = salary ,
+            username = username ,
+            password = password ,
+        )
+        
+        Administrators.save
+        User.objects.create_user(
+            username = username ,
+            password = password ,
+            email = email ,
+            is_staff = True ,
+            is_superuser = True ,
+        )
+        
+        
+        messages.success(request , "Administrator Created Successfully")
+        return redirect('adminslist') 
+    return render(request , 'frontend/staff/administratorsAdd.html')
+
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
