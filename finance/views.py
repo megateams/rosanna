@@ -9,6 +9,7 @@ from django.core import serializers
 from django.http import JsonResponse
 # from django_excel_response import ExcelResponse
 from django.db.models.functions import ExtractMonth
+from django.db import transaction
 import openpyxl
 
 def editteacherpayments(request):
@@ -381,17 +382,20 @@ def financeaddTeacherpayments(request):
     if request.method == 'POST':
         teacherid = request.POST.get('teacherid')
 
-        # Check if a payment for the same teacher already exists
-        if Teacherspayment.objects.filter(teacherid=teacherid).exists():
-            messages.error(request, 'Payment for this teacher already exists.')
-            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
-
         teacher = Teachers.objects.get(teacherid=teacherid)
         teachername = teacher.teachernames
         paymentdate = request.POST.get('paymentdate')
-        salary = teacher.salary
-        amountpaid = request.POST.get('amount')
-        balance = int(salary) - int(amountpaid)
+        salary = float(teacher.salary)
+        amountpaid = float(request.POST.get('amount'))
+        
+
+        # Check if a payment for the same teacher already exists
+        if Teacherspayment.objects.filter(teacherid=teacherid).exists():
+            previous_payment = Teacherspayment.objects.filter(teacherid=teacherid).latest('paymentdate')
+            previous_balance = previous_payment.balance
+            new_balance = previous_balance - amountpaid  # Accumulate balance
+        else:
+            new_balance = salary - amountpaid
 
         Teacherspayment.objects.create(
             teacherid=teacherid,
@@ -399,16 +403,13 @@ def financeaddTeacherpayments(request):
             paymentdate=paymentdate,
             salary=salary,
             amountpaid=amountpaid,
-            balance=balance,
+            balance=new_balance,
         )
 
         messages.success(request, 'Teacher payment added successfully.')
         return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
     return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
-
-
-
 def financeteacherpaymentsList(request):
     total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teacherspayment = Teacherspayment.objects.all()

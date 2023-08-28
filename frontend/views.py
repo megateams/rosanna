@@ -334,41 +334,86 @@ def delete_student(request):
 def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
-# Send the registration staff details to and retrieve from database 
-def supportstaffreg(request):
-    # retrieve data from request
-    if request.method == 'POST':
-        supportstaffnames =request.POST.get('supportstaffnames')
-        contact =request.POST.get('contact')
-        email =request.POST.get('email')
-        address =request.POST.get('address')
-        gender =request.POST.get('gender')
-        dob =request.POST.get('dob')
-        qualification =request.POST.get('qualification')
-        position =request.POST.get('position')
-        joiningdate =request.POST.get('joiningdate')
-        salary =request.POST.get('salary')
-        bankaccnum =request.POST.get('bankaccnum')
+# # Send the registration staff details to and retrieve from database 
+# def supportstaffreg(request):
+#     # retrieve data from request
+#     if request.method == 'POST':
+#         supportstaffnames =request.POST.get('supportstaffnames')
+#         contact =request.POST.get('contact')
+#         email =request.POST.get('email')
+#         address =request.POST.get('address')
+#         gender =request.POST.get('gender')
+#         dob =request.POST.get('dob')
+#         qualification =request.POST.get('qualification')
+#         position =request.POST.get('position')
+#         joiningdate =request.POST.get('joiningdate')
+#         salary =request.POST.get('salary')
+#         bankaccnum =request.POST.get('bankaccnum')
+
+#         if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
+#             messages.error(request, 'This supportstaff has already been added to fees.')
+#             supportstaff = Supportstaff.objects.all()
+#             return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
+
+#         else:
         
-        #create support staff object and submit it in the database
-        supportStaffReg =Supportstaff.objects.create(
-            supportstaffnames =supportstaffnames,
-            contact=contact,
-            email=email,
-            address=address,
-            gender=gender,
-            dob=dob,
-            qualification=qualification,
-            position=position,  
-            joiningdate=joiningdate,
-            salary=salary,
-            bankaccnum=bankaccnum,          
-        )
-        supportStaffReg.save()
-        messages.success(request, 'Data successfully added!')
+#         #create support staff object and submit it in the database
+#         supportStaffReg =Supportstaff.objects.create(
+#             supportstaffnames =supportstaffnames,
+#             contact=contact,
+#             email=email,
+#             address=address,
+#             gender=gender,
+#             dob=dob,
+#             qualification=qualification,
+#             position=position,  
+#             joiningdate=joiningdate,
+#             salary=salary,
+#             bankaccnum=bankaccnum,          
+#         )
+#         supportStaffReg.save()
+#         messages.success(request, 'Data successfully added!')
                 
-        # Redirect to the registration page for support staff after successful data addition
+#         # Redirect to the registration page for support staff after successful data addition
+#         return redirect('AddSupportstaff')
+
+def supportstaffreg(request):
+    if request.method == 'POST':
+        supportstaffnames = request.POST.get('supportstaffnames')
+
+        if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
+            messages.error(request, 'This support staff has already been added.')
+        else:
+            contact = request.POST.get('contact')
+            email = request.POST.get('email')
+            address = request.POST.get('address')
+            gender = request.POST.get('gender')
+            dob = request.POST.get('dob')
+            qualification = request.POST.get('qualification')
+            position = request.POST.get('position')
+            joiningdate = request.POST.get('joiningdate')
+            salary = request.POST.get('salary')
+            bankaccnum = request.POST.get('bankaccnum')
+
+            supportStaffReg = Supportstaff.objects.create(
+                supportstaffnames=supportstaffnames,
+                contact=contact,
+                email=email,
+                address=address,
+                gender=gender,
+                dob=dob,
+                qualification=qualification,
+                position=position,
+                joiningdate=joiningdate,
+                salary=salary,
+                bankaccnum=bankaccnum,
+            )
+            messages.success(request, 'Data successfully added!')
+
         return redirect('AddSupportstaff')
+
+    supportstaff = Supportstaff.objects.all()
+    return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
 
 @login_required
 def addsubjectsform(request):
@@ -463,12 +508,24 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
+         # Retrieve form data
+        childname = request.POST.get('childname')
+        class_id = request.POST['stdclass']
+
+        # Check if a student with the same stdnumber and stdclass exists
+        existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
+
+        if existing_student:
+            messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
         # Generate the next stdnumber
         if max_stdnumber:
             new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
+
+                 
         else:
             new_stdnumber = 'STD001'
         regdate = request.POST.get('regdate')
