@@ -857,3 +857,59 @@ def supportstaffpaymentsList(request):
     supportstaffinfo = Supportstaffpayment.objects.all()
     return render(request,'frontend/accounting/supportstaffpayments.html' , {'supportstaffdata':supportstaffinfo})
 
+
+def export_subjects_to_excel(request):
+    data = Subjects.objects.all().values_list(
+        'subjectid', 'subjectname', 'subjecthead', 'classlevel'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append([
+        'Subject ID', 'Subject Name', 'Subject Head', 'Class Level'
+    ])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+
+    filename = 'subjects.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
+
+def export_classes_to_excel(request):
+    data = Schoolclasses.objects.all().values_list(
+        'classname', 'subjects','class_level', 'classteacher'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append([
+        'Class Name', 'Subjects', 'Class Level', 'Class Teacher'
+    ])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 30
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+
+    filename = 'classes.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
