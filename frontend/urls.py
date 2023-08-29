@@ -26,6 +26,7 @@ urlpatterns = [
     path('adminslist/' , views.adminslist , name = 'adminslist'),
     
     path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
+    path('delete_teacher/', views.delete_teacher, name="delete_teacher"),
     path('teacher_export/', views.teacher_export_to_excel, name="teacher_export"),
 
     path('addusers/', views.addUsers, name="Add User"),
@@ -50,6 +51,8 @@ urlpatterns = [
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
+    path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
+    path('delete_supportstaff/', views.delete_supportstaff, name="delete_supportstaff"),
 
 
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
