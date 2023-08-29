@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import *
 from django.db.models import Sum
 from finance.models import *
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -10,13 +11,101 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from datetime import datetime
+from datetime import datetime,date
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
 
 
 #register details for the user (admin)
+def editadministrator(request):
+    if request.method == 'POST':
+        adminid = request.POST.get('adminid')
+        fullname = request.POST.get('fullname')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        salary = request.POST.get('salary')
+        gender = request.POST.get('gender')
+        qualification = request.POST.get('qualification')
+        role = request.POST.get('role')
+        
+        admin = Administrators.objects.get(pk = adminid)
+        
+        admin.contact = contact
+        admin.email = email
+        admin.address = address
+        admin.salary = salary
+        admin.gender = gender
+        admin.qualification = qualification 
+        admin.role = role 
+        admin.fullname = fullname
+        
+        admin.save()
+        
+        messages.success(request , "Administrator Edited Successfully")
+        return redirect('adminslist')
+    
+    admins = Administrators.objects.all()
+    return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
+
+def deleteadmin(request):
+    if request.method == 'POST':
+        adminid = request.POST.get('adminid')
+        deladmin = Administrators.objects.get(id = adminid)
+        deladmin.delete()
+        messages.success(request , "Administrator Deleted Successfully")
+        return redirect("adminslist")
+    admins = Administrators.objects.all()
+    return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
+
+def adminslist(request):
+    admins = Administrators.objects.all()
+    return render(request , 'frontend/staff/administratorsList.html' , {'admins' : admins})
+
+def addadmins(request):
+    if request.method == 'POST':
+        fullname = request.POST.get('fullname')
+        gender = request.POST.get('gender')
+        address = request.POST.get('address')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        #profileimage = request.POST.get('profileimage')
+        role = request.POST.get('role')
+        qualification = request.POST.get('qualification')
+        bankaccnum = request.POST.get('bankaccnum')
+        salary = request.POST.get('salary')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        Administrators.objects.create(
+            fullname = fullname ,
+            gender = gender ,
+            address = address ,
+            contact = contact ,
+            email = email ,
+            role = role ,
+            qualification = qualification ,
+            bankaccnum =  bankaccnum ,
+            salary = salary ,
+            username = username ,
+            password = password ,
+        )
+        
+        Administrators.save
+        User.objects.create_user(
+            username = username ,
+            password = password ,
+            email = email ,
+            is_staff = True ,
+            is_superuser = True ,
+        )
+        
+        
+        messages.success(request , "Administrator Created Successfully")
+        return redirect('adminslist') 
+    return render(request , 'frontend/staff/administratorsAdd.html')
+
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -88,6 +177,7 @@ def home(request):
         'boys_count_by_class': boys_count_by_class,
         'girls_count_by_class': girls_count_by_class,
         'class_names': class_names,
+        'term_data' : Term.objects.filter(status=1)
     }
     return render(request,'frontend/dashboard.html',context)
 
@@ -344,49 +434,7 @@ def delete_student(request):
 def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
-# # Send the registration staff details to and retrieve from database 
-# def supportstaffreg(request):
-#     # retrieve data from request
-#     if request.method == 'POST':
-#         supportstaffnames =request.POST.get('supportstaffnames')
-#         contact =request.POST.get('contact')
-#         email =request.POST.get('email')
-#         address =request.POST.get('address')
-#         gender =request.POST.get('gender')
-#         dob =request.POST.get('dob')
-#         qualification =request.POST.get('qualification')
-#         position =request.POST.get('position')
-#         joiningdate =request.POST.get('joiningdate')
-#         salary =request.POST.get('salary')
-#         bankaccnum =request.POST.get('bankaccnum')
-
-#         if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
-#             messages.error(request, 'This supportstaff has already been added to fees.')
-#             supportstaff = Supportstaff.objects.all()
-#             return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
-
-#         else:
-        
-#         #create support staff object and submit it in the database
-#         supportStaffReg =Supportstaff.objects.create(
-#             supportstaffnames =supportstaffnames,
-#             contact=contact,
-#             email=email,
-#             address=address,
-#             gender=gender,
-#             dob=dob,
-#             qualification=qualification,
-#             position=position,  
-#             joiningdate=joiningdate,
-#             salary=salary,
-#             bankaccnum=bankaccnum,          
-#         )
-#         supportStaffReg.save()
-#         messages.success(request, 'Data successfully added!')
-                
-#         # Redirect to the registration page for support staff after successful data addition
-#         return redirect('AddSupportstaff')
-
+@login_required
 def supportstaffreg(request):
     if request.method == 'POST':
         supportstaffnames = request.POST.get('supportstaffnames')
@@ -518,16 +566,17 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
-         # Retrieve form data
-        childname = request.POST.get('childname')
-        class_id = request.POST['stdclass']
+        # capturing the profile image from the form
+        profile_image = request.FILES.get('profile_image')
+        #  # Retrieve form data
+        # childname = request.POST.get('childname')
+        # class_id = request.POST['stdclass']
 
-        # Check if a student with the same stdnumber and stdclass exists
-        existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
+        # # Check if a student with the same stdnumber and stdclass exists
+        # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
 
-        if existing_student:
-            messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
-
+        # if existing_student:
+        #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -538,6 +587,7 @@ def studentReg(request):
                  
         else:
             new_stdnumber = 'STD001'
+
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
@@ -573,7 +623,13 @@ def studentReg(request):
             livingwith = livingwith ,
             guardianname = guardianname ,
             gcontact = gcontact
-        )        
+        )
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            student.profile_image = image_filename
+
         student.save ()
         messages.success(request, 'Data successfully added!')
         return redirect("AddStudents")
@@ -970,3 +1026,102 @@ def export_classes_to_excel(request):
     wb.save(response)
 
     return response
+
+# settings views
+@login_required
+def settings(request):
+    if request.method == "POST":
+        current_term = request.POST.get("term")
+        current_year = request.POST.get("year")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        # Check if the end_date of the previous term has been reached
+        previous_term = Term.objects.filter(status=1).first()
+        if previous_term and date.today() < previous_term.end_date:
+            messages.error(request, "Cannot add a new term before the current term ends.")
+            return redirect("settings")
+
+        # First, set the status of any existing terms to expired
+        Term.objects.update(status=0)
+        
+        # Create a new Term object and set its status to current
+        new_term = Term.objects.create(
+            current_term=current_term,
+            current_year=current_year,
+            start_date=start_date,
+            end_date=end_date,
+            status=1  # Set as current term
+        )
+        messages.success(request, "New term settings have been added successfully")
+
+        return redirect("settings")
+    
+    context = {
+        'term_data' : Term.objects.filter(status=1)
+    }
+    return render(request, "frontend/settings.html", context)
+
+# edit term
+def edit_term(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        term = request.POST.get("term")
+        # year = request.POST.get("year")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        this_term = Term.objects.get(id=id)
+
+        this_term.current_term = term
+        # this_term.current_year = year
+        this_term.start_date = start_date
+        this_term.end_date = end_date
+
+        this_term.save()
+        messages.success(request, "Academic term edit successfully")
+        return redirect("settings")
+
+# delete term
+def delete_term(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        this_term = Term.objects.get(id=id)
+
+        this_term.delete()
+        messages.success(request, "Academic term deleted successfully")
+        return redirect("settings")
+
+
+# school information
+@login_required
+def school_info(request):
+    if request.method == "POST":
+        badge = request.FILES.get('badge')
+        schoolname = request.POST.get("schoolname")
+        contact = request.POST.get("contact")
+        box_number = request.POST.get("box_number")
+        email = request.POST.get("email")
+        website = request.POST.get("website")
+
+        school = SchoolInfo.objects.create(
+            schoolname = schoolname,
+            contact = contact,
+            box_number = box_number,
+            email = email,
+            website = website,
+        )
+
+        if badge:
+            fs = FileSystemStorage()
+            image_filename = fs.save(badge.name, badge)
+            school.badge = image_filename
+        school.save()
+
+        messages.success(request, 'School added successfully!')
+        return redirect("School Information")
+    
+    context={
+        'school_data': SchoolInfo.objects.all()
+    }
+    return render(request, "frontend/school_info.html", context)

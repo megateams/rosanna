@@ -1,0 +1,129 @@
+{% extends 'frontend/base.html' %}
+
+{% load static %}
+{% block  title %} School Information {% endblock title %}
+{% block  pagetitle %} School information {% endblock pagetitle %}
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
+            </li>
+            
+        </ul>
+    </nav>
+
+    {% if messages %}
+        <ul class="messages col-md-6 mt-3">
+            <script>
+                $(".alert").alert();
+            </script>
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong >{{ message }}</strong> 
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!-- school information details -->
+    <div class="row">
+        <div class="col-md-8">
+            <form action="" class="shadow rounded bg-light p-3 mt-4" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h5 class="text-center">Add School Information</h5>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="">School Name: </label>
+                        <input type="text" name="schoolname" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Badge: </label>
+                        <input type="file" name="badge" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="">Contacts: </label>
+                        <input type="text" name="contact" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">P.O.Box Number: </label>
+                        <input type="text" name="box_number" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="">Email: </label>
+                        <input type="email" name="email" class="form-control" >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Website link: </label>
+                        <input type="text" name="website" class="form-control" >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-sm btn-dark w-25">Save</button>
+            </form>
+        </div>
+
+        <div class="col-md-4 mt-3">
+            <div class="school-info bg-dark text-white shadow rounded p-3 mt-3">
+                <h5 class="text-center">School Information</h5>
+                <hr color="#fff">
+
+                {% for data in school_data %}
+                    {% if data.badge %}
+                    <div class="image">
+                        <center>
+                            <img class="img-thumbnail" src="{{ data.badge.url }}" style="width: 80px; height: 15vh; border-radius: 10%;">
+                        </center>
+                    </div>
+                    {% endif %}
+
+                    <div class="info mt-3 ml-3">
+                        <div class="d-flex" style="margin-bottom: -20px;">
+                            <p class="mr-3"><b>School Name: </b></p>
+                            <p>{{data.schoolname}}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex" style="margin-bottom: -20px;">
+                            <p class="mr-3"><b>Contacts: </b></p>
+                            <p>{{data.contact}}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex" style="margin-bottom: -20px;">
+                            <p class="mr-3"><b>Email: </b></p>
+                            <p>{{data.email}}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex" style="margin-bottom: -20px;">
+                            <p class="mr-3"><b>P.O.Box Number: </b></p>
+                            <p>{{data.box_number}}</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex" style="margin-bottom: -20px;">
+                            <p class="mr-3"><b>Website </b></p>
+                            <p>{{data.website}}</p>
+                        </div>
+                        <hr>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

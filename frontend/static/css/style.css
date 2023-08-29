@@ -137,6 +137,15 @@
 
 /* table */
 
+.cards{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    /* display: none; */
+}
+
+.cards .card{
+    margin: 10px;
+}
 
 .cards .card:hover{
     background-color: rgb(95, 86, 86);
@@ -326,6 +335,27 @@
         width: 0;
     }
     /* toggle actions */
+
+    .cards{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* display: none; */
+    }
+
+    .cards .card{
+        height: 13vh;
+        padding: 10px 5px;
+        margin: 10px 7px;
+    }
+
+    .cards .card .icon{
+    font-size: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 5px;
+    color: #fff;
+    
+}
 
    
 }

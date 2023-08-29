@@ -12,12 +12,12 @@
             
             <div class="row ml-2" style="margin: 30px 0;">
                 <div class="current-term mr-4">
-                    <a class=" btn-md btn-h text-white">Current Term: </a>
-                    <a  class=" btn-md btn-d text-white">Term I </a>
+                    <a class=" btn-md btn-danger text-white p-2">Current Term: </a>
+                    <a  class=" btn-md btn-secondary text-white p-2">Term I </a>
                 </div>
                 <div class="current-year"> 
-                    <a class=" btn-md btn-h text-white">Current Year: </a>
-                    <a class=" btn-md btn-d text-white">2023 </a>
+                    <a class=" btn-md btn-danger text-white p-2">Current Year: </a>
+                    <a class=" btn-md btn-secondary text-white p-2">2023 </a>
                 </div>
             </div>
             <hr>
@@ -73,9 +73,16 @@
                     <hr>
                 </div>
                 <div class="teacher-image ">
-                    <center>
-                        <img src="{% static 'images/person.jpg' %}"   alt="Person image">
-                    </center>
+                    {% if teacher.profile_image %}
+                    <div class="image">
+                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 30vh;">
+                    </div>
+                    {% else %}
+                    <div class="image">
+                        <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                    </div>
+                    {% endif %}
+                    
                 </div>
                 <div class="teacher-details">
                     <h4>{{teacher.teachernames}}</h4>

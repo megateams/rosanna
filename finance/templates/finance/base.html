@@ -32,7 +32,18 @@
     </style>
 </head>
   <body>
-    
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
 
     <div class="main">
         <!-- sidebar -->
@@ -50,7 +61,7 @@
             <ul class='sidebar-links pt-3 mr-2'>
                 
                 <li class="sidebar-item active">
-                    <a class="" href='/finance'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>    
+                    <a class="" href='/financedashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -71,10 +82,10 @@
                     <!-- sub menu -->
                     <ul class="submenu">
                         <li>
-                            <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers </span></a>
+                            <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers  </span></a>
                         </li>
                         <li>
-                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff</span></a>
+                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff </span></a>
                         </li>
                     </ul>    
                 </li>
@@ -108,7 +119,7 @@
                     {% if user.is_authenticated %}
                     <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ user.username }}</p>
                     {% endif %}
-                    <a class="ml-3 mr-2 text-danger" href="{% url 'logout' %}">
+                    <a class="ml-3 mr-2 text-danger" href="{% url 'financeloginpage' %}">
                         <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
                     </a>
                 </div>  

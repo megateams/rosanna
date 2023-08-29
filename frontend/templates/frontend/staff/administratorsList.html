@@ -1,0 +1,181 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Administrators List {% endblock title %}
+{% block  pagetitle %} Administrators List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/addadmins" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Administrators</a>
+        <a href="/admins-export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                        {% if messages %}
+                            <ul class="messages">
+                            {% for message in messages %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong>{{ message }}</strong>
+                                </div>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    <th>Administrator Id</th>
+                    <th>Fullname</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Gender</th>
+                    <th>Qualifications</th>
+                    <th>Position</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td>{{ admin.id }}</td>
+                    <td>{{ admin.fullname }}</td>
+                    <td>{{ admin.contact }}</td>
+                    <td>{{ admin.email }}</td>
+                    <td>{{ admin.address }}</td>
+                    <td>{{ admin.gender }}</td>
+                    <td>{{ admin.qualification }}</td>
+                    <td>{{ admin.role }}</td>
+
+                    <td>
+                        <a href="#edit{{ admin.id }}" data-toggle='modal' class="text-"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="#delete{{ admin.id }}" data-toggle = 'modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
+                    </td>
+
+                    <div class="modal fade" id="delete{{ admin.id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Administrator</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action='/deleteadmin/' method='POST'>
+                                        {% csrf_token %}
+
+                                        <div class="form-group col-md-6">
+                                            <input type="hidden" name="adminid" value="{{ admin.id }}" class="form-control" required>
+                                            <input type="hidden" name="adminid" value="{{ admin.id }}" class="form-control" required>
+                                        </div>
+
+                                        <p>
+                                            Are you sure you want to delete ?
+                                        </p>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+                                            <button type="submit" class="btn btn-danger">Yes</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="edit{{ admin.id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Administrator</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action='/editadministrator/'>
+                                        {% csrf_token %}
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <input type="hidden" name="adminid" value="{{ admin.id }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="">Full Name:</label>
+                                                <input type="text" name="fullname" value="{{ admin.fullname }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="">Contact:</label>
+                                                <input type="Number" name="contact" value="{{ admin.contact }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="">Email:</label>
+                                                <input type="text" name="email" value="{{ admin.email }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="">Address:</label>
+                                                <input type="text" name="address" value="{{ admin.address }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="">Salary:</label>
+                                                <input type="number" name="salary" value="{{ admin.salary }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="">Gender:</label>
+                                                <input type="text" name="gender" value="{{ admin.gender }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="">Qualification:</label>
+                                                <input type="text" name="qualification" value="{{ admin.qualification }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="">Role:</label>
+                                                <input type="text" name="role" value="{{ admin.role }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_support_staff">
+        
+    </div>
+</div>
+
+
+<!-- inner-content -->
+{% endblock main %}

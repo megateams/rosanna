@@ -1,5 +1,6 @@
 {% extends 'frontend/base.html' %}
 {% block  title %} Dashboard {% endblock title %}
+{% block  pagetitle %} Dashboard {% endblock pagetitle %}
 
 {% block  main %} 
 
@@ -8,13 +9,17 @@
     <div class="dashboard">
 
         <!-- cards -->
-      <div class="row cards">
-        <div class="col-lg-3 col-md-3">
+      <div class="cards">
+        <div class="">
             <div class="card session_card animate__animated animate__rubberBand">
                 <div class="row">
                     <div class="col-8 cbody">
-                        <h4>Term 1</h4>
-                        <p>Current Session</p>
+                        
+                            {% for data in term_data %}
+                            <h4>{{data.current_year}}</h4>
+                            <p>{{data.current_term}}</p>
+                            {% endfor %}
+                        
                     </div>
                     <div class="col-4 icon">
                         <i class="fas fa-book    "></i>
@@ -24,7 +29,7 @@
         </div>
       
 
-        <div class="col-lg-3 col-md-3">
+        <div class="">
             <a href="/studentslist" style="text-decoration: none;">
                 <div class="card stud_card">
                     <div class="row">
@@ -41,7 +46,7 @@
             </a>
         </div>
 
-        <div class=" col-lg-3 col-md-3">
+        <div class="">
             <a href="/teacherlist" style="text-decoration: none;">
                 <div class="card trcard">
                     <div class="row">
@@ -57,14 +62,14 @@
             </a>
         </div>
 
-        <div class="col-lg-3 col-md-3">
+        <div class="">
             <a href="" style="text-decoration: none;">
             <a href="/support-staff-list" style="text-decoration: none;">
                 <div class="card staff-card ">
                     <div class="row ">
                         <div class="col-8 cbody">
                             <h4>{{support_staff_count}}</h4>
-                            <p>Support Staff</p>
+                            <p>Supp Staff</p>
                         </div>
                         <div class="col-4  icon">
                             <i class="fas fa-people-carry    "></i>

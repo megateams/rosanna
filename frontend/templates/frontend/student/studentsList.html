@@ -1,7 +1,7 @@
 {% extends 'frontend/base.html' %}
 {% block  title %} Students List {% endblock title %}
 {% block  pagetitle %} Students List {% endblock pagetitle %}
-
+{% load static %}
 {% block  main %} 
 
 <!-- inner-content -->
@@ -30,6 +30,7 @@
             <thead>
                 <tr>
                     <th>Student number</th>
+                    <th>Profile Image</th>
                     <th>Child Fullname</th>
                     <th>Gender</th>
                     <th>Date of Birth</th>
@@ -45,6 +46,13 @@
                 {% for student in students %}
                 <tr>
                     <td>{{ student.stdnumber }}</td>
+                    <td>
+                        {% if student.profile_image %}
+                            <img class="img-thumbnail" src="{{ student.profile_image.url }}" width="90" style="height: 70px;">
+                        {% else %}
+                            <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                        {% endif %}
+                    </td>
                     <td>{{ student.childname }}</td>
                     <td>{{ student.gender }}</td>
                     <td>{{ student.dob }}</td>
