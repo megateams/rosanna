@@ -12,7 +12,7 @@
             {% for teacher in teachers %}
                 {% if teacher.profile_image %}
                 <div class="image">
-                    <img class="img-thumbnail" src="{{ teacher.profile_image.url }}">
+                    <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 60vh;">
                 </div>
                 {% else %}
                 <div class="image">

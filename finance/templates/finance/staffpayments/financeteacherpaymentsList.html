@@ -3,7 +3,6 @@
 {% block  pagetitle %} Teacher Payments List {% endblock pagetitle %}
 
 {% block  main %}
-
 <!-- inner-content -->
 <div class="inner-content">
     <div class="btns">
@@ -50,6 +49,7 @@
                     <td>{{ teacher.amountpaid }}</td>
                     <td>{{ teacher.balance }}</td>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     {% comment %} <th>{{ teacher.paymentmethod }}</th>
                     <th>{{ teacher.bankaccnum }}</th> {% endcomment %}
 =======
@@ -57,12 +57,13 @@
                     <td>{{ teacher.bankaccnum }}</td> {% endcomment %}
 >>>>>>> 6734fbbbe9244dd36296e8da408850a24d2be612
 
+=======
+>>>>>>> 43ae011be622b7546c54dce7c09f19b2c9f4bc4b
                    <td>
                     <div>
                         <a href="#edit{{ teacher.paymentid }}" data-toggle='modal'  class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="#delete{{ teacher.paymentid }}" data-toggle='modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
                     </div> 
-
                     <div class="modal fade" id="delete{{ teacher.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -148,8 +149,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </td>
                 </tr>
                 {% endfor %}

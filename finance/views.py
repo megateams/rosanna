@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, HttpResponse , redirect
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse,redirect
@@ -7,6 +6,10 @@ from django.db.models import Sum
 from frontend.models import *
 from django.core import serializers
 from django.http import JsonResponse
+# from django_excel_response import ExcelResponse
+from django.db.models.functions import ExtractMonth
+from django.db import transaction
+import openpyxl
 from django.contrib.auth import authenticate, login
 
 def financelogin(request):
@@ -33,34 +36,6 @@ def financelogin(request):
             return redirect('financeloginpage')
     return render(request , 'login.html')
 
-# def financelogin(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(username=username, password=password , role='Bursar')
-
-#         if user is not None:
-#             login(request, user)
-#             messages.success(request , "Login Successfull")
-#             expenses = ExpenseRecord.objects.all()
-#             total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
-
-#             fees = Fees.objects.all()
-#             total_amount = fees.aggregate(Sum('amount'))['amount__sum']
-
-#             context = {
-#                 'total_amount_paid': total_amount_paid,
-#                 'total_amount': total_amount,
-
-#             }
-#             return render(request, "finance/financedashboard.html", context)
-#         else:
-#             messages.warning(request, 'Login Failed')
-#             return redirect('financeloginpage')
-#     return render(request, 'login.html')
-# from django_excel_response import ExcelResponse
-from django.db.models.functions import ExtractMonth
-import openpyxl
 
 def editteacherpayments(request):
     if request.method == 'POST':
@@ -371,33 +346,38 @@ def editfeesstructure(request, feesstructureid):
 # teacherpayments views
 def financeaddTeacherpayments(request):
     teachersdata = Teachers.objects.all()
-    
+
     if request.method == 'POST':
         teacherid = request.POST.get('teacherid')
-        teachername = Teachers.objects.get(teacherid = teacherid).teachernames
-        paymentdate = request.POST.get('paymentdate')
-        salary = request.POST.get('salary')
-        amountpaid = request.POST.get('amount')
-        balance = request.POST.get('balance')
-        # paymentmethod = request.POST.get('paymentmethod')
-        # bankaccnum = request.POST.get('bankaccnum')
-        
-        Teacherspayment.objects.create(
-            teacherid = teacherid ,
-            teachername = teachername ,
-            paymentdate = paymentdate ,
-            salary = salary ,
-            amountpaid = amountpaid ,
-            balance = balance ,
-            # paymentmethod = paymentmethod ,
-            # bankaccnum = bankaccnum ,
-        )
-        
-        Teacherspayment.save
-        return redirect('teacherpaymentslists')
-        
-    return render(request,'finance/staffpayments/financeaddTeacherpayments.html' , {'teachers':teachersdata})
 
+        teacher = Teachers.objects.get(teacherid=teacherid)
+        teachername = teacher.teachernames
+        paymentdate = request.POST.get('paymentdate')
+        salary = float(teacher.salary)
+        amountpaid = float(request.POST.get('amount'))
+        
+
+        # Check if a payment for the same teacher already exists
+        if Teacherspayment.objects.filter(teacherid=teacherid).exists():
+            previous_payment = Teacherspayment.objects.filter(teacherid=teacherid).latest('paymentdate')
+            previous_balance = previous_payment.balance
+            new_balance = previous_balance - amountpaid  # Accumulate balance
+        else:
+            new_balance = salary - amountpaid
+
+        Teacherspayment.objects.create(
+            teacherid=teacherid,
+            teachername=teachername,
+            paymentdate=paymentdate,
+            salary=salary,
+            amountpaid=amountpaid,
+            balance=new_balance,
+        )
+
+        messages.success(request, 'Teacher payment added successfully.')
+        return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
+    return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 def financeteacherpaymentsList(request):
     teacherspayment = Teacherspayment.objects.all()
     return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
@@ -410,22 +390,26 @@ def financeaddsupportstaffpayments(request):
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amount_paid = float(request.POST.get('amountpaid'))
-        supportstaffrow = Supportstaff.objects.get(supportstaffid = support_staff_id)
-        balance = salary - amount_paid
-        # Fetch the support staff payment record
+
+        # Check if a payment for the same support staff already exists
+        if Supportstaffpayment.objects.filter(supportstaffid=support_staff_id).exists():
+            messages.error(request, 'Payment for this support staff already exists.')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'support_staff': Supportstaff.objects.all()})
+
         supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
+        balance = salary - amount_paid
 
-        # Update the payment record with the new amount paid and calculate the 
+        # Create a new support staff payment record
         payment = Supportstaffpayment.objects.create(
-            supportstaffid = support_staff_id,
-            amountpaid = amount_paid,
-            salary = salary,
-            paymentdate = paymentdate,
-            balance = balance,
-            staffname = supportstaffrow.supportstaffnames
+            supportstaffid=support_staff_id,
+            amountpaid=amount_paid,
+            salary=salary,
+            paymentdate=paymentdate,
+            balance=balance,
+            staffname=supportstaffrow.supportstaffnames
         )
-        payment.save()
 
+        messages.success(request, 'Support staff payment added successfully.')
         return redirect('SupportstaffpaymentsLists')  # Redirect to the list page
 
     context = {

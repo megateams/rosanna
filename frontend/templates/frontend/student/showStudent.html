@@ -12,9 +12,15 @@
     <div class="row">
         <div class="col-md-5">
             <!-- image -->
-            <div class="image">
-               <img class="img-thumbnail" src="{% static 'images/student.jpg' %}" alt=""> 
-            </div>
+            {% if student.profile_image %}
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ student.profile_image.url }}" style="height: 60vh;">
+                </div>
+                {% else %}
+                <div class="image">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                </div>
+                {% endif %}
             <!-- image -->
         </div>
         <div class="col-md-7">

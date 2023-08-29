@@ -27,8 +27,35 @@ CLASS_CHOICES =[
     ('P.6' , 'P.6'),
     ('P.7' , 'P.7')
 ]
+
+class SchoolInfo(models.Model):
+    schoolname = models.CharField(max_length= 150, verbose_name="School name")
+    badge = models.ImageField(upload_to='school_badge/', blank=True, null=True)
+    contact = models.CharField(max_length=15 , verbose_name="Contact")
+    box_number = models.CharField(max_length=15 , verbose_name="Box Number")
+    email = models.EmailField(default= None, verbose_name="Email")
+    website = models.CharField(max_length= 100, verbose_name="Website")
+
+    Display_School = [
+        'schoolname', 'contact', 'box_number', 'email','website'
+    ]
+
+
+class Term(models.Model):
+    current_term = models.CharField(max_length= 25, verbose_name = "Current Term")
+    current_year = models.CharField(max_length= 25, verbose_name = "Current Year")
+    start_date = models.DateField(default=None, verbose_name = "Start Date")
+    end_date = models.DateField(default=None, verbose_name = "End Date")
+    status = models.IntegerField(default=None)
+
+
+    Display_Term = [
+        'current_term', 'current_year','start_date', 'end_date'
+    ]
+
+
 class Subjects(models.Model):
-    subjectname = models.CharField(max_length = 25 , verbose_name = 'Subject Name')
+    subjectname = models.CharField(max_length = 25   , verbose_name = 'Subject Name')
     subjectid = models.CharField(primary_key=True , max_length = 25 , verbose_name = 'Subject id')
     classlevel = models.CharField(max_length = 25 , verbose_name = 'Class Level')
     subjecthead = models.CharField(max_length = 25 ,  verbose_name = "Head of Subject")
@@ -53,6 +80,7 @@ class Schoolclasses(models.Model):
 #students model
 class Student(models.Model):
     stdnumber = models.CharField(primary_key=True , max_length=20 , verbose_name='Student Number' , blank= True)
+    profile_image = models.ImageField(upload_to='student_profiles/', blank=True, null=True)
     regdate = models.DateField(verbose_name='Date', default=None, blank=True )
     childname = models.CharField(max_length=25 , verbose_name="Child's Name" , blank=True)
     stdclass = models.ForeignKey(Schoolclasses, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Class')
