@@ -257,20 +257,6 @@ class Administrators(models.Model):
     ]
 
 
-# #support staff model
-# class Supportstaff(models.Model):
-#     id =models.AutoField(primary_key=True, verbose_name='Staff Number')
-#     fullname=models.CharField(max_length=30, blank=True, verbose_name='Full Name')
-#     contact =models.CharField(max_length=20, blank=True, verbose_name='Phone contact')
-#     email=models.EmailField(max_length=50, blank=True, verbose_name='Email')
-#     address=models.CharField(max_length=255, blank=True, verbose_name='Address')
-#     gender =models.CharField(max_length=1, choices=GENDER_CHOICES, default=None, verbose_name="Gender")
-#     dob=models.DateField(default=None, verbose_name='Date of Birth')
-#     qualification=models.CharField(max_length=255, blank=True, verbose_name='Qualification')
-#     position=models.CharField(max_length=255, blank=True, verbose_name='Position')
-    
-#     Display_Supportstaff =['id','fullname','contact','email','address','dob','gender','dob','qualification', 'position']
-
 
     
     
