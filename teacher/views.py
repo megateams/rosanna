@@ -5,7 +5,7 @@ from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
-# from xhtml2pdf import pisa
+from xhtml2pdf import pisa
 from django.conf import settings
 # Create your views here.
 
@@ -90,6 +90,8 @@ def get_subjects(request, class_id):
 
 
 # views.py
+from django.db.models import Sum
+
 def class_details(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
@@ -105,8 +107,23 @@ def class_details(request, class_id, teacher_id):
     # Create a dictionary to hold the marks for each student and subject combination
     student_marks = {}
     for student in students:
-        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
-        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+        student_marks[student] = {}
+        for subject in subjects:
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            student_marks[student][subject] = {mark.mark_type: mark.marks_obtained for mark in marks}
+
+    # Calculate average marks for each subject for each student
+    for student, subject_marks in student_marks.items():
+        for subject, mark_dict in subject_marks.items():
+            bot_marks = mark_dict.get('BOT', 0)
+            mot_marks = mark_dict.get('MOT', 0)
+            eot_marks = mark_dict.get('EOT', 0)
+
+            total_marks = bot_marks + mot_marks + eot_marks
+            total_mark_entries = len(mark_dict)
+            average_marks = total_marks / total_mark_entries if total_mark_entries > 0 else 0
+
+            student_marks[student][subject]['average_marks'] = average_marks
 
     return render(request, 'teacher/class_details.html', {
         'schoolclass': schoolclass,
@@ -116,6 +133,8 @@ def class_details(request, class_id, teacher_id):
         'student_marks': student_marks,
         'mark_types': mark_types,
     })
+
+
 
 # views.py
 def class_marks_by_marktype(request, class_id, teacher_id):
@@ -145,7 +164,7 @@ def class_marks_by_marktype(request, class_id, teacher_id):
         else:
             student.total_marks = 0
             student.average_marks = 0
-    return render(request, 'teacher/class_details.html', {
+    return render(request, 'teacher/result_details.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
         'students': students,

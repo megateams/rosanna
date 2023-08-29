@@ -9,12 +9,19 @@
     <div class="row">
         <div class="col-md-5">
             <!-- image -->
-            <div class="image">
-               <img class="img-thumbnail" src="{% static 'images/student.jpg' %}" alt=""> 
-            </div>
+            {% for teacher in teachers %}
+                {% if teacher.profile_image %}
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ teacher.profile_image.url }}">
+                </div>
+                {% else %}
+                <div class="image">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                </div>
+                {% endif %}
+            {% endfor %}
+            
             <!-- image -->
-
-
         </div>
         <div class="col-md-7">
             <!-- student data -->
@@ -97,8 +104,7 @@
                         <h6><b>Username: </b></h6>
                         <p class="ml-2">{{teacher.username}}</p>
                     </div>
-                    
-                    
+                       
                 </div>
                     <!-- btns -->
                     <div class="btn ">

@@ -116,10 +116,10 @@ class Supportstaff(models.Model):
 class Teachers(models.Model):
 
     teacherid = models.CharField(primary_key=True, max_length=20, verbose_name='Teacher id')
+    profile_image = models.ImageField(upload_to='teacher_profiles/', blank=True, null=True)
     teachernames = models.CharField(max_length=100, verbose_name='Teachers Names')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES , verbose_name='Gender')
     dob = models.DateField(default=None , verbose_name='Date of Birth')
-    
     contact = models.CharField(max_length=15, verbose_name='Contact')
     email = models.EmailField(verbose_name="Email Address")
     address = models.CharField(max_length=200, verbose_name='Address')

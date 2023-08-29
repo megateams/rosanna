@@ -86,8 +86,12 @@
                         </li>
                         <li>
                             <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff </span></a>
+                            <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers </span></a>
                         </li>
-                    </ul>    
+                        <li>
+                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff</span></a>
+                        </li>
+                    </ul>
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -241,7 +245,7 @@
                 const id = $(this).val();
                 // alert(id);
                 // const stdclass_fees = $('#class_fees');
-                console.log('Selected Student Number:', id);
+                // console.log('Selected Student Number:', id);
 
                 // Fetch subjects for the selected class using AJAX
                 $.ajax({
@@ -249,7 +253,7 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        console.log('Received Data:', data);
+                        // console.log('Received Data:', data);
                         $('#salary').val(data.salary);
                     },
                     error: function(error) {

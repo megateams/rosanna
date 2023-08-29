@@ -58,6 +58,9 @@ def financelogin(request):
 #             messages.warning(request, 'Login Failed')
 #             return redirect('financeloginpage')
 #     return render(request, 'login.html')
+# from django_excel_response import ExcelResponse
+from django.db.models.functions import ExtractMonth
+import openpyxl
 
 def editteacherpayments(request):
     if request.method == 'POST':
@@ -254,8 +257,7 @@ def financeaddFees(request):
         balance = int(classfees) - int(amount)
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        print(amount)
-        print(classfees)
+        
         if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database
             fees = Fees.objects.create(
@@ -411,7 +413,7 @@ def financeaddsupportstaffpayments(request):
         supportstaffrow = Supportstaff.objects.get(supportstaffid = support_staff_id)
         balance = salary - amount_paid
         # Fetch the support staff payment record
-        # payment = Supportstaffpayment.objects.filter(supportstaffid=support_staff_id)
+        supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
 
         # Update the payment record with the new amount paid and calculate the 
         payment = Supportstaffpayment.objects.create(
@@ -441,17 +443,12 @@ def financesupportstaffpaymentsList(request):
 def financeaddExpenses(request):
     if request.method == 'POST':
         category = request.POST.get('category')
-        amountrequired = request.POST.get('amountrequired')
         expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
-        balance = request.POST.get('balance')
-
         expense_record = ExpenseRecord(
             category=category,
-            amountrequired=amountrequired,
             expensedate=expensedate,
             amountpaid=amountpaid,
-            balance=balance
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
@@ -468,15 +465,18 @@ def financeexpensesList(request):
     }
     return render(request, 'finance/expenses/financeexpensesList.html', context)
 
-def delete_expense(request, expenseid):
-    try:
-        expense = ExpenseRecord.objects.get(expenseid=expenseid)
-        expense.delete()
-        messages.success(request, 'Expense deleted successfully.')
-    except ExpenseRecord.DoesNotExist:
-        messages.error(request, 'Expense not found.')
+def delete_expense(request):
+    if request.method == 'POST':
+        expenseid = request.POST.get("expenseid")
+        try:
+            expense = ExpenseRecord.objects.get(expenseid=expenseid)
+            expense.delete()
+            messages.success(request, f"Expense record {expenseid} has been deleted.")
+        except ExpenseRecord.DoesNotExist:
+            messages.error(request, f"Expense record {expenseid} does not exist.")
 
-    return redirect('Expenses List')
+    return redirect('Expenses List')  # Adjust this to the correct URL name
+
 
 def edit_expense(request, expenseid):
     try:
@@ -484,15 +484,11 @@ def edit_expense(request, expenseid):
 
         if request.method == 'POST':
             updated_category = request.POST.get('category')
-            updated_amountrequired = request.POST.get('amountrequired')
             updated_expensedate = request.POST.get('expensedate')
             updated_amountpaid = request.POST.get('amountpaid')
-            updated_balance = request.POST.get('balance')
             expense.category = updated_category
-            expense.amountrequired = updated_amountrequired
             expense.expensedate = updated_expensedate
             expense.amountpaid = updated_amountpaid
-            expense.balance = updated_balance
             expense.save()
             messages.success(request, 'Expense updated successfully.')
             return redirect('Add Expenses')
@@ -548,7 +544,154 @@ def get_teacher_balance(request , id , amountpaid):
     balance = int(teacher.salary) - int(amountpaid)
     return JsonResponse({'balance' : balance})
 
+def export_finance_fees_to_excel(request):
+    # Fetch all the data from the Fees model
+    data = Fees.objects.all().values_list(
+        'paymentid', 'stdnumber__stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date'
+    )
 
+    # Create a new workbook and add a worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Write field names to the worksheet as headers
+    ws.append(['Payment ID', 'Student Number', 'Student Name', 'Student Class', 'Amount', 'Balance', 'Mode of Payment', 'Date'])
+
+    # Write data to the worksheet
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set the column width for the date column
+    ws.column_dimensions['A'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['B'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['C'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['D'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['E'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['F'].width = 15  # Adjust the width as needed
+    ws.column_dimensions['H'].width = 15  # Adjust the width as needed
+
+    # Set the filename and content type for the response
+    filename = 'finance_fees_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response
+
+
+def export_fees_structure_to_excel(request):
+    data = Feesstructure.objects.all().values_list(
+        'classname', 'amount'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append(['Class', 'Amount'])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set the column width for the amount column
+    ws.column_dimensions['A'].width = 15
+
+    filename = 'fees_structuredata.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+
+    return response
+
+def export_expenses_to_excel(request):
+    data = ExpenseRecord.objects.all().values_list(
+        'expenseid', 'category', 'expensedate', 'amountpaid'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append(['Expense ID', 'Category', 'Expense Date', 'Amount Paid'])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 15
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+
+    filename = 'expenses_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+
+    return response
+
+def export_teacher_payments_to_excel(request):
+    data = Teacherspayment.objects.all().values_list(
+        'teacherid', 'teachername', 'paymentdate', 'salary', 'amountpaid', 'balance'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append(['Teacher ID', 'Teacher Name', 'Payment Date', 'Salary', 'Amount Paid', 'Balance'])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 15
+
+    filename = 'teacher_payments_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+
+    return response
+
+
+
+
+def export_support_staff_payments_to_excel(request):
+    data = Supportstaffpayment.objects.all().values_list(
+        'supportstaffid', 'staffname', 'paymentdate', 'salary', 'amountpaid', 'balance'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append([
+        'Staff ID', 'Staff Name', 'Payment Date', 'Salary', 'Amount Paid', 'Balance'
+    ])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    # Set column widths
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 20
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 15
+
+    filename = 'support_staff_payments.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
 
 
 

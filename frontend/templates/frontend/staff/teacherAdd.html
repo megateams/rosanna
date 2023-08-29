@@ -10,7 +10,7 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+    <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light" enctype="multipart/form-data">
         {% csrf_token %}
         
         <div class="title">
@@ -149,6 +149,12 @@
                     <br>
                 {% endfor %}  
             </div>
+            <!-- profile_image -->
+            <div class="form-group col-md-6">
+                <label for="">Profile Image</label>
+                <input type="file" name="profile_image" class="form-control-file">
+            </div>
+
         </div>
 
         <!-- button -->

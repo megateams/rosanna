@@ -1,0 +1,128 @@
+{% extends 'frontend/base.html' %}
+{% block title %} View Class {% endblock title %}
+{% load static %}
+{% load custom_filters %}
+
+{% block main %}
+<div class="inner-content">
+    <a href="/view_marks/{{ schoolclass.classid }}"
+    class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
+        View all
+    </a>
+    {% for mark_type in mark_types %}
+        <a href="/view_mark/{{ schoolclass.classid }}?marktype={{ mark_type.0 }}"
+        class="btn btn-sm btn-danger mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
+            {{ mark_type.1 }} Results
+        </a>
+    {% endfor %}
+    <div class="header">
+        <h5 class="mb-2"><b>{{mark_type}} Examination results for {{schoolclass.classname}}</b></h5>
+    </div>
+    <div class="students-list" style="font-size: 14px;">
+        <table class="table bg-white" id="table" border="1">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th>Reg Number</th>
+                    <th>Name</th>
+                    {% for subject in subjects %}
+                        <th>{{ subject.subjectname|slice:":3" }}</th>
+                        <th>Grade</th>
+                    {% endfor %}
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student, marks_dict in student_marks.items %}
+                    <tr>
+                        <td>{{ student.stdnumber }}</td>
+                        <td>{{ student.childname }}</td>
+                        {% for subject in subjects %}
+                            <td>
+                                {% with marks=marks_dict|get_item:subject %}
+                                    {% if marks %}
+                                        {{ marks.marks_obtained }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                {% with marks=marks_dict|get_item:subject %}
+                                    {% if marks %}
+                                        {% if marks.marks_obtained >= 80 %}
+                                            <p>D1</p>
+                                        {% elif marks.marks_obtained >= 75 %}
+                                            <p>D2</p>
+                                        {% elif marks.marks_obtained >= 70 %}
+                                            <p>C3</p>
+                                        {% elif marks.marks_obtained >= 65 %}
+                                            <p>C4</p>
+                                        {% elif marks.marks_obtained >= 60 %}
+                                            <p>C5</p>
+                                        {% elif marks.marks_obtained >= 50 %}
+                                            <p>C6</p>
+                                        {% elif marks.marks_obtained >= 45 %}
+                                            <p>P7</p>
+                                        {% elif marks.marks_obtained >= 40 %}
+                                            <p>P8</p>
+                                        {% else %}
+                                            <p>F9</p>
+                                        {% endif %}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                        <td>{{ student.total_marks }}</td>
+                        <td>{{ student.average_marks|floatformat:1 }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success generate-report" data-student="{{ student.pk }}"><i class="fas fa-print    mr-1"></i>Print</button>
+                            <!-- <a href="" class="btn btn-sm text-danger delete marks"><i class="fas fa-trash    "></i></a> -->
+                        </td>
+                    </tr>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="edit_marks{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Marks for {{ student.childname }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/teacher/edit_all_marks" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="student_id" value="{{ student.stdnumber }}">
+                                        <div>
+                                                {% for subject in subjects %}
+                                                    <div class="form-group">
+                                                        <label>{{ subject.subjectname }}</label>
+                                                        <!-- <td> -->
+                                                            <input type="text" class="form-control" name="subject_{{ subject.subjectid }}" value="{% with marks=marks_dict|get_item:subject %}{{ marks.marks_obtained }}{% endwith %}">
+                                                        <!-- </td> -->
+                                                    </div>
+                                                {% endfor %}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        
+</div>
+{% endblock main %}

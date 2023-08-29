@@ -36,18 +36,10 @@ urlpatterns = [
    
     path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
     path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
-    path('delete_expense/<str:expenseid>/', views.delete_expense, name='delete_expense'),
+    path('delete_expense/', views.delete_expense, name='delete_expense'),
     path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
 
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="AddTeacherpayments"),
-
-    # path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="Teacherpayments List"),
-
-    # path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    # path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="Supportstaffpayments List"),
-
-    # path('financereports/', views.financeReports, name =" Reports"),
-    # path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
     path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
 
@@ -69,5 +61,12 @@ urlpatterns = [
     path('get_staff_salary/<id>/' , views.get_staff_salary , name = 'get_staff_salary'),
     path('get_teacher_salary/<id>/' , views.get_teacher_salary , name = 'get_teacher_salary'),
     path('get_teacher_balance/<id>/<amountpaid>/' , views.get_teacher_balance , name = 'get_teacher_balance'),
+
+    # path('export_excel/', views.export_to_excel, name='export_excel'),
+    path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
+    path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
+    path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
+    path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
+    path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
 
 ]

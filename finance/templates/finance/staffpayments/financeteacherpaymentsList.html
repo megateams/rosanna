@@ -8,7 +8,7 @@
 <div class="inner-content">
     <div class="btns">
         <a href="/financeaddteacherpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Teacher Payments</a>
-        <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        <a href="/export_teacher_payments" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <!-- <div class="table-section" style="font-size: 14px;"> -->
     <div class="table-section" style="font-size: 14px;"> 
@@ -26,7 +26,6 @@
         </ul>
         {% endif %}
 
-        <table class="table" id="table">
         <table class="table" id="table" border="1">
             <thead>
                 <tr>
@@ -50,8 +49,13 @@
                     <td>{{ teacher.salary }}</td>
                     <td>{{ teacher.amountpaid }}</td>
                     <td>{{ teacher.balance }}</td>
+<<<<<<< HEAD
                     {% comment %} <th>{{ teacher.paymentmethod }}</th>
                     <th>{{ teacher.bankaccnum }}</th> {% endcomment %}
+=======
+                    {% comment %} <td>{{ teacher.paymentmethod }}</td>
+                    <td>{{ teacher.bankaccnum }}</td> {% endcomment %}
+>>>>>>> 6734fbbbe9244dd36296e8da408850a24d2be612
 
                    <td>
                     <div>
@@ -121,7 +125,8 @@
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Salary:</label>
-                                                <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" required readonly>
+                                                <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" readonly>
+
                                             </div>
                                         </div>
                                 
