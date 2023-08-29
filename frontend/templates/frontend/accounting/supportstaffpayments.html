@@ -1,4 +1,4 @@
-{% extends 'frontend/base.html' %}
+{% extends 'finance/base.html' %}
 {% block  title %} Support Staff Payments List {% endblock title %}
 {% block  pagetitle %} Support Staff Payments List {% endblock pagetitle %}
 
@@ -9,9 +9,6 @@
     <div class="btns">
         <a href="/export_support_staffpayments" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
-    <!-- Display the total amount  -->
-    <h3>Total Amount of Supportstaff Payments Paid: {{ total_sspayments|default:"0" }}</h3>
-
     <div class="table-section" style="font-size: 14px;">
 
         {% if messages %}
@@ -26,26 +23,34 @@
         {% endfor %}
         </ul>
         {% endif %}
+
+        <table class="table" id="table">
         <table class="table" id="table" border="1">
             <thead>
                 <tr>
                     <th>Support Staff ID</th>
                     <th>Support Staff Name</th>
+                    <th>Payment id</th>
                     <th> Payment Date</th>
                     <th>Salary</th>
                     <th>Amount Paid</th>
                     <th>Balance</th>
+                    <th>Payment Method</th>
+                    <th>Bank Account No.</th>
                 </tr>
             </thead>
             <tbody>
                 {% for supportstaff in supportstaffdata %}
                 <tr>
-                    <td>{{ supportstaff.supportstaffid }}</td>
-                    <td>{{ supportstaff.staffname }}</td>
-                    <td>{{ supportstaff.paymentdate }}</td>
-                    <td>{{ supportstaff.salary }}</td>
-                    <td>{{ supportstaff.amountpaid }}</td>
-                    <td>{{ supportstaff.balance }}</td>
+                    <th>{{ supportstaff.supportstaffid }}</th>
+                    <th>{{ supportstaff.staffname }}</th>
+                    <th>{{ supportstaff.paymentid }}</th>
+                    <th>{{ supportstaff.paymentdate }}</th>
+                    <th>{{ supportstaff.salary }}</th>
+                    <th>{{ supportstaff.amountpaid }}</th>
+                    <th>{{ supportstaff.balance }}</th>
+                    <th>{{ supportstaff.paymentmethod }}</th>
+                    <th>{{ supportstaff.bankaccnum }}</th>
                 </tr>
                 {% endfor %}
             </tbody>

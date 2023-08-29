@@ -181,65 +181,17 @@ def expenserecords(request):
         ExpenseRecord.save()
     return render(request , 'finance/financedashboard.html')
 
-
-
-# def financedashboard(request):
-#     # Extract distinct months for each payment kind
-#     trpayments_months = Teacherspayment.objects.dates('paymentdate', 'month', order='ASC').distinct()
-#     sspayments_months = Supportstaffpayment.objects.dates('paymentdate', 'month', order='ASC').distinct()
-#     fees_months = Fees.objects.dates('date', 'month', order='ASC').distinct()
-#     expenses_months = ExpenseRecord.objects.dates('expensedate', 'month', order='ASC').distinct()
-
-#     # Extract expense data
-#     expenses_by_month = ExpenseRecord.objects.annotate(month=ExtractMonth('expensedate')).values('month').annotate(total_amount_paid=Sum('amountpaid')).order_by('month')
-
-#     # Extract and aggregate data for each payment kind per month
-#     fees_by_month = Fees.objects.annotate(month=ExtractMonth('date')).values('month').annotate(total_amount=Sum('amount')).order_by('month')
-
-#     # Extract support staff payment data
-#     sspayments_by_month = Supportstaffpayment.objects.annotate(month=ExtractMonth('paymentdate')).values('month').annotate(total_sspayments=Sum('amountpaid')).order_by('month')
-
-#     # Extract teacher payment data
-#     trpayments_by_month = Teacherspayment.objects.annotate(month=ExtractMonth('paymentdate')).values('month').annotate(total_trpayments=Sum('amountpaid')).order_by('month')
-
-  
-
-#     months = ["February", "March", "April", "May"]
-#     payments_total = [entry['total_trpayments'] for entry in trpayments_by_month]
-#     fees_total = [entry['total_amount'] for entry in fees_by_month]
-#     expenses_total = [entry['total_amount_paid'] for entry in expenses_by_month]
-
-#     context = {
-#         'trpayments_months' : trpayments_months,
-#         'fees_months' : trpayments_months,
-#         'expenses_months' : expenses_months,
-#         'payments_total' : payments_total,
-#         'fees_total': fees_total,
-#         'expenses_total': expenses_total
-#     }
-#     return render(request, "finance/financedashboard.html", context)
-
-
 # Create your views here.
 def financedashboard(request):
-    
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-    sspayments = Supportstaffpayment.objects.all()
-    total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
-
-    trpayments = Teacherspayment.objects.all()
-    total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
-
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
-        'total_sspayments' : total_sspayments,
-        'total_trpayments' : total_trpayments,
 
     }
     return render(request, "finance/financedashboard.html", context)
@@ -255,16 +207,7 @@ def financeaddFees(request):
         balance = int(classfees) - int(amount)
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        print(amount)
-        print(classfees)
-
-        # Check if the student with the same stdnumber is already added to the fees
-        if Fees.objects.filter(stdnumber=stdnumber).exists():
-            messages.error(request, 'This student has already been added to fees.')
-            students = Student.objects.all()
-            fees_structures = Feesstructure.objects.all()
-            return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
-
+        
         if int(amount) <= int(classfees):
             # Create a new Fees object and save it to the database
             fees = Fees.objects.create(
@@ -411,13 +354,8 @@ def financeaddTeacherpayments(request):
 
     return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 def financeteacherpaymentsList(request):
-    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teacherspayment = Teacherspayment.objects.all()
-    context = {
-       'teachers':teacherspayment,
-       'total_trpayments': total_trpayments, 
-    }
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' ,context)
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
 # teacherpayments views
 
 # supportstaffpayments views
@@ -455,14 +393,8 @@ def financeaddsupportstaffpayments(request):
     return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
 
 def financesupportstaffpaymentsList(request):
-    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     support_staff_payments = Supportstaffpayment.objects.all()
-    context = {
-        'supportstaffpayments': support_staff_payments,
-        'total_sspayments': total_sspayments,
-    }
-
-    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', context)
+    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', {'supportstaffpayments': support_staff_payments})
 
 # supportstaffpayments views
 
@@ -531,8 +463,8 @@ def edit_expense(request, expenseid):
 def financeReports(request):
     return render(request, 'finance/financeReports.html')
 
-# def financeStatistics(request):
-#     return render(request, 'finance/financeStatistics.html')
+def financeStatistics(request):
+    return render(request, 'finance/financeStatistics.html')
 
 def get_stdclass(request, stdnumber):
     try:
