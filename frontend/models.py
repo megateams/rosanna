@@ -236,7 +236,27 @@ class Admin_Model(models.Model):
     password =models.CharField(max_length=255)
     
     Display_Admins =['id','name','username','contact','email', 'gender','address','dob', 'role']
+
+class Administrators(models.Model):
+    fullname = models.CharField(max_length=20 , verbose_name='Ful Name')
+    gender = models.CharField(max_length=7 , verbose_name='Gender')
+    address = models.CharField(max_length=15 , verbose_name='Address')
+    contact = models.CharField(max_length=15 , verbose_name='Contact')
+    email = models.EmailField(max_length=30 , verbose_name='Email')
+    profileimage = models.ImageField(verbose_name='Profile Image')
+    role = models.CharField(verbose_name='Role' , max_length=10)
+    qualification = models.CharField(verbose_name='Qualifications' , max_length=30)
+    salary = models.IntegerField(verbose_name='Salary')
+    bankaccnum = models.IntegerField(verbose_name='Bank Account Number')
+    username = models.CharField(verbose_name='User Name' , max_length=20)
+    password = models.CharField(verbose_name='Password' , max_length=20)
     
+    displayadministrators = [
+        'fullname' , 'gender' , 'address' , 'contact' , 'email' , 'profileimage' , 'role' , 'qualification' , 
+        'salary' , 'bankaccnum'
+    ]
+
+
 # #support staff model
 # class Supportstaff(models.Model):
 #     id =models.AutoField(primary_key=True, verbose_name='Staff Number')

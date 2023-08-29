@@ -98,41 +98,41 @@
                                 <div class="modal-body">
                                     <form method="post" action='/editsupportstaffpayments/'>
                                         {% csrf_token %}
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <input type="hidden" name="paymentid" value="{{ supportstaff.paymentid }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Support Staff Name:</label>
                                                 <input type="text" name="staffname" value="{{ supportstaff.staffname }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Salary:</label>
                                                 <input type="number" name="salary" value="{{ supportstaff.salary }}" class="form-control" readonly>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Amount Paid:</label>
                                                 <input type="number" name="amountpaid" value="{{ supportstaff.amountpaid }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         {% comment %} <div class="row">
                                             <div class="form-group col-md-6">
                                                 <label for="amount">Payment Method:</label>
                                                 <input type="text" name="paymentmethod" value="{{ supportstaff.paymentmethod }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-6">
                                                 <label for="amount">Bank Account Number:</label>

@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, HttpResponse , redirect
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse,redirect
@@ -11,6 +10,32 @@ from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
+from django.contrib.auth import authenticate, login
+
+def financelogin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        bursar = Administrators.objects.get(role = 'Bursar')
+        if bursar.username == username and bursar.password == password:
+            messages.success(request , "Login Successfull")
+            expenses = ExpenseRecord.objects.all()
+            total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
+            fees = Fees.objects.all()
+            total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+
+            context = {
+                'total_amount_paid': total_amount_paid,
+                'total_amount': total_amount,
+
+            }
+            return render(request, "finance/financedashboard.html", context)
+        else:
+            messages.warning(request, 'Login Failed')
+            return redirect('financeloginpage')
+    return render(request , 'login.html')
+
 
 def editteacherpayments(request):
     if request.method == 'POST':
