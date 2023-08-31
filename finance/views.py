@@ -208,18 +208,33 @@ def expenserecords(request):
 
 # Create your views here.
 def financedashboard(request):
+    
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
+    fees_list = Fees.objects.exclude(balance__lte=0.0)# Filter fees with balance greater than 0
+    
+    sspayments = Supportstaffpayment.objects.all()
+    total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
+    trpayments = Teacherspayment.objects.all()
+    total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+
+    term_data = Term.objects.all()
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
-
+        'total_sspayments' : total_sspayments,
+        'total_trpayments' : total_trpayments,
+        'term_data' : term_data,
+        'fees_list': fees_list,
     }
     return render(request, "finance/financedashboard.html", context)
+
 
 # fees views
 def financeaddFees(request):
@@ -378,9 +393,15 @@ def financeaddTeacherpayments(request):
         return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
     return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
 def financeteacherpaymentsList(request):
+    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teacherspayment = Teacherspayment.objects.all()
-    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' , {'teachers':teacherspayment})
+    context = {
+       'teachers':teacherspayment,
+       'total_trpayments': total_trpayments, 
+    }
+    return render(request,'finance/staffpayments/financeteacherpaymentsList.html' ,context)
 # teacherpayments views
 
 # supportstaffpayments views
@@ -418,8 +439,14 @@ def financeaddsupportstaffpayments(request):
     return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
 
 def financesupportstaffpaymentsList(request):
+    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     support_staff_payments = Supportstaffpayment.objects.all()
-    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', {'supportstaffpayments': support_staff_payments})
+    context = {
+        'supportstaffpayments': support_staff_payments,
+        'total_sspayments': total_sspayments,
+    }
+
+    return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', context)
 
 # supportstaffpayments views
 
