@@ -1,0 +1,161 @@
+{% extends 'teacher/base.html' %}
+{% block title %} Class Details {% endblock title %}
+{% block pagetitle %} Class Details {% endblock pagetitle %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block main %}
+<div class="inner-content">
+    <div class="buttons  align-items-center justify-content-between" style="margin-top: -25px;">
+        <div class="current_session d-flex mt-4">
+            {% for data in term_data %}
+                <div class="current-term mr-4">
+                    <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="class-btns" pr-5>
+            <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
+            <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
+          
+            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+            
+        </div>
+        
+    </div>
+
+    <div class="class-information">
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-11 ml-3 class-info bg-white shadow p-3 rounded">
+                        <div class="header">
+                            <h6 class="text-center text-uppercase">
+                                Class details
+                            </h6>
+                            <hr>
+                        </div>
+                        <p class="mr-3"><b>Class name:</b> <span class="ml-2">{{ schoolclass.classname }}</span></p> 
+                        <p class="mr-3"><b>Class level:</b> <span class="ml-2">{{ schoolclass.class_level }}</span></p>
+                        <p class="mr-3"><b>Class teacher:</b> <span class="ml-2">{{ teacher.teachernames }}</span></p>
+                    </div>
+                    
+                    <div class="col-12 mt-3">
+                        <!-- donut chart -->
+                        <div class="donut-chart shadow  bg-light pb-2">
+                            <canvas id="genderDonutChart"></canvas>
+                        </div>
+                        <!-- donut chart -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8" style="font-size: 12px;">
+                <!-- teachers -->
+                <table class="table bg-white" border="1" id="table1">
+                    <h5>{{schoolclass.classname}} Teachers</h5>
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Teacher ID</th>
+                            <th>Teacher name</th>
+                            <th>Email</th>
+                            <th>Subjects</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teachers in teachers_in_class %}
+                        <tr>
+                            <td>{{teachers.teacherid}}</td>
+                            <td>{{teachers.teachernames}}</td>
+                            <td>{{teachers.email}}</td>
+                            <td>
+                                {% for subject in teachers.subjects.all %}
+                                    {{ subject.subjectname }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+                <div class="mt-2 mb-2">
+                    <hr>
+                </div>
+                <!-- students -->
+                <table class="table bg-white" border="1" id="table">
+                    <h5>{{schoolclass.classname}} Students</h5>
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student name</th>
+                            <th>Gender</th>
+                            <th>House</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        {% for student in students %}
+                        <tr>
+                            <td>{{student.stdnumber}}</td>
+                            <td>{{student.childname}}</td>
+                            <td>
+                                {% if student.gender == 'm' %}
+                                    <p>Male</p>
+                                {% else %}
+                                    <p>Female</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{student.house}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+        
+    </div>
+
+    
+</div>
+<!-- charts.js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const boysCount = {{num_boys}}
+    const girlsCount = {{num_girls}}
+    var donutCtx = document.getElementById("genderDonutChart").getContext("2d");
+    var donutData = {
+        labels: ["Boys", "Girls"],
+        datasets: [{
+            data: [boysCount, girlsCount], // Replace with your actual data
+            backgroundColor: ["red", "#f9b855"],
+        }]
+    };
+    var donutChart = new Chart(donutCtx, {
+        type: "doughnut",
+        data: donutData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: "bottom"
+            },
+            title: {
+                display: true,
+                text: "Gender Distribution"
+            }
+        }
+    });
+   
+
+</script>
+{% endblock main %}

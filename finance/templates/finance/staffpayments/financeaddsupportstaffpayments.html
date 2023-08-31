@@ -1,0 +1,68 @@
+{% extends 'finance/base.html' %}
+{% block  title %} Add Supportstaffpayment {% endblock title %}
+{% block  pagetitle %} Add Supportstaffpayment  {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/financesupportstaffpaymentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Support Staffpayments</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+               
+    <!-- form-section -->
+    <form action="" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+        {% csrf_token %}
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Supportstaffpayments</h5>
+            <hr>
+        </div>
+
+        <!-- staffpayments info section -->
+        <div class="staffpayments">
+            <div class="row">
+                <!-- teacherid -->
+                <div class="form-group col-md-6">
+                    <label for="">Staff name: </label>
+                    <select type="text" id="support-staffid" name="support-staffid" class="form-control">
+                        <option value="" selected disabled>---</option>
+                        {% for staff in support_staff %}
+                            <option value="{{staff.supportstaffid}}"  >{{staff.supportstaffnames}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- salary-->
+                <div class="form-group col-md-6">
+                    <label for=""> Salary </label>
+                    <input type="text" id="salary" name="salary" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- amountpaid -->
+                <div class="form-group col-md-6">
+                    <label for="">Amount Paid</label>
+                    <input type="text" name="amountpaid" class="form-control">
+                </div>
+
+                <!-- datepaid -->
+                <div class="form-group col-md-6">
+                    <label for="">Payment Date </label>
+                    <input type="date" name="paymentdate" class="form-control">
+                </div>
+            </div>
+
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>  
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

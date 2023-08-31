@@ -1,0 +1,167 @@
+{% extends 'finance/base.html' %}
+{% block  title %} Support Staff Payments List {% endblock title %}
+{% block  pagetitle %} Support Staff Payments List {% endblock pagetitle %}
+
+{% block  main %}
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/financeaddsupportstaffpayments" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Support Staff Payments</a>
+        <a href="/export_support_staffpayments" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+
+    <h5>Total Amount of Supportstaff Payments Paid: {{ total_sspayments|default:"0" }}</h5>
+    <div class="table-section" style="font-size: 14px;">
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        <table class="table" id="table" border="1">
+            <thead>
+                <tr>
+                    <th>Support Staff ID</th>
+                    <th>Support Staff Name</th>
+                    <th>Payment id</th>
+                    <th>Payment Date</th>
+                    <th>Salary</th>
+                    <th>Amount Paid</th>
+                    <th>Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for supportstaff in supportstaffpayments %}
+                <tr>
+                    <td>{{ supportstaff.supportstaffid }}</td>
+                    <td>{{ supportstaff.staffname }}</td>
+                    <!-- <th>{{ supportstaff.paymentid }}</th> -->
+                    <td>{{ supportstaff.paymentid }}</td>
+                    <td>{{ supportstaff.paymentdate }}</td>
+                    <td>{{ supportstaff.salary }}</td>
+                    <td>{{ supportstaff.amountpaid }}</td>
+                    <td>{{ supportstaff.balance }}</td>
+
+                    <td>
+                        <a href="#edit{{ supportstaff.paymentid }}" data-toggle='modal' class="text-"><i class="fas fa-edit  mr-2  "> </i></a>
+                        <a href="#delete{{ supportstaff.paymentid }}" data-toggle = 'modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
+                    </td>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="delete{{ supportstaff.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Payment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action='/deletesupportstaffpayment/' method='POST'>
+                                        {% csrf_token %}
+                                        <div class="form-group col-md-6">
+                                            <input type="hidden" name="paymentid" value="{{ supportstaff.paymentid }}" class="form-control" required>
+                                            <input type="hidden" name="supportstaffid" value="{{ supportstaff.supportstaffid }}" class="form-control" required>
+                                        </div>
+                                        <p>
+                                            Are you sure you want to delete ?
+                                        </p>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+                                            <button type="submit" class="btn btn-danger">Yes</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="edit{{ supportstaff.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Support staff Payments</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action='/editsupportstaffpayments/'>
+                                        {% csrf_token %}
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <input type="hidden" name="paymentid" value="{{ supportstaff.paymentid }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="amount">Support Staff Name:</label>
+                                                <input type="text" name="staffname" value="{{ supportstaff.staffname }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="amount">Salary:</label>
+                                                <input type="number" name="salary" value="{{ supportstaff.salary }}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="amount">Amount Paid:</label>
+                                                <input type="number" name="amountpaid" value="{{ supportstaff.amountpaid }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        {% comment %} <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="amount">Payment Method:</label>
+                                                <input type="text" name="paymentmethod" value="{{ supportstaff.paymentmethod }}" class="form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="amount">Bank Account Number:</label>
+                                                <input type="number" name="bankaccnum" value="{{ supportstaff.bankaccnum }}" class="form-control" required>
+                                            </div>
+                                        </div> {% endcomment %}
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

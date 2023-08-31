@@ -1,0 +1,18 @@
+<!-- frontend/marks/displayMarks.html -->
+{% extends 'frontend/base.html' %}
+{% block title %}Marks List{% endblock title %}
+{% block pagetitle %}Marks List{% endblock pagetitle %}
+
+{% block main %}
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns mb-3">
+        {% for class in classes %}
+            <a href="/view_marks/{{class.classid}}" class="btn btn-sm btn-danger">{{class.classname}}</a>
+        {% endfor %}
+    </div>
+
+    
+</div>
+<!-- inner-content -->
+{% endblock main %}

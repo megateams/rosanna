@@ -1,0 +1,305 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block  title %} Students List {% endblock title %}
+{% block  pagetitle %} Students List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+<div class="student-details mt-3">
+    <div class="row">
+        <div class="col-md-5">
+            <!-- image -->
+            {% if student.profile_image %}
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ student.profile_image.url }}" style="height: 60vh;">
+                </div>
+                {% else %}
+                <div class="image">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                </div>
+                {% endif %}
+            <!-- image -->
+        </div>
+        <div class="col-md-7">
+            <!-- student data -->
+            <div class=" row student-data">
+                <div class="personal-info">
+                    <h5><b>Student Personal Information</b></h5>
+                    <hr>
+
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Full Name: </b></h6>
+                            <p>{{ student.childname }}</p>
+                        </div>
+                        <div class="d-flex ">
+                            <h6 class="mr-3"><b>Student Number: </b></h6>
+                            <p>{{ student.stdnumber }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Gender: </b></h6>
+                            <p>
+                                {% if student.gender == 'm' %}
+                                <p>Male</p>
+                                {% else %}
+                                <p>Female</p>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="d-flex ">
+                            <h6 class="mr-3"><b>Date of birth: </b></h6>
+                            <p>{{ student.dob }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Address: </b></h6>
+                            <p>{{ student.address }}</p>
+                        </div>
+                        <div class="d-flex ">
+                            <h6 class="mr-3"><b>Class: </b></h6>
+                            <p>{{ student.stdclass.classname }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parent-info mt-3">
+                    <h5><b>Student Parent Information</b></h5>
+                    <hr>
+
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Father: </b></h6>
+                            <p>{{ student.fathername }}</p>
+                        </div>
+                        <div class="d-flex ">
+                            <h6 class="mr-3"><b>Father's Contact: </b></h6>
+                            <p>{{ student.fcontact }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Father's Occupation: </b></h6>
+                            <p>{{ student.foccupation }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Mother: </b></h6>
+                            <p>{{ student.mothername }}</p>
+                        </div>
+                        <div class="d-flex ">
+                            <h6 class="mr-3"><b>Mother's Contact: </b></h6>
+                            <p>{{ student.mcontact }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="d-flex mr-5">
+                            <h6 class="mr-3"><b>Mother's Occupation: </b></h6>
+                            <p>{{ student.foccupation }}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                
+            </div>
+            <!-- student data -->
+            <div class="btns">
+                <a href="#edit{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-primary"><i class="fas fa-edit    mr-2"></i>Edit Student</a>
+                <a href="#delete{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Student</a>
+            </div>
+
+
+            <!-- delete -->
+            <div class="modal fade" id="delete{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete {{student.childname}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/delete_student/" method="post">
+                                {% csrf_token%}
+                                <input type="hidden" name="stdnumber" value="{{student.stdnumber}}">
+                                <p>Are you sure you want to delete {{student.childname}}</p>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-success" data-dismiss="modal">no</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">yes</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- edit -->
+            <div class="modal fade" id="edit{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Information for {{student.childname}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <form action="/edit_student/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="stdnumber" value="{{student.stdnumber}}">
+                                    <div class="row">
+                                        <!-- name -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Child Fullname: </label>
+                                            <input type="text" name="childname" value="{{student.childname}}" class="form-control" required>
+                                        </div>
+                        
+                                        <div class="form-group col-md-6">
+                                            <label for="">Class: </label>
+                                            <input type="text" value="{{ student.stdclass.classname }}" name="stdclass" class="form-control" readonly>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <!-- class -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Gender: </label>
+                                            <select name="gender" id="" class="form-control pr-2" value="{{student.gender}}" required>
+                                                <!-- <option value="">---</option> -->
+                                                <option value="m">Male</option>
+                                                <option value="f">Female</option>
+                                            </select>
+                                        </div>
+                                        <!-- name -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Date Of Birth </label>
+                                            <input type="date" name="dob" class="form-control" value="{{student.dob}}" required>
+                                        </div>
+                        
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <!-- address -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Place of Residence </label>
+                                            <input type="text" name="address" value="{{student.address}}" class="form-control">
+                                        </div>
+                                        <!-- house -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Attached House </label>
+                                            <input type="text" name="house" value="{{student.house}}" class="form-control">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Registration Date </label>
+                                        <input type="date" name="regdate" value="{{student.regdate}}" class="form-control" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- student info section -->
+                        
+                                <div class="parent-info">
+                                    <div class="sub-heading">
+                                        <h5>Parents Information</h5>
+                                    </div>
+                                    <div class="row">
+                                        <!-- father name -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Father's Name: </label>
+                                            <input type="text" name="fathername" value="{{student.fathername}}" class="form-control">
+                                        </div>
+                                        <!-- father contact -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Father's Phone Number: </label>
+                                            <input type="text" value="{{student.fcontact}}" name="fcontact" class="form-control">
+                                        </div>
+                                        <!-- father occupation -->
+                                       
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Father's Occupation: </label>
+                                        <input type="text" name="foccupation" value="{{student.foccupation}}" class="form-control">
+                                    </div>
+                                    <div class="row">
+                                        <!-- mother name -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Mother's Name: </label>
+                                            <input type="text" name="mothername" value="{{student.mothername}}" class="form-control">
+                                        </div>
+                                        <!-- mother contact -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Mother's Phone Number: </label>
+                                            <input type="text" name="mcontact" value="{{student.mcontact}}" class="form-control">
+                                        </div>
+                                        <!-- mother occupation -->
+                                       
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Mother's Occupation: </label>
+                                        <input type="text" name="moccupation" value="{{student.moccupation}}" class="form-control">
+                                    </div>
+                                    <div class="row">
+                                        <!-- mother name -->
+                                        <div class="form-group col-md-6">
+                                            <label for="">Living with </label>
+                                            <select  name="livingwith" class="form-control livingwith" value="{{student.livingwith}}" required>
+                                                <!-- <option value="">---</option> -->
+                                                <option value="Father only">Father only</option>
+                                                <option value="Mother only">Mother only</option>
+                                                <option value="Both Parents">Both parents</option>
+                                                <option value="Guardian">Guardian</option>
+                                                <div class="form-group col-md-4">
+                                            </select>
+                                        </div>
+                                        <!-- guardian details -->
+                        
+                                        
+                                        <div class="col-md-6 guardian">
+                                            <div class="row">
+                                                <div class="form-group col-md-6 ">
+                                                    <label for="">Guardian's Name: </label>
+                                                    <input type="text" name="guardianname" class="form-control">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Guardian's Contact: </label>
+                                                    <input type="text" name="gcontact" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </div>
+                        
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- edit -->
+        </div>
+    </div>
+
+</div>
+
+{% endblock main %}

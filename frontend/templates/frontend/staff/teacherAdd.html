@@ -1,0 +1,173 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Add Teachers {% endblock title %}
+{% block  pagetitle %} Add Teachers  {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Teachers</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+
+    <!-- form-section -->
+    <form action="submit/" method="post" class="form ml-3 p-3 shadow rounded bg-light" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Teachers</h5>
+            <hr>
+        </div>
+
+         <!-- Success message after data has been sent  -->
+         {% if messages %}
+         <ul class="messages">
+         {% for message in messages %}
+             <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+               <strong>{{ message }}</strong> 
+             </div>
+         {% endfor %}
+         </ul>
+         {% endif %}
+
+        <!-- student info section -->
+        <div class="teacher-info">
+            <!-- <div class="sub-heading">
+                <h5>Teacher Information</h5>
+            </div> -->
+            <div class="row">
+                <!-- name -->
+                <div class="form-group col-md-6">
+                    <label for="">Teacher Fullname: </label>
+                    <input type="text" name="teachernames" class="form-control">
+                </div>
+                <!-- gender -->
+                <div class="form-group col-md-6">
+                    <label for="">Gender: </label>
+                    <select name="gender" id="" class="form-control pr-2">
+                        <option value="">---</option>
+                        <option value="Male">Male</option>
+                        <option value="Female ">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <!-- dob -->
+                <div class="form-group col-md-6">
+                    <label for="">Date Of Birth </label>
+                    <input type="date" name="dob" class="form-control">
+                </div>
+
+                <!-- contact -->
+                <div class="form-group col-md-6">
+                    <label for="">Contact </label>
+                    <input type="text" name="contact" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                
+                <!-- email -->
+                <div class="form-group col-md-6">
+                    <label for="">Email Address </label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+                <!-- address -->
+                <div class="form-group col-md-6">
+                    <label for=""> Address </label>
+                    <input type="text" name="address" class="form-control">
+                </div>
+                
+                
+            </div>
+        </div>
+        
+
+
+        <div class="parent-info">
+            <div class="row">
+                <!-- joining date -->
+                <div class="form-group col-md-6">
+                    <label for="">Joining Date </label>
+                    <input type="date" name="joiningdate" class="form-control">
+                </div>
+                <!-- qualification-->
+                <div class="form-group col-md-6">
+                    <label for="">Academic Qualification </label>
+                    <input type="text" name="qualification" class="form-control">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="">Position </label>
+                    <input type="text" name="position" class="form-control">
+                </div>
+                <!-- username-->
+                <div class="form-group col-md-6">
+                    <label for="">Username </label>
+                    <input type="text" name="username" class="form-control">
+                </div>
+                
+            </div>
+            
+
+            
+        </div>
+        <div class="row">
+            <!-- class -->
+            <div class="form-group col-md-6">
+                <label for="class-checkbox">Salary:</label><br>
+                <input type="text" name="salary" id="" class="form-control" value="" required>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="class-checkbox">Bank Account Number:</label><br>
+                <input type="text" name="bankaccnum" id="" class="form-control" value="" required>
+            </div>
+
+            
+            <!-- position -->
+            
+        </div>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="class-checkbox">Attached Classes:</label><br>
+                {% for class in classes %}
+                    <input type="checkbox" name="classes" id="" value="{{class.classid}}">
+                    <label for="class-checkbox">{{class.classname}}</label>
+                    <br>
+                {% endfor %}  
+            </div>
+            <!-- Subject -->
+            <div class="form-group col-md-3">
+                <label for="class-checkbox">Attached Subjects:</label><br>
+                {% for subject in subjects %}
+                    <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
+                    <label for="class-checkbox">{{subject.subjectname}}</label>
+                    <br>
+                {% endfor %}  
+            </div>
+            <!-- profile_image -->
+            <div class="form-group col-md-6">
+                <label for="">Profile Image</label>
+                <input type="file" name="profile_image" class="form-control-file">
+            </div>
+
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}

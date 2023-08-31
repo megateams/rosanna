@@ -1,0 +1,43 @@
+{% extends 'teacher/base.html' %}
+{% block  title %} Payment History {% endblock title %}
+{% block  pagetitle %} Payment History {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Staff Name</th>
+                    <th>Date Paid</th>
+                    <th>Term $ Year</th>
+                    <th>Salary</th>
+                    <th>Amount Paid</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{teacher.teacherid}}</td>
+                    <td>{{teacher.teachername}}</td>
+                    <td>{{teacher.paymentdate}}</td>
+                    <td>TERM I 2024</td>
+                    <td>{{teacher.salary}}</td>
+                    <td>{{teacher.amountpaid}}</td>
+                    <td>{{teacher.balance}}</td>
+                </tr>
+  
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

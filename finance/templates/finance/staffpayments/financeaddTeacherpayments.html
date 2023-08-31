@@ -1,0 +1,91 @@
+{% extends 'finance/base.html' %}
+{% block  title %} Add Teacherpayment {% endblock title %}
+{% block  pagetitle %} Add Teacherpayment  {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <a href="/financeteacherpaymentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Teacherpayments</a>
+    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+               
+    <!-- form-section -->
+    <form action="" class="form ml-3 p-3 shadow rounded bg-light" method='POST'>
+        {% csrf_token %}
+        <div class="title">
+            <h5 class="text-uppercase text-center">Register Teacherpayments</h5>
+            <hr>
+        </div>
+
+        <!-- staffpayments info section -->
+        <div class="staffpayments">
+            <div class="row">
+                <!-- teacherid -->
+                <div class="form-group col-md-6">
+                    <label for="">Teacher ID: </label>
+                    {% comment %} <input type="text" name="teacherid" class="form-control"> {% endcomment %}
+                    <select type="text" id='teachersid' name="teacherid" class="form-control">
+                        <option value="" selected disabled>---</option>
+                        {% for teacherinfo in teachers %}
+                        <option value='{{ teacherinfo.teacherid }}'>{{ teacherinfo.teachernames }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for=""> Salary </label>
+                    <input id="teachersalary" type="text" name="salary" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- datepaid -->
+                <div class="form-group col-md-6">
+                    <label for="">Payment Date </label>
+                    <input type="date" name="paymentdate" class="form-control">
+                </div>
+                <!-- amountpaid -->
+                <div class="form-group col-md-6">
+                    <label for="">Amount Paid</label>
+                    <input id='amountpaid' type="number" name="amount" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- amountpaid -->
+                <div class="form-group col-md-6">
+                    <label for=""> Balance </label>
+                    <input id='balance' type="number" name="balance" class="form-control" readonly>
+                </div>
+                <!-- Balance -->
+                {% comment %} <div class="form-group col-md-6">
+                    <label for="">Payment Method</label>
+                    <input type="text" name="paymentmethod" class="form-control">
+                </div> {% endcomment %}
+            </div>
+
+            {% comment %} <div class="row">
+                <!-- position -->
+                <div class="form-group col-md-6">
+                    <label for=""> Bank Account No.</label>
+                    <input type="text" name="bankaccnum" class="form-control">
+                </div>
+            </div> {% endcomment %}
+
+
+            
+        </div>
+
+        <!-- button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
+        </div>
+        
+
+        
+    </form>
+    <!-- form-section -->
+
+</div>
+<!-- inner-content -->
+
+{% endblock main %}
