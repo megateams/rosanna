@@ -829,6 +829,14 @@ def teacher_export_to_excel(request):
     
 def teachers(request):
     if request.method == 'POST':
+        teachernames = request.POST.get('teachernames')
+        dob = request.POST.get('dob')
+
+        # Check if a teacher with the same name and date of birth already exists
+        if Teachers.objects.filter(Q(teachernames=teachernames) & Q(dob=dob)).exists():
+            messages.error(request, 'A teacher with the same name and date of birth already exists.')
+            return redirect("Add Teacher")  # Redirect back to the form page
+
         profile_image = request.FILES.get('profile_image')
         last_teacher = Teachers.objects.order_by('-teacherid').first()
 
