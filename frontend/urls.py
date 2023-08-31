@@ -96,6 +96,9 @@ urlpatterns = [
    path('edit_term/', views.edit_term, name='edit_term'),
    path('delete_term/', views.delete_term, name='delete_term'),
 
+#    imports
+    # path('import_excel/', views.import_excel, name='import_excel'),
+
 
 
 

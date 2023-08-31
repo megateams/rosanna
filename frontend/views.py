@@ -15,6 +15,7 @@ from datetime import datetime,date
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
+import pandas as pd
 
 
 #register details for the user (admin)
@@ -479,30 +480,34 @@ def addsubjectsform(request):
 
 def addsubject(request):
     if request.method == 'POST':
-        subjectnames = request.POST.get('subjectname')
+        subject_name = request.POST.get('subjectname')
         classlevel = request.POST.get('classlevel')
         # subjectheads = request.POST.get('subjecthead')
-        
-        # Find the last subject ID to determine the next one
-        last_subject = Subjects.objects.order_by('-subjectid').first()
-        if last_subject:
-            last_subject_id = last_subject.subjectid
-            next_subject_number = int(last_subject_id[3:]) + 1
-        else:
-            next_subject_number = 1
 
-        # Generate the new subject ID
-        subjectids = 'SUB{:02d}'.format(next_subject_number)
-        
-        Subjects.objects.create(
-            subjectname=subjectnames,
-            subjectid=subjectids,
-            classlevel=classlevel,
-            # subjecthead=subjectheads
-        )
-        Subjects.save
-        messages.success(request, 'Subject successfully added!')
-        return redirect("addsubjectsform")
+        # Check if the subject already exists
+        if Subjects.objects.filter(subjectname=subject_name).exists():
+            messages.error(request, 'Subject with this name already exists.')
+        else:
+            # Find the last subject ID to determine the next one
+            last_subject = Subjects.objects.order_by('-subjectid').first()
+            if last_subject:
+                last_subject_id = last_subject.subjectid
+                next_subject_number = int(last_subject_id[3:]) + 1
+            else:
+                next_subject_number = 1
+
+            # Generate the new subject ID
+            subjectids = 'SUB{:02d}'.format(next_subject_number)
+            
+            Subjects.objects.create(
+                subjectname=subject_name,
+                subjectid=subjectids,
+                classlevel=classlevel,
+                # subjecthead=subjectheads
+            )
+            Subjects.save
+            messages.success(request, 'Subject successfully added!')
+    return redirect("addsubjectsform")
     # return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
 
 # assign subject head
@@ -1189,3 +1194,6 @@ def delete_supportstaff(request):
         messages.success(request, "Supportstaff has been deleted")
 
         return redirect("Support staff List")
+
+# import
+
