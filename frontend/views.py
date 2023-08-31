@@ -16,6 +16,7 @@ from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
+from django.db.models import Q 
 
 
 #register details for the user (admin)
@@ -571,17 +572,17 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
+        dob = request.POST.get('dob')
+        childname = request.POST.get('childname')
+
+        # Check if a student with the same name and date of birth already exists
+        if Student.objects.filter(Q(childname=childname) & Q(dob=dob)).exists():
+            messages.error(request, 'A student with the same name and date of birth already exists.')
+            return redirect("AddStudents")  # Redirect back to the form page
+
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
-        #  # Retrieve form data
-        # childname = request.POST.get('childname')
-        # class_id = request.POST['stdclass']
-
-        # # Check if a student with the same stdnumber and stdclass exists
-        # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
-
-        # if existing_student:
-        #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+        
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -688,14 +689,14 @@ def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
-        class_level = request.POST['class_level']
+        # class_level = request.POST['class_level']
 
         # Check if the class already exists
         if Schoolclasses.objects.filter(classname=classname).exists():
             messages.error(request, 'Class with this name already exists.')
             return redirect("AddClasses")  # Redirect back to the form page
 
-        newclass = Schoolclasses.objects.create(classname=classname, class_level=class_level)
+        newclass = Schoolclasses.objects.create(classname=classname)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
