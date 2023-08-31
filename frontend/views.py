@@ -481,7 +481,7 @@ def addsubjectsform(request):
 def addsubject(request):
     if request.method == 'POST':
         subject_name = request.POST.get('subjectname')
-        classlevel = request.POST.get('classlevel')
+        # classlevel = request.POST.get('classlevel')
         # subjectheads = request.POST.get('subjecthead')
 
         # Check if the subject already exists
@@ -502,7 +502,7 @@ def addsubject(request):
             Subjects.objects.create(
                 subjectname=subject_name,
                 subjectid=subjectids,
-                classlevel=classlevel,
+                # classlevel=classlevel,
                 # subjecthead=subjectheads
             )
             Subjects.save
