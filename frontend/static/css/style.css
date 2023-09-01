@@ -346,7 +346,7 @@
     }
 
     .cards .card{
-        height: 12vh;
+        height: 15vh;
         padding: 10px 5px;
         margin: 10px 7px;
     }
@@ -376,11 +376,15 @@
 
     .dataTables_filter{
         /* display: none; */
-        margin-right: -150px;
+        margin-right: -170px;
+    }
+
+    .dataTables_filter input{
+        width: 120px;
     }
 
     .dataTables_length{
-        margin-left: -250px;
+        margin-left: -210px;
         margin-bottom: -43px;
     }
 

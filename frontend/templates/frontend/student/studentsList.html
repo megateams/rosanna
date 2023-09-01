@@ -6,7 +6,7 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <div class="btns">
+    <div class="btns" style="margin-left: -18px;">
         <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
         <a href="/export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
@@ -48,7 +48,7 @@
                     <td>{{ student.stdnumber }}</td>
                     <td>
                         {% if student.profile_image %}
-                            <img class="img-thumbnail" src="{{ student.profile_image.url }}" width="90" style="height: 70px;">
+                            <img class="img-thumbnail" src="{{ student.profile_image.url }}" width="45" style="height: 45px;">
                         {% else %}
                             <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
                         {% endif %}
