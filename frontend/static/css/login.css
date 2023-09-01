@@ -58,8 +58,11 @@
 }
 
 @media (max-width:550px) {
+    .main{
+        background-color: rgb(252, 252, 252);
+    }
     .container{
-        margin: 0;
+        margin: 15% 10%;
         height: 100vh;
     }
 
@@ -67,6 +70,15 @@
         margin: 10% 5%;
         width: 90%;
     }
+
+    .container .content{
+        /* display: none; */
+        margin: 0 5%;
+        margin-bottom: -20px;
+    }
+
+
+
     
 }
 

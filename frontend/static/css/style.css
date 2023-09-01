@@ -12,7 +12,7 @@
     width: 100%;
     position: relative;
     /* display: none; */
-    height: 90vh;
+    height: 100vh;
     overflow: hidden;
 
 }
@@ -123,9 +123,11 @@
 }
 .inner-content .table-section
 {
-    padding: 3px 15px;
+    /* padding: 3px 15px; */
     /* background-color: #fff; */
     border-radius: 10px;
+    /* display: none; */
+    padding: 0 -10px;
 }
 .table-section .table thead
 {
@@ -171,6 +173,9 @@
     padding-right: 50px;
     padding-top: 10px;
     color: #fff;
+    border-left: 3px solid #fff;
+    margin-top: -10px;
+    margin-bottom: 10px;
     
 }
 
@@ -180,17 +185,11 @@
     color: #fff;
     border-radius: 5px;
     /* display: none; */
-    box-shadow: 2px 2px 2px 2px rgb(64, 43, 43);
+    box-shadow: 1px 1px 1px 1px rgb(64, 43, 43);
 }
 
 .cards .card:hover{
     background-color: rgb(95,86,86);
-}
-
-.card .cbody
-{
-    border-right: 3px solid #fff;
-    margin-bottom: 10px;
 }
 
 .cards .session_card{
@@ -343,10 +342,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         /* display: none; */
+        margin: 0 -15px;
     }
 
     .cards .card{
-        height: 13vh;
+        height: 12vh;
         padding: 10px 5px;
         margin: 10px 7px;
     }
@@ -357,6 +357,8 @@
         justify-content: center;
         padding: 15px 5px;
         color: #fff;
+        margin: 0;
+        margin-left: -10px;
     }
 
     .current_date{
@@ -364,10 +366,22 @@
     }
 
     .table-section{
-        margin-left: -20px;
-        padding: 30px;
+        /* margin-left: -20px; */
+        /* padding: 30px; */
         width: 100%;
-        overflow-x: scroll;
+        /* overflow-x: scroll; */
+        /* background: #fff; */
+        padding-top: 20px;
+    }
+
+    .dataTables_filter{
+        /* display: none; */
+        margin-right: -150px;
+    }
+
+    .dataTables_length{
+        margin-left: -250px;
+        margin-bottom: -43px;
     }
 
    
