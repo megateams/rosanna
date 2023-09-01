@@ -87,10 +87,10 @@
                             </div>
                             <ul class="submenu1">
                                 <li>
-                                    <a href="/adminslist" style="font-size: 12px;"><i class="fas fa-list    mr-1"></i> <span>Administrators List</span></a>
+                                    <a href="/adminslist" style="font-size: 12px;"><i class="fas fa-list    mr-1"></i> <span> List</span></a>
                                 </li>
                                 <li>
-                                    <a href="/addadmins" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-1"></i> <span>Add Administrators</span></a>
+                                    <a href="/addadmins" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-1"></i> <span>Add </span></a>
                                 </li>
                             </ul>
                             <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
@@ -155,13 +155,7 @@
                         <li>
                             <a href="/markslist"> <i class="fas fa-file    mr-2"></i> <span>Marks</span></a>
                         </li>
-                        <!-- <li>
-                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> <span>Academic Reports</span></a>
-                        </li> -->
                     </ul>
-
-                    <!-- <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a> -->
-                    <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
                 <li>
@@ -209,9 +203,6 @@
 
                 </li>
                 <hr color="#fff">
-                
-                
-
                 <li>
                     <a class="" href='/settings/enrollment'><i class="fas fa-cogs    mr-2"></i><span>Settings</span></a>
                     <!-- <hr className='mt-3' /> -->
@@ -228,6 +219,10 @@
             <nav class="navbar bg-light shadow align-items-center">
                 <div class='brand'>
                     <i class="fas fa-bars " ></i>    
+                </div>
+                <div class="current_date ml-5"> 
+                    <a class="btn btn-sm btn-primary text-white p-2">Current Date: </a>
+                    <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
                 <div class="right mr-5 d-flex">
                     {% if user.is_authenticated %}

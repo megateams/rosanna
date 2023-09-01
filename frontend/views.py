@@ -15,6 +15,8 @@ from datetime import datetime,date
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
+import pandas as pd
+from django.db.models import Q 
 
 
 #register details for the user (admin)
@@ -479,30 +481,34 @@ def addsubjectsform(request):
 
 def addsubject(request):
     if request.method == 'POST':
-        subjectnames = request.POST.get('subjectname')
-        classlevel = request.POST.get('classlevel')
+        subject_name = request.POST.get('subjectname')
+        # classlevel = request.POST.get('classlevel')
         # subjectheads = request.POST.get('subjecthead')
-        
-        # Find the last subject ID to determine the next one
-        last_subject = Subjects.objects.order_by('-subjectid').first()
-        if last_subject:
-            last_subject_id = last_subject.subjectid
-            next_subject_number = int(last_subject_id[3:]) + 1
-        else:
-            next_subject_number = 1
 
-        # Generate the new subject ID
-        subjectids = 'SUB{:02d}'.format(next_subject_number)
-        
-        Subjects.objects.create(
-            subjectname=subjectnames,
-            subjectid=subjectids,
-            classlevel=classlevel,
-            # subjecthead=subjectheads
-        )
-        Subjects.save
-        messages.success(request, 'Subject successfully added!')
-        return redirect("addsubjectsform")
+        # Check if the subject already exists
+        if Subjects.objects.filter(subjectname=subject_name).exists():
+            messages.error(request, 'Subject with this name already exists.')
+        else:
+            # Find the last subject ID to determine the next one
+            last_subject = Subjects.objects.order_by('-subjectid').first()
+            if last_subject:
+                last_subject_id = last_subject.subjectid
+                next_subject_number = int(last_subject_id[3:]) + 1
+            else:
+                next_subject_number = 1
+
+            # Generate the new subject ID
+            subjectids = 'SUB{:02d}'.format(next_subject_number)
+            
+            Subjects.objects.create(
+                subjectname=subject_name,
+                subjectid=subjectids,
+                # classlevel=classlevel,
+                # subjecthead=subjectheads
+            )
+            Subjects.save
+            messages.success(request, 'Subject successfully added!')
+    return redirect("addsubjectsform")
     # return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
 
 # assign subject head
@@ -515,7 +521,7 @@ def assign_subjecthead(request):
         that_subject.subjecthead = subject_head
         that_subject.save()
         messages.success(request,"Subject Head assigned successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 # edit subject view
 def edit_subject(request):
@@ -566,8 +572,17 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
+        dob = request.POST.get('dob')
+        childname = request.POST.get('childname')
+
+        # Check if a student with the same name and date of birth already exists
+        if Student.objects.filter(Q(childname=childname) & Q(dob=dob)).exists():
+            messages.error(request, 'A student with the same name and date of birth already exists.')
+            return redirect("AddStudents")  # Redirect back to the form page
+
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
+<<<<<<< HEAD
          # Retrieve form data
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
@@ -577,6 +592,9 @@ def studentReg(request):
 
         # if existing_student:
         #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+=======
+        
+>>>>>>> 2c6a7334369fefa65332e2d863aa9256e917b62f
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -683,9 +701,14 @@ def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
-        class_level = request.POST['class_level']
+        # class_level = request.POST['class_level']
 
-        newclass = Schoolclasses.objects.create(classname=classname, class_level=class_level)
+        # Check if the class already exists
+        if Schoolclasses.objects.filter(classname=classname).exists():
+            messages.error(request, 'Class with this name already exists.')
+            return redirect("AddClasses")  # Redirect back to the form page
+
+        newclass = Schoolclasses.objects.create(classname=classname)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
@@ -818,6 +841,14 @@ def teacher_export_to_excel(request):
     
 def teachers(request):
     if request.method == 'POST':
+        teachernames = request.POST.get('teachernames')
+        dob = request.POST.get('dob')
+
+        # Check if a teacher with the same name and date of birth already exists
+        if Teachers.objects.filter(Q(teachernames=teachernames) & Q(dob=dob)).exists():
+            messages.error(request, 'A teacher with the same name and date of birth already exists.')
+            return redirect("Add Teacher")  # Redirect back to the form page
+
         profile_image = request.FILES.get('profile_image')
         last_teacher = Teachers.objects.order_by('-teacherid').first()
 
@@ -1125,3 +1156,65 @@ def school_info(request):
         'school_data': SchoolInfo.objects.all()
     }
     return render(request, "frontend/school_info.html", context)
+
+def delete_teacher(request):
+    if request.method == "POST":
+        teacherid = request.POST.get("teacherid")
+
+        teacher = Teachers.objects.get(pk=teacherid)
+        teacher.delete()
+        messages.success(request, "Teacher has been deleted")
+
+        return redirect("Teachers List")
+
+def edit_supportstaff(request):
+    if request.method == 'POST':
+        supportstaffid = request.POST.get("supportstaffid")
+        supportstaffnames = request.POST.get('supportstaffnames')
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        position = request.POST.get('position')
+        qualification = request.POST.get('qualification')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
+        dob = request.POST.get('dob')
+        joiningdate = request.POST.get('joiningdate')
+
+
+        that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
+
+        # Update support staff attributes
+        that_support_staff.supportstaffnames = supportstaffnames
+        that_support_staff.gender = gender
+        that_support_staff.contact = contact
+        that_support_staff.email = email
+        that_support_staff.address = address
+        that_support_staff.position = position
+        that_support_staff.qualification = qualification
+        that_support_staff.salary = salary
+        that_support_staff.bankaccnum = bankaccnum
+        that_support_staff.dob = dob
+        that_support_staff.joiningdate = joiningdate
+
+        # Save the updated support staff
+        that_support_staff.save()
+
+        messages.success(request, "Support Staff edited successfully")
+        return redirect("show supportstaff", supportstaffid=supportstaffid)
+    # else:
+    #     return render(request, 'your_template_name.html')  # Render a form for editing if the request method is GET
+
+def delete_supportstaff(request):
+    if request.method == "POST":
+        supportstaffid = request.POST.get("supportstaffid")
+
+        supportstaff = Supportstaff.objects.get(pk=supportstaffid)
+        supportstaff.delete()
+        messages.success(request, "Supportstaff has been deleted")
+
+        return redirect("Support staff List")
+
+# import
+

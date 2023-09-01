@@ -349,13 +349,12 @@
     }
 
     .cards .card .icon{
-    font-size: 1.5rem;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 5px;
-    color: #fff;
-    
-}
+        font-size: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 5px;
+        color: #fff;
+    }
 
    
 }

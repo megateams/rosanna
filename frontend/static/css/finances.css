@@ -54,18 +54,6 @@
     border-radius: 50%;
     border: 2px solid white;
 }
-.inner-content .current-term .btn-h, .current-year .btn-h{
-    background-color: rgb(42, 42, 42);
-    color: black;
-    padding: 10px 20px;
-}
-
-.inner-content .current-term .btn-d, .current-year .btn-d{
-    background-color: gold;
-    color: rgb(255, 255, 255);
-    padding: 10px 20px;
-    font-weight: 700;
-}
 /* responsivenes */
 /* small screens */
 

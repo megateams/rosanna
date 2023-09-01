@@ -1,16 +1,32 @@
 {% extends 'teacher/base.html' %}
 {% block title %} Class Details {% endblock title %}
+{% block pagetitle %} Class Details {% endblock pagetitle %}
 {% load static %}
 {% load custom_filters %}
 
 
 {% block main %}
 <div class="inner-content">
-    <div class="class-btns" pr-5>
-        <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
-        <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
-      
-        <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+    <div class="buttons  align-items-center justify-content-between" style="margin-top: -25px;">
+        <div class="current_session d-flex mt-4">
+            {% for data in term_data %}
+                <div class="current-term mr-4">
+                    <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="class-btns" pr-5>
+            <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
+            <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
+          
+            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+            
+        </div>
         
     </div>
 
@@ -29,6 +45,7 @@
                         <p class="mr-3"><b>Class level:</b> <span class="ml-2">{{ schoolclass.class_level }}</span></p>
                         <p class="mr-3"><b>Class teacher:</b> <span class="ml-2">{{ teacher.teachernames }}</span></p>
                     </div>
+                    
                     <div class="col-12 mt-3">
                         <!-- donut chart -->
                         <div class="donut-chart shadow  bg-light pb-2">

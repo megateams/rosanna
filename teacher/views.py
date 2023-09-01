@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.contrib import messages
-from frontend.models import Teachers, Schoolclasses, Subjects, Student, Mark
+from frontend.models import *
 from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
@@ -56,8 +56,8 @@ def dashboard(request):
     teacher_id = request.session['teacher_id']
 
     teacher = Teachers.objects.get(teacherid=teacher_id)    
-
-    return render(request, 'teacher/dashboard.html',{'teacher': teacher})
+    term_data = Term.objects.all()
+    return render(request, 'teacher/dashboard.html',{'teacher': teacher, 'term_data':term_data})
 
 def profile(request,teacher_id):
     teachers = Teachers.objects.get(teacherid = teacher_id)
@@ -305,6 +305,8 @@ def his_class(request, class_id, teacher_id):
     for student in students:
         marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
         student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+    
+    term_data = Term.objects.all()
 
     return render(request, 'teacher/his_class.html', {
         'schoolclass': schoolclass,
@@ -315,6 +317,7 @@ def his_class(request, class_id, teacher_id):
         'teachers_in_class': teachers_in_class,
         'num_girls': num_girls,
         'num_boys': num_boys,
+        'term_data': term_data,
     })
 
 # view marks
