@@ -4,9 +4,9 @@
 {% block  main %} 
 
 <!-- inner-content -->
-<div class="inner-content">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+<div class="inner-content ">
+    <nav class="navbar navbar-light bg-white settings_links ">
+        <ul class="d-flex" style="list-style-type: none;">
             <li class="nav-item active">
                 <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
             </li>
@@ -17,16 +17,17 @@
         </ul>
     </nav>
     <!-- current term -->
-    <div class="row ml-2 mt-4 align-items-center">
+    <div class="row ml-2 mt-2 align-items-center">
         {% for data in term_data %}
         <div class="current-term mr-3">
             <a class=" btn-md btn-primary text-white p-2">Current Term: </a>
             <a  class=" btn-md btn-dark text-white p-2">{{data.current_term}} </a>
         </div>
         <div class="current-year"> 
-        </div>
             <a class=" btn-md btn-primary text-white p-2">Current Year: </a>
             <a class=" btn-md btn-dark text-white p-2">{{data.current_year}} </a>
+        </div>
+           
         {% endfor %}
     </div>
     <!-- current term -->

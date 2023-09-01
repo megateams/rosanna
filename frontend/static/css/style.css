@@ -29,6 +29,7 @@
 
 .inner-content{
     padding: 10px;
+    
     height: 80vh;
     overflow: hidden;
     overflow-y: scroll;
@@ -174,8 +175,8 @@
     padding-top: 10px;
     color: #fff;
     border-left: 3px solid #fff;
-    margin-top: -10px;
-    margin-bottom: 10px;
+    /* margin-top: -10px; */
+    /* margin-bottom: 10px; */
     
 }
 
@@ -376,7 +377,11 @@
 
     .dataTables_filter{
         /* display: none; */
+        margin-left: 180px;
         margin-right: -170px;
+        position: fixed;
+        z-index: 1;
+        /* top: 0; */
     }
 
     .dataTables_filter input{
@@ -384,10 +389,34 @@
     }
 
     .dataTables_length{
-        margin-left: -210px;
-        margin-bottom: -43px;
+        margin-left: 10px;
+        /* margin-left: -210px; */
+        margin-bottom: -50px;
+        position: fixed;
+        /* z-index: 1; */
+        /* top: 0; */
+    }
+    .current-year, .current-term{
+        /* display: none; */
+        font-size: 13px;
     }
 
+    .page_link{
+        display: none;
+    }
+
+    .inner-content{
+        padding-top: 20px;
+    }
+
+    .dataTables_wrapper {
+        overflow-y: scroll;
+        /* max-height: 100px; Adjust the maximum height as needed */
+    }
+
+    #table{
+        margin-top: 50px;
+    }
    
 }
 /* small screen */
