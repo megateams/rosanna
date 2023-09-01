@@ -573,10 +573,10 @@ def studentReg(request):
         class_id = request.POST['stdclass']
 
         # Check if a student with the same stdnumber and stdclass exists
-        existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
+        # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
 
-        if existing_student:
-            messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+        # if existing_student:
+        #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
