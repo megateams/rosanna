@@ -18,6 +18,13 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
 
+def admincheckemail(request , email):
+    try:
+        Administrators.objects.get(email = email)
+        return JsonResponse({'data' : 'Email address already used.'})
+    except:
+        print("")
+    return JsonResponse({'data' : ''})
 
 #register details for the user (admin)
 def editadministrator(request):
@@ -80,32 +87,37 @@ def addadmins(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        Administrators.objects.create(
-            fullname = fullname ,
-            gender = gender ,
-            address = address ,
-            contact = contact ,
-            email = email ,
-            role = role ,
-            qualification = qualification ,
-            bankaccnum =  bankaccnum ,
-            salary = salary ,
-            username = username ,
-            password = password ,
-        )
-        
-        Administrators.save
-        User.objects.create_user(
-            username = username ,
-            password = password ,
-            email = email ,
-            is_staff = True ,
-            is_superuser = True ,
-        )
-        
-        
-        messages.success(request , "Administrator Created Successfully")
-        return redirect('adminslist') 
+        try:
+            adminexist = Administrators.objects.get(username = username)
+            messages.error(request , "Administrator already exists.")
+            return render(request , 'frontend/staff/administratorsAdd.html')
+        except:
+            Administrators.objects.create(
+                fullname = fullname ,
+                gender = gender ,
+                address = address ,
+                contact = contact ,
+                email = email ,
+                role = role ,
+                qualification = qualification ,
+                bankaccnum =  bankaccnum ,
+                salary = salary ,
+                username = username ,
+                password = password ,
+            )
+            
+            Administrators.save
+            User.objects.create_user(
+                username = username ,
+                password = password ,
+                email = email ,
+                is_staff = True ,
+                is_superuser = True ,
+            )
+            
+            messages.success(request , "Administrator Created Successfully")
+            return redirect('adminslist') 
+
     return render(request , 'frontend/staff/administratorsAdd.html')
 
 def register(request):
@@ -182,8 +194,6 @@ def home(request):
         'term_data' : Term.objects.filter(status=1)
     }
     return render(request,'frontend/dashboard.html',context)
-
-
 
 # students views
 @login_required
@@ -582,7 +592,6 @@ def studentReg(request):
 
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
-<<<<<<< HEAD
          # Retrieve form data
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
@@ -592,17 +601,12 @@ def studentReg(request):
 
         # if existing_student:
         #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
-=======
-        
->>>>>>> 2c6a7334369fefa65332e2d863aa9256e917b62f
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
         # Generate the next stdnumber
         if max_stdnumber:
             new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
-
-                 
         else:
             new_stdnumber = 'STD001'
 
@@ -672,15 +676,20 @@ def subjects(request):
         subjectids = request.POST.get('subjectid')
         classlevels = request.POST.get('classlevel')
         subjectheads = request.POST.get('subjecthead')
-    
-        Subjects.objects.create(
-            subjectname = subjectnames , 
-            subjectid = subjectids , 
-            classlevel = classlevels , 
-            subjecthead = subjectheads
-        )
-    
-        Subjects.save
+        
+        try:
+            Subjects.objects.get(sugjectname = subjectnames , classlevels = classlevels)
+            messages.error(request , 'Subject Already Exists')
+        except:
+            Subjects.objects.create(
+                subjectname = subjectnames , 
+                subjectid = subjectids , 
+                classlevel = classlevels , 
+                subjecthead = subjectheads
+            )
+        
+            Subjects.save
+            messages.success(request , "Subject Added Succesfully")
     return HttpResponse(subjectnames)
 
 @login_required

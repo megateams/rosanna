@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 # from .views import save_registration
 
 urlpatterns = [
+    path('admincheckemail/<email>/' , views.admincheckemail , name = "checkemail"),
     path('deleteadmin/' , views.deleteadmin , name = "deleteadmin"),
     path('editadministrator/' , views.editadministrator , name = 'editadministrator'),
     path("", views.user_login, name="Admin Login"),
