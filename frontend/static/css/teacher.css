@@ -35,17 +35,10 @@
 }
 
 
-.current-term .btn-h, .current-year .btn-h{
-    background-color: rgb(42, 42, 42);
-    color: white;
-    padding: 10px 20px;
-}
 
-.current-term .btn-d, .current-year .btn-d{
-    background-color: gold;
-    color: rgb(255, 255, 255);
-    padding: 10px 20px;
-    font-weight: 700;
+
+.buttons{
+    display: flex;
 }
 
 /* small screen */
@@ -77,10 +70,7 @@
         margin-right: 20px;
     }
 
-   .current-year{
-    margin-top: 40px;
-    margin-left: 15px;
-   }
+   
    .current-term{
     margin-left: 15px;
    }
@@ -135,6 +125,38 @@
         width: 0;
     }
     /* toggle actions */
+
+    .current_date{
+        display: none;
+    }
+
+    .brand{
+        margin-right: 50px;
+    }
+
+    .right a{
+        /* display: none; */
+        margin-right: -40px;
+
+    }
+
+    .class-btns{
+        display: flex;
+        margin:20px 5px;
+    }
+
+    .class-btns a{
+        margin-right: 5px;
+    }
+
+    .buttons{
+        display: block;
+    }
+
+    .current_session{
+        display: flex;
+    }
+
 
    
 }

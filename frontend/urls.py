@@ -13,10 +13,13 @@ urlpatterns = [
 
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
+    path('student-by-class/<int:class_id>/', views.student_by_class, name='student_by_class'),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
     path('edit_student/', views.edit_student, name="edit_student"),
     path('delete_student/', views.delete_student, name="delete_student"),
+    path('edit_std_image/', views.edit_std_image, name="edit_std_image"),
+    path('edit_tr_image/', views.edit_tr_image, name="edit_tr_image"),
 
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
@@ -26,6 +29,7 @@ urlpatterns = [
     path('adminslist/' , views.adminslist , name = 'adminslist'),
     
     path('edit_teacher/', views.edit_teacher, name="edit_teacher"),
+    path('delete_teacher/', views.delete_teacher, name="delete_teacher"),
     path('teacher_export/', views.teacher_export_to_excel, name="teacher_export"),
 
     path('addusers/', views.addUsers, name="Add User"),
@@ -50,6 +54,8 @@ urlpatterns = [
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
     path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
+    path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
+    path('delete_supportstaff/', views.delete_supportstaff, name="delete_supportstaff"),
 
 
     path('addsubjectsform/' , views.addsubjectsform , name = "addsubjectsform"),
@@ -93,7 +99,8 @@ urlpatterns = [
    path('edit_term/', views.edit_term, name='edit_term'),
    path('delete_term/', views.delete_term, name='delete_term'),
 
-
+    # imports
+    path('import_students/', views.import_students, name='import_students'),
 
 
 ]

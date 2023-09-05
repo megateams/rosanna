@@ -6,9 +6,17 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <div class="btns">
-        <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
-        <a href="/export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    <div class="d-flex">
+        <div class="btns">
+            <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
+            <a href="/export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        </div>
+        <div class="btns mb-3 ml-4">
+            <a href="/studentslist/" class="btn btn-sm btn-primary">View All</a>
+            {% for class in classes %}
+                <a href="/student-by-class/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
+            {% endfor %}
+        </div>
     </div>
     <div class="table-section" style="font-size: 14px;"> 
         {% if messages %}
@@ -35,7 +43,6 @@
                     <th>Gender</th>
                     <th>Date of Birth</th>
                     <th>Address</th>
-                    {% comment %} <th>Class</th> {% endcomment %}
                     <th>Registration Date </th>
                     <th>House</th>
                     <th>Class</th>
@@ -48,16 +55,21 @@
                     <td>{{ student.stdnumber }}</td>
                     <td>
                         {% if student.profile_image %}
-                            <img class="img-thumbnail" src="{{ student.profile_image.url }}" width="90" style="height: 70px;">
+                            <img class="img-thumbnail" src="{{ student.profile_image.url }}" width="45" style="height: 45px;">
                         {% else %}
-                            <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                            <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail" width="45" style="height: 45px;">
                         {% endif %}
                     </td>
                     <td>{{ student.childname }}</td>
-                    <td>{{ student.gender }}</td>
+                    <td>
+                        {% if student.gender == 'm' %}
+                            Male
+                        {% else %}
+                            Female
+                        {% endif %}
+                    </td>
                     <td>{{ student.dob }}</td>
                     <td>{{ student.address }}</td>
-                    {% comment %} <td>{{ student.stdclass }}</td> {% endcomment %}
                     <td>{{ student.regdate }}</td>
                     <td>{{ student.house }}</td>
                     <td>{{ student.stdclass.classname }}</td>

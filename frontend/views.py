@@ -15,6 +15,8 @@ from datetime import datetime,date
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
+import pandas as pd
+from django.db.models import Q 
 
 
 #register details for the user (admin)
@@ -177,7 +179,7 @@ def home(request):
         'boys_count_by_class': boys_count_by_class,
         'girls_count_by_class': girls_count_by_class,
         'class_names': class_names,
-        'term_data' : Term.objects.filter(status=1)
+        'term_data' : Term.objects.filter(status=1),
     }
     return render(request,'frontend/dashboard.html',context)
 
@@ -188,12 +190,31 @@ def home(request):
 def studentsList(request):
     #retrieve all the selected students data from the database
     selected_students =Student.objects.all()
+    classes = Schoolclasses.objects.all()
+
+    context = {
+      'students': selected_students,
+       'classes': classes
+    }
     #pass the data to template for rendering
-    return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
+    return render(request, 'frontend/student/studentsList.html',context)
 
 @login_required
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html',{'classes': Schoolclasses.objects.all()})
+
+@login_required
+def student_by_class(request, class_id):
+    try:
+        # Fetch the class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        print(selected_class)
+        # Fetch students in the selected class
+        students = Student.objects.filter(stdclass=selected_class)
+        classes = Schoolclasses.objects.all()
+        return render(request, 'frontend/student/student_by_class.html', {'students': students, 'selected_class': selected_class, 'classes': classes})
+    except Exception as e:
+        return render(request, 'frontend/student/studentsList.html', {'error_message': str(e)})
 
 # teachers views
 @login_required
@@ -376,6 +397,49 @@ def showStudent(request,stdnumber):
     return render(request, 'frontend/student/showStudent.html', {'student': student, 'classes':classes})
 # students views
 
+# edit profile image
+def edit_std_image(request):
+    if request.method == "POST":
+        stdnumber = request.POST.get("stdnumber")
+        profile_image = request.FILES.get('profile_image')
+
+        student = Student.objects.get(stdnumber=stdnumber)
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            student.profile_image = image_filename
+
+            student.save()
+            messages.success(request, "Image edited successfully")
+            return redirect("Student details", stdnumber=stdnumber)
+        
+        else:
+            messages.success(request, "Error!!!")
+            return redirect("Student details", stdnumber=stdnumber)  
+
+# edit profile image
+def edit_tr_image(request):
+    if request.method == "POST":
+        teacherid = request.POST.get("teacherid")
+        profile_image = request.FILES.get('profile_image')
+
+        teacher = Teachers.objects.get(pk=teacherid)
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            teacher.profile_image = image_filename
+
+            teacher.save()
+            messages.success(request, "Image edited successfully")
+            return redirect("Show Teacher", teacherId=teacherid)
+        
+        else:
+            messages.success(request, "Error!!!")
+            return redirect("Show Teacher", teacherId=teacherid)  
+
+
 
 # edit student
 @login_required
@@ -479,30 +543,34 @@ def addsubjectsform(request):
 
 def addsubject(request):
     if request.method == 'POST':
-        subjectnames = request.POST.get('subjectname')
-        classlevel = request.POST.get('classlevel')
+        subject_name = request.POST.get('subjectname')
+        # classlevel = request.POST.get('classlevel')
         # subjectheads = request.POST.get('subjecthead')
-        
-        # Find the last subject ID to determine the next one
-        last_subject = Subjects.objects.order_by('-subjectid').first()
-        if last_subject:
-            last_subject_id = last_subject.subjectid
-            next_subject_number = int(last_subject_id[3:]) + 1
-        else:
-            next_subject_number = 1
 
-        # Generate the new subject ID
-        subjectids = 'SUB{:02d}'.format(next_subject_number)
-        
-        Subjects.objects.create(
-            subjectname=subjectnames,
-            subjectid=subjectids,
-            classlevel=classlevel,
-            # subjecthead=subjectheads
-        )
-        Subjects.save
-        messages.success(request, 'Subject successfully added!')
-        return redirect("addsubjectsform")
+        # Check if the subject already exists
+        if Subjects.objects.filter(subjectname=subject_name).exists():
+            messages.error(request, 'Subject with this name already exists.')
+        else:
+            # Find the last subject ID to determine the next one
+            last_subject = Subjects.objects.order_by('-subjectid').first()
+            if last_subject:
+                last_subject_id = last_subject.subjectid
+                next_subject_number = int(last_subject_id[3:]) + 1
+            else:
+                next_subject_number = 1
+
+            # Generate the new subject ID
+            subjectids = 'SUB{:02d}'.format(next_subject_number)
+            
+            Subjects.objects.create(
+                subjectname=subject_name,
+                subjectid=subjectids,
+                # classlevel=classlevel,
+                # subjecthead=subjectheads
+            )
+            Subjects.save
+            messages.success(request, 'Subject successfully added!')
+    return redirect("addsubjectsform")
     # return render(request , 'frontend/academics/subjects.html' , {'subjects' : Subjects.objects.all()})
 
 # assign subject head
@@ -515,7 +583,7 @@ def assign_subjecthead(request):
         that_subject.subjecthead = subject_head
         that_subject.save()
         messages.success(request,"Subject Head assigned successfully")
-        return redirect("Subjects List")
+        return redirect("subjectList")
 
 # edit subject view
 def edit_subject(request):
@@ -551,10 +619,10 @@ def supportstaffList(request):
 
 @login_required   
 def showteacher(request,teacherId):
-    teachers = Teachers.objects.filter(teacherid=teacherId)
+    teacher = Teachers.objects.get(teacherid=teacherId)
     classes = Schoolclasses.objects.all()
     subjects = Subjects.objects.all()
-    return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers, 'classes':classes, 'subjects':subjects})
+    return render(request, 'frontend/staff/showteacher.html',{'teacher': teacher, 'classes':classes, 'subjects':subjects})
 
 
 @login_required
@@ -566,17 +634,23 @@ def showsupportstaff(request,supportstaffid):
 #students registration views
 def studentReg(request):
     if(request.method == 'POST'):
+        dob = request.POST.get('dob')
+        childname = request.POST.get('childname')
+
+        # Check if a student with the same name and date of birth already exists
+        if Student.objects.filter(Q(childname=childname) & Q(dob=dob)).exists():
+            messages.error(request, 'A student with the same name and date of birth already exists.')
+            return redirect("AddStudents")  # Redirect back to the form page
+
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
-         # Retrieve form data
-        childname = request.POST.get('childname')
-        class_id = request.POST['stdclass']
 
         # Check if a student with the same stdnumber and stdclass exists
         # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
 
         # if existing_student:
         #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -683,9 +757,14 @@ def schoolclasses(request):
     if request.method == 'POST':
         classname = request.POST['class_name']
         subject_names = request.POST.getlist('subjects')
-        class_level = request.POST['class_level']
+        # class_level = request.POST['class_level']
 
-        newclass = Schoolclasses.objects.create(classname=classname, class_level=class_level)
+        # Check if the class already exists
+        if Schoolclasses.objects.filter(classname=classname).exists():
+            messages.error(request, 'Class with this name already exists.')
+            return redirect("AddClasses")  # Redirect back to the form page
+
+        newclass = Schoolclasses.objects.create(classname=classname)
 
         for subject_name in subject_names:
             subject, created = Subjects.objects.get_or_create(subjectname=subject_name)
@@ -818,6 +897,14 @@ def teacher_export_to_excel(request):
     
 def teachers(request):
     if request.method == 'POST':
+        teachernames = request.POST.get('teachernames')
+        dob = request.POST.get('dob')
+
+        # Check if a teacher with the same name and date of birth already exists
+        if Teachers.objects.filter(Q(teachernames=teachernames) & Q(dob=dob)).exists():
+            messages.error(request, 'A teacher with the same name and date of birth already exists.')
+            return redirect("Add Teacher")  # Redirect back to the form page
+
         profile_image = request.FILES.get('profile_image')
         last_teacher = Teachers.objects.order_by('-teacherid').first()
 
@@ -835,7 +922,6 @@ def teachers(request):
         joiningdate = request.POST.get('joiningdate')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
-        position = request.POST.get('position')
         qualification = request.POST.get('qualification')
         username = request.POST.get('username')
         salary = request.POST.get('salary')
@@ -853,7 +939,6 @@ def teachers(request):
             email=email,
             address=address,
             joiningdate=joiningdate,
-            position=position,
             qualification=qualification,
             salary=salary,
             bankaccnum=bankaccnum,
@@ -1125,3 +1210,120 @@ def school_info(request):
         'school_data': SchoolInfo.objects.all()
     }
     return render(request, "frontend/school_info.html", context)
+
+def delete_teacher(request):
+    if request.method == "POST":
+        teacherid = request.POST.get("teacherid")
+
+        teacher = Teachers.objects.get(pk=teacherid)
+        teacher.delete()
+        messages.success(request, "Teacher has been deleted")
+
+        return redirect("Teachers List")
+
+def edit_supportstaff(request):
+    if request.method == 'POST':
+        supportstaffid = request.POST.get("supportstaffid")
+        supportstaffnames = request.POST.get('supportstaffnames')
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        position = request.POST.get('position')
+        qualification = request.POST.get('qualification')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
+        dob = request.POST.get('dob')
+        joiningdate = request.POST.get('joiningdate')
+
+
+        that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
+
+        # Update support staff attributes
+        that_support_staff.supportstaffnames = supportstaffnames
+        that_support_staff.gender = gender
+        that_support_staff.contact = contact
+        that_support_staff.email = email
+        that_support_staff.address = address
+        that_support_staff.position = position
+        that_support_staff.qualification = qualification
+        that_support_staff.salary = salary
+        that_support_staff.bankaccnum = bankaccnum
+        that_support_staff.dob = dob
+        that_support_staff.joiningdate = joiningdate
+
+        # Save the updated support staff
+        that_support_staff.save()
+
+        messages.success(request, "Support Staff edited successfully")
+        return redirect("show supportstaff", supportstaffid=supportstaffid)
+    # else:
+    #     return render(request, 'your_template_name.html')  # Render a form for editing if the request method is GET
+
+def delete_supportstaff(request):
+    if request.method == "POST":
+        supportstaffid = request.POST.get("supportstaffid")
+
+        supportstaff = Supportstaff.objects.get(pk=supportstaffid)
+        supportstaff.delete()
+        messages.success(request, "Supportstaff has been deleted")
+
+        return redirect("Support staff List")
+
+# import students
+def import_students(request):
+    if request.method == 'POST':
+        students_file = request.FILES.get('student_file')
+
+        if students_file:
+            try:
+                # Find the maximum stdnumber in the database
+                max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
+
+                # Generate the next stdnumber
+                if max_stdnumber:
+                    new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
+                else:
+                    new_stdnumber = 'STD001'
+
+                # Assuming the uploaded file is in Excel format (e.g., .xlsx)
+                student_data = pd.read_excel(students_file)
+
+                # Loop through the rows in the Excel file and create Student objects
+                for _, row in student_data.iterrows():
+                    class_name=row['Class']
+                    this_class = Schoolclasses.objects.get(classname=class_name)
+                    
+                    Student.objects.create(
+                        stdnumber=new_stdnumber,
+                        childname=row["Child's Name"],
+                        stdclass=this_class,
+                        gender=row['Gender'],
+                        dob=row['Date of Birth'],
+                        address=row['Address'],
+                        house=row['House'],
+                        regdate=row['Registration Date'],
+                        fathername=row["Father's Name"],
+                        fcontact=row["Father's Contact"],
+                        foccupation=row["Father's occupation"],
+                        mothername=row["Mother's Name"],
+                        mcontact=row["Mother's Contact"],
+                        moccupation=row["Mother's Occupation"],
+                        livingwith=row["Living with"],
+                        guardianname=row["Guardian's Name"],
+                        gcontact=row["Guardian's Contact"],
+                    )
+
+                    # Increment the new_stdnumber for the next student
+                    new_stdnumber = 'STD{:03d}'.format(int(new_stdnumber[3:]) + 1)
+
+                # Optionally, you can add success messages or redirection
+                messages.success(request, "Students imported successfully.")
+                return redirect('AddStudents')  # Redirect to a page showing the student list
+            except Exception as e:
+                # Handle exceptions (e.g., file format error)
+                messages.error(request, f"Error importing students: {str(e)}")
+                return redirect('AddStudents')
+        return redirect('AddStudents') 
+        
+

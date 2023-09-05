@@ -84,29 +84,21 @@
         <!-- donut and bargraph-->
         <div class="row mt-4">
             <div class="col-md-4 ">
-                <div class="donut-chart shadow  bg-light pb-2">
+                <div class="donut-chart shadow  bg-light p-2 rounded">
+                    <h6 class="text-center">School Gender Distribution Chart</h6>
                     <canvas id="genderDonutChart"></canvas>
                 </div>
             </div>
             <div class="col-md-8 bar">
 
-                <div class="bar-chart shadow bg-light">
+                <div class="bar-chart shadow bg-light p-2 rounded pb-5">
+                    <h6 class="text-center">Class Gender Distribution Graph</h6>
                     <canvas id="genderBarChart"></canvas>
                 </div>                   
             </div>
         </div>
          
-        <!-- calendar and line graph -->
-        <div class="row mt-4">
-            <div class="col-lg-7 bar">
-                <div class="line-chart ">
-                    <canvas id="paymentChart"></canvas>
-                </div>          
-            </div>
-            <div class="col-lg-5">
-                <!-- <div id="calendar" class="dycalendar-container"></div>  -->
-            </div>
-        </div>
+        
     </div>
 </div>
 <!-- inner-content -->
@@ -180,10 +172,6 @@
                 legend: {
                     position: "top"
                 },
-                title: {
-                    display: true,
-                    text: "Gender Distribution by Class"
-                }
             }
         }
     });

@@ -35,7 +35,7 @@
                     <th>Subject ID</th>
                     <th>Subject Name</th>
                     <th>Subject Head</th>
-                    <th>Class Level</th>
+                    <!-- <th>Class Level</th> -->
                     <th>Actions</th>
                     
                 </tr>
@@ -46,7 +46,7 @@
                     <td>{{ subj.subjectid }}</td>
                     <td>{{ subj.subjectname }}</td>
                     <td>{{ subj.subjecthead }}</td>
-                    <td>{{ subj.classlevel }}</td>
+                    <!-- <td>{{ subj.classlevel }}</td> -->
                     <td>
                         <div>
                             <a href="#assign{{subj.subjectid}}" data-toggle="modal"  class="btn btn-sm mr-2 btn-primary">Assign Head</a>
@@ -111,15 +111,15 @@
                                             <label for="">Subject name:</label>
                                             <input type="text" name="subjectname" value="{{subj.subjectname}}" class="form-control">
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label for="">level:</label>
                                             <select type="text" name="classlevel" value="{{subj.classlevel}}" class="form-control">
                                                 <!-- <option value=""selected disabled>---</option> -->
-                                                <option value="lower-primary">Lower primary</option>
+                                                <!-- <option value="lower-primary">Lower primary</option>
                                                 <option value="upper-primary">Upper primary</option>
                                                 <option value="nursery">Nursery</option>
                                             </select>
-                                        </div>
+                                        </div> --> -->
                                         <div class="form-group">
                                             <label for="">Select teacher</label>
                                             <select name="subject_head" id="" class="form-control" value="{{subj.subjecthead}}">

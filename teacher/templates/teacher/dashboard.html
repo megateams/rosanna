@@ -1,24 +1,28 @@
 {% extends 'teacher/base.html' %}
 {% block  title %} Dashboard {% endblock title %}
+{% block  pagetitle %} Dashboard {% endblock pagetitle %}
 {% load static %}
 {% block  main %}
 <div class="inner-content">
     <div class="row">
         <div class="col-md-8">
             <div class="welcome-message shadow">
-                <h3 class="text-left "> Your Welcome our Dearest Teacher </h3>
+                <h4 class="text-center "> Your Welcome our Dearest Teacher </h4>
+                <!-- <p>{% now 'd-m-Y' %}</p>    -->
                 
             </div>
             
-            <div class="row ml-2" style="margin: 30px 0;">
-                <div class="current-term mr-4">
-                    <a class=" btn-md btn-danger text-white p-2">Current Term: </a>
-                    <a  class=" btn-md btn-secondary text-white p-2">Term I </a>
-                </div>
-                <div class="current-year"> 
-                    <a class=" btn-md btn-danger text-white p-2">Current Year: </a>
-                    <a class=" btn-md btn-secondary text-white p-2">2023 </a>
-                </div>
+            <div class="d-flex align-items-center  ml-2" style="margin: 20px 0">
+                {% for data in term_data %}
+                    <div class="current-term mr-3">
+                        <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                    </div>
+                    <div class="current-year"> 
+                        <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                    </div>
+                {% endfor %}
             </div>
             <hr>
             <div class="header mt-3 ml-2">
@@ -75,7 +79,7 @@
                 <div class="teacher-image ">
                     {% if teacher.profile_image %}
                     <div class="image">
-                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 30vh;">
+                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 23vh;">
                     </div>
                     {% else %}
                     <div class="image">
@@ -91,7 +95,7 @@
                 </div>
                 <div>
                     <!-- <button class="btn btn-md btn-outline-warning">More Details</button> -->
-                    <a href="/teacher/profile/{{teacher.teacherid}}" class="btn btn-outline-warning btn-md">More Details</a>
+                    <a href="/teacher/profile/{{teacher.teacherid}}" class="btn btn-outline-primary btn-md">More Details <i class="fas fa-arrow-circle-right    "></i></a>
                 </div>
             </div>
             

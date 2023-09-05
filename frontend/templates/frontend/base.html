@@ -1,5 +1,8 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 {% load static %}
+
+
 <html lang="en">
   <head>
     <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
@@ -38,11 +41,25 @@
             <div class="dismiss">
                 <i class="fas fa-bars    text-white"></i>
             </div>
-            <div class='header text-center p-2 mb-2'>
-                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+            {% get_school_info as school_info %}
+            {% if school_info %}
+                {% for info in school_info %}
+                    <div class='header text-center p-2 mb-2 mt-4'>
+                        <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge">
+                        <h5 class="text-white"><b>{{ info.schoolname }}</b></h5>
+                        
+                    </div>
+                    
+                    <!-- Display other school information as needed -->
+                {% endfor %}
+            {% else %}#
+                <div class='header text-center p-2 mb-2 mt-4'>
+                    <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
 
-                <h5 class="text-white"><b>Rosanna Schools</b></h5>
-            </div>
+                    <h5 class="text-white"><b>Rosanna Schools</b></h5>   
+                </div>
+            {% endif %}
+            
             <hr color="#fff" style="height: 3px;">
 
             <ul class='sidebar-links pt-3'>
@@ -87,22 +104,22 @@
                             </div>
                             <ul class="submenu1">
                                 <li>
-                                    <a href="/adminslist" style="font-size: 12px;"><i class="fas fa-list    mr-1"></i> <span>Administrators List</span></a>
+                                    <a href="/adminslist" style="font-size: 12px;"><i class="fas fa-list    mr-1"></i> <span> List</span></a>
                                 </li>
                                 <li>
-                                    <a href="/addadmins" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-1"></i> <span>Add Administrators</span></a>
+                                    <a href="/addadmins" style="font-size: 12px;"> <i class="fas fa-user-graduate    mr-1"></i> <span>Add </span></a>
                                 </li>
                             </ul>
                             <!-- <a href="/studentslist"><i class="fas fa-list    mr-2"></i> Students List</a> -->
                         </li>
                         <li>
-                            <div class="main-submenu1 d-flex justify-content-between">
+                            <div class="main-submenu3 d-flex justify-content-between">
                                 <a class="" href='./staff'><i class="fas fa-user-graduate    mr-2"></i><span>Teachers</span></a>
-                                <div class="chevron1 ">
+                                <div class="chevron3 ">
                                     <i class="fas fa-chevron-right text-white    mr-2"></i>
                                 </div>
                             </div>
-                            <ul class="submenu1">
+                            <ul class="submenu3">
                                 <li>
                                     <a href="/teacherlist" style="font-size: 12px;"><i class="fas fa-list    mr-2"></i> <span>List</span></a>
                                 </li>
@@ -155,13 +172,7 @@
                         <li>
                             <a href="/markslist"> <i class="fas fa-file    mr-2"></i> <span>Marks</span></a>
                         </li>
-                        <!-- <li>
-                            <a href="/addstudent"> <i class="fas fa-file-archive   mr-2"></i> <span>Academic Reports</span></a>
-                        </li> -->
                     </ul>
-
-                    <!-- <a class="" href='./academics'><i class="fas fa-book-open    mr-2"></i><span>Academics</span></a> -->
-                    <!-- <hr className='mt-3' /> -->
                 </li>
                 <hr color="#fff">
                 <li>
@@ -209,9 +220,6 @@
 
                 </li>
                 <hr color="#fff">
-                
-                
-
                 <li>
                     <a class="" href='/settings/enrollment'><i class="fas fa-cogs    mr-2"></i><span>Settings</span></a>
                     <!-- <hr className='mt-3' /> -->
@@ -228,6 +236,10 @@
             <nav class="navbar bg-light shadow align-items-center">
                 <div class='brand'>
                     <i class="fas fa-bars " ></i>    
+                </div>
+                <div class="current_date ml-5"> 
+                    <a class="btn btn-sm btn-primary text-white p-2">Current Date: </a>
+                    <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
                 <div class="right mr-5 d-flex">
                     {% if user.is_authenticated %}
