@@ -2,6 +2,8 @@
 {% block  title %} Teahers List {% endblock title %}
 {% block  pagetitle %} Teachers List {% endblock pagetitle %}
 
+{% load static %}
+
 {% block  main %} 
 
 <!-- inner-content -->
@@ -16,6 +18,7 @@
             <thead>
                 <tr>
                     <th>Teacher ID</th>
+                    <th>Profile Image</th>
                     <th>Teacher Name</th>
                     <th>Gender</th>
                     <th>Contact</th>
@@ -31,6 +34,13 @@
                 {% for teacher in teachers %}
                 <tr>
                     <td>{{teacher.teacherid}}</td>
+                    <td>
+                        {% if teacher.profile_image %}
+                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" width="45" style="height: 45px;">
+                        {% else %}
+                        <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail" width="45" style="height: 45px;">
+                        {% endif %}
+                    </td>
                     <td>{{teacher.teachernames}}</td>
                     <td>{{teacher.gender}}</td>
                     <td>{{teacher.contact}}</td>

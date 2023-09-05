@@ -1,11 +1,12 @@
 {% extends 'frontend/base.html' %}
-{% block  title %} Students List {% endblock title %}
-{% block  pagetitle %} Students List {% endblock pagetitle %}
+{% block title %}Students List{% endblock title %}
+{% block pagetitle %}Students List{% endblock pagetitle %}
 {% load static %}
-{% block  main %} 
+{% block main %}
 
 <!-- inner-content -->
 <div class="inner-content">
+    <!-- Display the selected class name -->
     <div class="d-flex">
         <div class="btns">
             <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
@@ -18,23 +19,11 @@
             {% endfor %}
         </div>
     </div>
-    <div class="table-section" style="font-size: 14px;"> 
-        {% if messages %}
-            <ul class="messages">
-                <script>
-                    $(".alert").alert();
-                </script>
-                {% for message in messages %}
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                        <strong >{{ message }}</strong> 
-                    </div>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    <h5 class="ml-3"><u><b>{{ selected_class.classname }} Students</b></u></h5>
+
+    <div class="table-section" style="font-size: 14px;">
         <table class="table" id="table">
+            <!-- Table headers -->
             <thead>
                 <tr>
                     <th>Student number</th>
@@ -43,13 +32,14 @@
                     <th>Gender</th>
                     <th>Date of Birth</th>
                     <th>Address</th>
-                    <th>Registration Date </th>
+                    <th>Registration Date</th>
                     <th>House</th>
-                    <th>Class</th>
+                    <!-- <th>Class</th> -->
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                <!-- Loop through and display students in the selected class -->
                 {% for student in students %}
                 <tr>
                     <td>{{ student.stdnumber }}</td>
@@ -66,21 +56,15 @@
                     <td>{{ student.address }}</td>
                     <td>{{ student.regdate }}</td>
                     <td>{{ student.house }}</td>
-                    <td>{{ student.stdclass.classname }}</td>
-                     <td>   
-                        <a href="/showstudent/{{student.stdnumber}}" class="btn btn-sm btn-primary ">More ...</a> 
+                    <!-- <td>{{ student.stdclass.classname }}</td> -->
+                    <td>
+                        <a href="/showstudent/{{ student.stdnumber }}" class="btn btn-sm btn-primary">More ...</a>
                     </td>
                 </tr>
-                {% endfor %}  
+                {% endfor %}
             </tbody>
         </table>
     </div>
-    <!-- student show -->
-    <div class="show_student">
-        
-    </div>
 </div>
-
-
 <!-- inner-content -->
 {% endblock main %}

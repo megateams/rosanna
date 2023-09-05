@@ -14,10 +14,13 @@ urlpatterns = [
 
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
+    path('student-by-class/<int:class_id>/', views.student_by_class, name='student_by_class'),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
     path('edit_student/', views.edit_student, name="edit_student"),
     path('delete_student/', views.delete_student, name="delete_student"),
+    path('edit_std_image/', views.edit_std_image, name="edit_std_image"),
+    path('edit_tr_image/', views.edit_tr_image, name="edit_tr_image"),
 
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),

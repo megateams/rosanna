@@ -191,7 +191,7 @@ def home(request):
         'boys_count_by_class': boys_count_by_class,
         'girls_count_by_class': girls_count_by_class,
         'class_names': class_names,
-        'term_data' : Term.objects.filter(status=1)
+        'term_data' : Term.objects.filter(status=1),
     }
     return render(request,'frontend/dashboard.html',context)
 
@@ -200,12 +200,31 @@ def home(request):
 def studentsList(request):
     #retrieve all the selected students data from the database
     selected_students =Student.objects.all()
+    classes = Schoolclasses.objects.all()
+
+    context = {
+      'students': selected_students,
+       'classes': classes
+    }
     #pass the data to template for rendering
-    return render(request, 'frontend/student/studentsList.html', {'students': selected_students})
+    return render(request, 'frontend/student/studentsList.html',context)
 
 @login_required
 def studentsAdd(request):
     return render(request, 'frontend/student/studentsAdd.html',{'classes': Schoolclasses.objects.all()})
+
+@login_required
+def student_by_class(request, class_id):
+    try:
+        # Fetch the class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        print(selected_class)
+        # Fetch students in the selected class
+        students = Student.objects.filter(stdclass=selected_class)
+        classes = Schoolclasses.objects.all()
+        return render(request, 'frontend/student/student_by_class.html', {'students': students, 'selected_class': selected_class, 'classes': classes})
+    except Exception as e:
+        return render(request, 'frontend/student/studentsList.html', {'error_message': str(e)})
 
 # teachers views
 @login_required
@@ -388,6 +407,49 @@ def showStudent(request,stdnumber):
     return render(request, 'frontend/student/showStudent.html', {'student': student, 'classes':classes})
 # students views
 
+# edit profile image
+def edit_std_image(request):
+    if request.method == "POST":
+        stdnumber = request.POST.get("stdnumber")
+        profile_image = request.FILES.get('profile_image')
+
+        student = Student.objects.get(stdnumber=stdnumber)
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            student.profile_image = image_filename
+
+            student.save()
+            messages.success(request, "Image edited successfully")
+            return redirect("Student details", stdnumber=stdnumber)
+        
+        else:
+            messages.success(request, "Error!!!")
+            return redirect("Student details", stdnumber=stdnumber)  
+
+# edit profile image
+def edit_tr_image(request):
+    if request.method == "POST":
+        teacherid = request.POST.get("teacherid")
+        profile_image = request.FILES.get('profile_image')
+
+        teacher = Teachers.objects.get(pk=teacherid)
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            teacher.profile_image = image_filename
+
+            teacher.save()
+            messages.success(request, "Image edited successfully")
+            return redirect("Show Teacher", teacherId=teacherid)
+        
+        else:
+            messages.success(request, "Error!!!")
+            return redirect("Show Teacher", teacherId=teacherid)  
+
+
 
 # edit student
 @login_required
@@ -567,10 +629,10 @@ def supportstaffList(request):
 
 @login_required   
 def showteacher(request,teacherId):
-    teachers = Teachers.objects.filter(teacherid=teacherId)
+    teacher = Teachers.objects.get(teacherid=teacherId)
     classes = Schoolclasses.objects.all()
     subjects = Subjects.objects.all()
-    return render(request, 'frontend/staff/showteacher.html',{'teachers': teachers, 'classes':classes, 'subjects':subjects})
+    return render(request, 'frontend/staff/showteacher.html',{'teacher': teacher, 'classes':classes, 'subjects':subjects})
 
 
 @login_required
