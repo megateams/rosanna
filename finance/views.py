@@ -378,16 +378,13 @@ def financeaddTeacherpayments(request):
             previous_balance = previous_payment.balance
             new_balance = previous_balance - amountpaid  # Accumulate balance
         else:
-            new_balance = salary - amountpaid
-
-        Teacherspayment.objects.create(
+            
             teacherid=teacherid,
             teachername=teachername,
             paymentdate=paymentdate,
             salary=salary,
             amountpaid=amountpaid,
             balance=new_balance,
-        )
 
         messages.success(request, 'Teacher payment added successfully.')
         return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
