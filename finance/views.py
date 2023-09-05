@@ -225,6 +225,13 @@ def financedashboard(request):
 
     term_data = Term.objects.all()
 
+    # Calculate the percentages
+    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    fees_percentage = (total_amount / total) * 100
+    expenses_percentage = (total_amount_paid / total) * 100
+    sspayments_percentage = (total_sspayments / total) * 100
+    trpayments_percentage = (total_trpayments / total) * 100
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
@@ -232,6 +239,10 @@ def financedashboard(request):
         'total_trpayments' : total_trpayments,
         'term_data' : term_data,
         'fees_list': fees_list,
+        'fees_percentage': fees_percentage,
+        'expenses_percentage': expenses_percentage,
+        'sspayments_percentage': sspayments_percentage,
+        'trpayments_percentage': trpayments_percentage,
     }
     return render(request, "finance/financedashboard.html", context)
 

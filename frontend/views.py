@@ -1017,11 +1017,28 @@ def feesstructure(request):
 def fees(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
+    classes = Schoolclasses.objects.all()
     context = {
         'fees_list': fees_list,
         'total_amount': total_amount,
+        'classes': classes,
     }
     return render(request, 'frontend/accounting/fees.html',context)
+
+@login_required
+def fees_by_class(request, class_id):
+    classes = Schoolclasses.objects.all()
+    # Fetch the class based on the class_id
+    selected_class = Schoolclasses.objects.get(classid=class_id)
+    this_class = selected_class.classname
+    # Fetch fees records for students in the selected class
+    fees_list = Fees.objects.filter(studentclass=this_class)
+   
+    return render(request, 'frontend/accounting/fees_by_class.html', {
+        'fees_list': fees_list,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
 
 @login_required
 def teacherspayments(request):

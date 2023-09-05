@@ -82,6 +82,7 @@ urlpatterns = [
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
+    path('fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
     #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
     path('expenseslist/', views.expenses, name='Expenses '),
