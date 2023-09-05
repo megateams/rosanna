@@ -1271,6 +1271,8 @@ def delete_supportstaff(request):
         return redirect("Support staff List")
 
 # import students
+from django.db.models import Q  # Import Q for complex queries
+
 def import_students(request):
     if request.method == 'POST':
         students_file = request.FILES.get('student_file')
@@ -1291,31 +1293,44 @@ def import_students(request):
 
                 # Loop through the rows in the Excel file and create Student objects
                 for _, row in student_data.iterrows():
-                    class_name=row['Class']
-                    this_class = Schoolclasses.objects.get(classname=class_name)
-                    
-                    Student.objects.create(
-                        stdnumber=new_stdnumber,
-                        childname=row["Child's Name"],
-                        stdclass=this_class,
-                        gender=row['Gender'],
-                        dob=row['Date of Birth'],
-                        address=row['Address'],
-                        house=row['House'],
-                        regdate=row['Registration Date'],
-                        fathername=row["Father's Name"],
-                        fcontact=row["Father's Contact"],
-                        foccupation=row["Father's occupation"],
-                        mothername=row["Mother's Name"],
-                        mcontact=row["Mother's Contact"],
-                        moccupation=row["Mother's Occupation"],
-                        livingwith=row["Living with"],
-                        guardianname=row["Guardian's Name"],
-                        gcontact=row["Guardian's Contact"],
-                    )
+                    # Check if a student with the same name and DOB already exists
+                    existing_student = Student.objects.filter(
+                        Q(childname=row["Child Name"]) &
+                        Q(dob=row['Date of Birth'])
+                    ).first()
 
-                    # Increment the new_stdnumber for the next student
-                    new_stdnumber = 'STD{:03d}'.format(int(new_stdnumber[3:]) + 1)
+                    if not existing_student:
+                        class_name = row['Class']
+                        this_class = Schoolclasses.objects.get(classname=class_name)
+
+                        Student.objects.create(
+                            stdnumber=new_stdnumber,
+                            childname=row["Child Name"],
+                            stdclass=this_class,
+                            gender=row['Gender'],
+                            dob=row['Date of Birth'],
+                            address=row['Address'],
+                            house=row['House'],
+                            regdate=row['Registration Date'],
+                            fathername=row["Father's Name"],
+                            fcontact=row["Father's Contact"],
+                            foccupation=row["Father's occupation"],
+                            mothername=row["Mother's Name"],
+                            mcontact=row["Mother's Contact"],
+                            moccupation=row["Mother's Occupation"],
+                            livingwith=row["Living with"],
+                            guardianname=row["Guardian's Name"],
+                            gcontact=row["Guardian's Contact"],
+                        )
+
+                        # Increment the new_stdnumber for the next student
+                        new_stdnumber = 'STD{:03d}'.format(int(new_stdnumber[3:]) + 1)
+                    else:
+                        # Handle the case where the student already exists
+                        messages.warning(
+                            request,
+                            f"Student {row['Child Name']} with DOB {row['Date of Birth']} already exists."
+                        )
 
                 # Optionally, you can add success messages or redirection
                 messages.success(request, "Students imported successfully.")
@@ -1324,6 +1339,7 @@ def import_students(request):
                 # Handle exceptions (e.g., file format error)
                 messages.error(request, f"Error importing students: {str(e)}")
                 return redirect('AddStudents')
-        return redirect('AddStudents') 
+        return redirect('AddStudents')
+
         
 
