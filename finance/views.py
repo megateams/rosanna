@@ -274,11 +274,30 @@ def financeaddFees(request):
 def financefeesList(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
+    classes = Schoolclasses.objects.all()
     context = {
         'fees_list': fees_list,
         'total_amount': total_amount,
+        'classes': classes,
     }
     return render(request,'finance/fees/financefeesList.html',context)
+
+def fees_by_class(request, class_id):
+    classes = Schoolclasses.objects.all()
+    # Fetch the class based on the class_id
+    selected_class = Schoolclasses.objects.get(classid=class_id)
+    this_class = selected_class.classname
+    # Fetch fees records for students in the selected class
+    fees_list = Fees.objects.filter(studentclass=this_class)
+    
+    # total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
+
+    return render(request, 'finance/fees/fees_by_class.html', {
+        'fees_list': fees_list,
+        'classes': classes,
+        'selected_class': selected_class,
+        # 'total_amount': total_amount,
+    })
 
 def delete_fee(request):
     if request.method == 'POST':
