@@ -25,12 +25,7 @@ def financelogin(request):
             fees = Fees.objects.all()
             total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-            context = {
-                'total_amount_paid': total_amount_paid,
-                'total_amount': total_amount,
-
-            }
-            return render(request, "finance/financedashboard.html", context)
+            return redirect("Finance Dashboard")
         else:
             messages.warning(request, 'Login Failed')
             return redirect('financeloginpage')

@@ -588,12 +588,18 @@ def assign_subjecthead(request):
     if request.method == 'POST':
         subject_id = request.POST.get("subject_id")
         subject_head = request.POST.get("subject_head")
-        that_subject = Subjects.objects.get(pk=subject_id)
+        
+        # Check if the teacher is already assigned as a subject head for another subject
+        if Subjects.objects.filter(subjecthead=subject_head).exclude(pk=subject_id).exists():
+            messages.error(request, f'Teacher {subject_head} is already assigned as a subject head to another subject.')
+        else:
+            that_subject = Subjects.objects.get(pk=subject_id)
+            that_subject.subjecthead = subject_head
+            that_subject.save()
+            messages.success(request, f'Teacher {subject_head} assigned successfully to {that_subject.subjectname}.')
+    
+    return redirect("subjectList")
 
-        that_subject.subjecthead = subject_head
-        that_subject.save()
-        messages.success(request,"Subject Head assigned successfully")
-        return redirect("subjectList")
 
 # edit subject view
 def edit_subject(request):

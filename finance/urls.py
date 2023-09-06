@@ -21,7 +21,7 @@ from . import views
 
 urlpatterns = [
     path('finance/', views.financelogin , name='financeloginpage'),
-    path('financedashboard/', views.financedashboard, name=""), 
+    path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
