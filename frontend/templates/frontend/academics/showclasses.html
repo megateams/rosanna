@@ -77,16 +77,15 @@
                                         <!-- <div class="form-group">
                                             <label for="">level:</label>
                                             <select type="text" name="classlevel" value="{{class_obj.classlevel}}" class="form-control">
-                                                <!-- <option value=""selected disabled>---</option> -->
+                                                <option value=""selected disabled>---</option> -->
                                                 <!-- <option value="lower-primary">Lower primary</option>
                                                 <option value="upper-primary">Upper primary</option>
                                                 <option value="nursery">Nursery</option>
                                             </select> -->
-                                        </div> -->
                                         <div class="form-group">
                                             <label for="">Assign classteacher</label>
                                             <select name="classteacher" id="" class="form-control" value="{{class_obj.classteacher}}">
-                                                <!-- <option value="" selected disabled>---</option> -->
+                                                <option value="" selected disabled>---</option>
                                                 {% for teacher in teachers %}
                                                     <option value="{{teacher.teachernames}}">{{teacher.teachernames}}</option>
                                                 {% endfor %}

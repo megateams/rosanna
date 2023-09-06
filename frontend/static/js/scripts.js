@@ -31,6 +31,9 @@ $('.submenu1').css({
 $('.submenu2').css({
     'display' : 'none',
 });
+$('.submenu3').css({
+    'display' : 'none',
+});
 $('.submenu-acc').css({
     'display' : 'none',
 });
@@ -65,6 +68,12 @@ $('.main-submenu2').click(function (e) {
     $('.chevron2').toggle();
 
     $('.submenu2').toggle();
+});
+$('.main-submenu3').click(function (e) { 
+    e.preventDefault();
+    $('.chevron3').toggle();
+
+    $('.submenu3 ').toggle();
 });
 $('.main-menu-acc').click(function (e) { 
     e.preventDefault();

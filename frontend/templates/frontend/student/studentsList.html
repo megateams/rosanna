@@ -61,7 +61,13 @@
                         {% endif %}
                     </td>
                     <td>{{ student.childname }}</td>
-                    <td>{{ student.gender }}</td>
+                    <td>
+                        {% if student.gender == 'm' %}
+                            Male
+                        {% else %}
+                            Female
+                        {% endif %}
+                    </td>
                     <td>{{ student.dob }}</td>
                     <td>{{ student.address }}</td>
                     <td>{{ student.regdate }}</td>

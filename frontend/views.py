@@ -654,15 +654,7 @@ def studentReg(request):
 
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
-         # Retrieve form data
-        childname = request.POST.get('childname')
-        class_id = request.POST['stdclass']
-
-        # Check if a student with the same stdnumber and stdclass exists
-        # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
-
-        # if existing_student:
-        #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
+        
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
@@ -937,7 +929,6 @@ def teachers(request):
         joiningdate = request.POST.get('joiningdate')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
-        position = request.POST.get('position')
         qualification = request.POST.get('qualification')
         username = request.POST.get('username')
         salary = request.POST.get('salary')
@@ -955,7 +946,6 @@ def teachers(request):
             email=email,
             address=address,
             joiningdate=joiningdate,
-            position=position,
             qualification=qualification,
             salary=salary,
             bankaccnum=bankaccnum,
@@ -1304,5 +1294,76 @@ def delete_supportstaff(request):
 
         return redirect("Support staff List")
 
-# import
+# import students
+from django.db.models import Q  # Import Q for complex queries
+
+def import_students(request):
+    if request.method == 'POST':
+        students_file = request.FILES.get('student_file')
+
+        if students_file:
+            try:
+                # Find the maximum stdnumber in the database
+                max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
+
+                # Generate the next stdnumber
+                if max_stdnumber:
+                    new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
+                else:
+                    new_stdnumber = 'STD001'
+
+                # Assuming the uploaded file is in Excel format (e.g., .xlsx)
+                student_data = pd.read_excel(students_file)
+
+                # Loop through the rows in the Excel file and create Student objects
+                for _, row in student_data.iterrows():
+                    # Check if a student with the same name and DOB already exists
+                    existing_student = Student.objects.filter(
+                        Q(childname=row["Child Name"]) &
+                        Q(dob=row['Date of Birth'])
+                    ).first()
+
+                    if not existing_student:
+                        class_name = row['Class']
+                        this_class = Schoolclasses.objects.get(classname=class_name)
+
+                        Student.objects.create(
+                            stdnumber=new_stdnumber,
+                            childname=row["Child Name"],
+                            stdclass=this_class,
+                            gender=row['Gender'],
+                            dob=row['Date of Birth'],
+                            address=row['Address'],
+                            house=row['House'],
+                            regdate=row['Registration Date'],
+                            fathername=row["Father's Name"],
+                            fcontact=row["Father's Contact"],
+                            foccupation=row["Father's occupation"],
+                            mothername=row["Mother's Name"],
+                            mcontact=row["Mother's Contact"],
+                            moccupation=row["Mother's Occupation"],
+                            livingwith=row["Living with"],
+                            guardianname=row["Guardian's Name"],
+                            gcontact=row["Guardian's Contact"],
+                        )
+
+                        # Increment the new_stdnumber for the next student
+                        new_stdnumber = 'STD{:03d}'.format(int(new_stdnumber[3:]) + 1)
+                    else:
+                        # Handle the case where the student already exists
+                        messages.warning(
+                            request,
+                            f"Student {row['Child Name']} with DOB {row['Date of Birth']} already exists."
+                        )
+
+                # Optionally, you can add success messages or redirection
+                messages.success(request, "Students imported successfully.")
+                return redirect('AddStudents')  # Redirect to a page showing the student list
+            except Exception as e:
+                # Handle exceptions (e.g., file format error)
+                messages.error(request, f"Error importing students: {str(e)}")
+                return redirect('AddStudents')
+        return redirect('AddStudents')
+
+        
 

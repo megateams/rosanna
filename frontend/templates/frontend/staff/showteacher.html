@@ -108,39 +108,35 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h6><b>Address: </b></h6>
                         <p class="ml-2">{{teacher.address}}</p>
                     </div>
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h6><b>Classes </b></h6>
                         {% for class in teacher.classes.all %}
-                            <p class="ml-2">{{ class.classname }}{% if not forloop.last %}, {% endif %}</p>
+                            <p class="ml-3">{{ class.classname }}{% if not forloop.last %}, {% endif %}</p>
                             
                         {% endfor %}
                         
                     </div>
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h6><b>Joining Date: </b></h6>
                         <p class="ml-2">{{teacher.joiningdate}}</p>
                     </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Position: </b></h6>
-                        <p class="ml-2">{{teacher.position}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h5><b>Subject: </b></h5>
                         {% for subject in teacher.subjects.all %}
-                            <p class="ml-2">{{ subject.subjectname }}{% if not forloop.last %}, {% endif %}</p>
+                            <p class="ml-3">{{ subject.subjectname }}{% if not forloop.last %}, {% endif %}</p>
                             
                         {% endfor %}
                     </div>
                     
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h6><b>Qualification: </b></h6>
                         <p class="ml-2">{{teacher.qualification}}</p>
                     </div>
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-3">
                         <h6><b>Username: </b></h6>
                         <p class="ml-2">{{teacher.username}}</p>
                     </div>
