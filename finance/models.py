@@ -92,12 +92,13 @@ class Teacherspayment(models.Model):
     paymentdate = models.DateField(verbose_name='Payment Date')
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
     balance = models.IntegerField(verbose_name='Balance')
     # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
     # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
-        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'accumulatedamount' , 'balance' , 'paymentmethod' , 'bankaccnum'
     ]
     
     

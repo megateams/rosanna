@@ -400,27 +400,60 @@ def financeaddTeacherpayments(request):
         paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
+        balance = int(request.POST.get('balance'))
         
+        if balance < 0:
+            messages.error(request , 'Payment not Added')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'teachers': teachersdata})
 
-        # Check if a payment for the same teacher already exists
-        if Teacherspayment.objects.filter(teacherid=teacherid).exists():
-            previous_payment = Teacherspayment.objects.filter(teacherid=teacherid).latest('paymentdate')
-            previous_balance = previous_payment.balance
-            new_balance = previous_balance - amountpaid  # Accumulate balance
-        else:
-            new_balance = salary - amountpaid
+        payment = Teacherspayment.objects.filter(teacherid = teacherid).last()
 
-        Teacherspayment.objects.create(
-            teacherid=teacherid,
-            teachername=teachername,
-            paymentdate=paymentdate,
-            salary=salary,
-            amountpaid=amountpaid,
-            balance=new_balance,
-        )
+        if payment == None:
+            Teacherspayment.objects.create(
+                teacherid = teacherid,
+                teachername = teachername,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedpayment = amountpaid,
+                balance = balance,
+            )
 
-        messages.success(request, 'Teacher payment added successfully.')
-        return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+            messages.success(request, 'Teacher payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
+        if payment.balance == 0:
+            Teacherspayment.objects.create(
+                teacherid = teacherid,
+                teachername = teachername,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedpayment = amountpaid,
+                balance = balance,
+            )
+
+            messages.success(request, 'Teacher payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
+        if payment.balance > 0:
+            accumulatedpayment = payment.accumulatedpayment + amountpaid
+            newbalance = payment.salary - accumulatedpayment
+            if newbalance < 0:
+                messages.error(request , 'Payment not Added')
+                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'teachers': teachersdata})
+            else:
+                Teacherspayment.objects.create(
+                    teacherid = teacherid,
+                    teachername = teachername,
+                    paymentdate = paymentdate,
+                    salary = salary,
+                    amountpaid = amountpaid,
+                    accumulatedpayment = accumulatedpayment,
+                    balance = newbalance,
+                )
+                messages.success(request, 'Teacher payment added successfully.')
+                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
     return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
