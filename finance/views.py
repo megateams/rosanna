@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
+from collections import defaultdict
 from django.contrib.auth import authenticate, login
 
 def financelogin(request):
@@ -226,6 +227,8 @@ def financedashboard(request):
     expenses_percentage = (total_amount_paid / total) * 100
     sspayments_percentage = (total_sspayments / total) * 100
     trpayments_percentage = (total_trpayments / total) * 100
+
+    
 
     context = {
         'total_amount_paid': total_amount_paid,
