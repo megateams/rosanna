@@ -1050,16 +1050,27 @@ def fees(request):
 @login_required
 def fees_by_class(request, class_id):
     classes = Schoolclasses.objects.all()
-    # Fetch the class based on the class_id
-    selected_class = Schoolclasses.objects.get(classid=class_id)
-    this_class = selected_class.classname
-    # Fetch fees records for students in the selected class
-    fees_list = Fees.objects.filter(studentclass=this_class)
-   
+    
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+        
+        # Retrieve the class fees from the Fees model
+        classfees = Fees.objects.filter(studentclass=selected_class.classname).first()
+        classfees = classfees.classfees if classfees else 0  # Default value if class fees are not found
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        fees_list = []
+        classfees = 0  # Default value if class is not found or fees not set
+    
     return render(request, 'frontend/accounting/fees_by_class.html', {
         'fees_list': fees_list,
         'classes': classes,
         'selected_class': selected_class,
+        'classfees': classfees,  # Pass the class fees to the template
     })
 
 @login_required
