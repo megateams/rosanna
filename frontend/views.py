@@ -18,6 +18,13 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
 
+def admincheckemail(request , email):
+    try:
+        Administrators.objects.get(email = email)
+        return JsonResponse({'data' : 'Email address already used.'})
+    except:
+        print("")
+    return JsonResponse({'data' : ''})
 
 #register details for the user (admin)
 def editadministrator(request):
@@ -80,32 +87,37 @@ def addadmins(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        Administrators.objects.create(
-            fullname = fullname ,
-            gender = gender ,
-            address = address ,
-            contact = contact ,
-            email = email ,
-            role = role ,
-            qualification = qualification ,
-            bankaccnum =  bankaccnum ,
-            salary = salary ,
-            username = username ,
-            password = password ,
-        )
-        
-        Administrators.save
-        User.objects.create_user(
-            username = username ,
-            password = password ,
-            email = email ,
-            is_staff = True ,
-            is_superuser = True ,
-        )
-        
-        
-        messages.success(request , "Administrator Created Successfully")
-        return redirect('adminslist') 
+        try:
+            adminexist = Administrators.objects.get(username = username)
+            messages.error(request , "Administrator already exists.")
+            return render(request , 'frontend/staff/administratorsAdd.html')
+        except:
+            Administrators.objects.create(
+                fullname = fullname ,
+                gender = gender ,
+                address = address ,
+                contact = contact ,
+                email = email ,
+                role = role ,
+                qualification = qualification ,
+                bankaccnum =  bankaccnum ,
+                salary = salary ,
+                username = username ,
+                password = password ,
+            )
+            
+            Administrators.save
+            User.objects.create_user(
+                username = username ,
+                password = password ,
+                email = email ,
+                is_staff = True ,
+                is_superuser = True ,
+            )
+            
+            messages.success(request , "Administrator Created Successfully")
+            return redirect('adminslist') 
+
     return render(request , 'frontend/staff/administratorsAdd.html')
 
 def register(request):
@@ -182,8 +194,6 @@ def home(request):
         'term_data' : Term.objects.filter(status=1),
     }
     return render(request,'frontend/dashboard.html',context)
-
-
 
 # students views
 @login_required
@@ -578,12 +588,18 @@ def assign_subjecthead(request):
     if request.method == 'POST':
         subject_id = request.POST.get("subject_id")
         subject_head = request.POST.get("subject_head")
-        that_subject = Subjects.objects.get(pk=subject_id)
+        
+        # Check if the teacher is already assigned as a subject head for another subject
+        if Subjects.objects.filter(subjecthead=subject_head).exclude(pk=subject_id).exists():
+            messages.error(request, f'Teacher {subject_head} is already assigned as a subject head to another subject.')
+        else:
+            that_subject = Subjects.objects.get(pk=subject_id)
+            that_subject.subjecthead = subject_head
+            that_subject.save()
+            messages.success(request, f'Teacher {subject_head} assigned successfully to {that_subject.subjectname}.')
+    
+    return redirect("subjectList")
 
-        that_subject.subjecthead = subject_head
-        that_subject.save()
-        messages.success(request,"Subject Head assigned successfully")
-        return redirect("subjectList")
 
 # edit subject view
 def edit_subject(request):
@@ -644,21 +660,13 @@ def studentReg(request):
 
         # capturing the profile image from the form
         profile_image = request.FILES.get('profile_image')
-
-        # Check if a student with the same stdnumber and stdclass exists
-        # existing_student = Student.objects.filter(childname=childname, stdclass_id=class_id).exist()
-
-        # if existing_student:
-        #     messages.error(request, 'A student with the same stdnumber and stdclass already exists.') 
-
+        
         # Find the maximum stdnumber in the database
         max_stdnumber = Student.objects.aggregate(Max('stdnumber'))['stdnumber__max']
 
         # Generate the next stdnumber
         if max_stdnumber:
             new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
-
-                 
         else:
             new_stdnumber = 'STD001'
 
@@ -728,15 +736,20 @@ def subjects(request):
         subjectids = request.POST.get('subjectid')
         classlevels = request.POST.get('classlevel')
         subjectheads = request.POST.get('subjecthead')
-    
-        Subjects.objects.create(
-            subjectname = subjectnames , 
-            subjectid = subjectids , 
-            classlevel = classlevels , 
-            subjecthead = subjectheads
-        )
-    
-        Subjects.save
+        
+        try:
+            Subjects.objects.get(sugjectname = subjectnames , classlevels = classlevels)
+            messages.error(request , 'Subject Already Exists')
+        except:
+            Subjects.objects.create(
+                subjectname = subjectnames , 
+                subjectid = subjectids , 
+                classlevel = classlevels , 
+                subjecthead = subjectheads
+            )
+        
+            Subjects.save
+            messages.success(request , "Subject Added Succesfully")
     return HttpResponse(subjectnames)
 
 @login_required
@@ -781,12 +794,17 @@ def edit_class(request):
         classname = request.POST.get("classname")
         classteacher = request.POST.get("classteacher")
 
-        that_class = Schoolclasses.objects.get(pk=classid)
-        that_class.classname = classname
-        that_class.classteacher = classteacher
-        that_class.save()
-        messages.success(request,"Class edited successfully")
-        return redirect("showclasses")
+        # Check if the teacher is already a classteacher for another class
+        if Schoolclasses.objects.filter(classteacher=classteacher).exclude(pk=classid).exists():
+            messages.error(request, f'{classteacher} is already a classteacher for another class.')
+        else:
+            that_class = Schoolclasses.objects.get(pk=classid)
+            that_class.classname = classname
+            that_class.classteacher = classteacher
+            that_class.save()
+            messages.success(request, "Class edited successfully")
+
+    return redirect("showclasses")
 
 # modal for deleting class
 def delete_class(request):
@@ -1021,11 +1039,28 @@ def feesstructure(request):
 def fees(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
+    classes = Schoolclasses.objects.all()
     context = {
         'fees_list': fees_list,
         'total_amount': total_amount,
+        'classes': classes,
     }
     return render(request, 'frontend/accounting/fees.html',context)
+
+@login_required
+def fees_by_class(request, class_id):
+    classes = Schoolclasses.objects.all()
+    # Fetch the class based on the class_id
+    selected_class = Schoolclasses.objects.get(classid=class_id)
+    this_class = selected_class.classname
+    # Fetch fees records for students in the selected class
+    fees_list = Fees.objects.filter(studentclass=this_class)
+   
+    return render(request, 'frontend/accounting/fees_by_class.html', {
+        'fees_list': fees_list,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
 
 @login_required
 def teacherspayments(request):

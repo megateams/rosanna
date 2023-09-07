@@ -1,6 +1,6 @@
 {% extends 'finance/base.html' %}
-{% block  title %} Fees List {% endblock title %}
-{% block  pagetitle %} Fees List {% endblock pagetitle %}
+{% block  title %} Fees List by class {% endblock title %}
+{% block  pagetitle %} Fees List by class {% endblock pagetitle %}
 
 {% block  main %} 
 
@@ -12,14 +12,15 @@
         <a href="/export_financefees" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>    
     </div>
     <div class="btns mb-3 ml-4">
-        <a href="/financefeeslist/" class="btn btn-sm btn-primary">View All</a>
+        <a href="/financefeeslist" class="btn btn-sm btn-primary">View All</a>
         {% for class in classes %}
-            <a href="/finance/fees_by_class/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
+        <a href="/finance/fees_by_class/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
         {% endfor %}
     </div>
     </div>
     <!-- Display the total amount  -->
-    <h3>Total Amount of Fees Paid: {{ total_amount|default:"0" }}</h3>
+    <!-- <h3>Total Amount of Fees Paid: {{ total_amount|default:"0" }}</h3> -->
+    <h5 class="ml-3"><u><b>{{ selected_class.classname }} Students Fees : {{classfees}}</b></u></h5>
 
     <div class="table-section" style="font-size: 14px;"> 
         <table class="table" id="table">

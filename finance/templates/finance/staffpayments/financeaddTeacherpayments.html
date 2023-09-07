@@ -11,6 +11,20 @@
                
     <!-- form-section -->
     <form action="" class="form ml-3 p-3 shadow rounded bg-light" method='POST'>
+
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
         {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Teacherpayments</h5>
@@ -47,6 +61,16 @@
                 <div class="form-group col-md-6">
                     <label for="">Amount Paid</label>
                     <input id='amountpaid' type="number" name="amount" class="form-control">
+                        {% if balancealert %}
+                            <ul class="messages">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>{{ balancealert }}</strong>
+                                </div>
+                            </ul>
+                        {% endif %}
                 </div>
             </div>
 

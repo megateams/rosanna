@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 # from .views import save_registration
 
 urlpatterns = [
+    path('admincheckemail/<email>/' , views.admincheckemail , name = "checkemail"),
     path('deleteadmin/' , views.deleteadmin , name = "deleteadmin"),
     path('editadministrator/' , views.editadministrator , name = 'editadministrator'),
     path("", views.user_login, name="Admin Login"),
@@ -82,6 +83,7 @@ urlpatterns = [
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
+    path('fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
     #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
     path('expenseslist/', views.expenses, name='Expenses '),

@@ -21,10 +21,11 @@ from . import views
 
 urlpatterns = [
     path('finance/', views.financelogin , name='financeloginpage'),
-    path('financedashboard/', views.financedashboard, name=""), 
+    path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
+    path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     path('delete_fee/', views.delete_fee, name='delete_fee'),
     path('edit_std_fees/', views.edit_std_fees, name='edit_std_fees'),
 

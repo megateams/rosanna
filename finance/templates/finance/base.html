@@ -85,9 +85,9 @@
                             <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers  </span></a>
                         </li>
                         <li>
-                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff </span></a>
+                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff</span></a>
                         </li>
-                    </ul>    
+                    </ul>
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -183,8 +183,8 @@
             var donutpaymentData = {
                 labels: ["Fees", "Expenses", "Teacherpayments","SStaffpayments"],
                 datasets: [{
-                    data: [65, 35, 45, 25], // Replace with your actual data
-                    backgroundColor: ["red", "blue","#f9b855","green"],
+                    data: [{{ fees_percentage }}, {{ expenses_percentage }}, {{ trpayments_percentage }}, {{ sspayments_percentage }}], // Replace with your actual data
+                    backgroundColor: ["blue", "#f9b855","red","green"],
                 }]
             };
     

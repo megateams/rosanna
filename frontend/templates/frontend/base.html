@@ -52,11 +52,13 @@
                     
                     <!-- Display other school information as needed -->
                 {% endfor %}
-            {% else %}#
+            {% else %}
                 <div class='header text-center p-2 mb-2 mt-4'>
-                    <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+                    <div class="badge p-3 mb-2" style="border: 2px solid #fff; border-radius: 50%;">
+                        <i class="fa fa-camera text-white" aria-hidden="true" style="font-size: 2rem;"></i>
+                    </div>
 
-                    <h5 class="text-white"><b>Rosanna Schools</b></h5>   
+                    <h5 class="text-white"><b>School Name</b></h5>   
                 </div>
             {% endif %}
             
@@ -292,7 +294,27 @@
     <script src="{% static 'js/charts.js' %}"></script>
     <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
     <script src="{% static 'js/script.js' %}"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('#emails').on('change' , function(){
+                const email = $(this).val();
 
+                $.ajax({
+                    url: `/admincheckemail/${email}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#result').html(data)
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+            });
+        });
+    </script>
 
     <script>
        $(document).ready(function() {
