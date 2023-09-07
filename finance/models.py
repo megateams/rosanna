@@ -28,6 +28,8 @@ class Fees(models.Model):
     studentclass = models.CharField(choices=CLASS_CHOICES , max_length=20 , verbose_name='Class' , blank=True)
     classfees = models.CharField(max_length= 20, verbose_name='Class Fees' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
+    # accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
+    accumulatedpayment = models.IntegerField(default=0)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateField(verbose_name="Date of Payment")
@@ -94,8 +96,6 @@ class Teacherspayment(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
     balance = models.IntegerField(verbose_name='Balance')
-    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
         'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'accumulatedamount' , 'balance' , 'paymentmethod' , 'bankaccnum'

@@ -65,8 +65,8 @@ def profile(request,teacher_id):
 
 
 def paymenthistory(request,teacher_id):
-    teacher = Teacherspayment.objects.get(teacherid=teacher_id)
-    return render(request, 'teacher/paymenthistory.html', {"teacher": teacher})  
+    teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
+    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data})  
 
 
 # marks logic

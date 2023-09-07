@@ -249,13 +249,18 @@ def financeaddFees(request):
         stdname = Student.objects.get(stdnumber=stdnumber).childname  # Get student name
         studentclass = request.POST.get('studentclass')
         classfees = request.POST.get("classfees")
-        amount = request.POST.get("amount") # Get amount from fees structure
-        balance = int(classfees) - int(amount)
+        amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        
-        if int(amount) <= int(classfees):
-            # Create a new Fees object and save it to the database
+
+        # Calculate balance
+        balance = int(classfees) - int(amount)
+
+        # Check if there are previous fee records for the student
+        last_fee = Fees.objects.filter(stdnumber_id=stdnumber).last()
+
+        if last_fee is None:
+            # No previous fee records exist, create a new entry
             fees = Fees.objects.create(
                 stdnumber_id=stdnumber,
                 stdname=stdname,
@@ -264,15 +269,48 @@ def financeaddFees(request):
                 amount=amount,
                 balance=balance,
                 modeofpayment=modeofpayment,
-                date=date
+                date=date,
+                accumulatedpayment=amount  # Set accumulatedpayment for the first entry
             )
             fees.save()
-
-            messages.success(request, 'Fees registered successfully.')
-            return redirect('Add Fees')
-        
         else:
-            messages.error(request, 'Amount is greater than the class fees. Please try again')
+            if last_fee.balance == 0:
+                # Previous balance was 0, create a new entry
+                fees = Fees.objects.create(
+                    stdnumber_id=stdnumber,
+                    stdname=stdname,
+                    studentclass=studentclass,
+                    classfees=classfees,
+                    amount=amount,
+                    balance=balance,
+                    modeofpayment=modeofpayment,
+                    date=date,
+                    accumulatedpayment=amount  # Set accumulatedpayment for the new entry
+                )
+                fees.save()
+            else:
+                # Previous balance was greater than 0, update accumulated payment and balance
+                accumulatedpayment = last_fee.accumulatedpayment + int(amount)
+                new_balance = int(classfees) - accumulatedpayment
+                if new_balance < 0:
+                    messages.error(request, 'Student fees already exists')
+                else:
+                    fees = Fees.objects.create(
+                        stdnumber_id=stdnumber,
+                        stdname=stdname,
+                        studentclass=studentclass,
+                        classfees=classfees,
+                        amount=amount,
+                        balance=new_balance,
+                        modeofpayment=modeofpayment,
+                        date=date,
+                        accumulatedpayment=accumulatedpayment
+                    )
+                    fees.save()
+
+        messages.success(request, 'Fees registered successfully.')
+        return redirect('Add Fees')
+
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})

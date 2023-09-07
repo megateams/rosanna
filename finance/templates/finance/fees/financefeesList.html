@@ -14,7 +14,7 @@
     <div class="btns mb-3 ml-4">
         <a href="/financefeeslist/" class="btn btn-sm btn-primary">View All</a>
         {% for class in classes %}
-            <a href="/fees_by_class/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
+            <a href="/finance/fees_by_class/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
         {% endfor %}
     </div>
     </div>
@@ -30,6 +30,7 @@
                     <th>Student Name</th>
                     <th>Student Class</th>
                     <th>Amount</th>
+                    <th>Accumulated Fees</th>
                     <th>Balance</th>
                     <th>Mode of Payment</th>
                     <th>Date</th>
@@ -44,6 +45,7 @@
                     <td>{{ fee.stdname }}</td>
                     <td>{{ fee.studentclass }}</td>
                     <td>{{ fee.amount }}</td>
+                    <td>{{ fee.accumulatedpayment }}</td>
                     <td>{{ fee.balance }}</td>
                     <td>{{ fee.modeofpayment }}</td>
                     <td>{{ fee.date }}</td>

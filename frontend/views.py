@@ -794,12 +794,17 @@ def edit_class(request):
         classname = request.POST.get("classname")
         classteacher = request.POST.get("classteacher")
 
-        that_class = Schoolclasses.objects.get(pk=classid)
-        that_class.classname = classname
-        that_class.classteacher = classteacher
-        that_class.save()
-        messages.success(request,"Class edited successfully")
-        return redirect("showclasses")
+        # Check if the teacher is already a classteacher for another class
+        if Schoolclasses.objects.filter(classteacher=classteacher).exclude(pk=classid).exists():
+            messages.error(request, f'{classteacher} is already a classteacher for another class.')
+        else:
+            that_class = Schoolclasses.objects.get(pk=classid)
+            that_class.classname = classname
+            that_class.classteacher = classteacher
+            that_class.save()
+            messages.success(request, "Class edited successfully")
+
+    return redirect("showclasses")
 
 # modal for deleting class
 def delete_class(request):
