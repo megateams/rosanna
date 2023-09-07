@@ -256,26 +256,12 @@ def financeaddFees(request):
         # Calculate balance
         balance = int(classfees) - int(amount)
 
-        # Check if there are previous fee records for the student
-        last_fee = Fees.objects.filter(stdnumber_id=stdnumber).last()
+        if int(amount) <= int(classfees):
+            # Check if there are previous fee records for the student
+            last_fee = Fees.objects.filter(stdnumber_id=stdnumber).last()
 
-        if last_fee is None:
-            # No previous fee records exist, create a new entry
-            fees = Fees.objects.create(
-                stdnumber_id=stdnumber,
-                stdname=stdname,
-                studentclass=studentclass,
-                classfees=classfees,
-                amount=amount,
-                balance=balance,
-                modeofpayment=modeofpayment,
-                date=date,
-                accumulatedpayment=amount  # Set accumulatedpayment for the first entry
-            )
-            fees.save()
-        else:
-            if last_fee.balance == 0:
-                # Previous balance was 0, create a new entry
+            if last_fee is None:
+                # No previous fee records exist, create a new entry
                 fees = Fees.objects.create(
                     stdnumber_id=stdnumber,
                     stdname=stdname,
@@ -285,36 +271,52 @@ def financeaddFees(request):
                     balance=balance,
                     modeofpayment=modeofpayment,
                     date=date,
-                    accumulatedpayment=amount  # Set accumulatedpayment for the new entry
+                    accumulatedpayment=amount  # Set accumulatedpayment for the first entry
                 )
                 fees.save()
             else:
-                # Previous balance was greater than 0, update accumulated payment and balance
-                accumulatedpayment = last_fee.accumulatedpayment + int(amount)
-                new_balance = int(classfees) - accumulatedpayment
-                if new_balance < 0:
-                    messages.error(request, 'Student fees already exists')
-                else:
+                if last_fee.balance == 0:
+                    # Previous balance was 0, create a new entry
                     fees = Fees.objects.create(
                         stdnumber_id=stdnumber,
                         stdname=stdname,
                         studentclass=studentclass,
                         classfees=classfees,
                         amount=amount,
-                        balance=new_balance,
+                        balance=balance,
                         modeofpayment=modeofpayment,
                         date=date,
-                        accumulatedpayment=accumulatedpayment
+                        accumulatedpayment=amount  # Set accumulatedpayment for the new entry
                     )
                     fees.save()
+                else:
+                    # Previous balance was greater than 0, update accumulated payment and balance
+                    accumulatedpayment = last_fee.accumulatedpayment + int(amount)
+                    new_balance = int(classfees) - accumulatedpayment
+                    if new_balance < 0:
+                        messages.error(request, 'Student fees already exists')
+                    else:
+                        fees = Fees.objects.create(
+                            stdnumber_id=stdnumber,
+                            stdname=stdname,
+                            studentclass=studentclass,
+                            classfees=classfees,
+                            amount=amount,
+                            balance=new_balance,
+                            modeofpayment=modeofpayment,
+                            date=date,
+                            accumulatedpayment=accumulatedpayment
+                        )
+                        fees.save()
 
-        messages.success(request, 'Fees registered successfully.')
-        return redirect('Add Fees')
+            messages.success(request, 'Fees registered successfully.')
+            return redirect('Add Fees')
+        else:
+            messages.error(request, 'Amount is greater than class fees. Please try again')
 
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
-
 def financefeesList(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
@@ -328,19 +330,27 @@ def financefeesList(request):
 
 def fees_by_class(request, class_id):
     classes = Schoolclasses.objects.all()
-    # Fetch the class based on the class_id
-    selected_class = Schoolclasses.objects.get(classid=class_id)
-    this_class = selected_class.classname
-    # Fetch fees records for students in the selected class
-    fees_list = Fees.objects.filter(studentclass=this_class)
     
-    # total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
-
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+        
+        # Retrieve the class fees from the Fees model
+        classfees = Fees.objects.filter(studentclass=selected_class.classname).first()
+        classfees = classfees.classfees if classfees else 0  # Default value if class fees are not found
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        fees_list = []
+        classfees = 0  # Default value if class is not found or fees not set
+    
     return render(request, 'finance/fees/fees_by_class.html', {
         'fees_list': fees_list,
         'classes': classes,
         'selected_class': selected_class,
-        # 'total_amount': total_amount,
+        'classfees': classfees,  # Pass the class fees to the template
     })
 
 def delete_fee(request):
