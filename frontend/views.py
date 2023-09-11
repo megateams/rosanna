@@ -510,43 +510,119 @@ def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
 @login_required
+# def supportstaffreg(request):
+#     if request.method == 'POST':
+#         supportstaffnames = request.POST.get('supportstaffnames')
+
+#         if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
+#             messages.error(request, 'This support staff has already been added.')
+#         else:
+#             contact = request.POST.get('contact')
+#             email = request.POST.get('email')
+#             address = request.POST.get('address')
+#             gender = request.POST.get('gender')
+#             dob = request.POST.get('dob')
+#             qualification = request.POST.get('qualification')
+#             position = request.POST.get('position')
+#             joiningdate = request.POST.get('joiningdate')
+#             salary = request.POST.get('salary')
+#             bankaccnum = request.POST.get('bankaccnum')
+
+#             supportStaffReg = Supportstaff.objects.create(
+#                 supportstaffnames=supportstaffnames,
+#                 contact=contact,
+#                 email=email,
+#                 address=address,
+#                 gender=gender,
+#                 dob=dob,
+#                 qualification=qualification,
+#                 position=position,
+#                 joiningdate=joiningdate,
+#                 salary=salary,
+#                 bankaccnum=bankaccnum,
+#             )
+#             messages.success(request, 'Support staff added successfully!')
+
+#         return redirect('AddSupportstaff')
+
+#     supportstaff = Supportstaff.objects.all()
+#     return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
+
 def supportstaffreg(request):
     if request.method == 'POST':
         supportstaffnames = request.POST.get('supportstaffnames')
+        dob = request.POST.get('dob')
 
-        if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
-            messages.error(request, 'This support staff has already been added.')
-        else:
-            contact = request.POST.get('contact')
-            email = request.POST.get('email')
-            address = request.POST.get('address')
-            gender = request.POST.get('gender')
-            dob = request.POST.get('dob')
-            qualification = request.POST.get('qualification')
-            position = request.POST.get('position')
-            joiningdate = request.POST.get('joiningdate')
-            salary = request.POST.get('salary')
-            bankaccnum = request.POST.get('bankaccnum')
+        # Check if a support staff with the same name and date of birth already exists
+        if Supportstaff.objects.filter(Q(supportstaffnames=supportstaffnames) & Q(dob=dob)).exists():
+            messages.error(request, 'A support staff with the same name and date of birth already exists.')
+            return redirect("AddSupportstaff")  # Redirect back to the form page
 
-            supportStaffReg = Supportstaff.objects.create(
-                supportstaffnames=supportstaffnames,
-                contact=contact,
-                email=email,
-                address=address,
-                gender=gender,
-                dob=dob,
-                qualification=qualification,
-                position=position,
-                joiningdate=joiningdate,
-                salary=salary,
-                bankaccnum=bankaccnum,
-            )
-            messages.success(request, 'Data successfully added!')
+        profile_image = request.FILES.get('profile_image')
+        last_supportstaff = Supportstaff.objects.order_by('-supportstaffid').first()
 
+        default_supportstaffid = 'RSS{:04}'.format(int(last_supportstaff.supportstaffid[2:]) + 1) if last_supportstaff else 'RSS0001'
+
+
+        # Retrieve other form fields
+        gender = request.POST.get('gender')
+        contact = request.POST.get('contact')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        joiningdate = request.POST.get('joiningdate')
+        qualification = request.POST.get('qualification')
+        position = request.POST.get('position')
+        salary = request.POST.get('salary')
+        bankaccnum = request.POST.get('bankaccnum')
+
+        # Create and save the SupportStaff object to the database
+        staff = Supportstaff.objects.create(
+            supportstaffid=default_supportstaffid,
+            supportstaffnames=supportstaffnames,
+            dob=dob,
+            gender=gender,
+            contact=contact,
+            email=email,
+            address=address,
+            joiningdate=joiningdate,
+            qualification=qualification,
+            position=position,
+            salary=salary,
+            bankaccnum=bankaccnum,
+            # Add other fields as needed
+        )
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            staff.profile_image = image_filename
+        staff.save()
+
+        # Display a success message to the user
+        messages.success(request, 'Support staff added successfully!')
+
+        # Redirect the user to a different page (e.g., supportstafflist page)
         return redirect('AddSupportstaff')
 
-    supportstaff = Supportstaff.objects.all()
-    return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
+def edit_sstaff_image(request):
+    if request.method == "POST":
+        supportstaffid = request.POST.get("supportstaffid")
+        profile_image = request.FILES.get('profile_image')
+        
+        staff = Supportstaff.objects.get(pk=supportstaffid)
+
+        if profile_image:
+            fs = FileSystemStorage()
+            image_filename = fs.save(profile_image.name, profile_image)
+            staff.profile_image = image_filename
+
+            staff.save()
+            messages.success(request, "Image edited successfully")
+            return redirect("show supportstaff", supportstaffid=supportstaffid)
+        
+        else:
+            messages.success(request, "Error!!!")
+            return redirect("show supportstaff", supportstaffid=supportstaffid)  
 
 @login_required
 def addsubjectsform(request):

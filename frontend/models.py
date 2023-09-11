@@ -101,7 +101,8 @@ class Student(models.Model):
     ]
 
 class Supportstaff(models.Model):
-    supportstaffid = models.AutoField(primary_key=True)
+    supportstaffid = models.CharField(primary_key=True, max_length=20, verbose_name='Supportstaff id')
+    profile_image = models.ImageField(upload_to='supportstaff_profiles/', blank=True, null=True)
     supportstaffnames = models.CharField(max_length=30 , verbose_name='Suppot Staff Names' , default=None)
     gender = models.CharField(max_length=7 , verbose_name='Gender' , default=None)
     dob = models.DateField(verbose_name='Date of Birth' , default=None)
