@@ -3,7 +3,6 @@
 {% block  pagetitle %} Students Add {% endblock pagetitle %}
 
 {% block  main %} 
-{% load static %}
 
 <!-- inner-content -->
 <div class="inner-content">
@@ -11,7 +10,7 @@
         <div class="btns">
             <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
             <a href="#import" data-toggle="modal" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
-            
+            <a href="" class="btn btn-sm btn-primary">Download excel template</a>
             <!-- import Modal -->
             <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -40,9 +39,7 @@
             </div>
         </div>
         <div class="template">
-            <a href="{% static 'assets/students_template.xlsx' %}" class="btn btn-sm btn-primary" download>
-                <i class="fas fa-download"></i> Excel Template
-            </a>
+            
         </div>
     </div>
     <!-- form-section -->
