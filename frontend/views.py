@@ -561,7 +561,10 @@ def supportstaffreg(request):
         profile_image = request.FILES.get('profile_image')
         last_supportstaff = Supportstaff.objects.order_by('-supportstaffid').first()
 
-        default_supportstaffid = 'RSS{:04}'.format(int(last_supportstaff.supportstaffid[2:]) + 1) if last_supportstaff else 'RSS0001'
+        if last_supportstaff:
+            default_supportstaffid = 'RSS{:04}'.format(int(last_supportstaff.supportstaffid[3:]) + 1) 
+        else:
+            default_supportstaffid = 'RSS0001' 
 
 
         # Retrieve other form fields
@@ -764,6 +767,7 @@ def studentReg(request):
         livingwith = request.POST.get('livingwith')
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
+        
         student =Student.objects.create(
             stdnumber =new_stdnumber,            
             regdate = regdate ,
