@@ -104,15 +104,13 @@ class Teacherspayment(models.Model):
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    #supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
     supportstaffid = models.CharField(max_length=10 , verbose_name='Support Staff id')
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
     balance = models.IntegerField(verbose_name='Balance')
-    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    accumulatedamount = models.IntegerField(verbose_name='Accumulated Amount' , default=None)
     
     displaysupportstaffpayment = [
         'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' 
