@@ -186,7 +186,6 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     subject = get_object_or_404(Subjects, subjectid=subject_id)
 
-    
     # Retrieve the students related to the class
     students = Student.objects.filter(stdclass=schoolclass)
     # Retrieve the mark types for the dropdown
@@ -197,38 +196,50 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
 
     # Create a set of student names whose marks have been added for the current subject
     marks_students = set(mark.student_name for mark in marks)
-
+    print(marks_students)
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
         student_number = request.POST.get('studentname')
         marks_obtained = request.POST.get('mark_obtained')
-        
 
         if mark_type and student_number and marks_obtained:
             # Get the student object
             student = Student.objects.get(stdnumber=student_number)
-            print(student.childname)
-            # Create a new Mark object to save the marks
-            Mark.objects.create(
+
+            # Check if a mark of the same type already exists for the student and subject
+            existing_mark = Mark.objects.filter(
                 class_name=schoolclass,
                 student_name=student.childname,
                 subject=subject,
-                marks_obtained=int(marks_obtained),
                 mark_type=mark_type,
-            )
+            ).first()
 
-            # Add a success message to inform the user that marks have been added
-            messages.success(request, 'Subject marks added successfully.')
+            if existing_mark:
+                # If a mark already exists, update it
+                existing_mark.marks_obtained = int(marks_obtained)
+                existing_mark.save()
+                messages.success(request, 'Subject mark updated successfully.')
+            else:
+                # If a mark doesn't exist, create a new one
+                Mark.objects.create(
+                    class_name=schoolclass,
+                    student_name=student.childname,
+                    subject=subject,
+                    marks_obtained=int(marks_obtained),
+                    mark_type=mark_type,
+                )
+                messages.success(request, 'Subject mark added successfully.')
+
             return redirect('Add Subject marks', class_id=class_id, teacher_id=teacher_id, subject_id=subject_id)
 
-    # If the request method is GET, render the form for adding subject marks
     return render(request, 'teacher/marks/add_subject_marks.html', {
         'schoolclass': schoolclass,
         'subject': subject,
         'students': students,
         'mark_types': mark_types,
-        'teacher_id': teacher_id,  # Include the teacher_id in the context
+        'marks_students': marks_students,
+        'teacher_id': teacher_id,
     })
 
 def addmarks(request, class_id, teacher_id):
@@ -248,6 +259,8 @@ def addmarks(request, class_id, teacher_id):
 
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
+
+    subject_id = request.GET.get('subject')
 
     # Handle form submission to add subject marks
     if request.method == 'POST':
@@ -279,6 +292,7 @@ def addmarks(request, class_id, teacher_id):
         'mark_types': mark_types,
         'teacher_id': teacher_id,
         'students': students,
+        'subject_id': subject_id,
     })
 
 

@@ -20,7 +20,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="class-btns" pr-5>
+        <div class="class-btns mt-3" pr-5>
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
           
@@ -42,20 +42,20 @@
                             <hr>
                         </div>
                         <p class="mr-3"><b>Class name:</b> <span class="ml-2">{{ schoolclass.classname }}</span></p> 
-                        <p class="mr-3"><b>Class level:</b> <span class="ml-2">{{ schoolclass.class_level }}</span></p>
                         <p class="mr-3"><b>Class teacher:</b> <span class="ml-2">{{ teacher.teachernames }}</span></p>
                     </div>
                     
                     <div class="col-12 mt-3">
                         <!-- donut chart -->
-                        <div class="donut-chart shadow  bg-light pb-2">
+                        <div class="donut-chart shadow  bg-light pb-2 pb-5">
+                            <h5 class="text-center">{{schoolclass.classname}} Gender Distribution Chart</h5>
                             <canvas id="genderDonutChart"></canvas>
                         </div>
                         <!-- donut chart -->
                     </div>
                 </div>
             </div>
-            <div class="col-md-8" style="font-size: 12px;">
+            <div class="col-md-8" style="font-size: 12px; height: 75vh; overflow: hidden; overflow-y: scroll;" >
                 <!-- teachers -->
                 <table class="table bg-white" border="1" id="table1">
                     <h5>{{schoolclass.classname}} Teachers</h5>
