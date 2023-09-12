@@ -20,6 +20,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
     path('finance/', views.financelogin , name='financeloginpage'),
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     

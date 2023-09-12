@@ -446,9 +446,8 @@ def financeaddTeacherpayments(request):
         paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
-        balance = int(request.POST.get('balance'))
         
-        if balance < 0:
+        if amountpaid > float(teacher.salary):
             messages.error(request , 'Payment not Added')
             return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'teachers': teachersdata})
 
@@ -462,7 +461,7 @@ def financeaddTeacherpayments(request):
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
-                balance = balance,
+                balance = float(teacher.salary) - amountpaid,
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -476,7 +475,7 @@ def financeaddTeacherpayments(request):
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
-                balance = balance,
+                balance = float(teacher.salary) - amountpaid,
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -515,37 +514,68 @@ def financeteacherpaymentsList(request):
 
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
+    supportstaffdata = Supportstaff.objects.all()
     if request.method == 'POST':
-        support_staff_id = request.POST.get('support-staffid')
+        supportstaffid = request.POST.get('support-staffid')
+        supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
+        staffnames = supportstaffname.supportstaffnames
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
-        amount_paid = float(request.POST.get('amountpaid'))
+        amountpaid = float(request.POST.get('amountpaid'))
 
-        # Check if a payment for the same support staff already exists
-        if Supportstaffpayment.objects.filter(supportstaffid=support_staff_id).exists():
-            messages.error(request, 'Payment for this support staff already exists.')
-            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'support_staff': Supportstaff.objects.all()})
+        if amountpaid > float(supportstaffname.salary):
+            messages.error(request , 'Payment not Added')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata})
 
-        supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
-        balance = salary - amount_paid
+        payment = Supportstaffpayment.objects.filter(supportstaffid = supportstaffid).last()
 
-        # Create a new support staff payment record
-        payment = Supportstaffpayment.objects.create(
-            supportstaffid=support_staff_id,
-            amountpaid=amount_paid,
-            salary=salary,
-            paymentdate=paymentdate,
-            balance=balance,
-            staffname=supportstaffrow.supportstaffnames
-        )
+        if payment == None:
+            Supportstaffpayment.objects.create(
+                supportstaffid = supportstaffid ,
+                staffname = staffnames ,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedamount = amountpaid,
+                balance = float(supportstaffname.salary) - amountpaid,
+            )
 
-        messages.success(request, 'Support staff payment added successfully.')
-        return redirect('SupportstaffpaymentsLists')  # Redirect to the list page
+            messages.success(request, 'Support Staff payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+        
+        if payment.balance == 0:
+            Supportstaffpayment.objects.create(
+                supportstaffid = supportstaffid ,
+                staffname = staffnames ,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedamount = amountpaid,
+                balance = float(supportstaffname.salary) - amountpaid,
+            )
 
-    context = {
-        'support_staff': Supportstaff.objects.all()
-    }
-    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
+            messages.success(request, 'Support staff payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+        
+        if payment.balance > 0:
+            accumulatedpayment = payment.accumulatedamount + amountpaid
+            newbalance = payment.salary - accumulatedpayment
+            if newbalance < 0:
+                messages.error(request , 'Payment not Added')
+                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata})
+            else:
+                Supportstaffpayment.objects.create(
+                    supportstaffid = supportstaffid ,
+                    staffname = staffnames ,
+                    paymentdate = paymentdate,
+                    salary = salary,
+                    amountpaid = amountpaid,
+                    accumulatedamount = accumulatedpayment,
+                    balance = newbalance,
+                )
+                messages.success(request, 'Teacher payment added successfully.')
+                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata})
+    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
 
 def financesupportstaffpaymentsList(request):
     total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -659,10 +689,18 @@ def get_teacher_salary(request , id):
     }
     return JsonResponse(teachersalary)
 
-def get_teacher_balance(request , id , amountpaid):
+def get_teacher_balance(request , id):
     teacher = Teachers.objects.get(teacherid = id)
-    balance = int(teacher.salary) - int(amountpaid)
+    payment = Teacherspayment.objects.get(teacherid = id)
+    balance = int(teacher.salary) - int(payment.accumulatedpayment)
+    print(balance)
     return JsonResponse({'balance' : balance})
+
+def getsupportstaffbalance(request , id):
+    supportstaff = Supportstaff.objects.get(supportstaffid = id)
+    payment = Supportstaffpayment.objects.get(supportstaffid = id)
+    balance = supportstaff.salary - payment.accumulatedamount
+    return JsonResponse({'balance':balance})
 
 def export_finance_fees_to_excel(request):
     # Fetch all the data from the Fees model

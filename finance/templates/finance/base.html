@@ -237,7 +237,7 @@
             });
         });
         $(document).ready(function() {
-            $('#support-staffid').on('change', function() {
+            $('#supportstaffid').on('change', function() {
                 const id = $(this).val();
                 // alert(id);
                 // const stdclass_fees = $('#class_fees');
@@ -288,7 +288,29 @@
                 const id = $('#teachersid').val();
                 const amountpaid = $(this).val();
                 $.ajax({
-                    url: `/get_teacher_balance/${id}/${amountpaid}/`,
+                    url: `/get_teacher_balance/${id}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#balance').val(data.balance);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+
+        $(document).ready(function() {
+
+            $('#amountpaid').on('change', function() {
+                const id = $('#supportstaffid').val();
+                const amountpaid = $(this).val();
+                $.ajax({
+                    url: `/getsupportstaffbalance/${id}/`,
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
