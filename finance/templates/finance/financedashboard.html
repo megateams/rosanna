@@ -118,20 +118,33 @@
                     </thead>
                     <tbody>
                         {% for fee in fees_list %}
-                        <tr>
-                            <td>{{ fee.paymentid }}</td>
-                            <td>{{ fee.stdnumber.stdnumber }}</td>
-                            <td>{{ fee.stdname }}</td>
-                            <td>{{ fee.studentclass }}</td>
-                            <td>{{ fee.amount }}</td>
-                            <td>{{ fee.balance }}</td>
-                            <td>{{ fee.date }}</td>
-                        </tr>
+                            {% if fee.balance != 0 %}
+                                {% with fee.stdnumber as last_stdnumber %}
+                                    {% for previous_fee in fees_list %}
+                                        {% if previous_fee.stdnumber == last_stdnumber %}
+                                            {% if previous_fee.date > fee.date %}
+                                                {% with fee=previous_fee %}
+                                                {% endwith %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                                <tr>
+                                    <td>{{ fee.paymentid }}</td>
+                                    <td>{{ fee.stdnumber.stdnumber }}</td>
+                                    <td>{{ fee.stdname }}</td>
+                                    <td>{{ fee.studentclass }}</td>
+                                    <td>{{ fee.amount }}</td>
+                                    <td>{{ fee.balance }}</td>
+                                    <td>{{ fee.date }}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+        
         
     </div>
     

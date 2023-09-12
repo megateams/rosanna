@@ -12,6 +12,8 @@ from django.db import transaction
 import openpyxl
 from collections import defaultdict
 from django.contrib.auth import authenticate, login
+from django.db.models import OuterRef, Subquery
+from django.db.models import F
 
 def financelogin(request):
     if request.method == 'POST':
@@ -211,7 +213,11 @@ def financedashboard(request):
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-    fees_list = Fees.objects.exclude(balance__lte=0.0)# Filter fees with balance greater than 0
+    # Retrieve only the latest balance for each student based on the latest timestamp
+    latest_timestamps = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-timestamp')
+    fees_list = Fees.objects.annotate(
+        latest_timestamp=Subquery(latest_timestamps.values('timestamp')[:1])
+    ).filter(balance__gt=0.0, timestamp=F('latest_timestamp'))
     
     sspayments = Supportstaffpayment.objects.all()
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -255,6 +261,7 @@ def financeaddFees(request):
         amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
+        timestamp = request.POST.get('timestamp')
 
         # Calculate balance
         balance = int(classfees) - int(amount)
@@ -274,6 +281,7 @@ def financeaddFees(request):
                     balance=balance,
                     modeofpayment=modeofpayment,
                     date=date,
+                    timestamp=timestamp,
                     accumulatedpayment=amount  # Set accumulatedpayment for the first entry
                 )
                 fees.save()
@@ -289,6 +297,7 @@ def financeaddFees(request):
                         balance=balance,
                         modeofpayment=modeofpayment,
                         date=date,
+                        timestamp=timestamp,
                         accumulatedpayment=amount  # Set accumulatedpayment for the new entry
                     )
                     fees.save()
@@ -297,7 +306,7 @@ def financeaddFees(request):
                     accumulatedpayment = last_fee.accumulatedpayment + int(amount)
                     new_balance = int(classfees) - accumulatedpayment
                     if new_balance < 0:
-                        messages.error(request, 'Student fees already exists')
+                        messages.error(request, 'Student has cleared all fees for this term')
                     else:
                         fees = Fees.objects.create(
                             stdnumber_id=stdnumber,
@@ -308,6 +317,7 @@ def financeaddFees(request):
                             balance=new_balance,
                             modeofpayment=modeofpayment,
                             date=date,
+                            timestamp=timestamp,
                             accumulatedpayment=accumulatedpayment
                         )
                         fees.save()
