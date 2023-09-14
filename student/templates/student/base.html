@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/teacher.css' %}">
+    <link rel="stylesheet" href="{% static 'css/student.css' %}">
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
     
@@ -50,6 +51,10 @@
                 
                 <li class="sidebar-item active">
                     <a class="" href='/student/dashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>   
+                </li>
+                <hr color="#fff">
+                <li>
+                    <a class="" href='/student/my_results/{{student.stdnumber}}/{{student.stdclass.classid}}'><i class="fas fa-book-open  mr-2"></i><span>My results</span></a>    
                 </li>
                 <hr color="#fff">
                 <li>

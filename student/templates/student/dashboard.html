@@ -13,36 +13,45 @@
             </div>
             
             <div class="d-flex align-items-center  ml-2" style="margin: 20px 0">
-                {% for data in term_data %}
                     <div class="current-term mr-3">
                         <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
-                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
                     </div>
                     <div class="current-year"> 
                         <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
-                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
                     </div>
-                {% endfor %}
             </div>
             <hr>
-            <div class="header mt-3 ml-2">
-                <h5> STUDENT RESULTS </h5>
-                <div class="std_cards" style="display: grid; grid-template-columns: 1fr 1fr;">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-8 cbody">
-                                
-                                    {% for data in term_data %}
-                                    <h4>{{data.current_year}}</h4>
-                                    <p>{{data.current_term}}</p>
-                                    {% endfor %}
-                                
-                            </div>
-                            <div class="col-4 icon">
-                                <i class="fas fa-book    "></i>
+            <div class="header mt-4 ml-2">
+                <!-- <h5> STUDENT RESULTS </h5> -->
+                <div class="std_cards">
+                    <a href="/student/my_results/{{student.stdnumber}}/{{student.stdclass.classid}}" style="text-decoration: none;">
+                        <div class="card results_card">
+                            <div class="row">
+                                <div class="col-8 cbody pt-2" style="border-right: 5px solid red;">
+                                        <h5>My Results</h5>
+                                </div>
+                                <div class="col-4 icon">
+                                    <i class="fas fa-book-open    " style="font-size: 2rem;"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
+                    <a href="/student/paymenthistory/{{student.stdnumber}}" style="text-decoration: none;">
+                        <div class="card fees_card">
+                            <div class="row">
+                                <div class="col-8 cbody" style="border-right: 5px solid #d79430;">
+                                        <h5>Fees Payment History</h5>
+                                </div>
+                                <div class="col-4 icon">
+                                    
+                                    <i class="fas fa-money-bill   " style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
             
