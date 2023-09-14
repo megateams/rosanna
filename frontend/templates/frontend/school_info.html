@@ -126,7 +126,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit School Information</h5>
+                                        <h5 class="modal-title text-dark">Edit School Information</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -137,32 +137,32 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="id" value="{{ data.id }}">
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark">
                                                 <label for="schoolname">School Name:</label>
                                                 <input type="text" name="schoolname" class="form-control" value="{{ data.schoolname }}" required>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark">
                                                 <label for="badge">Badge:</label>
                                                 <input type="file" name="badge" accept="image/*">
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark">
                                                 <label for="contact">Contacts:</label>
                                                 <input type="text" name="contact" class="form-control" value="{{ data.contact }}" required>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark">
                                                 <label for="box_number">P.O. Box Number:</label>
                                                 <input type="text" name="box_number" class="form-control" value="{{ data.box_number }}" required>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark">
                                                 <label for="email">Email:</label>
                                                 <input type="email" name="email" class="form-control" value="{{ data.email }}">
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group text-dark" >
                                                 <label for="website">Website link:</label>
                                                 <input type="text" name="website" class="form-control" value="{{ data.website }}">
                                             </div>

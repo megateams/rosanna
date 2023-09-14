@@ -173,6 +173,8 @@ class Mark(models.Model):
     student_name = models.CharField(max_length=100)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     marks_obtained = models.IntegerField()
+    current_term = models.CharField(max_length=15, default=None)
+    current_year = models.CharField(max_length=15, default=None)
     mark_type = models.CharField(max_length=20, default=None, choices=MARK_TYPES)
 
     def __str__(self):
