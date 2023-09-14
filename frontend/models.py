@@ -83,7 +83,7 @@ class Student(models.Model):
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
     regdate =models.DateField(verbose_name="Date of Registration")
     username = models.CharField(max_length=50 , verbose_name='Username', default=None)
-    password = models.CharField(max_length=100, verbose_name='Password', default=None)
+    password = models.CharField(max_length=255, verbose_name='Password', default=None)
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
     fcontact = models.CharField(max_length=10 , verbose_name="Father's Contact" , blank=True)
