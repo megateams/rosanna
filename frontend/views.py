@@ -1307,6 +1307,37 @@ def school_info(request):
     }
     return render(request, "frontend/school_info.html", context)
 
+def edit_school_info(request):
+    if request.method == "POST":
+        school_id = request.POST.get("id")
+        school = get_object_or_404(SchoolInfo, pk=school_id)
+
+        # Update school information based on form data
+        school.schoolname = request.POST.get("schoolname")
+        school.contact = request.POST.get("contact")
+        school.box_number = request.POST.get("box_number")
+        school.email = request.POST.get("email")
+        school.website = request.POST.get("website")
+
+        # Handle badge image update if necessary
+        badge = request.FILES.get('badge')
+        if badge:
+            school.badge = badge
+
+        school.save()
+
+        # Add success message
+        messages.success(request, 'School information updated successfully!')
+        return redirect("School Information")
+
+    # Render the school information template with context
+    context = {
+        'school_data': SchoolInfo.objects.all()
+    }
+    return render(request, "frontend/school_info.html", context)
+
+
+
 def delete_teacher(request):
     if request.method == "POST":
         teacherid = request.POST.get("teacherid")
