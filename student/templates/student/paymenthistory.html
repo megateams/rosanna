@@ -1,0 +1,50 @@
+{% extends 'student/base.html' %}
+{% block  title %} Payment History {% endblock title %}
+{% block  pagetitle %} Payment History {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th>Fees ID</th>
+                    <th>Student Number</th>
+                    <th>Student Name</th>
+                    <th>Student Class</th>
+                    <th>Amount</th>
+                    <th>Accumulated Fees</th>
+                    <th>Balance</th>
+                    <th>Mode of Payment</th>
+                    <th>Date</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fee in fees_list %}
+                <tr>
+                    <td>{{ fee.paymentid }}</td>
+                    <td>{{ fee.stdnumber.stdnumber }}</td>
+                    <td>{{ fee.stdname }}</td>
+                    <td>{{ fee.studentclass }}</td>
+                    <td>{{ fee.amount }}</td>
+                    <td>{{ fee.accumulatedpayment }}</td>
+                    <td>{{ fee.balance }}</td>
+                    <td>{{ fee.modeofpayment }}</td>
+                    <td>{{ fee.date }}</td>
+                    <td>{{ fee.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

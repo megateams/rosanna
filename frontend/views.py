@@ -472,6 +472,7 @@ def edit_student(request):
         livingwith = request.POST.get('livingwith')
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
+        username = request.POST.get("username")
 
         student = Student.objects.get(pk=stdnumber)
         student.regdate = regdate
@@ -489,6 +490,7 @@ def edit_student(request):
         student.livingwith = livingwith
         student.guardianname = guardianname
         student.gcontact = gcontact
+        student.username = username
 
         student.save()
         messages.success(request, 'Student edited successfully')
@@ -510,44 +512,6 @@ def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
 @login_required
-# def supportstaffreg(request):
-#     if request.method == 'POST':
-#         supportstaffnames = request.POST.get('supportstaffnames')
-
-#         if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
-#             messages.error(request, 'This support staff has already been added.')
-#         else:
-#             contact = request.POST.get('contact')
-#             email = request.POST.get('email')
-#             address = request.POST.get('address')
-#             gender = request.POST.get('gender')
-#             dob = request.POST.get('dob')
-#             qualification = request.POST.get('qualification')
-#             position = request.POST.get('position')
-#             joiningdate = request.POST.get('joiningdate')
-#             salary = request.POST.get('salary')
-#             bankaccnum = request.POST.get('bankaccnum')
-
-#             supportStaffReg = Supportstaff.objects.create(
-#                 supportstaffnames=supportstaffnames,
-#                 contact=contact,
-#                 email=email,
-#                 address=address,
-#                 gender=gender,
-#                 dob=dob,
-#                 qualification=qualification,
-#                 position=position,
-#                 joiningdate=joiningdate,
-#                 salary=salary,
-#                 bankaccnum=bankaccnum,
-#             )
-#             messages.success(request, 'Support staff added successfully!')
-
-#         return redirect('AddSupportstaff')
-
-#     supportstaff = Supportstaff.objects.all()
-#     return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
-
 def supportstaffreg(request):
     if request.method == 'POST':
         supportstaffnames = request.POST.get('supportstaffnames')
@@ -749,6 +713,8 @@ def studentReg(request):
             new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
         else:
             new_stdnumber = 'STD001'
+        default_password = "123456"
+
 
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
@@ -758,6 +724,7 @@ def studentReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
+        username = request.POST.get('username')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -777,6 +744,8 @@ def studentReg(request):
             dob = dob ,
             address = address ,
             house = house ,
+            username = username ,
+            password = default_password ,
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,

@@ -1,5 +1,6 @@
 from django.db import models
 from frontend.models import *
+from django.utils import timezone
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -33,8 +34,9 @@ class Fees(models.Model):
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateField(verbose_name="Date of Payment")
+    timestamp = models.TimeField(default=timezone.now)
     
-    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
+    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp']
     
 class ExpenseRecord(models.Model):
     expenseid = models.AutoField(primary_key=True)
