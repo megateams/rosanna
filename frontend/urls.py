@@ -102,6 +102,7 @@ urlpatterns = [
    path('settings/school_info/', views.school_info, name='School Information'),
    path('edit_term/', views.edit_term, name='edit_term'),
    path('delete_term/', views.delete_term, name='delete_term'),
+   path('edit_school_info/', views.edit_school_info, name='edit_school_info'),
 
     # imports
     path('import_students/', views.import_students, name='import_students'),
