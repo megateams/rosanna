@@ -392,18 +392,74 @@ def edit_std_fees(request):
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
+
+def feesclearedstudents(request):
+    # Filter the Fees model to get students with a balance of 0
+    cleared_students = Fees.objects.filter(balance=0)
+    classes = Schoolclasses.objects.all()
+
+    # Pass the cleared_students queryset to the template
+    return render(request, 'finance/fees/feesclearedstudents.html', {'cleared_students': cleared_students, 'classes': classes})
+
+def feesclearedstudents_byclass(request, class_id):
+    classes = Schoolclasses.objects.all()
+    selected_class = None  # Initialize selected_class
+
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch cleared students for the selected class (balance = 0)
+        cleared_students = Fees.objects.filter(studentclass=selected_class.classname, balance=0)
+    except Schoolclasses.DoesNotExist:
+        pass  # Handle the case where the class is not found
+
+    return render(request, 'finance/fees/feesclearedstudents_byclass.html', {
+        'cleared_students': cleared_students,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
+
+def generate_clearance(request, stdnumber):
+    try:
+        # Get the student's information based on their student number
+        student = Fees.objects.filter(stdnumber=stdnumber)
+
+        # Perform clearance generation logic here
+        # You can update the student's clearance status or perform any other necessary actions
+
+        # Optionally, you can add a success message
+        messages.success(request, f"Clearance generated for student.")
+
+    except Fees.DoesNotExist:
+        # Handle the case where the student is not found
+        messages.error(request, "Student not found.")
+
+    # Redirect back to the cleared students list or any other appropriate page
+    return redirect('Cleared Students List')
+
 # fees views
 
 def financeaddFeesstructure(request):
     if request.method == 'POST':
         classname = request.POST.get('classname')
         amount = request.POST.get('amount')
+        term_data = Term.objects.get(status=1)
+
+        term = term_data.current_term
+        year = term_data.current_year
+
 
         this_class = Feesstructure.objects.filter(classname = classname)
         if(this_class):
             messages.success(request, "This class already exists")
         else:
-            fees_structure = Feesstructure.objects.create(classname=classname, amount=amount)
+            fees_structure = Feesstructure.objects.create(
+                classname = classname, 
+                amount = amount,
+                term = term,
+                year = year
+                )
             fees_structure.save()
             messages.success(request, f"Fees Structure for class '{classname}' added successfully.")
         return redirect('Add Fees Structure')
@@ -450,12 +506,15 @@ def financeaddTeacherpayments(request):
 
     if request.method == 'POST':
         teacherid = request.POST.get('teacherid')
+        term_data = Term.objects.get(status=1)
 
         teacher = Teachers.objects.get(teacherid=teacherid)
         teachername = teacher.teachernames
         paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
+        term = term_data.current_term
+        year = term_data.current_year
         
         if amountpaid > float(teacher.salary):
             messages.error(request , 'Payment not Added')
@@ -472,6 +531,8 @@ def financeaddTeacherpayments(request):
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
                 balance = float(teacher.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -486,6 +547,8 @@ def financeaddTeacherpayments(request):
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
                 balance = float(teacher.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -506,6 +569,8 @@ def financeaddTeacherpayments(request):
                     amountpaid = amountpaid,
                     accumulatedpayment = accumulatedpayment,
                     balance = newbalance,
+                    term = term,
+                    year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
                 return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
@@ -526,12 +591,15 @@ def financeteacherpaymentsList(request):
 def financeaddsupportstaffpayments(request):
     supportstaffdata = Supportstaff.objects.all()
     if request.method == 'POST':
+        term_data = Term.objects.get(status=1)
         supportstaffid = request.POST.get('support-staffid')
         supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
         staffnames = supportstaffname.supportstaffnames
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amountpaid = float(request.POST.get('amountpaid'))
+        term = term_data.current_term
+        year = term_data.current_year
 
         if amountpaid > float(supportstaffname.salary):
             messages.error(request , 'Payment not Added')
@@ -548,6 +616,8 @@ def financeaddsupportstaffpayments(request):
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
                 balance = float(supportstaffname.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Support Staff payment added successfully.')
@@ -562,6 +632,8 @@ def financeaddsupportstaffpayments(request):
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
                 balance = float(supportstaffname.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Support staff payment added successfully.')
@@ -582,6 +654,8 @@ def financeaddsupportstaffpayments(request):
                     amountpaid = amountpaid,
                     accumulatedamount = accumulatedpayment,
                     balance = newbalance,
+                    term = term,
+                year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
                 return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata})
@@ -602,6 +676,10 @@ def financesupportstaffpaymentsList(request):
 # expenses views
 def financeaddExpenses(request):
     if request.method == 'POST':
+        term_data = Term.objects.get(status=1)
+
+        term = term_data.current_term
+        year = term_data.current_year
         category = request.POST.get('category')
         expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
@@ -609,6 +687,8 @@ def financeaddExpenses(request):
             category=category,
             expensedate=expensedate,
             amountpaid=amountpaid,
+            term = term,
+            year = year
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message

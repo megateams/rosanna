@@ -1,0 +1,42 @@
+{% extends 'finance/base.html' %}
+{% block title %} Cleared Students by Class {% endblock title %}
+{% block pagetitle %} Cleared Students by Class {% endblock pagetitle %}
+
+{% block main %}
+<div class="inner-content">
+  
+        <div class="d-flex">
+            <div class="btns">
+                <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>    
+            </div>
+            <div class="btns mb-3 ml-4">
+                <a href="/feesclearedstudents/" class="btn btn-sm btn-primary">View All</a>
+                {% for class in classes %}
+                    <a href="/feesclearedstudents_byclass/{{class.classid }}" class="btn btn-sm btn-danger">{{class.classname}}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% if selected_class %}
+        <h2>Class: {{ selected_class.classname }}</h2>
+    {% endif %}
+    <div class="table-section" style="font-size: 14px;">
+        <table class="table" id="table" border="1px">
+            <thead>
+                <tr>
+                    <th>Student Number</th>
+                    <th>Student Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in cleared_students %}
+                <tr>
+                    <td>{{ student.stdnumber.stdnumber }}</td>
+                    <td>{{ student.stdname }}</td>
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main %}

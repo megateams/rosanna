@@ -20,6 +20,8 @@ class Feesstructure(models.Model):
     feesstructureid = models.AutoField(primary_key=True)
     classname = models.CharField(max_length=20)
     amount = models.IntegerField()
+    term = models.CharField(max_length=10, default=None)
+    year = models.PositiveIntegerField(default=None) 
 # feesstructure models
 
 class Fees(models.Model):
@@ -35,16 +37,20 @@ class Fees(models.Model):
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateField(verbose_name="Date of Payment")
     timestamp = models.TimeField(default=timezone.now)
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
-    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp']
+    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp', 'term', 'year']
     
 class ExpenseRecord(models.Model):
     expenseid = models.AutoField(primary_key=True)
     category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
     expensedate =models.DateField(verbose_name="Date of Expense")
     amountpaid =models.CharField(max_length=20, blank=True, verbose_name="Amount paid")
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
-    Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid']
+    Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid', 'term', 'year']
 
 
 
@@ -59,9 +65,10 @@ class Staffpayments(models.Model):
     balance = models.IntegerField(verbose_name='Balance' , blank=True)
     position = models.CharField(max_length=15 , verbose_name='Position' , blank=True)
     bankaccnum = models.IntegerField(verbose_name='Account Number' , blank=True , default=None)
-
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     displaystaffpayments = [
-        'staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum'
+        'staffname' , 'datepaid' , 'salary' , 'amountpaid' , 'balance' , 'position' , 'bankaccnum', 'term', 'year'
     ]
 
 class Bankdetails(models.Model):
@@ -69,9 +76,11 @@ class Bankdetails(models.Model):
     bankname = models.CharField(max_length=30 ,  verbose_name='Bank Name' , blank=True)
     accnum = models.IntegerField(verbose_name='Account Number' , blank=True)
     accname = models.CharField(verbose_name='Account Name' , max_length=25 , blank=True)
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
     displaybankdetails = [
-        'staffname' , 'bankname' , 'accnum' , 'accname'
+        'staffname' , 'bankname' , 'accnum' , 'accname', 'term', 'year'
     ]
     
 class Receipts(models.Model):
@@ -84,9 +93,11 @@ class Receipts(models.Model):
     item = models.CharField(max_length=30 , verbose_name='Item' , blank=True)
     balance = models.IntegerField(verbose_name='Balance' , blank=True)
     payername = models.CharField(max_length=30 , verbose_name='Payer Name' , blank=True)
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
     displayreceipts = [
-        'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername'
+        'receiptnum' , 'transactiondate' , 'amountpaid' , 'item' , 'balance' , 'payername', 'term', 'year'
     ]
     
 class Teacherspayment(models.Model):
@@ -98,9 +109,11 @@ class Teacherspayment(models.Model):
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
     balance = models.IntegerField(verbose_name='Balance')
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
     displayteacherpayment = [
-        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'accumulatedamount' , 'balance' , 'paymentmethod' , 'bankaccnum'
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'accumulatedamount' , 'balance' , 'paymentmethod' , 'bankaccnum', 'term', 'year'
     ]
     
     
@@ -113,9 +126,11 @@ class Supportstaffpayment(models.Model):
     paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
     balance = models.IntegerField(verbose_name='Balance')
     accumulatedamount = models.IntegerField(verbose_name='Accumulated Amount' , default=None)
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
     displaysupportstaffpayment = [
-        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' 
+        'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance', 'term', 'year'
     ]
 
 
