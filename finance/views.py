@@ -10,7 +10,10 @@ from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
+from collections import defaultdict
 from django.contrib.auth import authenticate, login
+from django.db.models import OuterRef, Subquery
+from django.db.models import F
 
 def financelogin(request):
     if request.method == 'POST':
@@ -25,12 +28,7 @@ def financelogin(request):
             fees = Fees.objects.all()
             total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-            context = {
-                'total_amount_paid': total_amount_paid,
-                'total_amount': total_amount,
-
-            }
-            return render(request, "finance/financedashboard.html", context)
+            return redirect("Finance Dashboard")
         else:
             messages.warning(request, 'Login Failed')
             return redirect('financeloginpage')
@@ -215,7 +213,11 @@ def financedashboard(request):
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-    fees_list = Fees.objects.exclude(balance__lte=0.0)# Filter fees with balance greater than 0
+    # Retrieve only the latest balance for each student based on the latest timestamp
+    latest_timestamps = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-timestamp')
+    fees_list = Fees.objects.annotate(
+        latest_timestamp=Subquery(latest_timestamps.values('timestamp')[:1])
+    ).filter(balance__gt=0.0, timestamp=F('latest_timestamp'))
     
     sspayments = Supportstaffpayment.objects.all()
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -225,6 +227,15 @@ def financedashboard(request):
 
     term_data = Term.objects.all()
 
+    # Calculate the percentages
+    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    fees_percentage = (total_amount / total) * 100
+    expenses_percentage = (total_amount_paid / total) * 100
+    sspayments_percentage = (total_sspayments / total) * 100
+    trpayments_percentage = (total_trpayments / total) * 100
+
+    
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
@@ -232,6 +243,10 @@ def financedashboard(request):
         'total_trpayments' : total_trpayments,
         'term_data' : term_data,
         'fees_list': fees_list,
+        'fees_percentage': fees_percentage,
+        'expenses_percentage': expenses_percentage,
+        'sspayments_percentage': sspayments_percentage,
+        'trpayments_percentage': trpayments_percentage,
     }
     return render(request, "finance/financedashboard.html", context)
 
@@ -243,42 +258,113 @@ def financeaddFees(request):
         stdname = Student.objects.get(stdnumber=stdnumber).childname  # Get student name
         studentclass = request.POST.get('studentclass')
         classfees = request.POST.get("classfees")
-        amount = request.POST.get("amount") # Get amount from fees structure
-        balance = int(classfees) - int(amount)
+        amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-        
+        timestamp = request.POST.get('timestamp')
+
+        # Calculate balance
+        balance = int(classfees) - int(amount)
+
         if int(amount) <= int(classfees):
-            # Create a new Fees object and save it to the database
-            fees = Fees.objects.create(
-                stdnumber_id=stdnumber,
-                stdname=stdname,
-                studentclass=studentclass,
-                classfees=classfees,
-                amount=amount,
-                balance=balance,
-                modeofpayment=modeofpayment,
-                date=date
-            )
-            fees.save()
+            # Check if there are previous fee records for the student
+            last_fee = Fees.objects.filter(stdnumber_id=stdnumber).last()
+
+            if last_fee is None:
+                # No previous fee records exist, create a new entry
+                fees = Fees.objects.create(
+                    stdnumber_id=stdnumber,
+                    stdname=stdname,
+                    studentclass=studentclass,
+                    classfees=classfees,
+                    amount=amount,
+                    balance=balance,
+                    modeofpayment=modeofpayment,
+                    date=date,
+                    timestamp=timestamp,
+                    accumulatedpayment=amount  # Set accumulatedpayment for the first entry
+                )
+                fees.save()
+            else:
+                if last_fee.balance == 0:
+                    # Previous balance was 0, create a new entry
+                    fees = Fees.objects.create(
+                        stdnumber_id=stdnumber,
+                        stdname=stdname,
+                        studentclass=studentclass,
+                        classfees=classfees,
+                        amount=amount,
+                        balance=balance,
+                        modeofpayment=modeofpayment,
+                        date=date,
+                        timestamp=timestamp,
+                        accumulatedpayment=amount  # Set accumulatedpayment for the new entry
+                    )
+                    fees.save()
+                else:
+                    # Previous balance was greater than 0, update accumulated payment and balance
+                    accumulatedpayment = last_fee.accumulatedpayment + int(amount)
+                    new_balance = int(classfees) - accumulatedpayment
+                    if new_balance < 0:
+                        messages.error(request, 'Student has cleared all fees for this term')
+                    else:
+                        fees = Fees.objects.create(
+                            stdnumber_id=stdnumber,
+                            stdname=stdname,
+                            studentclass=studentclass,
+                            classfees=classfees,
+                            amount=amount,
+                            balance=new_balance,
+                            modeofpayment=modeofpayment,
+                            date=date,
+                            timestamp=timestamp,
+                            accumulatedpayment=accumulatedpayment
+                        )
+                        fees.save()
 
             messages.success(request, 'Fees registered successfully.')
             return redirect('Add Fees')
-        
         else:
-            messages.error(request, 'Amount is greater than the class fees. Please try again')
+            messages.error(request, 'Amount is greater than class fees. Please try again')
+
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
-
 def financefeesList(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
+    classes = Schoolclasses.objects.all()
     context = {
         'fees_list': fees_list,
         'total_amount': total_amount,
+        'classes': classes,
     }
     return render(request,'finance/fees/financefeesList.html',context)
+
+def fees_by_class(request, class_id):
+    classes = Schoolclasses.objects.all()
+    
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+        
+        # Retrieve the class fees from the Fees model
+        classfees = Fees.objects.filter(studentclass=selected_class.classname).first()
+        classfees = classfees.classfees if classfees else 0  # Default value if class fees are not found
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        fees_list = []
+        classfees = 0  # Default value if class is not found or fees not set
+    
+    return render(request, 'finance/fees/fees_by_class.html', {
+        'fees_list': fees_list,
+        'classes': classes,
+        'selected_class': selected_class,
+        'classfees': classfees,  # Pass the class fees to the template
+    })
 
 def delete_fee(request):
     if request.method == 'POST':
@@ -371,26 +457,58 @@ def financeaddTeacherpayments(request):
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
         
+        if amountpaid > float(teacher.salary):
+            messages.error(request , 'Payment not Added')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'teachers': teachersdata})
 
-        # Check if a payment for the same teacher already exists
-        if Teacherspayment.objects.filter(teacherid=teacherid).exists():
-            previous_payment = Teacherspayment.objects.filter(teacherid=teacherid).latest('paymentdate')
-            previous_balance = previous_payment.balance
-            new_balance = previous_balance - amountpaid  # Accumulate balance
-        else:
-            new_balance = salary - amountpaid
+        payment = Teacherspayment.objects.filter(teacherid = teacherid).last()
 
-        Teacherspayment.objects.create(
-            teacherid=teacherid,
-            teachername=teachername,
-            paymentdate=paymentdate,
-            salary=salary,
-            amountpaid=amountpaid,
-            balance=new_balance,
-        )
+        if payment == None:
+            Teacherspayment.objects.create(
+                teacherid = teacherid,
+                teachername = teachername,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedpayment = amountpaid,
+                balance = float(teacher.salary) - amountpaid,
+            )
 
-        messages.success(request, 'Teacher payment added successfully.')
-        return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+            messages.success(request, 'Teacher payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
+        if payment.balance == 0:
+            Teacherspayment.objects.create(
+                teacherid = teacherid,
+                teachername = teachername,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedpayment = amountpaid,
+                balance = float(teacher.salary) - amountpaid,
+            )
+
+            messages.success(request, 'Teacher payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+
+        if payment.balance > 0:
+            accumulatedpayment = payment.accumulatedpayment + amountpaid
+            newbalance = payment.salary - accumulatedpayment
+            if newbalance < 0:
+                messages.error(request , 'Payment not Added')
+                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'teachers': teachersdata})
+            else:
+                Teacherspayment.objects.create(
+                    teacherid = teacherid,
+                    teachername = teachername,
+                    paymentdate = paymentdate,
+                    salary = salary,
+                    amountpaid = amountpaid,
+                    accumulatedpayment = accumulatedpayment,
+                    balance = newbalance,
+                )
+                messages.success(request, 'Teacher payment added successfully.')
+                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
     return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
 
@@ -406,37 +524,68 @@ def financeteacherpaymentsList(request):
 
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
+    supportstaffdata = Supportstaff.objects.all()
     if request.method == 'POST':
-        support_staff_id = request.POST.get('support-staffid')
+        supportstaffid = request.POST.get('support-staffid')
+        supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
+        staffnames = supportstaffname.supportstaffnames
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
-        amount_paid = float(request.POST.get('amountpaid'))
+        amountpaid = float(request.POST.get('amountpaid'))
 
-        # Check if a payment for the same support staff already exists
-        if Supportstaffpayment.objects.filter(supportstaffid=support_staff_id).exists():
-            messages.error(request, 'Payment for this support staff already exists.')
-            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'support_staff': Supportstaff.objects.all()})
+        if amountpaid > float(supportstaffname.salary):
+            messages.error(request , 'Payment not Added')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata})
 
-        supportstaffrow = Supportstaff.objects.get(supportstaffid=support_staff_id)
-        balance = salary - amount_paid
+        payment = Supportstaffpayment.objects.filter(supportstaffid = supportstaffid).last()
 
-        # Create a new support staff payment record
-        payment = Supportstaffpayment.objects.create(
-            supportstaffid=support_staff_id,
-            amountpaid=amount_paid,
-            salary=salary,
-            paymentdate=paymentdate,
-            balance=balance,
-            staffname=supportstaffrow.supportstaffnames
-        )
+        if payment == None:
+            Supportstaffpayment.objects.create(
+                supportstaffid = supportstaffid ,
+                staffname = staffnames ,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedamount = amountpaid,
+                balance = float(supportstaffname.salary) - amountpaid,
+            )
 
-        messages.success(request, 'Support staff payment added successfully.')
-        return redirect('SupportstaffpaymentsLists')  # Redirect to the list page
+            messages.success(request, 'Support Staff payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+        
+        if payment.balance == 0:
+            Supportstaffpayment.objects.create(
+                supportstaffid = supportstaffid ,
+                staffname = staffnames ,
+                paymentdate = paymentdate,
+                salary = salary,
+                amountpaid = amountpaid,
+                accumulatedamount = amountpaid,
+                balance = float(supportstaffname.salary) - amountpaid,
+            )
 
-    context = {
-        'support_staff': Supportstaff.objects.all()
-    }
-    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', context)
+            messages.success(request, 'Support staff payment added successfully.')
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+        
+        if payment.balance > 0:
+            accumulatedpayment = payment.accumulatedamount + amountpaid
+            newbalance = payment.salary - accumulatedpayment
+            if newbalance < 0:
+                messages.error(request , 'Payment not Added')
+                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata})
+            else:
+                Supportstaffpayment.objects.create(
+                    supportstaffid = supportstaffid ,
+                    staffname = staffnames ,
+                    paymentdate = paymentdate,
+                    salary = salary,
+                    amountpaid = amountpaid,
+                    accumulatedamount = accumulatedpayment,
+                    balance = newbalance,
+                )
+                messages.success(request, 'Teacher payment added successfully.')
+                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata})
+    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
 
 def financesupportstaffpaymentsList(request):
     total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -550,10 +699,18 @@ def get_teacher_salary(request , id):
     }
     return JsonResponse(teachersalary)
 
-def get_teacher_balance(request , id , amountpaid):
+def get_teacher_balance(request , id):
     teacher = Teachers.objects.get(teacherid = id)
-    balance = int(teacher.salary) - int(amountpaid)
+    payment = Teacherspayment.objects.get(teacherid = id)
+    balance = int(teacher.salary) - int(payment.accumulatedpayment)
+    print(balance)
     return JsonResponse({'balance' : balance})
+
+def getsupportstaffbalance(request , id):
+    supportstaff = Supportstaff.objects.get(supportstaffid = id)
+    payment = Supportstaffpayment.objects.get(supportstaffid = id)
+    balance = supportstaff.salary - payment.accumulatedamount
+    return JsonResponse({'balance':balance})
 
 def export_finance_fees_to_excel(request):
     # Fetch all the data from the Fees model

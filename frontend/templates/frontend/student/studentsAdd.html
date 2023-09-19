@@ -6,9 +6,42 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
-    <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
-
+    <div class="d-flex justify-content-between">
+        <div class="btns">
+            <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">View Students</a>
+            <a href="#import" data-toggle="modal" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
+            <a href="" class="btn btn-sm btn-primary">Download excel template</a>
+            <!-- import Modal -->
+            <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content ">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title text-white">Import an excel or csv student list</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/import_students/" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="">Select File: </label><br>
+                                    <input type="file" name="student_file" id="">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="template">
+            
+        </div>
+    </div>
     <!-- form-section -->
 
     <form action="submit/" method="POST" class="form ml-3 p-3 shadow rounded bg-light" enctype="multipart/form-data">
@@ -41,12 +74,12 @@
             </div>
             <div class="row">
                 <!-- name -->
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="">Child Fullname: </label>
                     <input type="text" name="childname" class="form-control" required>
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="">Class: </label>
                     <select name="stdclass" id="" class="form-control">
                         <option value="">---</option>
@@ -54,6 +87,11 @@
                         <option value="{{class.classid}}">{{class.classname}}</option>
                         {% endfor %}
                     </select>
+                </div>
+                 <!-- username-->
+                 <div class="form-group col-md-4">
+                    <label for="">Username </label>
+                    <input type="text" name="username" class="form-control">
                 </div>
             </div>
             <div class="row">
@@ -178,7 +216,12 @@
     </form>
     <!-- form-section -->
 
+
+
 </div>
 <!-- inner-content -->
+
+
+
 
 {% endblock main %}

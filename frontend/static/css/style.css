@@ -19,12 +19,12 @@
 .sidebar{
     background-color: #1b1415;
     height: 100vh;
-    width: 15%;
+    width: 17%;
     overflow: hidden;
     overflow-y: scroll;
 }
 .content{
-    width: 85%;
+    width: 83%;
 }
 
 .inner-content{

@@ -6,7 +6,7 @@
 {% block main %}
 <div class="inner-content">
     <div class="header d-flex" style="margin-bottom: 10px;">
-        <div class="class-btns" pr-5>
+        <div class="class-btns">
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
             <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
@@ -22,15 +22,15 @@
         <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
     </div>
 
-    <div class="students-list" style="font-size: 14px;">
+    <div class="table-section" style="font-size: 14px;">
         <table class="table bg-white" id="table" border="1">
-            <thead class="bg-dark text-white">
+            <thead class=" text-white">
                 <tr>
                     <th>Reg Number</th>
                     <th>Name</th>
                     {% for subject in subjects %}
                         <th>{{ subject.subjectname|slice:":3" }}</th>
-                        <th>Grade</th>
+                        <!-- <th>Grade</th> -->
                     {% endfor %}
                     <th>Total</th>
                     <th>Average</th>
@@ -46,7 +46,7 @@
                         {% for subject_data in subjects_data %}
                             <!-- <td>{{ subject_data.total_marks }}</td> -->
                             <td>{{ subject_data.average_marks|floatformat:0 }}</td>
-                            <td>
+                            <!-- <td>
                                 {% if subject_data.average_marks >= 80 %}
                                     <p>D1</p>
                                 {% elif subject_data.average_marks >= 75 %}
@@ -66,7 +66,7 @@
                                 {% else %}
                                     <p>F9</p>
                                 {% endif %}
-                            </td>
+                            </td> -->
                         {% endfor %}
                         <td><b>{{ student.total_average_marks|floatformat:0 }}</b></td>
                         <td><b>{{ student.final_average|floatformat:2 }}</b></td>

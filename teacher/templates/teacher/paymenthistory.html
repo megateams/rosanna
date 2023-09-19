@@ -21,6 +21,7 @@
                 </tr>
             </thead>
             <tbody>
+                {% for teacher in teacher_data %}
                 <tr>
                     <td>{{teacher.teacherid}}</td>
                     <td>{{teacher.teachername}}</td>
@@ -30,6 +31,7 @@
                     <td>{{teacher.amountpaid}}</td>
                     <td>{{teacher.balance}}</td>
                 </tr>
+                {% endfor %}
   
             </tbody>
         </table>

@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 # from .views import save_registration
 
 urlpatterns = [
+    path('admincheckemail/<email>/' , views.admincheckemail , name = "checkemail"),
     path('deleteadmin/' , views.deleteadmin , name = "deleteadmin"),
     path('editadministrator/' , views.editadministrator , name = 'editadministrator'),
     path("", views.user_login, name="Admin Login"),
@@ -13,10 +14,15 @@ urlpatterns = [
 
     # path('save_registration/', save_registration, name='save_registration')
     path('studentslist/', views.studentsList, name="Students List"),
+    path('student-by-class/<int:class_id>/', views.student_by_class, name='student_by_class'),
     path('addstudent/', views.studentsAdd, name="AddStudents"),
     path('addstudent/submit/', views.studentReg, name="studentReg"),
     path('edit_student/', views.edit_student, name="edit_student"),
     path('delete_student/', views.delete_student, name="delete_student"),
+    path('edit_std_image/', views.edit_std_image, name="edit_std_image"),
+    path('edit_tr_image/', views.edit_tr_image, name="edit_tr_image"),
+    path('edit_sstaff_image/', views.edit_sstaff_image, name="edit_sstaff_image"),
+
 
     path('addteacher/', views.teacherAdd, name="Add Teacher"),
     path('teacherlist/', views.teacherList, name="Teachers List"),
@@ -50,7 +56,7 @@ urlpatterns = [
     path('showteacher/<teacherId>', views.showteacher, name="Show Teacher"),
     path('add-support-staff/submit/', views.supportstaffreg, name='supportstaffreg'),
     # path('add-support-staff/', views.supportstaffreg, name='supportstaffreg'),
-    path('showsupportstaff/<int:supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
+    path('showsupportstaff/<supportstaffid>/', views.showsupportstaff, name='show supportstaff'),
     path('edit_supportstaff/', views.edit_supportstaff, name="edit_supportstaff"),
     path('delete_supportstaff/', views.delete_supportstaff, name="delete_supportstaff"),
 
@@ -79,6 +85,7 @@ urlpatterns = [
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
     path('feeslist/', views.fees, name='Fees '),
+    path('fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     #path('teacherspaymentslist/', views.teacherspayments, name='Teachers Payments '),
     #path('supportstaffpaymentslist/', views.supportstaffpayments, name='Supportstaff Payments '),
     path('expenseslist/', views.expenses, name='Expenses '),
@@ -96,7 +103,8 @@ urlpatterns = [
    path('edit_term/', views.edit_term, name='edit_term'),
    path('delete_term/', views.delete_term, name='delete_term'),
 
-
+    # imports
+    path('import_students/', views.import_students, name='import_students'),
 
 
 ]

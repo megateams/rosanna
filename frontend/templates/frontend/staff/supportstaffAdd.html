@@ -24,7 +24,7 @@
     <a href="" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Import excel</a>
 
     <!-- form-section -->
-    <form method='POST', action="submit/" class="form ml-3 p-3 shadow rounded bg-light">
+    <form method='POST', action="submit/" class="form ml-3 p-3 shadow rounded bg-light" enctype="multipart/form-data">
         {%csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Add Support Staff</h5>
@@ -108,6 +108,11 @@
                 <div class="form-group col-md-6">
                     <label for="">Joining Date </label>
                     <input type="date" name="joiningdate" id="" class="form-control pr-2">
+                </div>
+                <!-- profile image -->
+                <div class="form-group col-md-6">
+                    <label for="">Profile Image</label>
+                    <input type="file" name="profile_image" class="form-control-file">
                 </div>
             </div>
         </div>

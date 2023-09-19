@@ -1,5 +1,6 @@
 from django.db import models
 from frontend.models import *
+from django.utils import timezone
 # Create your models here.
 CLASS_CHOICES =[
     ('baby' , 'baby'),
@@ -28,11 +29,14 @@ class Fees(models.Model):
     studentclass = models.CharField(choices=CLASS_CHOICES , max_length=20 , verbose_name='Class' , blank=True)
     classfees = models.CharField(max_length= 20, verbose_name='Class Fees' , blank=True)
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
+    # accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
+    accumulatedpayment = models.IntegerField(default=0)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateField(verbose_name="Date of Payment")
+    timestamp = models.TimeField(default=timezone.now)
     
-    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date']
+    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp']
     
 class ExpenseRecord(models.Model):
     expenseid = models.AutoField(primary_key=True)
@@ -92,26 +96,23 @@ class Teacherspayment(models.Model):
     paymentdate = models.DateField(verbose_name='Payment Date')
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
+    accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
     balance = models.IntegerField(verbose_name='Balance')
-    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum' ,  default=None)
     
     displayteacherpayment = [
-        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' , 'paymentmethod' , 'bankaccnum'
+        'paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'accumulatedamount' , 'balance' , 'paymentmethod' , 'bankaccnum'
     ]
     
     
 class Supportstaffpayment(models.Model):
     paymentid = models.AutoField(primary_key=True)
-    #supportstaffid = models.ForeignKey(Supportstaff, on_delete=models.CASCADE)
     supportstaffid = models.CharField(max_length=10 , verbose_name='Support Staff id')
     staffname = models.CharField(max_length = 25 , verbose_name='Staffname' , null=True)
     salary = models.IntegerField(verbose_name='Salary')
     amountpaid = models.IntegerField(verbose_name='Amount Paid')
     paymentdate = models.DateField(max_length=6 , verbose_name='PAyment Date' , null=True)
     balance = models.IntegerField(verbose_name='Balance')
-    # paymentmethod = models.CharField(max_length=25 , verbose_name='Payment Method')
-    # bankaccnum = models.CharField(max_length=25 , verbose_name='bankaccnum')
+    accumulatedamount = models.IntegerField(verbose_name='Accumulated Amount' , default=None)
     
     displaysupportstaffpayment = [
         'supportstaffid','paymentid' , 'paymentdate' , 'salary' , 'amountpaid' , 'balance' 

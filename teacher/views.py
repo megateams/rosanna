@@ -65,9 +65,9 @@ def profile(request,teacher_id):
 
 
 def paymenthistory(request,teacher_id):
-    teacher = Teacherspayment.objects.get(teacherid=teacher_id)
-    return render(request, 'teacher/paymenthistory.html', {"teacher": teacher})  
-
+    teachers = Teachers.objects.get(teacherid = teacher_id)
+    teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
+    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data, 'teacher':teachers})   
 
 # marks logic
 def get_students_by_class(request, class_id):
@@ -132,6 +132,7 @@ def class_details(request, class_id, teacher_id):
         'subjects': subjects,
         'student_marks': student_marks,
         'mark_types': mark_types,
+        'term_data': Term.objects.all()
     })
 
 
@@ -186,49 +187,67 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     subject = get_object_or_404(Subjects, subjectid=subject_id)
 
-    
     # Retrieve the students related to the class
     students = Student.objects.filter(stdclass=schoolclass)
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
+    term_data = Term.objects.all().first()
     # Get the marks for the current subject
     marks = Mark.objects.filter(class_name=schoolclass, subject=subject)
 
     # Create a set of student names whose marks have been added for the current subject
     marks_students = set(mark.student_name for mark in marks)
-
+    
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
         student_number = request.POST.get('studentname')
         marks_obtained = request.POST.get('mark_obtained')
-        
 
         if mark_type and student_number and marks_obtained:
             # Get the student object
             student = Student.objects.get(stdnumber=student_number)
-            print(student.childname)
-            # Create a new Mark object to save the marks
-            Mark.objects.create(
+
+            # Check if a mark of the same type already exists for the student and subject
+            existing_mark = Mark.objects.filter(
                 class_name=schoolclass,
                 student_name=student.childname,
                 subject=subject,
-                marks_obtained=int(marks_obtained),
                 mark_type=mark_type,
-            )
+                current_term=term_data.current_term,
+                current_year=term_data.current_year,
+            ).first()
 
-            # Add a success message to inform the user that marks have been added
-            messages.success(request, 'Subject marks added successfully.')
+            if existing_mark:
+                # If a mark already exists, update it
+                existing_mark.marks_obtained = int(marks_obtained)
+                existing_mark.save()
+                messages.success(request, 'Subject mark updated successfully.')
+            else:
+                # If a mark doesn't exist, create a new one
+                mark = Mark.objects.create(
+                    class_name=schoolclass,
+                    student_name=student.childname,
+                    subject=subject,
+                    marks_obtained=int(marks_obtained),
+                    mark_type=mark_type,
+                    current_term=term_data.current_term,
+                    current_year=term_data.current_year,
+                )
+                mark.save()
+                messages.success(request, 'Subject mark added successfully.')
+
             return redirect('Add Subject marks', class_id=class_id, teacher_id=teacher_id, subject_id=subject_id)
 
-    # If the request method is GET, render the form for adding subject marks
     return render(request, 'teacher/marks/add_subject_marks.html', {
         'schoolclass': schoolclass,
         'subject': subject,
         'students': students,
         'mark_types': mark_types,
-        'teacher_id': teacher_id,  # Include the teacher_id in the context
+        'marks_students': marks_students,
+        'teacher_id': teacher_id,
+        'term_data': term_data,
     })
 
 def addmarks(request, class_id, teacher_id):
@@ -246,9 +265,13 @@ def addmarks(request, class_id, teacher_id):
     # Retrieve the subjects that are associated with this class
     subjects = schoolclass.subjects.all()
 
+    # getting the current term data
+    term_data = Term.objects.all().first()
+
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
+    marktype = request.GET.get('marktype')
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
@@ -267,6 +290,8 @@ def addmarks(request, class_id, teacher_id):
                 subject_id=subject_id,
                 mark_type=mark_type,
                 marks_obtained=int(marks_obtained),
+                current_term=term_data.current_term,
+                current_year=term_data.current_year,
             )
             messages.success(request, 'Subject marks added successfully.')
 
@@ -279,8 +304,24 @@ def addmarks(request, class_id, teacher_id):
         'mark_types': mark_types,
         'teacher_id': teacher_id,
         'students': students,
+        'marktype': marktype,
+        'term_data': term_data,
     })
 
+# view to check if the mark already exists
+def get_mark(request, student_id, subject_id, mark_type):
+    # Retrieve the mark for the specified student, subject, and mark type
+    
+    mark = Mark.objects.filter(
+        student_name=student_id,
+        subject=subject_id,
+        mark_type=mark_type
+    ).first()
+    print(mark)
+    # Prepare the response data
+    response_data = {'marks_obtained': mark.marks_obtained if mark else ''}
+
+    return JsonResponse(response_data)
 
 # class teacher class
 def his_class(request, class_id, teacher_id):
@@ -336,6 +377,7 @@ def view_marks(request, class_id, teacher_id):
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
+    term_data = Term.objects.all()
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
     subjects_total_marks = {subject: 0 for subject in subjects}
@@ -383,6 +425,7 @@ def view_marks(request, class_id, teacher_id):
         'subjects': subjects,
         'mark_types': mark_types,
         'subjects_marks_data': subjects_marks_data,
+        'term_data': term_data
     })
 
 
@@ -501,6 +544,6 @@ def generate_report(request, student_id):
     return response
 
 
-
+ 
 
 

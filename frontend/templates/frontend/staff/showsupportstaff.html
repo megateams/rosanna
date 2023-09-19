@@ -9,10 +9,62 @@
     <div class="row">
         <div class="col-md-5">
             <!-- image -->
-            <div class="image">
-               <img class="img-thumbnail" src="{% static 'images/student.jpg' %}" alt="support staff image"> 
+            {% for staff in supportstaffs %}
+            {% if staff.profile_image %}
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ staff.profile_image.url }}" style="height: 60vh;">
+                </div>
+                {% else %}
+                <div class="image">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                </div>
+            {% endif %}
+            <a href="#edit_image{{staff.supportstaffid}}" class="edit-image btn" data-toggle="modal">
+                <i class="fas fa-camera   p-3" style="
+                    font-size: 4rem;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 280;
+                    left: 340;
+                    color: #ffffff;
+                    background: #f00;
+                    "></i>
+            </a>
+
+            <!-- edit image -->
+            <div class="modal fade" id="edit_image{{staff.supportstaffid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/edit_sstaff_image/" method="post" enctype="multipart/form-data">
+                                {% csrf_token%}
+                                <input type="hidden" name="supportstaffid" value="{{staff.supportstaffid}}">
+                                
+                                <div class="form-group">
+                                    <label for="">Edit Image:</label><br>
+                                    <input type="file" name="profile_image" id="">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-sm btn-danger">Update</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
+            
             <!-- image -->
+            {% endfor %}
+
+
         </div>
         <div class="col-md-7">
             <!-- staff data -->
