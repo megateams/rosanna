@@ -362,7 +362,32 @@ def his_class(request, class_id, teacher_id):
     })
 
 # view marks
+def assign_subject(request):
+    if request.method == "POST":
+        teacher_id = request.POST.get("teacher_id")
+        schoolclass_id = request.POST.get("schoolclass")
+        subjects = request.POST.getlist('subjects')
 
+        # Get the teacher and school class
+        teacher = Teachers.objects.get(teacherid=teacher_id)
+        schoolclass = Schoolclasses.objects.get(classid=schoolclass_id)
+
+        data_exists = TeacherSubject.objects.filter(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
+
+        if data_exists:
+            messages.success(request, "Subjects already assigned to this teacher")
+            return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
+        else:
+            data = TeacherSubject.objects.create(
+            teacher = teacher,
+            schoolclass = schoolclass,
+        )
+        data.save()
+
+        data.subjects.set(subjects)
+        
+        messages.success(request, "Teacher assigned subjects")
+        return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
 
 def view_marks(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
