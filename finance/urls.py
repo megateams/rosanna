@@ -32,6 +32,7 @@ urlpatterns = [
     path('feesclearedstudents/', views.feesclearedstudents, name='Cleared Students List'),
     path('feesclearedstudents_byclass/<int:class_id>/', views.feesclearedstudents_byclass, name='Cleared Students by Class'),
     path('generate_clearance/<str:stdnumber>/', views.generate_clearance, name='Generate Clearance'),
+    path('clearance_card/<str:stdnumber>/', views.clearance_card, name='Clearance Card'),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),

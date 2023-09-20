@@ -423,20 +423,43 @@ def feesclearedstudents_byclass(request, class_id):
 def generate_clearance(request, stdnumber):
     try:
         # Get the student's information based on their student number
-        student = Fees.objects.filter(stdnumber=stdnumber)
+        student = get_object_or_404(Fees, stdnumber=stdnumber)
 
         # Perform clearance generation logic here
-        # You can update the student's clearance status or perform any other necessary actions
+        # For example, you can update the student's clearance status
+        student.clearance_status = True  # Assuming you have a field for clearance status in the Fees model
+        student.save()
+
+        # Redirect to the clearance card view with the student's stdnumber
+        return redirect('Clearance Card', stdnumber=stdnumber)
 
         # Optionally, you can add a success message
-        messages.success(request, f"Clearance generated for student.")
+        messages.success(request, f"Clearance generated for {student.stdname}.")
 
     except Fees.DoesNotExist:
         # Handle the case where the student is not found
         messages.error(request, "Student not found.")
 
     # Redirect back to the cleared students list or any other appropriate page
-    return redirect('Cleared Students List')
+    return redirect('Cleared Students List')  # Adjust this URL name as needed
+
+def clearance_card(request, stdnumber):
+    # Retrieve the student's information based on the stdnumber
+    student = Fees.objects.get(stdnumber=stdnumber,balance=0)
+    
+    # get more student details
+    student_img = Student.objects.get(stdnumber=stdnumber)
+
+    # get school information
+    term_data = Term.objects.get(status=1)
+    # Render the clearance card template and pass the student's information
+
+    context={
+        'student': student,
+        'student_img': student_img,
+        'term_data':term_data
+    }
+    return render(request, 'finance/fees/clearancecard.html',context)
 
 # fees views
 
