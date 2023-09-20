@@ -228,6 +228,14 @@ class Administrators(models.Model):
         'salary' , 'bankaccnum'
     ]
 
+class TeacherSubject(models.Model):
+    teacher = models.ForeignKey('Teachers', on_delete=models.CASCADE)
+    subjects = models.ManyToManyField('Subjects')
+    schoolclass = models.ForeignKey('Schoolclasses', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.teacher} - {', '.join([str(subject) for subject in self.subjects.all()])} ({self.schoolclass})"
+
 
 
     
