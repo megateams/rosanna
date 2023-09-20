@@ -74,5 +74,6 @@ urlpatterns = [
     path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
     path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
     path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
+    path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
 ]

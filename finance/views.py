@@ -964,6 +964,38 @@ def export_support_staff_payments_to_excel(request):
 
     return response
 
+def export_clearedstudents_to_excel(request):
+    # Query cleared students data from your Fees model (assuming balance = 0 indicates cleared students)
+    cleared_students_data = Fees.objects.filter(balance=0).values_list(
+        'stdnumber', 'stdname', 'studentclass'
+    )
+
+    # Create a new workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Define column headers
+    ws.append(['Student Number', 'Student Name', 'Student Class'])
+
+    # Iterate over cleared students' data and add it to the worksheet
+    for row_data in cleared_students_data:
+        ws.append(row_data)
+
+    # Set column widths (adjust as needed)
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 25
+    ws.column_dimensions['C'].width = 15
+
+    # Define the filename and create an HTTP response
+    filename = 'cleared_students_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response
+
 
 
 
