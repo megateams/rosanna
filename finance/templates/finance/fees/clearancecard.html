@@ -1,0 +1,134 @@
+{% load custom_tags %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Print clearance card</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body{
+            margin: 10px;
+        }
+        .header{
+            padding: 10px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 5px solid #251a1b;
+        }
+        .inner-content
+        {
+            border: 2px solid #251a1b;
+        }
+
+        .mybadge
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .mybadge .image
+        {
+            margin-right: 20px;
+        }
+
+        .student-info{
+            width: 25%;
+        }
+
+        #print_section{
+            width: 75%;
+        }
+
+    </style>
+</head>
+  <body>
+
+    <div class="inner-content">
+        <div class="header">
+            <div class="mybadge">
+                {% get_school_info as school_info %}
+                {% if school_info %}
+                    {% for info in school_info %}
+                        <div class='image'>
+                            <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge" width="100">
+                        </div>
+                        <div class="name">
+                            <h4 class="text-dark text-uppercase"><b>{{ info.schoolname }}</b></h4>
+                            <h5 class="text-dark"><b>Email:</b> {{ info.email }}</h5>
+                            <h5 class="text-dark"><b>Tel:</b> {{ info.contact }}</h5>
+                        </div>
+                        
+                        <!-- Display other school information as needed -->
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="">
+                <h5 class="text-dark text-uppercase"><b><u>office of the School Bursar</u></b></h5>
+                <div class="term text-uppercase" style="display: flex;">
+                    <h6>Term: {{term_data.current_term}}</h6>
+                    <h6 style="margin-left: 10px;"> | Year: {{term_data.current_year}}</h5>
+                </div>
+                <p>Printed on: {% now 'l. d M, Y' %} </p>
+                
+            </div>
+        </div>
+        <div class="title text-dark p-2">
+            <h4 class="text-uppercase text-center"> <b><u>Fees clearance card</u></b></h4>
+        </div>
+        <div class="card-section d-flex">
+            <div id="print_section" class="p-5">
+                <!-- <h1>Clearance Card</h1> -->
+                <h2>Student Information</h2>
+                <h5><b>Student Number:</b> {{ student.stdnumber.stdnumber }}</h5>
+                <h5><b>Student Name: </b>{{ student.stdname }}</h5>
+                <h5><b>Student Class:</b> {{ student.studentclass }}</h5>
+            </div>
+            <div class="student-info p-2">
+                {% if student_img.profile_image %}
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ student_img.profile_image.url }}" >
+                </div>
+                {% else %}
+                <div class="image">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                </div>
+                {% endif %}
+            </div>
+            
+        </div>
+        
+    
+        <!-- Include additional clearance details and styling here -->
+    
+        <!-- Add a button or link to print the clearance card -->
+        <a href="#" class="btn btn-primary print ml-5 mb-3">Print Clearance Card</a>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $(".print").click(function(e) {
+                e.preventDefault();
+                // Print the section with class "print-section"
+                $('.print').hide();
+                window.print();
+            });
+        });
+    </script>
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

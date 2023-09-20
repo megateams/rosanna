@@ -29,6 +29,10 @@ urlpatterns = [
     path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     path('delete_fee/', views.delete_fee, name='delete_fee'),
     path('edit_std_fees/', views.edit_std_fees, name='edit_std_fees'),
+    path('feesclearedstudents/', views.feesclearedstudents, name='Cleared Students List'),
+    path('feesclearedstudents_byclass/<int:class_id>/', views.feesclearedstudents_byclass, name='Cleared Students by Class'),
+    path('generate_clearance/<str:stdnumber>/', views.generate_clearance, name='Generate Clearance'),
+    path('clearance_card/<str:stdnumber>/', views.clearance_card, name='Clearance Card'),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
