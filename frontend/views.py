@@ -1176,14 +1176,14 @@ def supportstaffpaymentsList(request):
 
 def export_subjects_to_excel(request):
     data = Subjects.objects.all().values_list(
-        'subjectid', 'subjectname', 'subjecthead', 'classlevel'
+        'subjectid', 'subjectname', 'subjecthead'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Subject ID', 'Subject Name', 'Subject Head', 'Class Level'
+        'Subject ID', 'Subject Name', 'Subject Head'
     ])
 
     for row_data in data:
@@ -1193,7 +1193,6 @@ def export_subjects_to_excel(request):
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 20
     ws.column_dimensions['C'].width = 15
-    ws.column_dimensions['D'].width = 15
 
     filename = 'subjects.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -1204,14 +1203,14 @@ def export_subjects_to_excel(request):
 
 def export_classes_to_excel(request):
     data = Schoolclasses.objects.all().values_list(
-        'classname', 'subjects','class_level', 'classteacher'
+        'classname', 'subjects', 'classteacher'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Class Name', 'Subjects', 'Class Level', 'Class Teacher'
+        'Class Name', 'Subjects', 'Class Teacher'
     ])
 
     for row_data in data:
@@ -1220,7 +1219,6 @@ def export_classes_to_excel(request):
     # Set column widths
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 15
     ws.column_dimensions['D'].width = 15
 
     filename = 'classes.xlsx'
