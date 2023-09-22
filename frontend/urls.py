@@ -81,6 +81,7 @@ urlpatterns = [
     path('addclasses/' , views.addclasses , name='AddClasses'),
     path('edit_class/' , views.edit_class , name='edit_class'),
     path('delete_class/' , views.delete_class , name='delete_class'),
+    path('edit-class-subjects/', views.edit_class_subjects, name='edit_class_subjects'),
 
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),

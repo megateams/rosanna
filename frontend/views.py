@@ -807,7 +807,8 @@ def showclasses(request):
     classes = Schoolclasses.objects.all()
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
-    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
+    all_subjects = Subjects.objects.all()
+    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers,'all_subjects':all_subjects})
 
 @login_required
 def addclasses(request):
@@ -1071,6 +1072,27 @@ def edit_teacher(request):
 
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
+
+def edit_class_subjects(request):
+    # Get all available subjects
+    all_subjects = Subjects.objects.all()
+
+    if request.method == 'POST':
+        # Get the list of selected subjects from the POST request
+        classid = request.POST.get("classid")
+        selected_subjects = request.POST.getlist('subjects[]')
+
+        # Update the subjects for the class
+        class_instance = get_object_or_404(Schoolclasses, pk=classid)
+        class_instance.subjects.set(selected_subjects)
+
+        # Save the updated class
+        class_instance.save()
+
+        return redirect('showclasses')
+
+    # Handle GET requests or other cases if needed
+    return render(request, 'frontend/academics/showclasses.html', {'class_instance': class_instance, 'all_subjects': all_subjects})
 
 @login_required
 def supportstaffList(request):
