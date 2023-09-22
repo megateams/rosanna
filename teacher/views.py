@@ -96,12 +96,13 @@ def class_details(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+    teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
 
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
     # Get the subjects taught by the teacher for this class
-    subjects = teacher.subjects.filter(schoolclasses=schoolclass)
+    subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
 
     mark_types = Mark.MARK_TYPES
     # Create a dictionary to hold the marks for each student and subject combination
@@ -132,7 +133,7 @@ def class_details(request, class_id, teacher_id):
         'subjects': subjects,
         'student_marks': student_marks,
         'mark_types': mark_types,
-        'term_data': Term.objects.all()
+        'term_data': Term.objects.get(status=1)
     })
 
 
@@ -142,9 +143,10 @@ def class_marks_by_marktype(request, class_id, teacher_id):
     schoolclass = Schoolclasses.objects.get(classid=class_id)
     teacher = Teachers.objects.get(teacherid=teacher_id)
     mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
-    
+    teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
+
     students = Student.objects.filter(stdclass=schoolclass)
-    subjects = teacher.subjects.filter(schoolclasses=schoolclass)
+    subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
     mark_types = Mark.MARK_TYPES
     student_marks = {}
     for student in students:
@@ -323,7 +325,6 @@ def get_mark(request, student_id, subject_id, mark_type):
 
     return JsonResponse(response_data)
 
-# class teacher class
 def his_class(request, class_id, teacher_id):
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     teacher = get_object_or_404(Teachers, teacherid=teacher_id)
@@ -331,34 +332,37 @@ def his_class(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
-    # Get the subjects taught by the teacher for this class
-    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
-
     # Get the teachers who teach that class
     teachers_in_class = Teachers.objects.filter(classes=schoolclass)
-    # print (teachers_in_class)
+
     # Calculate the number of boys and girls in the class
     num_boys = students.filter(gender='m').count()
     num_girls = students.filter(gender='f').count()
 
     # Create a dictionary to hold the marks for each student and subject combination
-    student_marks = {}
-    for student in students:
-        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
-        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+    # student_marks = {}
+    # for student in students:
+    #     marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
+    #     student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
     
-    term_data = Term.objects.all()
+    term_data = Term.objects.get(status=1)
+
+    # Create a dictionary to hold subjects for each teacher_in_class
+    teacher_subjects = {}
+    for teacher_in_class in teachers_in_class:
+        teacher_subject = TeacherSubject.objects.filter(teacher=teacher_in_class, schoolclass=schoolclass).first()
+        teacher_subjects[teacher_in_class] = teacher_subject.subjects.all() if teacher_subject else []
 
     return render(request, 'teacher/his_class.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
         'students': students,
-        'subjects': subjects,
-        'student_marks': student_marks,
+        # 'student_marks': student_marks,
         'teachers_in_class': teachers_in_class,
         'num_girls': num_girls,
         'num_boys': num_boys,
         'term_data': term_data,
+        'teacher_subjects': teacher_subjects,  # Pass subjects for each teacher_in_class
     })
 
 # view marks
@@ -372,10 +376,11 @@ def assign_subject(request):
         teacher = Teachers.objects.get(teacherid=teacher_id)
         schoolclass = Schoolclasses.objects.get(classid=schoolclass_id)
 
-        data_exists = TeacherSubject.objects.filter(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
+        data_exists = TeacherSubject.objects.get(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
 
         if data_exists:
-            messages.success(request, "Subjects already assigned to this teacher")
+            data_exists.subjects.set(subjects)
+            messages.success(request, "Subjects has been updated successfully")
             return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
         else:
             data = TeacherSubject.objects.create(
@@ -430,19 +435,17 @@ def view_marks(request, class_id, teacher_id):
                 'total_marks': total_marks,
                 'average_marks': average_marks,
             })
-
         subjects_marks_data[student] = student_subjects_data
-        student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-        # Calculate average marks for each subject across all students
-        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                                for subject, total_marks in subjects_total_marks.items()}
-        # Sort the students based on their final average marks in descending order
-        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+
+    # Sort the students based on their total marks in descending order
+    students = sorted(students, key=lambda student: student.total_average_marks, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
         student.rank = rank
+        
     return render(request, 'teacher/marks/view_all_marks.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
@@ -494,11 +497,11 @@ def view_marks_by_marktype(request, class_id, teacher_id):
     })
 
 
-
-
 def edit_all_marks(request):
     if request.method == "POST":
         student_id = request.POST.get("student_id")
+        mark_type = request.POST.get("mark_type")
+        teacherid = request.POST.get("teacherid")
         student = Student.objects.get(stdnumber=student_id)
         new_marks = {}
 
@@ -510,15 +513,18 @@ def edit_all_marks(request):
             subject_id = subject.subjectid
             new_marks[subject_id] = request.POST.get("subject_" + str(subject_id))
 
-            mark = Mark.objects.get(class_name=schoolclass, student_name=student.childname, subject=subject)
-            mark.marks_obtained = new_marks[subject_id]
-            mark.save()
-
-        messages.success(request, "Marks edited successfully")
-        return HttpResponseRedirect("/teacher/his_class/view_marks/{}/{}/".format(schoolclass.classid, teacher.teacherid)) 
+            mark = Mark.objects.get(class_name=schoolclass, student_name=student.childname, subject=subject,mark_type=mark_type)
+            if mark:
+                mark.marks_obtained = new_marks[subject_id]
+                mark.save()
+                messages.success(request, "Marks edited successfully")
+                return HttpResponseRedirect("/teacher/his_class/view_mark/{}/{}/?marktype={}".format(schoolclass.classid, teacherid,mark_type)) 
+            else:
+                messages.success(request, "Some marks are empty")
+                return HttpResponseRedirect("/teacher/his_class/view_mark/{}/{}/?marktype={}".format(schoolclass.classid, teacherid,mark_type)) 
+        
 
     return JsonResponse({})
-
 
 
 def edit_teacher_profile(request, teacher_id):
@@ -543,7 +549,6 @@ def edit_teacher_profile(request, teacher_id):
     
     return render(request, 'teacher/profile.html', {'teacher': teacher})
 
-    
 
 # generation of a report card
 

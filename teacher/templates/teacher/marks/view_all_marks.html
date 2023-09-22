@@ -46,27 +46,6 @@
                         {% for subject_data in subjects_data %}
                             <!-- <td>{{ subject_data.total_marks }}</td> -->
                             <td>{{ subject_data.average_marks|floatformat:0 }}</td>
-                            <!-- <td>
-                                {% if subject_data.average_marks >= 80 %}
-                                    <p>D1</p>
-                                {% elif subject_data.average_marks >= 75 %}
-                                    <p>D2</p>
-                                {% elif subject_data.average_marks >= 70 %}
-                                    <p>C3</p>
-                                {% elif subject_data.average_marks >= 65 %}
-                                    <p>C4</p>
-                                {% elif subject_data.average_marks >= 60 %}
-                                    <p>C5</p>
-                                {% elif subject_data.average_marks >= 50 %}
-                                    <p>C6</p>
-                                {% elif subject_data.average_marks >= 45 %}
-                                    <p>P7</p>
-                                {% elif subject_data.average_marks >= 40 %}
-                                    <p>P8</p>
-                                {% else %}
-                                    <p>F9</p>
-                                {% endif %}
-                            </td> -->
                         {% endfor %}
                         <td><b>{{ student.total_average_marks|floatformat:0 }}</b></td>
                         <td><b>{{ student.final_average|floatformat:2 }}</b></td>
