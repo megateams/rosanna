@@ -96,6 +96,8 @@ urlpatterns = [
 
    path('export_subjects/', views.export_subjects_to_excel, name='export_subjects'),
    path('export_classes/', views.export_classes_to_excel, name='export_classes'),
+   path('export-excel/', views.export_to_excel, name='export_to_excel'),
+   path('support_staff_export/', views.support_staff_export_to_excel, name='support_staff_export'),
 
 
     # settings urls

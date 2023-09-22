@@ -888,13 +888,32 @@ def export_to_excel(request):
         'Moccupation', 'Living with', "Guardian's Name", "Guardian's Contact"
     ]
     ws.append(field_names)
+
+    # Set column widths for all columns
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 20
+    ws.column_dimensions['C'].width = 10
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 15
+    ws.column_dimensions['G'].width = 15
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 15
+    ws.column_dimensions['J'].width = 15
+    ws.column_dimensions['K'].width = 20
+    ws.column_dimensions['L'].width = 15
+    ws.column_dimensions['M'].width = 15
+    ws.column_dimensions['N'].width = 20
+    ws.column_dimensions['O'].width = 15
+    ws.column_dimensions['P'].width = 15
+    ws.column_dimensions['Q'].width = 20
     
     # Write data to the worksheet
     for row_data in data:
         ws.append(row_data)
         
     # Set the filename and content type for the response
-    filename = 'exported_data.xlsx'
+    filename = 'students_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
@@ -916,13 +935,28 @@ def support_staff_export_to_excel(request):
         field_names = Supportstaff._meta.get_fields()
         header_row = [field.name for field in field_names]
         ws.append(header_row)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
         
         #write data to the worksheet
         for row_data in data:
             ws.append(list(row_data.values()))
             
         # Set the filename and content type for the response
-        filename = 'exported_data.xlsx'
+        filename = 'supportstaff_data.xlsx'
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         #save the workboot to the response
@@ -935,20 +969,29 @@ def support_staff_export_to_excel(request):
 def teacher_export_to_excel(request):
     #fetch all the data from the database
         data =Teachers.objects.all().values_list(
-            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subjects', 'qualification'
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','subjects', 'qualification'
             )
         
         #create new workbook and add in a worksheet
         wb =openpyxl.Workbook()
         ws =wb.active
         
-        #write field names to the worksheet as headers
-        # field_names = Student._meta.get_fields()
-        # header_row = [field.name for field in field_names]
-        # ws.append(header_row)
-        
         #write data to the worksheet
-        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subjects', 'Qualification'])
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Subjects', 'Qualification'])
+        
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+
         for row_data in data:
             ws.append(row_data)
             
@@ -961,8 +1004,7 @@ def teacher_export_to_excel(request):
         
         return response
 
-        
-    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})
+      
     
 def teachers(request):
     if request.method == 'POST':
