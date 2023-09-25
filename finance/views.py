@@ -228,27 +228,38 @@ def financedashboard(request):
     term_data = Term.objects.all()
 
     # Calculate the percentages
-    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
-    fees_percentage = (total_amount / total) * 100
-    expenses_percentage = (total_amount_paid / total) * 100
-    sspayments_percentage = (total_sspayments / total) * 100
-    trpayments_percentage = (total_trpayments / total) * 100
+    if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+        }
+        return render(request, "finance/financedashboard.html", context)
+    else: 
+        total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+        fees_percentage = (total_amount / total) * 100
+        expenses_percentage = (total_amount_paid / total) * 100
+        sspayments_percentage = (total_sspayments / total) * 100
+        trpayments_percentage = (total_trpayments / total) * 100
 
-    
+        
 
-    context = {
-        'total_amount_paid': total_amount_paid,
-        'total_amount': total_amount,
-        'total_sspayments' : total_sspayments,
-        'total_trpayments' : total_trpayments,
-        'term_data' : term_data,
-        'fees_list': fees_list,
-        'fees_percentage': fees_percentage,
-        'expenses_percentage': expenses_percentage,
-        'sspayments_percentage': sspayments_percentage,
-        'trpayments_percentage': trpayments_percentage,
-    }
-    return render(request, "finance/financedashboard.html", context)
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+            'fees_percentage': fees_percentage,
+            'expenses_percentage': expenses_percentage,
+            'sspayments_percentage': sspayments_percentage,
+            'trpayments_percentage': trpayments_percentage,
+        }
+        return render(request, "finance/financedashboard.html", context)
 
 
 # fees views
@@ -262,7 +273,8 @@ def financeaddFees(request):
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
         timestamp = request.POST.get('timestamp')
-
+        
+        term_data = Term.objects.get(status=1)
         # Calculate balance
         balance = int(classfees) - int(amount)
 
@@ -282,7 +294,9 @@ def financeaddFees(request):
                     modeofpayment=modeofpayment,
                     date=date,
                     timestamp=timestamp,
-                    accumulatedpayment=amount  # Set accumulatedpayment for the first entry
+                    accumulatedpayment=amount,
+                    term = term_data.current_term,
+                    year = term_data.current_year
                 )
                 fees.save()
             else:
@@ -298,7 +312,9 @@ def financeaddFees(request):
                         modeofpayment=modeofpayment,
                         date=date,
                         timestamp=timestamp,
-                        accumulatedpayment=amount  # Set accumulatedpayment for the new entry
+                        accumulatedpayment=amount,
+                        term = term_data.current_term,
+                        year = term_data.current_year
                     )
                     fees.save()
                 else:
@@ -318,7 +334,9 @@ def financeaddFees(request):
                             modeofpayment=modeofpayment,
                             date=date,
                             timestamp=timestamp,
-                            accumulatedpayment=accumulatedpayment
+                            accumulatedpayment=accumulatedpayment,
+                            term = term_data.current_term,
+                            year = term_data.current_year
                         )
                         fees.save()
 

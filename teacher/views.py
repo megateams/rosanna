@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 import os
 from xhtml2pdf import pisa
 from django.conf import settings
+from django.db.models import Avg
 # Create your views here.
 
 # view for the login page
@@ -406,7 +407,7 @@ def view_marks(request, class_id, teacher_id):
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
-    mark_types = Mark.MARK_TYPES
+    mark_types = Mark.MARK_TYPES[1:]
     term_data = Term.objects.all()
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
@@ -419,15 +420,16 @@ def view_marks(request, class_id, teacher_id):
         for subject in subjects:
             total_marks = 0
             marks_count = 0
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject).exclude(mark_type='Test')
+
             for mark in marks:
                 total_marks += mark.marks_obtained
                 marks_count += 1
                 subjects_total_marks[subject] += mark.marks_obtained
                 subjects_marks_count[subject] += 1
 
-            average_marks = total_marks / marks_count if marks_count > 0 else 0
-            total_average_marks += average_marks
+            average_marks = total_marks / 3 if marks_count > 0 else 0
+            total_average_marks += int(average_marks)
             final_average = total_average_marks / subjects_count if marks_count > 0 else 0
               # Accumulate average marks for the student
             student_subjects_data.append({
@@ -551,27 +553,71 @@ def edit_teacher_profile(request, teacher_id):
 
 
 # generation of a report card
+from collections import defaultdict
 
-def generate_report(request, student_id):
-   # Retrieve student and other data here
+def generate_report(request, student_id,position):
+    # Retrieve student and other data here
     student = Student.objects.get(pk=student_id)
-    
-    # Construct the URL for the image using STATIC_URL
-    image_url = request.build_absolute_uri(settings.STATIC_URL + 'images/rosannalogo.png')
 
+    # Get the class of the student
+    student_class = student.stdclass
+
+    # Fetch the subjects associated with the student's class
+    subjects = Subjects.objects.filter(schoolclasses=student_class)
+
+    student_count = Student.objects.filter(stdclass=student_class).count()
+
+    this_class = Schoolclasses.objects.get(pk=student.stdclass.classid)
+    classteacher = this_class.classteacher
+    # Get mark types except the first one
+    mark_types = Mark.MARK_TYPES[1:]
+
+    # Create a dictionary to store marks for each subject and mark type
+    student_marks = defaultdict(lambda: defaultdict(list))
+    subject_totals = defaultdict(float)  # Dictionary to store total marks for each subject
+
+    # Fetch marks for each subject and mark type
+    for subject in subjects:
+        for mark_type, _ in mark_types:
+            marks = Mark.objects.filter(
+                class_name=student_class,
+                student_name=student.childname,
+                subject=subject,
+                mark_type=mark_type,
+            )
+            student_marks[subject][mark_type] = marks
+
+            # Calculate the total mark for this subject and mark type
+            total_mark = sum([mark.marks_obtained for mark in marks])
+            subject_totals[subject] += total_mark  # Accumulate total marks for this subject
+
+    # Calculate the average total marks for each subject
+    subject_averages = {subject: int(total / len(mark_types)) for subject, total in subject_totals.items()}
+
+    # Calculate the total of subject averages
+    total_averages = sum(subject_averages.values())
+
+    # Calculate the final average
+    final_average = int(total_averages) / len(subjects)
     # Render the report template
     context = {
         "student": student,
-        "image_url": image_url,  # Pass the image URL to the template
+        "term_data": Term.objects.get(status=1),
+        "mark_types": mark_types,
+        "subjects": subjects,
+        "student_marks": student_marks,  # Pass the marks to the template
+        "subject_totals": subject_totals,  # Pass the subject totals to the template
+        "subject_averages": subject_averages,  # Pass the subject averages to the template
+        "total_averages": total_averages,
+        "final_average": final_average,
+        "position": position,
+        "student_count": student_count,
+        "classteacher": classteacher,
     }
-    html = render_to_string("teacher/reports/report_card.html", context)
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = 'filename="report.pdf"'
 
-    # Generate PDF using xhtml2pdf
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    
-    return response
+    return render(request, "teacher/reports/report_card.html", context)
+
+
 
 
  
