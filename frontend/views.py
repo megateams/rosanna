@@ -923,6 +923,63 @@ def export_to_excel(request):
     return response
 
 
+
+def export_students_by_class(request, class_id):
+    try:
+        selected_class = Schoolclasses.objects.get(pk=class_id)
+        students = Student.objects.filter(stdclass=selected_class)
+
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="students_in_class_{class_id}.xlsx"'
+        wb.save(response)
+        return response
+
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
+
 #Export the data in excel in the support staff model
 def support_staff_export_to_excel(request):
     #fetch all the data from the database
