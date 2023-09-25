@@ -1004,7 +1004,32 @@ def teacher_export_to_excel(request):
         
         return response
 
-      
+def admins_export_to_excel(request):
+    # Fetch all the data from the database
+    data = Administrators.objects.all().values()
+
+    # Create a new workbook and add a worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Write field names to the worksheet as headers
+    field_names = Administrators._meta.get_fields()
+    header_row = [field.name for field in field_names]
+    ws.append(header_row)
+
+    # Write data to the worksheet
+    for row_data in data:
+        ws.append(list(row_data.values()))
+
+    # Set the filename and content type for the response
+    filename = 'admins_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response      
     
 def teachers(request):
     if request.method == 'POST':

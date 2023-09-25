@@ -9,16 +9,14 @@
 <div class="inner-content">
     <div class="buttons  align-items-center justify-content-between" style="margin-top: -25px;">
         <div class="current_session d-flex mt-4">
-            {% for data in term_data %}
                 <div class="current-term mr-4">
                     <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
-                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
                 </div>
                 <div class="current-year"> 
                     <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
-                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
                 </div>
-            {% endfor %}
         </div>
         <div class="class-btns mt-3" pr-5>
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
@@ -81,24 +79,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for teachers in teachers_in_class %}
+                        {% for teacher_in_class in teachers_in_class %}
                         <tr>
-                            <td>{{teachers.teacherid}}</td>
-                            <td>{{teachers.teachernames}}</td>
-                            <td>{{teachers.email}}</td>
+                            <td>{{ teacher_in_class.teacherid }}</td>
+                            <td>{{ teacher_in_class.teachernames }}</td>
+                            <td>{{ teacher_in_class.email }}</td>
                             <td>
-                                {% for subject in teachers.subjects.all %}
+                                {% for subject in teacher_subjects|get_item:teacher_in_class %}
                                     {{ subject.subjectname }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    No subjects assigned
                                 {% endfor %}
                             </td>
                             <td>
-                                <a href="#assign_subject{{teachers.teacherid}}" data-toggle="modal" class="btn btn-sm btn-primary">Assign</a>
+                                <a href="#assign_subject{{ teacher_in_class.teacherid }}" data-toggle="modal"
+                                class="btn btn-sm btn-primary">Assign</a>
                             </td>
-                            
                         </tr>
 
                         <!-- The modal -->
-                        <div class="modal fade" id="assign_subject{{teachers.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="assignSubjectsModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="assign_subject{{teacher_in_class.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="assignSubjectsModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -111,11 +111,11 @@
                                         <!-- Add a form for assigning subjects to the teacher -->
                                         <form method="post" action="/teacher/assign_subject/">
                                             {% csrf_token %}
-                                            <input type="hidden" name="teacher_id" value="{{ teachers.teacherid }}">
+                                            <input type="hidden" name="teacher_id" value="{{ teacher_in_class.teacherid }}">
                                             <input type="hidden" name="schoolclass" value="{{ schoolclass.classid }}">
                                             <div class="form-group">
                                                 <label for="subjects">Select Subjects:</label><br>
-                                                {% for subject in teachers.subjects.all %}
+                                                {% for subject in teacher_in_class.subjects.all %}
                                                 <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
                                                 <label for="class-checkbox">{{subject.subjectname}}</label> <br>
                                                 {% endfor %}
