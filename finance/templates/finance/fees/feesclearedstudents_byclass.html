@@ -25,6 +25,7 @@
                 <tr>
                     <th>Student Number</th>
                     <th>Student Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,9 @@
                 <tr>
                     <td>{{ student.stdnumber.stdnumber }}</td>
                     <td>{{ student.stdname }}</td>
+                    <td> 
+                        <a href="/clearance_card/{{student.stdnumber.stdnumber}}/" class="btn btn-sm btn-primary">Generate Clearance</a>
+                    </td>
                 </tr>
                 
                 {% endfor %}

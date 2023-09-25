@@ -973,7 +973,7 @@ def export_students_by_class(request, class_id):
 
         # Create an HttpResponse with the Excel file
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="students_in_class_{class_id}.xlsx"'
+        response['Content-Disposition'] = f'attachment; filename="students_in_{selected_class.classname}.xlsx"'
         wb.save(response)
         return response
 
