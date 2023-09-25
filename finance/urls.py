@@ -70,6 +70,7 @@ urlpatterns = [
 
     # path('export_excel/', views.export_to_excel, name='export_excel'),
     path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
+    path('export-fees-by-class/<int:class_id>/', views.export_fees_by_class, name='export_fees_by_class'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
     path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
     path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),

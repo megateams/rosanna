@@ -851,6 +851,59 @@ def export_finance_fees_to_excel(request):
 
     return response
 
+def export_fees_by_class(request, class_id):
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+
+        if not fees_list:
+            # If there are no fees records for the selected class, return an empty response
+            return HttpResponse("No fees data available for this class.")
+
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write field names to the worksheet as headers
+        ws.append(['Payment ID', 'Student Number', 'Student Name', 'Student Class', 'Amount', 'Balance', 'Mode of Payment', 'Date'])
+
+        # Write data to the worksheet
+        for fee in fees_list:
+            ws.append([
+                fee.paymentid,
+                fee.stdnumber.stdnumber,
+                fee.stdname,
+                fee.studentclass,
+                fee.amount,
+                fee.balance,
+                fee.modeofpayment,
+                fee.date,
+            ])
+
+        # Set the column width for the date column
+        ws.column_dimensions['A'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['B'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['C'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['D'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['E'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['F'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['H'].width = 15  # Adjust the width as needed
+
+        # Set the filename and content type for the response
+        filename = f'fees_data_{selected_class.classname}.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        # Save the workbook to the response
+        wb.save(response)
+
+        return response
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse("Class not found.", status=404)
+
 
 def export_fees_structure_to_excel(request):
     data = Feesstructure.objects.all().values_list(
