@@ -298,7 +298,7 @@ def addmarks(request, class_id, teacher_id):
             )
             messages.success(request, 'Subject marks added successfully.')
 
-        return redirect('Add Marks', class_id=class_id, teacher_id=teacher_id)
+        return HttpResponseRedirect("/teacher/his_class/addmarks/{}/{}?marktype={}".format(class_id, teacher_id,mark_type))  
 
     # If the request method is GET, render the form for adding subject marks
     return render(request, 'teacher/marks/addMarks.html', {
@@ -407,7 +407,7 @@ def view_marks(request, class_id, teacher_id):
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
-    mark_types = Mark.MARK_TYPES[1:]
+    mark_types = Mark.MARK_TYPES
     term_data = Term.objects.all()
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}

@@ -37,8 +37,8 @@ class Fees(models.Model):
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateField(verbose_name="Date of Payment")
     timestamp = models.TimeField(default=timezone.now)
-    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
-    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None, null=True)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None, null=True)
     
     Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp', 'term', 'year']
     
