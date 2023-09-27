@@ -77,15 +77,17 @@
     {% if school_info %}
         {% for info in school_info %}
             <div class='header p-2 mb-2 mt-4'>
+                
                 <div class="school-info">
                     <h1 class="text-uppercase"><b>{{ info.schoolname }}</b></h1>
                     <p style="color: black; font-size: 17px;">Email: {{info.email}} | Tel: {{info.contact}}</p>
                     <p style="color: black; font-size: 17px;">{{info.box_number}} </p>
                 </div>
                 <div class="image">
-                    <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge" style="width: 120px; height: 130px;">
+                    <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge" style="width: 120px; height: 150px;">
 
                 </div>
+                
             </div>
             
             <!-- Display other school information as needed -->

@@ -871,57 +871,64 @@ def delete_class(request):
 # from django.http import HttpResponse
 
 def export_to_excel(request):
-    # Fetch all the data from the database
-    data = Student.objects.all().values_list(
-        'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'stdclass', 'regdate', 'fathername',
-        'fcontact', 'foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname', 'gcontact'
-    )
-    
-    # Create a new workbook and add a worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    
-    # Write field names to the worksheet as headers
-    field_names = [
-        'Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date',
-        "Father's name", "Father's Contact", 'Foccupation', "Mother's Name", "Mother's contact",
-        'Moccupation', 'Living with', "Guardian's Name", "Guardian's Contact"
-    ]
-    ws.append(field_names)
+    try:
+        students = Student.objects.all()
 
-    # Set column widths for all columns
-    ws.column_dimensions['A'].width = 15
-    ws.column_dimensions['B'].width = 20
-    ws.column_dimensions['C'].width = 10
-    ws.column_dimensions['D'].width = 15
-    ws.column_dimensions['E'].width = 20
-    ws.column_dimensions['F'].width = 15
-    ws.column_dimensions['G'].width = 15
-    ws.column_dimensions['H'].width = 20
-    ws.column_dimensions['I'].width = 15
-    ws.column_dimensions['J'].width = 15
-    ws.column_dimensions['K'].width = 20
-    ws.column_dimensions['L'].width = 15
-    ws.column_dimensions['M'].width = 15
-    ws.column_dimensions['N'].width = 20
-    ws.column_dimensions['O'].width = 15
-    ws.column_dimensions['P'].width = 15
-    ws.column_dimensions['Q'].width = 20
-    
-    # Write data to the worksheet
-    for row_data in data:
-        ws.append(row_data)
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        filename = 'students_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
         
-    # Set the filename and content type for the response
-    filename = 'students_data.xlsx'
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    
-    # Save the workbook to the response
-    wb.save(response)
-    messages.success(request, 'Data successfully exported to Excel.')
-    return response
+        # Save the workbook to the response
+        wb.save(response)
+        messages.success(request, 'Data successfully exported to Excel.')
+        return response
 
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
+    
 
 
 def export_students_by_class(request, class_id):
@@ -1018,7 +1025,6 @@ def support_staff_export_to_excel(request):
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         #save the workboot to the response
         wb.save(response)
-        
         return response
 
 

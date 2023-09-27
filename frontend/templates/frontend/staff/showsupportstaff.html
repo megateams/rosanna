@@ -12,11 +12,11 @@
             {% for staff in supportstaffs %}
             {% if staff.profile_image %}
                 <div class="image">
-                    <img class="img-thumbnail" src="{{ staff.profile_image.url }}" style="height: 60vh;">
+                    <img class="img-thumbnail" src="{{ staff.profile_image.url }}" style="height: 45vh;">
                 </div>
                 {% else %}
                 <div class="image">
-                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                    <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail" style="height: 45vh;">
                 </div>
             {% endif %}
             <a href="#edit_image{{staff.supportstaffid}}" class="edit-image btn" data-toggle="modal">
