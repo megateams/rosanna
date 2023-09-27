@@ -24,6 +24,9 @@ urlpatterns = [
     path('finance/', views.financelogin , name='financeloginpage'),
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
+    path('students/', views.students_list, name='students_list'),
+    path('assign_code/<str:stdnumber>/', views.assign_school_code, name='assign_school_code'),
+    
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
     path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),

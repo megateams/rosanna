@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse , redirect
+from django.shortcuts import render, HttpResponse , redirect, get_object_or_404
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse,redirect
 from .models import *
@@ -6,6 +6,7 @@ from django.db.models import Sum
 from frontend.models import *
 from django.core import serializers
 from django.http import JsonResponse
+from django.urls import reverse
 # from django_excel_response import ExcelResponse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
@@ -203,6 +204,39 @@ def expenserecords(request):
         
         ExpenseRecord.save()
     return render(request , 'finance/financedashboard.html')
+
+
+def students_list(request):
+    # Retrieve a list of students from your database
+    studentslist = Student.objects.all()  
+
+    # Pass the list of students to the template for rendering
+    context = {
+        'studentslist': studentslist,
+        }
+    return render(request, 'finance/students.html', context)
+
+def assign_school_code(request, stdnumber):
+    student = get_object_or_404(Student, stdnumber=stdnumber)
+    error_message = None
+    
+    if request.method == 'POST':
+        school_code = request.POST.get('schoolpaycode')
+        if school_code:
+            # Check if the school pay code is already assigned to another student
+            existing_student = Student.objects.filter(schoolpaycode=school_code).exclude(stdnumber=stdnumber).first()
+            if existing_student:
+                # If the code is assigned to another student, set the error message
+                messages.success(request,"The School Pay Code  is already assigned to another student.")
+            else:
+                # Assign the code to the current student
+                student.schoolpaycode = school_code
+                student.save()
+
+            return redirect("students_list")
+
+    # Handle the default case where there's no POST request or no school_code
+    # return render(request, 'finance/students.html', {'student': student, 'error_message': error_message})
 
 # Create your views here.
 def financedashboard(request):
