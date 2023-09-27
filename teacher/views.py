@@ -36,7 +36,7 @@ def teacher_login(request):
         else:
             # If the credentials are invalid, display an error message
             messages.error(request, 'Invalid username/email or password.')
-            return redirect('Login Page')
+            return redirect('Teacher Login Page')
     
 
 def logout_view(request):
@@ -45,13 +45,13 @@ def logout_view(request):
     # Add a success message to inform the user about the successful logout
     messages.success(request, 'You have been logged out.')
     # Redirect to the login page
-    return redirect('Login Page')
+    return redirect('Teacher Login Page')
 
 def dashboard(request):
     # Check if the teacher is authenticated (if you are using sessions)
     if 'teacher_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
-        return redirect('Login Page')  # Replace 'login' with the name/url of your login view
+        return redirect('Teacher Login Page')  # Replace 'login' with the name/url of your login view
 
     # Get the teacher ID from the session
     teacher_id = request.session['teacher_id']
@@ -93,49 +93,57 @@ def get_subjects(request, class_id):
 # views.py
 from django.db.models import Sum
 
+from django.core.exceptions import ObjectDoesNotExist
+
 def class_details(request, class_id, teacher_id):
-    # Retrieve the class and teacher objects based on the provided IDs
-    schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
-    teacher = get_object_or_404(Teachers, teacherid=teacher_id)
-    teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
+    try:
+        # Retrieve the class and teacher objects based on the provided IDs
+        schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
+        teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+        teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
 
-    # Get the students for this class taught by the teacher
-    students = Student.objects.filter(stdclass=schoolclass)
+        # Get the students for this class taught by the teacher
+        students = Student.objects.filter(stdclass=schoolclass)
 
-    # Get the subjects taught by the teacher for this class
-    subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
+        # Get the subjects taught by the teacher for this class
+        subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
 
-    mark_types = Mark.MARK_TYPES
-    # Create a dictionary to hold the marks for each student and subject combination
-    student_marks = {}
-    for student in students:
-        student_marks[student] = {}
-        for subject in subjects:
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
-            student_marks[student][subject] = {mark.mark_type: mark.marks_obtained for mark in marks}
+        mark_types = Mark.MARK_TYPES
+        # Create a dictionary to hold the marks for each student and subject combination
+        student_marks = {}
+        for student in students:
+            student_marks[student] = {}
+            for subject in subjects:
+                marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+                student_marks[student][subject] = {mark.mark_type: mark.marks_obtained for mark in marks}
 
-    # Calculate average marks for each subject for each student
-    for student, subject_marks in student_marks.items():
-        for subject, mark_dict in subject_marks.items():
-            bot_marks = mark_dict.get('BOT', 0)
-            mot_marks = mark_dict.get('MOT', 0)
-            eot_marks = mark_dict.get('EOT', 0)
+        # Calculate average marks for each subject for each student
+        for student, subject_marks in student_marks.items():
+            for subject, mark_dict in subject_marks.items():
+                bot_marks = mark_dict.get('BOT', 0)
+                mot_marks = mark_dict.get('MOT', 0)
+                eot_marks = mark_dict.get('EOT', 0)
 
-            total_marks = bot_marks + mot_marks + eot_marks
-            total_mark_entries = len(mark_dict)
-            average_marks = total_marks / total_mark_entries if total_mark_entries > 0 else 0
+                total_marks = bot_marks + mot_marks + eot_marks
+                total_mark_entries = len(mark_dict)
+                average_marks = total_marks / total_mark_entries if total_mark_entries > 0 else 0
 
-            student_marks[student][subject]['average_marks'] = average_marks
+                student_marks[student][subject]['average_marks'] = average_marks
 
-    return render(request, 'teacher/class_details.html', {
-        'schoolclass': schoolclass,
-        'teacher': teacher,
-        'students': students,
-        'subjects': subjects,
-        'student_marks': student_marks,
-        'mark_types': mark_types,
-        'term_data': Term.objects.get(status=1)
-    })
+        return render(request, 'teacher/class_details.html', {
+            'schoolclass': schoolclass,
+            'teacher': teacher,
+            'students': students,
+            'subjects': subjects,
+            'student_marks': student_marks,
+            'mark_types': mark_types,
+            'term_data': Term.objects.get(status=1)
+        })
+
+    except ObjectDoesNotExist:
+        # Handle the case where TeacherSubject does not exist
+        messages.success(request, "You cannot access this class before you are assigned to a subject. Please contact the classteacher")
+        return redirect("Teacher Dashboard")
 
 
 
@@ -258,7 +266,7 @@ def addmarks(request, class_id, teacher_id):
     if 'teacher_id' not in request.session or request.session['teacher_id'] != teacher_id:
         # If the teacher is not logged in or the session teacher_id doesn't match, redirect to the login page
         return redirect('login')  # Replace 'login' with the name/url of your login view
-
+    teacher = get_object_or_404(Teachers, teacherid=teacher_id)
     # Retrieve the class object
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
 
@@ -309,6 +317,7 @@ def addmarks(request, class_id, teacher_id):
         'students': students,
         'marktype': marktype,
         'term_data': term_data,
+        'teacher': teacher
     })
 
 # view to check if the mark already exists
@@ -333,6 +342,7 @@ def his_class(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
+    mark_types = Mark.MARK_TYPES
     # Get the teachers who teach that class
     teachers_in_class = Teachers.objects.filter(classes=schoolclass)
 
@@ -363,10 +373,13 @@ def his_class(request, class_id, teacher_id):
         'num_girls': num_girls,
         'num_boys': num_boys,
         'term_data': term_data,
+        'mark_types': mark_types,
         'teacher_subjects': teacher_subjects,  # Pass subjects for each teacher_in_class
     })
 
 # view marks
+from django.core.exceptions import ObjectDoesNotExist
+
 def assign_subject(request):
     if request.method == "POST":
         teacher_id = request.POST.get("teacher_id")
@@ -377,23 +390,38 @@ def assign_subject(request):
         teacher = Teachers.objects.get(teacherid=teacher_id)
         schoolclass = Schoolclasses.objects.get(classid=schoolclass_id)
 
-        data_exists = TeacherSubject.objects.get(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
+        # Check if the subjects are already assigned to another teacher in the same class
+        existing_assignments = TeacherSubject.objects.filter(
+            schoolclass=schoolclass, subjects__in=subjects
+        ).exclude(teacher=teacher)
 
-        if data_exists:
+        if existing_assignments.exists():
+            messages.error(
+                request,
+                "One or more subjects are already assigned to another teacher in this class."
+            )
+            return redirect("his_class", class_id=schoolclass_id, teacher_id=teacher_id)
+
+        try:
+            # Try to get an existing TeacherSubject record
+            data_exists = TeacherSubject.objects.get(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
+            
+            # Update subjects if the record exists
             data_exists.subjects.set(subjects)
-            messages.success(request, "Subjects has been updated successfully")
-            return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
-        else:
-            data = TeacherSubject.objects.create(
-            teacher = teacher,
-            schoolclass = schoolclass,
-        )
-        data.save()
+            messages.success(request, "Subjects have been updated successfully")
 
-        data.subjects.set(subjects)
-        
-        messages.success(request, "Teacher assigned subjects")
-        return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
+        except ObjectDoesNotExist:
+            # Create a new TeacherSubject record if it doesn't exist
+            data = TeacherSubject.objects.create(
+                teacher=teacher,
+                schoolclass=schoolclass,
+            )
+            data.subjects.set(subjects)
+            messages.success(request, "Teacher assigned subjects for the first time")
+
+        return redirect("his_class", class_id=schoolclass_id, teacher_id=teacher_id)
+
+
 
 def view_marks(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
@@ -408,7 +436,7 @@ def view_marks(request, class_id, teacher_id):
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
-    term_data = Term.objects.all()
+    term_data = Term.objects.get(status=1)
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
     subjects_total_marks = {subject: 0 for subject in subjects}

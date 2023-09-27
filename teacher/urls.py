@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('teacher/', views.login, name="Login Page"),
+    path('teacher/', views.login, name="Teacher Login Page"),
     path('teacher/login/', views.teacher_login, name="Teacher login"),
     path('teacher/logout/', views.logout_view, name='logout'),
     path('teacher/dashboard/', views.dashboard, name="Teacher Dashboard"),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('teacher/class_details/addmarks/<int:class_id>/<teacher_id>/<subject_id>', views.addsubjectmarks, name= 'Add Subject marks'),
 
     # generate report card
-    path('teacher/report_card/<student_id>/<position>', views.generate_report, name='Student report card'),
+    path('report_card/<student_id>/<position>', views.generate_report, name='Student report card'),
     path('teacher/profile/edit-profile/<teacher_id>', views.edit_teacher_profile, name='Edit Teacher Profile'),
     path('teacher/edit_all_marks', views.edit_all_marks, name='edit_all_marks'),    
     path('get_mark/<str:student_id>/<str:subject_id>/<str:mark_type>/', views.get_mark, name='get_mark'),

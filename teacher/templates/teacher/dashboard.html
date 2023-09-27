@@ -3,6 +3,7 @@
 {% block  pagetitle %} Dashboard {% endblock pagetitle %}
 {% load static %}
 {% block  main %}
+
 <div class="inner-content">
     <div class="row">
         <div class="col-md-8">
@@ -28,6 +29,18 @@
             <div class="header mt-3 ml-2">
                 <h5> YOUR CLASSES:</h5>
             </div>
+            {% if messages %}
+                    <ul class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{ message }}</strong> 
+                        </div>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
             <div class="row">
                 {% for class in teacher.classes.all %}
                         {% if class.classteacher == teacher.teachernames %}
