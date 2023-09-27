@@ -18,6 +18,27 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
 
+def edit_teacher_class(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        classes = request.POST.getlist('classes')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.classes.set(classes)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
+    
+def edit_teacher_subject(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        subjects = request.POST.getlist('subjects')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.subjects.set(subjects)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
 
 def admincheckemail(request , email):
     try:
