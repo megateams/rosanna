@@ -36,7 +36,7 @@
                             <i class="fas fa-money-bill-wave icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">{{ total_amount|default:"0" }}</h4>
+                            <h5 class="text-center">{{ total_amount|default:"0" }}</h5>
                             <p class="text-center"> Fees</p> 
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-8 ">
                             <h5 class="text-center">{{ total_trpayments|default:"0" }}</h5>
-                            <p class="text-center"> Teacher Payments</p> 
+                            <p class="text-center"> Tr Payments</p> 
                         </div>
                     </div>
                    
@@ -84,7 +84,7 @@
                             <i class="fas fa-money-bill-wave icon circle-icon" ></i>
                         </div>
                         <div class="col-8 ">
-                            <h4 class="text-center">{{ total_amount_paid|default:"0" }}</h4> 
+                            <h5 class="text-center">{{ total_amount_paid|default:"0" }}</h5> 
                             <p class="text-center"> Expenses</p> 
                         </div>
                     </div>
@@ -118,20 +118,33 @@
                     </thead>
                     <tbody>
                         {% for fee in fees_list %}
-                        <tr>
-                            <td>{{ fee.paymentid }}</td>
-                            <td>{{ fee.stdnumber.stdnumber }}</td>
-                            <td>{{ fee.stdname }}</td>
-                            <td>{{ fee.studentclass }}</td>
-                            <td>{{ fee.amount }}</td>
-                            <td>{{ fee.balance }}</td>
-                            <td>{{ fee.date }}</td>
-                        </tr>
+                            {% if fee.balance != 0 %}
+                                {% with fee.stdnumber as last_stdnumber %}
+                                    {% for previous_fee in fees_list %}
+                                        {% if previous_fee.stdnumber == last_stdnumber %}
+                                            {% if previous_fee.date > fee.date %}
+                                                {% with fee=previous_fee %}
+                                                {% endwith %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+                                <tr>
+                                    <td>{{ fee.paymentid }}</td>
+                                    <td>{{ fee.stdnumber.stdnumber }}</td>
+                                    <td>{{ fee.stdname }}</td>
+                                    <td>{{ fee.studentclass }}</td>
+                                    <td>{{ fee.amount }}</td>
+                                    <td>{{ fee.balance }}</td>
+                                    <td>{{ fee.date }}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+        
         
     </div>
     

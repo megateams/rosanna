@@ -472,6 +472,7 @@ def edit_student(request):
         livingwith = request.POST.get('livingwith')
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
+        username = request.POST.get("username")
 
         student = Student.objects.get(pk=stdnumber)
         student.regdate = regdate
@@ -489,6 +490,7 @@ def edit_student(request):
         student.livingwith = livingwith
         student.guardianname = guardianname
         student.gcontact = gcontact
+        student.username = username
 
         student.save()
         messages.success(request, 'Student edited successfully')
@@ -510,44 +512,6 @@ def supportstaffAdd(request):
       return render(request, 'frontend/staff/supportstaffAdd.html')
 
 @login_required
-# def supportstaffreg(request):
-#     if request.method == 'POST':
-#         supportstaffnames = request.POST.get('supportstaffnames')
-
-#         if Supportstaff.objects.filter(supportstaffnames=supportstaffnames).exists():
-#             messages.error(request, 'This support staff has already been added.')
-#         else:
-#             contact = request.POST.get('contact')
-#             email = request.POST.get('email')
-#             address = request.POST.get('address')
-#             gender = request.POST.get('gender')
-#             dob = request.POST.get('dob')
-#             qualification = request.POST.get('qualification')
-#             position = request.POST.get('position')
-#             joiningdate = request.POST.get('joiningdate')
-#             salary = request.POST.get('salary')
-#             bankaccnum = request.POST.get('bankaccnum')
-
-#             supportStaffReg = Supportstaff.objects.create(
-#                 supportstaffnames=supportstaffnames,
-#                 contact=contact,
-#                 email=email,
-#                 address=address,
-#                 gender=gender,
-#                 dob=dob,
-#                 qualification=qualification,
-#                 position=position,
-#                 joiningdate=joiningdate,
-#                 salary=salary,
-#                 bankaccnum=bankaccnum,
-#             )
-#             messages.success(request, 'Support staff added successfully!')
-
-#         return redirect('AddSupportstaff')
-
-#     supportstaff = Supportstaff.objects.all()
-#     return render(request, 'frontend/staff/supportstaffAdd.html', {'supportstaff': supportstaff})
-
 def supportstaffreg(request):
     if request.method == 'POST':
         supportstaffnames = request.POST.get('supportstaffnames')
@@ -749,6 +713,8 @@ def studentReg(request):
             new_stdnumber = 'STD{:03d}'.format(int(max_stdnumber[3:]) + 1)
         else:
             new_stdnumber = 'STD001'
+        default_password = "123456"
+
 
         regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
@@ -758,6 +724,7 @@ def studentReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
+        username = request.POST.get('username')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
         foccupation = request.POST.get('foccupation')
@@ -777,6 +744,8 @@ def studentReg(request):
             dob = dob ,
             address = address ,
             house = house ,
+            username = username ,
+            password = default_password ,
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -838,7 +807,8 @@ def showclasses(request):
     classes = Schoolclasses.objects.all()
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
-    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
+    all_subjects = Subjects.objects.all()
+    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers,'all_subjects':all_subjects})
 
 @login_required
 def addclasses(request):
@@ -901,38 +871,121 @@ def delete_class(request):
 # from django.http import HttpResponse
 
 def export_to_excel(request):
-    # Fetch all the data from the database
-    data = Student.objects.all().values_list(
-        'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'stdclass', 'regdate', 'fathername',
-        'fcontact', 'foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname', 'gcontact'
-    )
-    
-    # Create a new workbook and add a worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    
-    # Write field names to the worksheet as headers
-    field_names = [
-        'Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date',
-        "Father's name", "Father's Contact", 'Foccupation', "Mother's Name", "Mother's contact",
-        'Moccupation', 'Living with', "Guardian's Name", "Guardian's Contact"
-    ]
-    ws.append(field_names)
-    
-    # Write data to the worksheet
-    for row_data in data:
-        ws.append(row_data)
-        
-    # Set the filename and content type for the response
-    filename = 'exported_data.xlsx'
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    
-    # Save the workbook to the response
-    wb.save(response)
-    messages.success(request, 'Data successfully exported to Excel.')
-    return response
+    try:
+        students = Student.objects.all()
 
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        filename = 'students_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        # Save the workbook to the response
+        wb.save(response)
+        messages.success(request, 'Data successfully exported to Excel.')
+        return response
+
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
+    
+
+
+def export_students_by_class(request, class_id):
+    try:
+        selected_class = Schoolclasses.objects.get(pk=class_id)
+        students = Student.objects.filter(stdclass=selected_class)
+
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="students_in_{selected_class.classname}.xlsx"'
+        wb.save(response)
+        return response
+
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
 
 #Export the data in excel in the support staff model
 def support_staff_export_to_excel(request):
@@ -946,18 +999,32 @@ def support_staff_export_to_excel(request):
         field_names = Supportstaff._meta.get_fields()
         header_row = [field.name for field in field_names]
         ws.append(header_row)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
         
         #write data to the worksheet
         for row_data in data:
             ws.append(list(row_data.values()))
             
         # Set the filename and content type for the response
-        filename = 'exported_data.xlsx'
+        filename = 'supportstaff_data.xlsx'
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         #save the workboot to the response
         wb.save(response)
-        
         return response
 
 
@@ -965,20 +1032,29 @@ def support_staff_export_to_excel(request):
 def teacher_export_to_excel(request):
     #fetch all the data from the database
         data =Teachers.objects.all().values_list(
-            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subjects', 'qualification'
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','subjects', 'qualification'
             )
         
         #create new workbook and add in a worksheet
         wb =openpyxl.Workbook()
         ws =wb.active
         
-        #write field names to the worksheet as headers
-        # field_names = Student._meta.get_fields()
-        # header_row = [field.name for field in field_names]
-        # ws.append(header_row)
-        
         #write data to the worksheet
-        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subjects', 'Qualification'])
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Subjects', 'Qualification'])
+        
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+
         for row_data in data:
             ws.append(row_data)
             
@@ -991,8 +1067,32 @@ def teacher_export_to_excel(request):
         
         return response
 
-        
-    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})
+def admins_export_to_excel(request):
+    # Fetch all the data from the database
+    data = Administrators.objects.all().values()
+
+    # Create a new workbook and add a worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Write field names to the worksheet as headers
+    field_names = Administrators._meta.get_fields()
+    header_row = [field.name for field in field_names]
+    ws.append(header_row)
+
+    # Write data to the worksheet
+    for row_data in data:
+        ws.append(list(row_data.values()))
+
+    # Set the filename and content type for the response
+    filename = 'admins_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response      
     
 def teachers(request):
     if request.method == 'POST':
@@ -1103,6 +1203,27 @@ def edit_teacher(request):
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
 
+def edit_class_subjects(request):
+    # Get all available subjects
+    all_subjects = Subjects.objects.all()
+
+    if request.method == 'POST':
+        # Get the list of selected subjects from the POST request
+        classid = request.POST.get("classid")
+        selected_subjects = request.POST.getlist('subjects[]')
+
+        # Update the subjects for the class
+        class_instance = get_object_or_404(Schoolclasses, pk=classid)
+        class_instance.subjects.set(selected_subjects)
+
+        # Save the updated class
+        class_instance.save()
+
+        return redirect('showclasses')
+
+    # Handle GET requests or other cases if needed
+    return render(request, 'frontend/academics/showclasses.html', {'class_instance': class_instance, 'all_subjects': all_subjects})
+
 @login_required
 def supportstaffList(request):
     # Retrieve all support staff data from the database
@@ -1185,14 +1306,14 @@ def supportstaffpaymentsList(request):
 
 def export_subjects_to_excel(request):
     data = Subjects.objects.all().values_list(
-        'subjectid', 'subjectname', 'subjecthead', 'classlevel'
+        'subjectid', 'subjectname', 'subjecthead'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Subject ID', 'Subject Name', 'Subject Head', 'Class Level'
+        'Subject ID', 'Subject Name', 'Subject Head'
     ])
 
     for row_data in data:
@@ -1202,7 +1323,6 @@ def export_subjects_to_excel(request):
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 20
     ws.column_dimensions['C'].width = 15
-    ws.column_dimensions['D'].width = 15
 
     filename = 'subjects.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -1213,14 +1333,14 @@ def export_subjects_to_excel(request):
 
 def export_classes_to_excel(request):
     data = Schoolclasses.objects.all().values_list(
-        'classname', 'subjects','class_level', 'classteacher'
+        'classname', 'subjects', 'classteacher'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Class Name', 'Subjects', 'Class Level', 'Class Teacher'
+        'Class Name', 'Subjects', 'Class Teacher'
     ])
 
     for row_data in data:
@@ -1229,7 +1349,6 @@ def export_classes_to_excel(request):
     # Set column widths
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 15
     ws.column_dimensions['D'].width = 15
 
     filename = 'classes.xlsx'
@@ -1316,27 +1435,67 @@ def school_info(request):
         email = request.POST.get("email")
         website = request.POST.get("website")
 
-        school = SchoolInfo.objects.create(
-            schoolname = schoolname,
-            contact = contact,
-            box_number = box_number,
-            email = email,
-            website = website,
-        )
+        # Check if there's existing school info data, assuming only one instance
+        school_info = SchoolInfo.objects.first()
+
+        if school_info is None:
+            # If no data exists, create a new instance
+            school_info = SchoolInfo(
+                schoolname=schoolname,
+                contact=contact,
+                box_number=box_number,
+                email=email,
+                website=website,
+            )
+        else:
+            # If data exists, update it
+            messages.success(request, 'You can only add this information once!')
+            return redirect("School Information")  
 
         if badge:
             fs = FileSystemStorage()
             image_filename = fs.save(badge.name, badge)
-            school.badge = image_filename
-        school.save()
+            school_info.badge = image_filename
 
-        messages.success(request, 'School added successfully!')
-        return redirect("School Information")
+        school_info.save()
+        messages.success(request, 'School information updated successfully!')
+        return redirect("School Information")  # Use the appropriate URL name for school_info page
     
-    context={
+    context = {
         'school_data': SchoolInfo.objects.all()
     }
     return render(request, "frontend/school_info.html", context)
+
+def edit_school_info(request):
+    if request.method == "POST":
+        school_id = request.POST.get("id")
+        school = get_object_or_404(SchoolInfo, pk=school_id)
+
+        # Update school information based on form data
+        school.schoolname = request.POST.get("schoolname")
+        school.contact = request.POST.get("contact")
+        school.box_number = request.POST.get("box_number")
+        school.email = request.POST.get("email")
+        school.website = request.POST.get("website")
+
+        # Handle badge image update if necessary
+        badge = request.FILES.get('badge')
+        if badge:
+            school.badge = badge
+
+        school.save()
+
+        # Add success message
+        messages.success(request, 'School information updated successfully!')
+        return redirect("School Information")
+
+    # Render the school information template with context
+    context = {
+        'school_data': SchoolInfo.objects.all()
+    }
+    return render(request, "frontend/school_info.html", context)
+
+
 
 def delete_teacher(request):
     if request.method == "POST":

@@ -12,6 +12,8 @@ from django.db import transaction
 import openpyxl
 from collections import defaultdict
 from django.contrib.auth import authenticate, login
+from django.db.models import OuterRef, Subquery
+from django.db.models import F
 
 def financelogin(request):
     if request.method == 'POST':
@@ -211,7 +213,11 @@ def financedashboard(request):
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-    fees_list = Fees.objects.exclude(balance__lte=0.0)# Filter fees with balance greater than 0
+    # Retrieve only the latest balance for each student based on the latest timestamp
+    latest_timestamps = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-timestamp')
+    fees_list = Fees.objects.annotate(
+        latest_timestamp=Subquery(latest_timestamps.values('timestamp')[:1])
+    ).filter(balance__gt=0.0, timestamp=F('latest_timestamp'))
     
     sspayments = Supportstaffpayment.objects.all()
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -222,27 +228,38 @@ def financedashboard(request):
     term_data = Term.objects.all()
 
     # Calculate the percentages
-    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
-    fees_percentage = (total_amount / total) * 100
-    expenses_percentage = (total_amount_paid / total) * 100
-    sspayments_percentage = (total_sspayments / total) * 100
-    trpayments_percentage = (total_trpayments / total) * 100
+    if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+        }
+        return render(request, "finance/financedashboard.html", context)
+    else: 
+        total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+        fees_percentage = (total_amount / total) * 100
+        expenses_percentage = (total_amount_paid / total) * 100
+        sspayments_percentage = (total_sspayments / total) * 100
+        trpayments_percentage = (total_trpayments / total) * 100
 
-    
+        
 
-    context = {
-        'total_amount_paid': total_amount_paid,
-        'total_amount': total_amount,
-        'total_sspayments' : total_sspayments,
-        'total_trpayments' : total_trpayments,
-        'term_data' : term_data,
-        'fees_list': fees_list,
-        'fees_percentage': fees_percentage,
-        'expenses_percentage': expenses_percentage,
-        'sspayments_percentage': sspayments_percentage,
-        'trpayments_percentage': trpayments_percentage,
-    }
-    return render(request, "finance/financedashboard.html", context)
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+            'fees_percentage': fees_percentage,
+            'expenses_percentage': expenses_percentage,
+            'sspayments_percentage': sspayments_percentage,
+            'trpayments_percentage': trpayments_percentage,
+        }
+        return render(request, "finance/financedashboard.html", context)
 
 
 # fees views
@@ -255,7 +272,9 @@ def financeaddFees(request):
         amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
         date = request.POST.get('date')
-
+        timestamp = request.POST.get('timestamp')
+        
+        term_data = Term.objects.get(status=1)
         # Calculate balance
         balance = int(classfees) - int(amount)
 
@@ -274,7 +293,10 @@ def financeaddFees(request):
                     balance=balance,
                     modeofpayment=modeofpayment,
                     date=date,
-                    accumulatedpayment=amount  # Set accumulatedpayment for the first entry
+                    timestamp=timestamp,
+                    accumulatedpayment=amount,
+                    term = term_data.current_term,
+                    year = term_data.current_year
                 )
                 fees.save()
             else:
@@ -289,7 +311,10 @@ def financeaddFees(request):
                         balance=balance,
                         modeofpayment=modeofpayment,
                         date=date,
-                        accumulatedpayment=amount  # Set accumulatedpayment for the new entry
+                        timestamp=timestamp,
+                        accumulatedpayment=amount,
+                        term = term_data.current_term,
+                        year = term_data.current_year
                     )
                     fees.save()
                 else:
@@ -297,7 +322,7 @@ def financeaddFees(request):
                     accumulatedpayment = last_fee.accumulatedpayment + int(amount)
                     new_balance = int(classfees) - accumulatedpayment
                     if new_balance < 0:
-                        messages.error(request, 'Student fees already exists')
+                        messages.error(request, 'Student has cleared all fees for this term')
                     else:
                         fees = Fees.objects.create(
                             stdnumber_id=stdnumber,
@@ -308,7 +333,10 @@ def financeaddFees(request):
                             balance=new_balance,
                             modeofpayment=modeofpayment,
                             date=date,
-                            accumulatedpayment=accumulatedpayment
+                            timestamp=timestamp,
+                            accumulatedpayment=accumulatedpayment,
+                            term = term_data.current_term,
+                            year = term_data.current_year
                         )
                         fees.save()
 
@@ -382,18 +410,97 @@ def edit_std_fees(request):
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
+
+def feesclearedstudents(request):
+    # Filter the Fees model to get students with a balance of 0
+    cleared_students = Fees.objects.filter(balance=0)
+    classes = Schoolclasses.objects.all()
+
+    # Pass the cleared_students queryset to the template
+    return render(request, 'finance/fees/feesclearedstudents.html', {'cleared_students': cleared_students, 'classes': classes})
+
+def feesclearedstudents_byclass(request, class_id):
+    classes = Schoolclasses.objects.all()
+    selected_class = None  # Initialize selected_class
+
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch cleared students for the selected class (balance = 0)
+        cleared_students = Fees.objects.filter(studentclass=selected_class.classname, balance=0)
+    except Schoolclasses.DoesNotExist:
+        pass  # Handle the case where the class is not found
+
+    return render(request, 'finance/fees/feesclearedstudents_byclass.html', {
+        'cleared_students': cleared_students,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
+
+def generate_clearance(request, stdnumber):
+    try:
+        # Get the student's information based on their student number
+        student = get_object_or_404(Fees, stdnumber=stdnumber)
+
+        # Perform clearance generation logic here
+        # For example, you can update the student's clearance status
+        student.clearance_status = True  # Assuming you have a field for clearance status in the Fees model
+        student.save()
+
+        # Redirect to the clearance card view with the student's stdnumber
+        return redirect('Clearance Card', stdnumber=stdnumber)
+
+        # Optionally, you can add a success message
+        messages.success(request, f"Clearance generated for {student.stdname}.")
+
+    except Fees.DoesNotExist:
+        # Handle the case where the student is not found
+        messages.error(request, "Student not found.")
+
+    # Redirect back to the cleared students list or any other appropriate page
+    return redirect('Cleared Students List')  # Adjust this URL name as needed
+
+def clearance_card(request, stdnumber):
+    # Retrieve the student's information based on the stdnumber
+    student = Fees.objects.get(stdnumber=stdnumber,balance=0)
+    
+    # get more student details
+    student_img = Student.objects.get(stdnumber=stdnumber)
+
+    # get school information
+    term_data = Term.objects.get(status=1)
+    # Render the clearance card template and pass the student's information
+
+    context={
+        'student': student,
+        'student_img': student_img,
+        'term_data':term_data
+    }
+    return render(request, 'finance/fees/clearancecard.html',context)
+
 # fees views
 
 def financeaddFeesstructure(request):
     if request.method == 'POST':
         classname = request.POST.get('classname')
         amount = request.POST.get('amount')
+        term_data = Term.objects.get(status=1)
+
+        term = term_data.current_term
+        year = term_data.current_year
+
 
         this_class = Feesstructure.objects.filter(classname = classname)
         if(this_class):
             messages.success(request, "This class already exists")
         else:
-            fees_structure = Feesstructure.objects.create(classname=classname, amount=amount)
+            fees_structure = Feesstructure.objects.create(
+                classname = classname, 
+                amount = amount,
+                term = term,
+                year = year
+                )
             fees_structure.save()
             messages.success(request, f"Fees Structure for class '{classname}' added successfully.")
         return redirect('Add Fees Structure')
@@ -440,12 +547,15 @@ def financeaddTeacherpayments(request):
 
     if request.method == 'POST':
         teacherid = request.POST.get('teacherid')
+        term_data = Term.objects.get(status=1)
 
         teacher = Teachers.objects.get(teacherid=teacherid)
         teachername = teacher.teachernames
         paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
+        term = term_data.current_term
+        year = term_data.current_year
         
         if amountpaid > float(teacher.salary):
             messages.error(request , 'Payment not Added')
@@ -462,6 +572,8 @@ def financeaddTeacherpayments(request):
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
                 balance = float(teacher.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -476,6 +588,8 @@ def financeaddTeacherpayments(request):
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
                 balance = float(teacher.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Teacher payment added successfully.')
@@ -496,6 +610,8 @@ def financeaddTeacherpayments(request):
                     amountpaid = amountpaid,
                     accumulatedpayment = accumulatedpayment,
                     balance = newbalance,
+                    term = term,
+                    year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
                 return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
@@ -516,12 +632,15 @@ def financeteacherpaymentsList(request):
 def financeaddsupportstaffpayments(request):
     supportstaffdata = Supportstaff.objects.all()
     if request.method == 'POST':
+        term_data = Term.objects.get(status=1)
         supportstaffid = request.POST.get('support-staffid')
         supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
         staffnames = supportstaffname.supportstaffnames
         paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amountpaid = float(request.POST.get('amountpaid'))
+        term = term_data.current_term
+        year = term_data.current_year
 
         if amountpaid > float(supportstaffname.salary):
             messages.error(request , 'Payment not Added')
@@ -538,6 +657,8 @@ def financeaddsupportstaffpayments(request):
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
                 balance = float(supportstaffname.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Support Staff payment added successfully.')
@@ -552,6 +673,8 @@ def financeaddsupportstaffpayments(request):
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
                 balance = float(supportstaffname.salary) - amountpaid,
+                term = term,
+                year = year
             )
 
             messages.success(request, 'Support staff payment added successfully.')
@@ -572,6 +695,8 @@ def financeaddsupportstaffpayments(request):
                     amountpaid = amountpaid,
                     accumulatedamount = accumulatedpayment,
                     balance = newbalance,
+                    term = term,
+                year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
                 return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata})
@@ -592,6 +717,10 @@ def financesupportstaffpaymentsList(request):
 # expenses views
 def financeaddExpenses(request):
     if request.method == 'POST':
+        term_data = Term.objects.get(status=1)
+
+        term = term_data.current_term
+        year = term_data.current_year
         category = request.POST.get('category')
         expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
@@ -599,6 +728,8 @@ def financeaddExpenses(request):
             category=category,
             expensedate=expensedate,
             amountpaid=amountpaid,
+            term = term,
+            year = year
         )
         expense_record.save()
         messages.success(request, 'Expense added successfully.')  # Display a success message
@@ -738,6 +869,59 @@ def export_finance_fees_to_excel(request):
 
     return response
 
+def export_fees_by_class(request, class_id):
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+
+        if not fees_list:
+            # If there are no fees records for the selected class, return an empty response
+            return HttpResponse("No fees data available for this class.")
+
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write field names to the worksheet as headers
+        ws.append(['Payment ID', 'Student Number', 'Student Name', 'Student Class', 'Amount', 'Balance', 'Mode of Payment', 'Date'])
+
+        # Write data to the worksheet
+        for fee in fees_list:
+            ws.append([
+                fee.paymentid,
+                fee.stdnumber.stdnumber,
+                fee.stdname,
+                fee.studentclass,
+                fee.amount,
+                fee.balance,
+                fee.modeofpayment,
+                fee.date,
+            ])
+
+        # Set the column width for the date column
+        ws.column_dimensions['A'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['B'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['C'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['D'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['E'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['F'].width = 15  # Adjust the width as needed
+        ws.column_dimensions['H'].width = 15  # Adjust the width as needed
+
+        # Set the filename and content type for the response
+        filename = f'fees_data_{selected_class.classname}.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        # Save the workbook to the response
+        wb.save(response)
+
+        return response
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse("Class not found.", status=404)
+
 
 def export_fees_structure_to_excel(request):
     data = Feesstructure.objects.all().values_list(
@@ -847,6 +1031,38 @@ def export_support_staff_payments_to_excel(request):
     filename = 'support_staff_payments.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
+
+def export_clearedstudents_to_excel(request):
+    # Query cleared students data from your Fees model (assuming balance = 0 indicates cleared students)
+    cleared_students_data = Fees.objects.filter(balance=0).values_list(
+        'stdnumber', 'stdname', 'studentclass'
+    )
+
+    # Create a new workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Define column headers
+    ws.append(['Student Number', 'Student Name', 'Student Class'])
+
+    # Iterate over cleared students' data and add it to the worksheet
+    for row_data in cleared_students_data:
+        ws.append(row_data)
+
+    # Set column widths (adjust as needed)
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 25
+    ws.column_dimensions['C'].width = 15
+
+    # Define the filename and create an HTTP response
+    filename = 'cleared_students_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
     wb.save(response)
 
     return response

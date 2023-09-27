@@ -82,6 +82,8 @@ class Student(models.Model):
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
     regdate =models.DateField(verbose_name="Date of Registration")
+    username = models.CharField(max_length=50 , verbose_name='Username', default=None)
+    password = models.CharField(max_length=255, verbose_name='Password', default=None)
     
     fathername = models.CharField(max_length=25 , verbose_name="Father's Name" , blank=True)
     fcontact = models.CharField(max_length=10 , verbose_name="Father's Contact" , blank=True)
@@ -97,7 +99,7 @@ class Student(models.Model):
 
     Display_Fields = [
         'stdnumber','childname' ,'stdclass', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
-    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' 
+    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password'
     ]
 
 class Supportstaff(models.Model):
@@ -171,6 +173,8 @@ class Mark(models.Model):
     student_name = models.CharField(max_length=100)
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
     marks_obtained = models.IntegerField()
+    current_term = models.CharField(max_length=15, default=None)
+    current_year = models.CharField(max_length=15, default=None)
     mark_type = models.CharField(max_length=20, default=None, choices=MARK_TYPES)
 
     def __str__(self):
@@ -223,6 +227,14 @@ class Administrators(models.Model):
         'fullname' , 'gender' , 'address' , 'contact' , 'email' , 'profileimage' , 'role' , 'qualification' , 
         'salary' , 'bankaccnum'
     ]
+
+class TeacherSubject(models.Model):
+    teacher = models.ForeignKey('Teachers', on_delete=models.CASCADE)
+    subjects = models.ManyToManyField('Subjects')
+    schoolclass = models.ForeignKey('Schoolclasses', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.teacher} - {', '.join([str(subject) for subject in self.subjects.all()])} ({self.schoolclass})"
 
 
 

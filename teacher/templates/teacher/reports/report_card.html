@@ -1,5 +1,7 @@
+{% load custom_tags %}
 <!doctype html>
 {% load static %}
+   {% load custom_filters %}
 <html lang="en">
   <head>
     <title>{{student.pk }} Report Card</title>
@@ -13,52 +15,256 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
+
+  <style>
+
+    body{
+        margin: 50px;
+        
+        border: 2px solid #000;
+        padding: 20px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        /* text-transform: uppercase; */
+        justify-content: space-between;
+        border-bottom: 5px solid #000;
+    }
+    .student-info{
+        display: flex;
+    }
+
+    .student-info .tables{
+        width: 80%;
+        margin-right: 10px;
+    }
+
+    .student-info image{
+        width: 20%;
+        
+    }
+
+    #table, #table thead th, #table tbody td{
+        border: 1px solid #000;
+    }
+
+    .water-mark{
+        position: absolute;
+        left: 35%;
+        top: 35%;
+        opacity: 0.1;
+    }
+
+    .water-mark img {
+        width: 350px;
+    }
+  </style>
   <body>
+    {% get_school_info as school_info %}
+    {% if school_info %}
+        {% for info in school_info %}
+        <div class="water-mark">
+            <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge" >
 
-    <div class="header d-flex">
-        <h1 class="text-center" style="text-align: center; color: black;">
-            <span style="font-size: 25px; padding-bottom: 20px;">ROSANNA </span>
-            <img src="{{ image_url }}" alt="Logo" style="width: 60px; height: 70px;">
-            <span style="font-size: 25px;">SCHOOLS </span>
-        </h2>
-        <p style="text-align: center; color: black; font-size: 12px;">P.O.Box, 234 Kampala | www.rosannaschool.com | info@rosannaschool.com | Tel: +256 776 481 096</p>
+        </div>
+        {% endfor %}
+    {% endif %}
+    <div class="print-button">
+        <a href="" class="btn btn-success btn-sm print"><i class="fas fa-print    "></i> Print Report card</a>
     </div>
-    <div class="lines">
-        <hr style="font-size: 6px; color: brown;">
-        <!-- <hr> -->
-    </div>
-    <h5 style="text-align: center; color: black; font-size: 12px;">LEARNER'S REPORT CARD FOR TERM TWO, 2023</h5>
+    {% get_school_info as school_info %}
+    {% if school_info %}
+        {% for info in school_info %}
+            <div class='header p-2 mb-2 mt-4'>
+                
+                <div class="school-info">
+                    <h1 class="text-uppercase"><b>{{ info.schoolname }}</b></h1>
+                    <p style="color: black; font-size: 17px;">Email: {{info.email}} | Tel: {{info.contact}}</p>
+                    <p style="color: black; font-size: 17px;">{{info.box_number}} </p>
+                </div>
+                <div class="image">
+                    <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge" style="width: 120px; height: 150px;">
 
+                </div>
+                
+            </div>
+            
+            <!-- Display other school information as needed -->
+        {% endfor %}
+    {% endif %}
 
-    <!-- studentdetails -->
-    <div class="stud-details" style="display: flex; justify-content: space-between;">
-        <div class="info" style="display: flex;">
-            <p style="font-size: 14px;"><b>Child Name:</b> <span>{{student.childname}}</span></p>
-            <p style="font-size: 14px;"><b>Child Name:</b> <span>{{student.stdnumber}}</span></p>
+    <h5 class="text-center" style="width: 30%; margin: 0 35%; 
+    padding: 5px; border-radius: 15px;"><b><u>TERMLY SCHOOL REPORT</u></b></h5>
+
+    <div class="student-info mt-4" >
+        <div class="tables">
+            <table class="table" border="1">
+                <thead class="text-uppercase" style="font-size: 1.0rem;">
+                    <th>Name</th>
+                    <th>Student Number</th>
+                    <th>Gender</th>
+                </thead>
+                <tbody style="font-size: 20px;">
+                    <td class="text-uppercase">{{student.childname}}</td>
+                    <td>{{student.stdnumber}}</td>
+                    <td>
+                        {% if student.gender == 'm' %}
+                            {{"MALE"}}
+                        {% else %}
+                            {{"FEMALE"}}
+                        {% endif %}
+                    </td>
+                </tbody>
+            </table>
+            <table class="table" border="1">
+                <thead class="text-uppercase" style="font-size: 1.0rem;">
+                    <tr>
+                        <th>Class</th>
+                        <th>House</th>
+                        <th>Address</th>
+                        <th>School Pay Code</th>
+                        <th>Term</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{student.stdclass.classname}}</td>
+                        <td>{{student.house}}</td>
+                        <td>{{student.address}}</td>
+                        <td>{{student.schoolpay_code}}</td>
+                        <td>{{term_data.current_term}} - {{term_data.current_year}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="image">
+            {% if student.profile_image %}
+            <img src="{{student.profile_image.url}}" class="thumbnail" alt=""  style="width: 320px">
+            {% else %}
+            <div class="image">
+                <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+            </div>
+            {% endif %}
         </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>h</th>
-                <th>h</th>
-                <th>h</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td scope="row"></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td scope="row"></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- marks section -->
+    <div class="marks-section mt-4">
+        <table class="table" border="1" id="table">
+            <thead class="text-uppercase" style="font-size: 1.3rem;">
+                <tr>
+                    <th>Subject</th>
+                    {% for mark_type in mark_types %}
+                    <th>{{ mark_type.0 }}</th>
+                    {% endfor %}
+                    <th>Total</th>
+                    <th>Final Score</th>
+                    <th>Teacher Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                <tr>
+                    <td class="text-uppercase"><b>{{ subject.subjectname }}</b></td>
+                    {% for mark_type in mark_types %}
+                    <td>
+                        {% with marks=student_marks|get_item:subject|get_item:mark_type.0 %}
+                        {% if marks %}
+                        {{ marks.0.marks_obtained }}
+                        {% else %}
+                        0
+                        {% endif %}
+                        {% endwith %}
+                    </td>
+                    {% endfor %}
+                    <td>{{ subject_totals|get_item:subject }}</td>
+                    <td>{{ subject_averages|get_item:subject|floatformat:0 }}</td>
+                    <td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row ml-1 mr-1"  style="border: 1px solid #000;">
+            <div class="col-md-6" style="border-right: 1px solid #000;">
+                <div class="row">
+                    <div class="col-md-8" style="border-right: 1px solid #000;">
+                        <h4=5><b>TOTAL MARKS:</b></h4=5>
+                    </div>
+                    <div class="col-md-4">
+                        {{total_averages}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-8" style="border-right: 1px solid #000;">
+                        <h4=5><b>AVERAGE SCORE: </b></h4=5>
+                    </div>
+                    <div class="col-md-4">
+                        {{final_average}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="position-section m-4 mt-5">
+            <div class="row">
+                <div class="col-1"><b>Position: </b></div>
+                <div class="col-2" style="border-bottom: 2px dashed #000;">{{position}}</div>
+                <div class="col-1.5"><b>Out of: </b></div>
+                <div class="col-2" style="border-bottom: 2px dashed #000;">{{student_count}}</div>
+            </div>
+        </div>
+
+        <div class="class-teacher-comment m-4 mt-5">
+            <div class="row">
+                <div class="col-3">
+                    <h5>
+                        Class Teacher's Remarks: 
+                    </h5>
+                </div>
+                <div class="col-8">
+                    <p class="mt-2" style="border-bottom: 2px dashed #000;"></p>
+                    <p class="mt-5" style="border-bottom: 2px dashed #000;"></p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="head-teacher-comment m-4 mt-5">
+            <div class="row">
+                <div class="col-3">
+                    <h5>
+                        Head Teacher's Remarks: 
+                    </h5>
+                </div>
+                <div class="col-8">
+                    <p class="mt-2" style="border-bottom: 2px dashed #000;"></p>
+                    <p class="mt-5" style="border-bottom: 2px dashed #000;"></p>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="class-teacher-details m-4">
+            <div class="row">
+                <div class="col-6">
+                    <h6><b>Next Term begins on: </b> <span style=""> ______ /______ /_______   </span></h6>
+                </div>
+                <div class="col-6">
+                    <h6>Class Teacher Signature: </h6>
+                    <p class="mt-5" style="border-bottom: 2px dashed #000; width: 60%;"></p>
+                    <h5 class="text-uppercase"><b>{{classteacher}}</b></h5>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -67,5 +273,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <script>
+        $(".print").click(function (e) { 
+            e.preventDefault();
+            $(".print").hide()
+            window.print();
+        });
+    </script>
 </body>
 </html>

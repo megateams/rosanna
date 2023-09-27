@@ -81,6 +81,7 @@ urlpatterns = [
     path('addclasses/' , views.addclasses , name='AddClasses'),
     path('edit_class/' , views.edit_class , name='edit_class'),
     path('delete_class/' , views.delete_class , name='delete_class'),
+    path('edit-class-subjects/', views.edit_class_subjects, name='edit_class_subjects'),
 
     # accounting 
     path('feesstructurelist/', views.feesstructure, name='Fees Structure'),
@@ -95,6 +96,10 @@ urlpatterns = [
 
    path('export_subjects/', views.export_subjects_to_excel, name='export_subjects'),
    path('export_classes/', views.export_classes_to_excel, name='export_classes'),
+   path('export-excel/', views.export_to_excel, name='export_to_excel'),
+   path('support_staff_export/', views.support_staff_export_to_excel, name='support_staff_export'),
+   path('admins_export/', views.admins_export_to_excel, name='admins_export'),
+   path('export-students-by-class/<int:class_id>/', views.export_students_by_class, name='export_students_by_class'),
 
 
     # settings urls
@@ -102,6 +107,7 @@ urlpatterns = [
    path('settings/school_info/', views.school_info, name='School Information'),
    path('edit_term/', views.edit_term, name='edit_term'),
    path('delete_term/', views.delete_term, name='delete_term'),
+   path('edit_school_info/', views.edit_school_info, name='edit_school_info'),
 
     # imports
     path('import_students/', views.import_students, name='import_students'),

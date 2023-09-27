@@ -9,7 +9,7 @@
         <div class="class-btns">
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
-            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Add Marks</a>
+            <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_types.0.0 }}" class="btn btn-sm btn-danger">Add Marks</a>
         </div>
     </div>
     {% for mark_type in mark_types %}
@@ -33,7 +33,7 @@
                         <!-- <th>Grade</th> -->
                     {% endfor %}
                     <th>Total</th>
-                    <th>Average</th>
+                    <!-- <th>Average</th> -->
                     <th>Position</th>
                     <th></th>
                 </tr>
@@ -46,126 +46,14 @@
                         {% for subject_data in subjects_data %}
                             <!-- <td>{{ subject_data.total_marks }}</td> -->
                             <td>{{ subject_data.average_marks|floatformat:0 }}</td>
-                            <!-- <td>
-                                {% if subject_data.average_marks >= 80 %}
-                                    <p>D1</p>
-                                {% elif subject_data.average_marks >= 75 %}
-                                    <p>D2</p>
-                                {% elif subject_data.average_marks >= 70 %}
-                                    <p>C3</p>
-                                {% elif subject_data.average_marks >= 65 %}
-                                    <p>C4</p>
-                                {% elif subject_data.average_marks >= 60 %}
-                                    <p>C5</p>
-                                {% elif subject_data.average_marks >= 50 %}
-                                    <p>C6</p>
-                                {% elif subject_data.average_marks >= 45 %}
-                                    <p>P7</p>
-                                {% elif subject_data.average_marks >= 40 %}
-                                    <p>P8</p>
-                                {% else %}
-                                    <p>F9</p>
-                                {% endif %}
-                            </td> -->
                         {% endfor %}
                         <td><b>{{ student.total_average_marks|floatformat:0 }}</b></td>
-                        <td><b>{{ student.final_average|floatformat:2 }}</b></td>
+                        <!-- <td><b>{{ student.final_average|floatformat:2 }}</b></td> -->
                         <td>{{student.rank}}</td>
                         <td>
-                            <a href="#print{{ student.pk }}" class="btn btn-success btn-sm generate-report" data-toggle="modal"><i class="fas fa-print    "></i>Print    </a>
+                            <a href="/teacher/report_card/{{student.pk}}/{{student.rank}}" class="btn btn-success btn-sm generate-report"><i class="fas fa-print    "></i>Print    </a>
                         </td>
                     </tr>
-                    <div class="modal fade" id="print{{ student.pk }}" tabindex="-1" role="dialog" aria-labelledby="marksReportModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="marksReportModalLabel">Result Report for {{student.childname}}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="printable-content">
-                                        <div class="header">
-                                            <h1 class="text-center" style="text-align: center; color: black;">
-                                                <span style="font-size: 25px; padding-bottom: 20px;">ROSANNA </span>
-                                                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo" style="width: 60px; height: 70px;">
-                                                
-                                                <span style="font-size: 25px;">SCHOOLS </span>
-                                            </h2>
-                                            <p style="text-align: center; color: black; font-size: 12px;">P.O.Box, 234 Kampala | www.rosannaschool.com | info@rosannaschool.com | Tel: +256 776 481 096</p>
-                                        </div>
-                                        <div class="lines">
-                                            <hr style="font-size: 6px; color: brown;">
-                                            <!-- <hr> -->
-                                        </div>
-                                        <h5 style="text-align: center; color: black; font-size: 12px;">LEARNER'S REPORT CARD FOR TERM TWO, 2023</h5>
-                                    
-                                    
-                                        <!-- studentdetails -->
-                                        <div class="stud-details" style="display: flex; justify-content: space-between;">
-                                            <div class="info">
-                                                <p style="font-size: 14px;"><b>Student Number: </b> <span>{{student.childname}}</span></p>
-                                                <p style="font-size: 14px;"><b>Child Name:</b> <span>{{student.stdnumber}}</span></p>
-                                            </div>
-                                        </div>
-
-                                        <div class="results" style="display: flex;">
-                                            <div style="margin-right: 20px;">
-                                                <h6 style="border: 1px solid #000; padding: 5px;">SUBJECTS</h6>
-                                                {% for subject in subjects %}
-                                                    <p style="border: 1px solid #000; padding: 5px; margin-top: 0px; margin-bottom: 0px;">{{ subject.subjectname|slice:":3" }}</p>
-                                                {% endfor %}
-                                            </div>
-                                            <div style="margin-right: 20px;">
-                                                <h6> AVG MARKS</h6>
-                                                {% for subject_data in subjects_data %}
-                                                    <!-- <td>{{ subject_data.total_marks }}</td> -->
-                                                    <p>{{ subject_data.average_marks|floatformat:0 }}</p>
-                                                    
-                                                {% endfor %}
-                                            </div>
-                                            <div style="margin-right: 20px;">
-                                                <h6> GRADE</h6>
-                                                {% for subject_data in subjects_data %}
-                                                    <!-- <td>{{ subject_data.total_marks }}</td> -->
-                                                    <p>
-                                                        {% if subject_data.average_marks >= 80 %}
-                                                            <p>D1</p>
-                                                        {% elif subject_data.average_marks >= 75 %}
-                                                            <p>D2</p>
-                                                        {% elif subject_data.average_marks >= 70 %}
-                                                            <p>C3</p>
-                                                        {% elif subject_data.average_marks >= 65 %}
-                                                            <p>C4</p>
-                                                        {% elif subject_data.average_marks >= 60 %}
-                                                            <p>C5</p>
-                                                        {% elif subject_data.average_marks >= 50 %}
-                                                            <p>C6</p>
-                                                        {% elif subject_data.average_marks >= 45 %}
-                                                            <p>P7</p>
-                                                        {% elif subject_data.average_marks >= 40 %}
-                                                            <p>P8</p>
-                                                        {% else %}
-                                                            <p>F9</p>
-                                                        {% endif %}
-                                                    </p>
-                                                    
-                                                {% endfor %}
-                                            </div>
-
-                                        </div>
-
-                                        
-                                        
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-sm btn-success" id="print-report"> <i class="fas fa-print    "></i> Print Report</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 {% endfor %}
             </tbody>

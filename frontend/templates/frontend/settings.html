@@ -162,23 +162,23 @@
                                     <input type="hidden" name="id" value="{{data.id}}">
 
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Current Term:</label>
                                             <input type="text" name="term" value="{{data.current_term}}" class="form-control" required>
                                             
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Current Year:</label>
                                             <input type="text" name="year" value="{{data.current_year}}" class="form-control" value="{% now 'Y' %}" readonly>
                                         </div>
                                     </div>
                         
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Start Date:</label>
                                             <input type="date" name="start_date" value="{{data.start_date}}" class="form-control" required>
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">End Date:</label>
                                             <input type="date" name="end_date" value="{{data.end_date}}" class="form-control" required>
                                         </div>

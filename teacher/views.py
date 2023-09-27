@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 import os
 from xhtml2pdf import pisa
 from django.conf import settings
+from django.db.models import Avg
 # Create your views here.
 
 # view for the login page
@@ -65,9 +66,9 @@ def profile(request,teacher_id):
 
 
 def paymenthistory(request,teacher_id):
+    teachers = Teachers.objects.get(teacherid = teacher_id)
     teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
-    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data})  
-
+    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data, 'teacher':teachers})   
 
 # marks logic
 def get_students_by_class(request, class_id):
@@ -96,12 +97,13 @@ def class_details(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     teacher = get_object_or_404(Teachers, teacherid=teacher_id)
+    teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
 
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
     # Get the subjects taught by the teacher for this class
-    subjects = teacher.subjects.filter(schoolclasses=schoolclass)
+    subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
 
     mark_types = Mark.MARK_TYPES
     # Create a dictionary to hold the marks for each student and subject combination
@@ -132,6 +134,7 @@ def class_details(request, class_id, teacher_id):
         'subjects': subjects,
         'student_marks': student_marks,
         'mark_types': mark_types,
+        'term_data': Term.objects.get(status=1)
     })
 
 
@@ -141,9 +144,10 @@ def class_marks_by_marktype(request, class_id, teacher_id):
     schoolclass = Schoolclasses.objects.get(classid=class_id)
     teacher = Teachers.objects.get(teacherid=teacher_id)
     mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
-    
+    teacher_subject = TeacherSubject.objects.get(schoolclass_id=class_id, teacher_id=teacher_id)
+
     students = Student.objects.filter(stdclass=schoolclass)
-    subjects = teacher.subjects.filter(schoolclasses=schoolclass)
+    subjects = teacher_subject.subjects.filter(schoolclasses=schoolclass)
     mark_types = Mark.MARK_TYPES
     student_marks = {}
     for student in students:
@@ -191,12 +195,13 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
+    term_data = Term.objects.all().first()
     # Get the marks for the current subject
     marks = Mark.objects.filter(class_name=schoolclass, subject=subject)
 
     # Create a set of student names whose marks have been added for the current subject
     marks_students = set(mark.student_name for mark in marks)
-    print(marks_students)
+    
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
@@ -213,6 +218,8 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
                 student_name=student.childname,
                 subject=subject,
                 mark_type=mark_type,
+                current_term=term_data.current_term,
+                current_year=term_data.current_year,
             ).first()
 
             if existing_mark:
@@ -222,13 +229,16 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
                 messages.success(request, 'Subject mark updated successfully.')
             else:
                 # If a mark doesn't exist, create a new one
-                Mark.objects.create(
+                mark = Mark.objects.create(
                     class_name=schoolclass,
                     student_name=student.childname,
                     subject=subject,
                     marks_obtained=int(marks_obtained),
                     mark_type=mark_type,
+                    current_term=term_data.current_term,
+                    current_year=term_data.current_year,
                 )
+                mark.save()
                 messages.success(request, 'Subject mark added successfully.')
 
             return redirect('Add Subject marks', class_id=class_id, teacher_id=teacher_id, subject_id=subject_id)
@@ -240,6 +250,7 @@ def addsubjectmarks(request, class_id, teacher_id, subject_id):
         'mark_types': mark_types,
         'marks_students': marks_students,
         'teacher_id': teacher_id,
+        'term_data': term_data,
     })
 
 def addmarks(request, class_id, teacher_id):
@@ -257,11 +268,13 @@ def addmarks(request, class_id, teacher_id):
     # Retrieve the subjects that are associated with this class
     subjects = schoolclass.subjects.all()
 
+    # getting the current term data
+    term_data = Term.objects.all().first()
+
     # Retrieve the mark types for the dropdown
     mark_types = Mark.MARK_TYPES
 
-    subject_id = request.GET.get('subject')
-
+    marktype = request.GET.get('marktype')
     # Handle form submission to add subject marks
     if request.method == 'POST':
         mark_type = request.POST.get('marktype')
@@ -280,10 +293,12 @@ def addmarks(request, class_id, teacher_id):
                 subject_id=subject_id,
                 mark_type=mark_type,
                 marks_obtained=int(marks_obtained),
+                current_term=term_data.current_term,
+                current_year=term_data.current_year,
             )
             messages.success(request, 'Subject marks added successfully.')
 
-        return redirect('Add Marks', class_id=class_id, teacher_id=teacher_id)
+        return HttpResponseRedirect("/teacher/his_class/addmarks/{}/{}?marktype={}".format(class_id, teacher_id,mark_type))  
 
     # If the request method is GET, render the form for adding subject marks
     return render(request, 'teacher/marks/addMarks.html', {
@@ -292,11 +307,25 @@ def addmarks(request, class_id, teacher_id):
         'mark_types': mark_types,
         'teacher_id': teacher_id,
         'students': students,
-        'subject_id': subject_id,
+        'marktype': marktype,
+        'term_data': term_data,
     })
 
+# view to check if the mark already exists
+def get_mark(request, student_id, subject_id, mark_type):
+    # Retrieve the mark for the specified student, subject, and mark type
+    
+    mark = Mark.objects.filter(
+        student_name=student_id,
+        subject=subject_id,
+        mark_type=mark_type
+    ).first()
+    print(mark)
+    # Prepare the response data
+    response_data = {'marks_obtained': mark.marks_obtained if mark else ''}
 
-# class teacher class
+    return JsonResponse(response_data)
+
 def his_class(request, class_id, teacher_id):
     schoolclass = get_object_or_404(Schoolclasses, classid=class_id)
     teacher = get_object_or_404(Teachers, teacherid=teacher_id)
@@ -304,38 +333,67 @@ def his_class(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
-    # Get the subjects taught by the teacher for this class
-    subjects = Subjects.objects.filter(schoolclasses=schoolclass)
-
     # Get the teachers who teach that class
     teachers_in_class = Teachers.objects.filter(classes=schoolclass)
-    # print (teachers_in_class)
+
     # Calculate the number of boys and girls in the class
     num_boys = students.filter(gender='m').count()
     num_girls = students.filter(gender='f').count()
 
     # Create a dictionary to hold the marks for each student and subject combination
-    student_marks = {}
-    for student in students:
-        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
-        student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
+    # student_marks = {}
+    # for student in students:
+    #     marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname)
+    #     student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
     
-    term_data = Term.objects.all()
+    term_data = Term.objects.get(status=1)
+
+    # Create a dictionary to hold subjects for each teacher_in_class
+    teacher_subjects = {}
+    for teacher_in_class in teachers_in_class:
+        teacher_subject = TeacherSubject.objects.filter(teacher=teacher_in_class, schoolclass=schoolclass).first()
+        teacher_subjects[teacher_in_class] = teacher_subject.subjects.all() if teacher_subject else []
 
     return render(request, 'teacher/his_class.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
         'students': students,
-        'subjects': subjects,
-        'student_marks': student_marks,
+        # 'student_marks': student_marks,
         'teachers_in_class': teachers_in_class,
         'num_girls': num_girls,
         'num_boys': num_boys,
         'term_data': term_data,
+        'teacher_subjects': teacher_subjects,  # Pass subjects for each teacher_in_class
     })
 
 # view marks
+def assign_subject(request):
+    if request.method == "POST":
+        teacher_id = request.POST.get("teacher_id")
+        schoolclass_id = request.POST.get("schoolclass")
+        subjects = request.POST.getlist('subjects')
 
+        # Get the teacher and school class
+        teacher = Teachers.objects.get(teacherid=teacher_id)
+        schoolclass = Schoolclasses.objects.get(classid=schoolclass_id)
+
+        data_exists = TeacherSubject.objects.get(schoolclass_id=schoolclass_id, teacher_id=teacher_id)
+
+        if data_exists:
+            data_exists.subjects.set(subjects)
+            messages.success(request, "Subjects has been updated successfully")
+            return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
+        else:
+            data = TeacherSubject.objects.create(
+            teacher = teacher,
+            schoolclass = schoolclass,
+        )
+        data.save()
+
+        data.subjects.set(subjects)
+        
+        messages.success(request, "Teacher assigned subjects")
+        return redirect("his_class",class_id=schoolclass_id, teacher_id=teacher_id)
 
 def view_marks(request, class_id, teacher_id):
     # Retrieve the class and teacher objects based on the provided IDs
@@ -350,6 +408,7 @@ def view_marks(request, class_id, teacher_id):
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
+    term_data = Term.objects.all()
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
     subjects_total_marks = {subject: 0 for subject in subjects}
@@ -361,15 +420,16 @@ def view_marks(request, class_id, teacher_id):
         for subject in subjects:
             total_marks = 0
             marks_count = 0
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject).exclude(mark_type='Test')
+
             for mark in marks:
                 total_marks += mark.marks_obtained
                 marks_count += 1
                 subjects_total_marks[subject] += mark.marks_obtained
                 subjects_marks_count[subject] += 1
 
-            average_marks = total_marks / marks_count if marks_count > 0 else 0
-            total_average_marks += average_marks
+            average_marks = total_marks / 3 if marks_count > 0 else 0
+            total_average_marks += int(average_marks)
             final_average = total_average_marks / subjects_count if marks_count > 0 else 0
               # Accumulate average marks for the student
             student_subjects_data.append({
@@ -377,19 +437,17 @@ def view_marks(request, class_id, teacher_id):
                 'total_marks': total_marks,
                 'average_marks': average_marks,
             })
-
         subjects_marks_data[student] = student_subjects_data
-        student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-        # Calculate average marks for each subject across all students
-        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                                for subject, total_marks in subjects_total_marks.items()}
-        # Sort the students based on their final average marks in descending order
-        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+
+    # Sort the students based on their total marks in descending order
+    students = sorted(students, key=lambda student: student.total_average_marks, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
         student.rank = rank
+        
     return render(request, 'teacher/marks/view_all_marks.html', {
         'schoolclass': schoolclass,
         'teacher': teacher,
@@ -397,6 +455,7 @@ def view_marks(request, class_id, teacher_id):
         'subjects': subjects,
         'mark_types': mark_types,
         'subjects_marks_data': subjects_marks_data,
+        'term_data': term_data
     })
 
 
@@ -440,11 +499,11 @@ def view_marks_by_marktype(request, class_id, teacher_id):
     })
 
 
-
-
 def edit_all_marks(request):
     if request.method == "POST":
         student_id = request.POST.get("student_id")
+        mark_type = request.POST.get("mark_type")
+        teacherid = request.POST.get("teacherid")
         student = Student.objects.get(stdnumber=student_id)
         new_marks = {}
 
@@ -456,15 +515,18 @@ def edit_all_marks(request):
             subject_id = subject.subjectid
             new_marks[subject_id] = request.POST.get("subject_" + str(subject_id))
 
-            mark = Mark.objects.get(class_name=schoolclass, student_name=student.childname, subject=subject)
-            mark.marks_obtained = new_marks[subject_id]
-            mark.save()
-
-        messages.success(request, "Marks edited successfully")
-        return HttpResponseRedirect("/teacher/his_class/view_marks/{}/{}/".format(schoolclass.classid, teacher.teacherid)) 
+            mark = Mark.objects.get(class_name=schoolclass, student_name=student.childname, subject=subject,mark_type=mark_type)
+            if mark:
+                mark.marks_obtained = new_marks[subject_id]
+                mark.save()
+                messages.success(request, "Marks edited successfully")
+                return HttpResponseRedirect("/teacher/his_class/view_mark/{}/{}/?marktype={}".format(schoolclass.classid, teacherid,mark_type)) 
+            else:
+                messages.success(request, "Some marks are empty")
+                return HttpResponseRedirect("/teacher/his_class/view_mark/{}/{}/?marktype={}".format(schoolclass.classid, teacherid,mark_type)) 
+        
 
     return JsonResponse({})
-
 
 
 def edit_teacher_profile(request, teacher_id):
@@ -489,32 +551,75 @@ def edit_teacher_profile(request, teacher_id):
     
     return render(request, 'teacher/profile.html', {'teacher': teacher})
 
-    
 
 # generation of a report card
+from collections import defaultdict
 
-def generate_report(request, student_id):
-   # Retrieve student and other data here
+def generate_report(request, student_id,position):
+    # Retrieve student and other data here
     student = Student.objects.get(pk=student_id)
-    
-    # Construct the URL for the image using STATIC_URL
-    image_url = request.build_absolute_uri(settings.STATIC_URL + 'images/rosannalogo.png')
 
+    # Get the class of the student
+    student_class = student.stdclass
+
+    # Fetch the subjects associated with the student's class
+    subjects = Subjects.objects.filter(schoolclasses=student_class)
+
+    student_count = Student.objects.filter(stdclass=student_class).count()
+
+    this_class = Schoolclasses.objects.get(pk=student.stdclass.classid)
+    classteacher = this_class.classteacher
+    # Get mark types except the first one
+    mark_types = Mark.MARK_TYPES[1:]
+
+    # Create a dictionary to store marks for each subject and mark type
+    student_marks = defaultdict(lambda: defaultdict(list))
+    subject_totals = defaultdict(float)  # Dictionary to store total marks for each subject
+
+    # Fetch marks for each subject and mark type
+    for subject in subjects:
+        for mark_type, _ in mark_types:
+            marks = Mark.objects.filter(
+                class_name=student_class,
+                student_name=student.childname,
+                subject=subject,
+                mark_type=mark_type,
+            )
+            student_marks[subject][mark_type] = marks
+
+            # Calculate the total mark for this subject and mark type
+            total_mark = sum([mark.marks_obtained for mark in marks])
+            subject_totals[subject] += total_mark  # Accumulate total marks for this subject
+
+    # Calculate the average total marks for each subject
+    subject_averages = {subject: int(total / len(mark_types)) for subject, total in subject_totals.items()}
+
+    # Calculate the total of subject averages
+    total_averages = sum(subject_averages.values())
+
+    # Calculate the final average
+    final_average = int(total_averages) / len(subjects)
     # Render the report template
     context = {
         "student": student,
-        "image_url": image_url,  # Pass the image URL to the template
+        "term_data": Term.objects.get(status=1),
+        "mark_types": mark_types,
+        "subjects": subjects,
+        "student_marks": student_marks,  # Pass the marks to the template
+        "subject_totals": subject_totals,  # Pass the subject totals to the template
+        "subject_averages": subject_averages,  # Pass the subject averages to the template
+        "total_averages": total_averages,
+        "final_average": final_average,
+        "position": position,
+        "student_count": student_count,
+        "classteacher": classteacher,
     }
-    html = render_to_string("teacher/reports/report_card.html", context)
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = 'filename="report.pdf"'
 
-    # Generate PDF using xhtml2pdf
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    
-    return response
+    return render(request, "teacher/reports/report_card.html", context)
 
 
 
+
+ 
 
 

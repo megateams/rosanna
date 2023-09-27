@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'frontend',
     'finance',
     'teacher',
+    'student',
 ]
 
 MIDDLEWARE = [

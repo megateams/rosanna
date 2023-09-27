@@ -1,0 +1,93 @@
+{% extends 'student/base.html' %}
+{% block  title %} Dashboard {% endblock title %}
+{% block  pagetitle %} Dashboard {% endblock pagetitle %}
+{% load static %}
+{% block  main %}
+<div class="inner-content">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="welcome-message shadow">
+                <h4 class="text-center "> Your Welcome our Dearest Student </h4>
+                <!-- <p>{% now 'd-m-Y' %}</p>    -->
+                
+            </div>
+            
+            <div class="d-flex align-items-center  ml-2" style="margin: 20px 0">
+                    <div class="current-term mr-3">
+                        <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+                    </div>
+                    <div class="current-year"> 
+                        <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+                    </div>
+            </div>
+            <hr>
+            <div class="header mt-4 ml-2">
+                <!-- <h5> STUDENT RESULTS </h5> -->
+                <div class="std_cards">
+                    <a href="/student/my_results/{{student.stdnumber}}/{{student.stdclass.classid}}" style="text-decoration: none;">
+                        <div class="card results_card shadow rounded">
+                            <div class="row">
+                                <div class="col-8 cbody pt-2" style="border-right: 5px solid red;">
+                                        <h5>My Results</h5>
+                                </div>
+                                <div class="col-4 icon">
+                                    <i class="fas fa-book-open    " style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="/student/paymenthistory/{{student.stdnumber}}" style="text-decoration: none;">
+                        <div class="card fees_card shadow rounded">
+                            <div class="row">
+                                <div class="col-8 cbody" style="border-right: 5px solid #d79430;">
+                                        <h5>Fees Payment History</h5>
+                                </div>
+                                <div class="col-4 icon">
+                                    
+                                    <i class="fas fa-money-bill   " style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+            <div class=" profile pt-4 pb-4 shadow bg-white">
+                <div>
+                    <h4>Student's Profile</h4>
+                    <hr>
+                </div>
+                <div class="student-image ">
+                    {% if student.profile_image %}
+                    <div class="image">
+                        <img class="img-thumbnail" src="{{ student.profile_image.url }}" style="height: 30vh;">
+                    </div>
+                    {% else %}
+                    <div class="image">
+                        <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                    </div>
+                    {% endif %}
+                    
+                </div>
+                <div class="student-details">
+                    <h4>{{student.childname}}</h4>
+                    <p>{{student.stdnumber}}</p>
+                    <p>@{{student.username}}</p>
+                </div>
+                <div>
+                    <!-- <button class="btn btn-md btn-outline-warning">More Details</button> -->
+                    <a href="/student/profile/{{student.stdnumber}}" class="btn btn-outline-primary btn-md">More Details <i class="fas fa-arrow-circle-right    "></i></a>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+    
+</div> 
+{% endblock main %} 

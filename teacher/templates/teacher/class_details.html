@@ -6,7 +6,7 @@
 
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex"  style="margin-bottom: 10px;">
+    <div class="header d-flex justify-content-between"  style="margin-bottom: 10px;">
         <div class="d-flex mr-4" >
             <h5 class="mr-3">Class:</h5>
             <h5>{{ schoolclass.classname }}</h5>
@@ -16,6 +16,16 @@
             {% for subject in subjects %}
                 <a href="/teacher/class_details/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}/{{ subject.subjectid }}" class="btn btn-sm btn-danger">Add {{ subject.subjectname }} Marks</a>
             {% endfor %}
+        </div>
+        <div class="current_session d-flex mt-2">
+                <div class="current-term mr-4">
+                    <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+                </div>
         </div>
     </div>
     <!-- <hr> -->

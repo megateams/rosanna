@@ -2,7 +2,7 @@
 {% block title %} Add Marks {% endblock title %}
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex">
+    <div class="header d-flex justify-content-between">
         <div class="class-btns" pr-5>
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">View Exam Results</a>
@@ -10,12 +10,26 @@
             <!-- <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Add Marks</a> -->
             
         </div>
+        <div class="current_session d-flex mt-2">
+                <div class="current-term mr-4">
+                    <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+                </div>
+        </div>
         
     </div>
+
     <div class="add-btns mt-2">
-        {% for subject in subjects %}
-        <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}?subject={{ subject.subjectid }}" class="btn btn-sm btn-warning m-1">Add {{ subject.subjectname }} Marks</a>
+        {% for mark_type in mark_types %}
+        <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}?marktype={{ mark_type.0 }}" class="btn btn-sm btn-warning m-1">Add {{ mark_type.0 }} Marks</a>
         {% endfor %}
+    </div>
+    <div class="header">
+        <h5 class="mb-2"><b> Add {{marktype}} Marks</b></h5>
     </div>
     
     
@@ -32,15 +46,15 @@
         </ul>
     {% endif %}
     <!-- table for adding student marks -->
-    {% if subject_id %}
+    {% if marktype %}
     <div class="table-section">
         <table class="table" id="">
             <thead>
                 <tr>
                     <th>Student Number</th>
                     <th>Student Name</th>
-                    {% for mark_type in mark_types %}
-                    <th>{{ mark_type.0 }}</th>
+                    {% for subject in subjects %}
+                    <th>{{ subject.subjectname }}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -49,18 +63,19 @@
                     <tr>
                         <td>{{ student.stdnumber }}</td>
                         <td>{{ student.childname }}</td>
-                        {% for mark_type in mark_types %}
+                        {% for subject in subjects %}
                             <td>
-                               <form action="" class="form" method="post">
+                                <form class="form mark-form" action="" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="studentname" value="{{student.childname}}">
-                                    <input type="hidden" name="marktype" value="{{mark_type.0}}">
-                                    <input type="hidden" name="subject" value="{{subject_id}}">
+                                    <input type="hidden" name="studentname" value="{{ student.childname }}">
+                                    <input type="hidden" name="marktype" value="{{ marktype }}">
+                                    <input type="hidden" name="subject" value="{{ subject.subjectid }}">
                                     <div class="d-flex">
                                         <input type="text" name="mark_obtained" style="height: 30px;" class="form-control">
-                                        <button  type="submit" class="btn btn-sm btn-success ml-2"><i class="fas fa-check    "></i></button>
+                                        <button type="submit" class="btn btn-sm btn-success ml-2"><i class="fas fa-check"></i></button>
                                     </div>
-                               </form>
+                                </form>
+                                <div class="mark-type-display"></div> <!-- Placeholder for displaying mark type -->
                             </td>
                         {% endfor %}
                     </tr>
@@ -68,6 +83,7 @@
             </tbody>
         </table>
     </div>
+    
     
     {% endif %}
 </div>
