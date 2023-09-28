@@ -2,15 +2,15 @@
 {% block title %} Add Marks {% endblock title %}
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex justify-content-between">
-        <div class="class-btns" pr-5>
+    <div class="row header">
+        <div class="col-md-8 class-btns" pr-5>
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">View Exam Results</a>
           
             <!-- <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Add Marks</a> -->
             
         </div>
-        <div class="current_session d-flex mt-2">
+        <div class="col-md-4 current_session d-flex mt-2">
                 <div class="current-term mr-4">
                     <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
                     <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>

@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8" style="font-size: 12px; height: 75vh; overflow: hidden; overflow-y: scroll;" >
+            <div class="col-md-8 " style="font-size: 12px; height: 75vh; overflow: hidden; overflow-y: scroll;" >
                 <!-- teachers -->
                 {% if messages %}
                     <ul class="messages">
@@ -67,110 +67,114 @@
                     {% endfor %}
                     </ul>
                 {% endif %}
-                <table class="table bg-white" border="1" id="table1">
-                    <h5>{{schoolclass.classname}} Teachers</h5>
-                    <thead class="bg-dark text-white">
-                        <tr>
-                            <th>Teacher ID</th>
-                            <th>Teacher name</th>
-                            <th>Email</th>
-                            <th>Subjects</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for teacher_in_class in teachers_in_class %}
-                        <tr>
-                            <td>{{ teacher_in_class.teacherid }}</td>
-                            <td>{{ teacher_in_class.teachernames }}</td>
-                            <td>{{ teacher_in_class.email }}</td>
-                            <td>
-                                {% for subject in teacher_subjects|get_item:teacher_in_class %}
-                                    {{ subject.subjectname }}{% if not forloop.last %}, {% endif %}
-                                {% empty %}
-                                    No subjects assigned
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <a href="#assign_subject{{ teacher_in_class.teacherid }}" data-toggle="modal"
-                                class="btn btn-sm btn-primary">Assign</a>
-                            </td>
-                        </tr>
-
-                        <!-- The modal -->
-                        <div class="modal fade" id="assign_subject{{teacher_in_class.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="assignSubjectsModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="assignSubjectsModalLabel">Assign Subjects to Teacher</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Add a form for assigning subjects to the teacher -->
-                                        <form method="post" action="/teacher/assign_subject/">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="teacher_id" value="{{ teacher_in_class.teacherid }}">
-                                            <input type="hidden" name="schoolclass" value="{{ schoolclass.classid }}">
-                                            <div class="form-group">
-                                                <label for="subjects">Select Subjects:</label><br>
-                                                {% for subject in teacher_in_class.subjects.all %}
-                                                <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
-                                                <label for="class-checkbox">{{subject.subjectname}}</label> <br>
-                                                {% endfor %}
-                                                
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-sm btn-primary">Assign</button>
-
-                                            </div>
-                                        </form>
+                <div class="table-section">
+                    <table class="table bg-white" border="1" id="table1">
+                        <h5>{{schoolclass.classname}} Teachers</h5>
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th>Teacher ID</th>
+                                <th>Teacher name</th>
+                                <th>Email</th>
+                                <th>Subjects</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher_in_class in teachers_in_class %}
+                            <tr>
+                                <td>{{ teacher_in_class.teacherid }}</td>
+                                <td>{{ teacher_in_class.teachernames }}</td>
+                                <td>{{ teacher_in_class.email }}</td>
+                                <td>
+                                    {% for subject in teacher_subjects|get_item:teacher_in_class %}
+                                        {{ subject.subjectname }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        No subjects assigned
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="#assign_subject{{ teacher_in_class.teacherid }}" data-toggle="modal"
+                                    class="btn btn-sm btn-primary">Assign</a>
+                                </td>
+                            </tr>
+    
+                            <!-- The modal -->
+                            <div class="modal fade" id="assign_subject{{teacher_in_class.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="assignSubjectsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="assignSubjectsModalLabel">Assign Subjects to Teacher</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Add a form for assigning subjects to the teacher -->
+                                            <form method="post" action="/teacher/assign_subject/">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="teacher_id" value="{{ teacher_in_class.teacherid }}">
+                                                <input type="hidden" name="schoolclass" value="{{ schoolclass.classid }}">
+                                                <div class="form-group">
+                                                    <label for="subjects">Select Subjects:</label><br>
+                                                    {% for subject in teacher_in_class.subjects.all %}
+                                                    <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
+                                                    <label for="class-checkbox">{{subject.subjectname}}</label> <br>
+                                                    {% endfor %}
+                                                    
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+    
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {% endfor %}
-                    </tbody>
-                    
-                </table>
+    
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
                 <div class="mt-2 mb-2">
                     <hr>
                 </div>
                 <!-- students -->
-                <table class="table bg-white" border="1" id="table">
-                    <h5>{{schoolclass.classname}} Students</h5>
-                    <thead class="bg-dark text-white">
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Student name</th>
-                            <th>Gender</th>
-                            <th>House</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                        {% for student in students %}
-                        <tr>
-                            <td>{{student.stdnumber}}</td>
-                            <td>{{student.childname}}</td>
-                            <td>
-                                {% if student.gender == 'm' %}
-                                    <p>Male</p>
-                                {% else %}
-                                    <p>Female</p>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{student.house}}
-                            </td>
-                        </tr>
-                        {% endfor %}
+                <div class="table-section">
+                    <table class="table bg-white" border="1" id="table">
+                        <h5>{{schoolclass.classname}} Students</h5>
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student name</th>
+                                <th>Gender</th>
+                                <th>House</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                            {% for student in students %}
+                            <tr>
+                                <td>{{student.stdnumber}}</td>
+                                <td>{{student.childname}}</td>
+                                <td>
+                                    {% if student.gender == 'm' %}
+                                        <p>Male</p>
+                                    {% else %}
+                                        <p>Female</p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{student.house}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
                         
-                    </tbody>
-                    
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
         
