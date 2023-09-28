@@ -25,8 +25,9 @@ urlpatterns = [
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
     path('students/', views.students_list, name='students_list'),
+    path('finance/students_by_class/<int:class_id>/', views.students_by_class, name='students_by_class'),
     path('assign_code/<str:stdnumber>/', views.assign_school_code, name='assign_school_code'),
-    
+    # path('assign_school_codes_by_class/<int:class_id>/', views.assign_school_codes_by_class, name='assign_school_codes_by_class'),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
     path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),

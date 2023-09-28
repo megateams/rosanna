@@ -208,13 +208,35 @@ def expenserecords(request):
 
 def students_list(request):
     # Retrieve a list of students from your database
-    studentslist = Student.objects.all()  
+    studentslist = Student.objects.all() 
+    classes = Schoolclasses.objects.all() 
 
     # Pass the list of students to the template for rendering
     context = {
         'studentslist': studentslist,
+        'classes': classes,
         }
     return render(request, 'finance/students.html', context)
+
+def students_by_class(request, class_id):
+    # Retrieve all available classes
+    classes = Schoolclasses.objects.all()
+
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch students in the selected class
+        students_in_class = Student.objects.filter(stdclass=selected_class.classid)
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        students_in_class = []
+
+    return render(request, 'finance/studentsbyclass.html', {
+        'studentslist': students_in_class,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
 
 def assign_school_code(request, stdnumber):
     student = get_object_or_404(Student, stdnumber=stdnumber)
@@ -235,8 +257,9 @@ def assign_school_code(request, stdnumber):
 
             return redirect("students_list")
 
-    # Handle the default case where there's no POST request or no school_code
-    # return render(request, 'finance/students.html', {'student': student, 'error_message': error_message})
+
+
+    
 
 # Create your views here.
 def financedashboard(request):
