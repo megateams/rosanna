@@ -18,6 +18,27 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
 
+def edit_teacher_class(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        classes = request.POST.getlist('classes')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.classes.set(classes)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
+    
+def edit_teacher_subject(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        subjects = request.POST.getlist('subjects')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.subjects.set(subjects)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
 
 def admincheckemail(request , email):
     try:
@@ -1074,24 +1095,42 @@ def admins_export_to_excel(request):
     wb = openpyxl.Workbook()
     ws = wb.active
 
+    # Define the fields to export (excluding 'profileimage' and 'password')
+    fields_to_export = [
+        'fullname', 'gender', 'address', 'contact', 'email',
+        'role', 'qualification', 'salary', 'bankaccnum'
+    ]
+
     # Write field names to the worksheet as headers
-    field_names = Administrators._meta.get_fields()
-    header_row = [field.name for field in field_names]
-    ws.append(header_row)
+    ws.append(fields_to_export)
+
+    # Set column widths for all columns
+    ws.column_dimensions['A'].width = 20
+    ws.column_dimensions['B'].width = 10
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 15
+    ws.column_dimensions['G'].width = 15
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 15
 
     # Write data to the worksheet
     for row_data in data:
-        ws.append(list(row_data.values()))
+        # Extract values only for the fields to export
+        row_values = [row_data[field] for field in fields_to_export]
+        ws.append(row_values)
 
     # Set the filename and content type for the response
-    filename = 'admins_data.xlsx'
+    filename = 'administrators_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     # Save the workbook to the response
     wb.save(response)
 
-    return response      
+    return response
+    
     
 def teachers(request):
     if request.method == 'POST':
