@@ -297,6 +297,9 @@
 }
 /* small screen */
 @media (max-width: 770px){
+    tbody td{
+        min-width: 90px;
+    }
     .main{
         height: 100vh;
     }
