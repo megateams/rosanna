@@ -3,11 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-<<<<<<< HEAD
-    path('teacher/', views.login, name="Teacher Login Page"),
-=======
     path('teacher/', views.login, name="teacherloginpage"),
->>>>>>> ca725275c4ed052a6556ab97caf30cee49a19f59
     path('teacher/login/', views.teacher_login, name="Teacher login"),
     path('teacher/logout/', views.logout_view, name='logout'),
     path('teacher/dashboard/', views.dashboard, name="Teacher Dashboard"),
