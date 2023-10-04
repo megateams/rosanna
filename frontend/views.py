@@ -12,6 +12,7 @@ from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from datetime import datetime,date
+from django.utils.timezone import now
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
@@ -743,8 +744,11 @@ def studentReg(request):
             new_stdnumber = 'STD001'
         default_password = "123456"
 
+        # Capture the current date
+        regdate = now().date()
 
-        regdate = request.POST.get('regdate')
+
+        # regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
         selected_class = Schoolclasses.objects.get(pk=class_id)
