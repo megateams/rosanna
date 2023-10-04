@@ -18,6 +18,27 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
 
+def edit_teacher_class(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        classes = request.POST.getlist('classes')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.classes.set(classes)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
+    
+def edit_teacher_subject(request):
+    if request.method == 'POST':
+        teacherid = request.POST.get('teacherid')
+        subjects = request.POST.getlist('subjects')
+        that_teacher = Teachers.objects.get(pk=teacherid)
+        that_teacher.subjects.set(subjects)
+        # Save the updated teacher
+        that_teacher.save()
+        messages.success(request,"Teacher classes edited successfully")
+        return redirect("Show Teacher", teacherId=teacherid)
 
 def admincheckemail(request , email):
     try:
@@ -315,6 +336,7 @@ def view_marks(request, class_id):
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
+    term_data = Term.objects.get(status=1)
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
     subjects_total_marks = {subject: 0 for subject in subjects}
@@ -326,15 +348,16 @@ def view_marks(request, class_id):
         for subject in subjects:
             total_marks = 0
             marks_count = 0
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject).exclude(mark_type='Test')
+
             for mark in marks:
                 total_marks += mark.marks_obtained
                 marks_count += 1
                 subjects_total_marks[subject] += mark.marks_obtained
                 subjects_marks_count[subject] += 1
 
-            average_marks = total_marks / marks_count if marks_count > 0 else 0
-            total_average_marks += average_marks
+            average_marks = total_marks / 3 if marks_count > 0 else 0
+            total_average_marks += int(average_marks)
             final_average = total_average_marks / subjects_count if marks_count > 0 else 0
               # Accumulate average marks for the student
             student_subjects_data.append({
@@ -342,15 +365,12 @@ def view_marks(request, class_id):
                 'total_marks': total_marks,
                 'average_marks': average_marks,
             })
-
         subjects_marks_data[student] = student_subjects_data
-        student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-        # Calculate average marks for each subject across all students
-        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                                for subject, total_marks in subjects_total_marks.items()}
-        # Sort the students based on their final average marks in descending order
-        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+
+    # Sort the students based on their total marks in descending order
+    students = sorted(students, key=lambda student: student.total_average_marks, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
@@ -807,7 +827,8 @@ def showclasses(request):
     classes = Schoolclasses.objects.all()
     # Retrieve the teacher names based on teacherid matching classname
     teachers = Teachers.objects.all()
-    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers})
+    all_subjects = Subjects.objects.all()
+    return render(request, 'frontend/academics/showclasses.html', {'classes': classes, 'teachers': teachers,'all_subjects':all_subjects})
 
 @login_required
 def addclasses(request):
@@ -870,38 +891,121 @@ def delete_class(request):
 # from django.http import HttpResponse
 
 def export_to_excel(request):
-    # Fetch all the data from the database
-    data = Student.objects.all().values_list(
-        'stdnumber', 'childname', 'gender', 'dob', 'address', 'house', 'stdclass', 'regdate', 'fathername',
-        'fcontact', 'foccupation', 'mothername', 'mcontact', 'moccupation', 'livingwith', 'guardianname', 'gcontact'
-    )
-    
-    # Create a new workbook and add a worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    
-    # Write field names to the worksheet as headers
-    field_names = [
-        'Student Number', 'Student Name', 'Gender', 'DOB', 'Address', 'House', 'Class', 'Reg Date',
-        "Father's name", "Father's Contact", 'Foccupation', "Mother's Name", "Mother's contact",
-        'Moccupation', 'Living with', "Guardian's Name", "Guardian's Contact"
-    ]
-    ws.append(field_names)
-    
-    # Write data to the worksheet
-    for row_data in data:
-        ws.append(row_data)
-        
-    # Set the filename and content type for the response
-    filename = 'exported_data.xlsx'
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    
-    # Save the workbook to the response
-    wb.save(response)
-    messages.success(request, 'Data successfully exported to Excel.')
-    return response
+    try:
+        students = Student.objects.all()
 
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        filename = 'students_data.xlsx'
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        # Save the workbook to the response
+        wb.save(response)
+        messages.success(request, 'Data successfully exported to Excel.')
+        return response
+
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
+    
+
+
+def export_students_by_class(request, class_id):
+    try:
+        selected_class = Schoolclasses.objects.get(pk=class_id)
+        students = Student.objects.filter(stdclass=selected_class)
+
+        # Create a new workbook and add a worksheet
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        # Write headers to the worksheet
+        headers = [
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
+            "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
+            "Guardian's Name", "Guardian's Contact"
+        ]
+        ws.append(headers)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 20
+        ws.column_dimensions['O'].width = 15
+        ws.column_dimensions['P'].width = 15
+        ws.column_dimensions['Q'].width = 20
+
+        # Write student data to the worksheet
+        for student in students:
+            ws.append([
+                student.stdnumber, student.childname, student.gender, student.dob,
+                student.address, student.house, student.stdclass.classname, student.regdate,
+                student.fathername, student.fcontact, student.foccupation,
+                student.mothername, student.mcontact, student.moccupation,
+                student.livingwith, student.guardianname, student.gcontact
+            ])
+
+        # Create an HttpResponse with the Excel file
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="students_in_{selected_class.classname}.xlsx"'
+        wb.save(response)
+        return response
+
+    except Schoolclasses.DoesNotExist:
+        return HttpResponse('Class not found', status=404)
 
 #Export the data in excel in the support staff model
 def support_staff_export_to_excel(request):
@@ -915,18 +1019,32 @@ def support_staff_export_to_excel(request):
         field_names = Supportstaff._meta.get_fields()
         header_row = [field.name for field in field_names]
         ws.append(header_row)
+
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 15
+        ws.column_dimensions['M'].width = 15
         
         #write data to the worksheet
         for row_data in data:
             ws.append(list(row_data.values()))
             
         # Set the filename and content type for the response
-        filename = 'exported_data.xlsx'
+        filename = 'supportstaff_data.xlsx'
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         #save the workboot to the response
         wb.save(response)
-        
         return response
 
 
@@ -934,20 +1052,29 @@ def support_staff_export_to_excel(request):
 def teacher_export_to_excel(request):
     #fetch all the data from the database
         data =Teachers.objects.all().values_list(
-            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','position','subjects', 'qualification'
+            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','subjects', 'qualification'
             )
         
         #create new workbook and add in a worksheet
         wb =openpyxl.Workbook()
         ws =wb.active
         
-        #write field names to the worksheet as headers
-        # field_names = Student._meta.get_fields()
-        # header_row = [field.name for field in field_names]
-        # ws.append(header_row)
-        
         #write data to the worksheet
-        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Position','Subjects', 'Qualification'])
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Subjects', 'Qualification'])
+        
+        # Set column widths for all columns
+        ws.column_dimensions['A'].width = 15
+        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['C'].width = 10
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['G'].width = 15
+        ws.column_dimensions['H'].width = 20
+        ws.column_dimensions['I'].width = 15
+        ws.column_dimensions['J'].width = 15
+        ws.column_dimensions['K'].width = 20
+
         for row_data in data:
             ws.append(row_data)
             
@@ -960,8 +1087,50 @@ def teacher_export_to_excel(request):
         
         return response
 
-        
-    # return render(request , 'frontend/academics/showclasses.html',{'classes' : Schoolclasses.objects.all()})
+def admins_export_to_excel(request):
+    # Fetch all the data from the database
+    data = Administrators.objects.all().values()
+
+    # Create a new workbook and add a worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    # Define the fields to export (excluding 'profileimage' and 'password')
+    fields_to_export = [
+        'fullname', 'gender', 'address', 'contact', 'email',
+        'role', 'qualification', 'salary', 'bankaccnum'
+    ]
+
+    # Write field names to the worksheet as headers
+    ws.append(fields_to_export)
+
+    # Set column widths for all columns
+    ws.column_dimensions['A'].width = 20
+    ws.column_dimensions['B'].width = 10
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 15
+    ws.column_dimensions['G'].width = 15
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 15
+
+    # Write data to the worksheet
+    for row_data in data:
+        # Extract values only for the fields to export
+        row_values = [row_data[field] for field in fields_to_export]
+        ws.append(row_values)
+
+    # Set the filename and content type for the response
+    filename = 'administrators_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response
+    
     
 def teachers(request):
     if request.method == 'POST':
@@ -1072,6 +1241,27 @@ def edit_teacher(request):
         messages.success(request,"Teacher edited successfully")
         return redirect("Show Teacher", teacherId=teacherid)
 
+def edit_class_subjects(request):
+    # Get all available subjects
+    all_subjects = Subjects.objects.all()
+
+    if request.method == 'POST':
+        # Get the list of selected subjects from the POST request
+        classid = request.POST.get("classid")
+        selected_subjects = request.POST.getlist('subjects[]')
+
+        # Update the subjects for the class
+        class_instance = get_object_or_404(Schoolclasses, pk=classid)
+        class_instance.subjects.set(selected_subjects)
+
+        # Save the updated class
+        class_instance.save()
+
+        return redirect('showclasses')
+
+    # Handle GET requests or other cases if needed
+    return render(request, 'frontend/academics/showclasses.html', {'class_instance': class_instance, 'all_subjects': all_subjects})
+
 @login_required
 def supportstaffList(request):
     # Retrieve all support staff data from the database
@@ -1154,14 +1344,14 @@ def supportstaffpaymentsList(request):
 
 def export_subjects_to_excel(request):
     data = Subjects.objects.all().values_list(
-        'subjectid', 'subjectname', 'subjecthead', 'classlevel'
+        'subjectid', 'subjectname', 'subjecthead'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Subject ID', 'Subject Name', 'Subject Head', 'Class Level'
+        'Subject ID', 'Subject Name', 'Subject Head'
     ])
 
     for row_data in data:
@@ -1171,7 +1361,6 @@ def export_subjects_to_excel(request):
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 20
     ws.column_dimensions['C'].width = 15
-    ws.column_dimensions['D'].width = 15
 
     filename = 'subjects.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -1182,14 +1371,14 @@ def export_subjects_to_excel(request):
 
 def export_classes_to_excel(request):
     data = Schoolclasses.objects.all().values_list(
-        'classname', 'subjects','class_level', 'classteacher'
+        'classname', 'subjects', 'classteacher'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
     ws.append([
-        'Class Name', 'Subjects', 'Class Level', 'Class Teacher'
+        'Class Name', 'Subjects', 'Class Teacher'
     ])
 
     for row_data in data:
@@ -1198,7 +1387,6 @@ def export_classes_to_excel(request):
     # Set column widths
     ws.column_dimensions['A'].width = 15
     ws.column_dimensions['B'].width = 30
-    ws.column_dimensions['C'].width = 15
     ws.column_dimensions['D'].width = 15
 
     filename = 'classes.xlsx'

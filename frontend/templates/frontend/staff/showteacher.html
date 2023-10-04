@@ -9,13 +9,13 @@
     <div class="btns">
         <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">Teachers list</a>
     </div>
-    <div class="student-details mt-3">
+    <div class="student-details mt-3 p-2">
         <div class="row">
             <div class="col-md-5">
                 <!-- image -->
                 {% if teacher.profile_image %}
                     <div class="image">
-                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 60vh;">
+                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}">
                     </div>
                     {% else %}
                     <div class="image">
@@ -23,15 +23,7 @@
                     </div>
                 {% endif %}
                 <a href="#edit_image{{teacher.teacherid}}" class="edit-image btn" data-toggle="modal">
-                    <i class="fas fa-camera   p-3" style="
-                        font-size: 4rem;
-                        border-radius: 50%;
-                        position: absolute;
-                        top: 280;
-                        left: 340;
-                        color: #ffffff;
-                        background: #f00;
-                        "></i>
+                    <i class="fas fa-camera   p-3 image_icon"></i>
                 </a>
     
                 <!-- edit image -->
@@ -83,7 +75,7 @@
                 {% endfor %}
                 </ul>
                 {% endif %}
-                <div class=" row teacher-data">
+                <div class=" row teacher-data p-2">
                     <div class="col-md-6">
                         <div class="d-flex mb-3">
                             <h6><b>Teacher's ID: </b></h6>
@@ -143,13 +135,70 @@
                         <div class="d-flex mb-3">
                             <h6><b>Username: </b></h6>
                             <p class="ml-2">{{teacher.username}}</p>
-                        </div>
-                           
+                        </div> 
                     </div>
                         <!-- btns -->
-                        <div class="btn ">
+                        <div class="btn">
                             <a href="#edit{{teacher.teacherid}}" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-edit    "></i> Edit teacher</a>
                             <a href="#delete{{teacher.teacherid}}" class="btn btn-sm btn-danger" data-toggle="modal"><i class="fas fa-trash    "></i> Delete</a>
+                            <a href="#edit_classes{{teacher.teacherid}}" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-edit    "></i> Edit Teacher Classes</a>
+                            <a href="#edit_subjects{{teacher.teacherid}}" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-edit    "></i> Edit Teacher Subjects</a>
+                        </div>
+
+                        <div class="modal fade" id="edit_classes{{teacher.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit {{teacher.teachernames}} Classes.</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/edit_teacher_class/" method="post">
+                                            {% csrf_token%}
+                                            <input type="hidden" name="teacherid" value="{{teacher.teacherid}}">
+                                            <div class="form-group col-md-6" >
+                                                <label for="class-checkbox">Attached Classes:</label><br>
+                                                {% for class in classes %}
+                                                    <input type="checkbox" name="classes" id="" value="{{class.classid}}">
+                                                    <label for="class-checkbox">{{class.classname}}</label>
+                                                    <br>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="edit_subjects{{teacher.teacherid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit {{teacher.teachernames}} Subjects.</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/edit_teacher_subject/" method="post">
+                                            {% csrf_token%}
+                                            <input type="hidden" name="teacherid" value="{{teacher.teacherid}}">
+                                            <div class="form-group col-md-6">
+                                                <label for="class-checkbox">Attached Subjects:</label><br>
+                                                {% for subject in subjects %}
+                                                    <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
+                                                    <label for="class-checkbox">{{subject.subjectname}}</label>
+                                                    <br>
+                                                {% endfor %}  
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
     
                         <!-- modals -->
@@ -195,9 +244,6 @@
                                         <div class="container-fluid">
                                             <form action="/edit_teacher/" method="post">
                                                 {% csrf_token %}
-                                        
-                                                
-                                        
                                                 <!-- student info section -->
                                                 <div class="teacher-info">
                                                     <input type="hidden" name="teacherid" value="{{teacher.teacherid}}">
@@ -295,31 +341,10 @@
                                                     <!-- position -->
                                                     
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label for="class-checkbox">Attached Classes:</label><br>
-                                                        {% for class in classes %}
-                                                            <input type="checkbox" name="classes" id="" value="{{class.classid}}">
-                                                            <label for="class-checkbox">{{class.classname}}</label>
-                                                            <br>
-                                                        {% endfor %}  
-                                                    </div>
-                                                    <!-- Subject -->
-                                                    <div class="form-group col-md-6">
-                                                        <label for="class-checkbox">Attached Subjects:</label><br>
-                                                        {% for subject in subjects %}
-                                                            <input type="checkbox" name="subjects" id="" value="{{subject.subjectid}}">
-                                                            <label for="class-checkbox">{{subject.subjectname}}</label>
-                                                            <br>
-                                                        {% endfor %}  
-                                                    </div>
-                                                </div>
-                                                
                                         
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                    
                                                 </div>
                                             </form>
                                         </div>

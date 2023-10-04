@@ -96,10 +96,11 @@ class Student(models.Model):
 
     guardianname = models.CharField(max_length=10 , verbose_name='Guardian Names' , blank=True)
     gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
+    schoolpaycode = models.CharField(max_length=10 , verbose_name="School Pay Code" , blank=True)
 
     Display_Fields = [
         'stdnumber','childname' ,'stdclass', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
-    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password'
+    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password', 'schoolpaycode'
     ]
 
 class Supportstaff(models.Model):
@@ -227,6 +228,14 @@ class Administrators(models.Model):
         'fullname' , 'gender' , 'address' , 'contact' , 'email' , 'profileimage' , 'role' , 'qualification' , 
         'salary' , 'bankaccnum'
     ]
+
+class TeacherSubject(models.Model):
+    teacher = models.ForeignKey('Teachers', on_delete=models.CASCADE)
+    subjects = models.ManyToManyField('Subjects')
+    schoolclass = models.ForeignKey('Schoolclasses', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.teacher} - {', '.join([str(subject) for subject in self.subjects.all()])} ({self.schoolclass})"
 
 
 

@@ -11,13 +11,18 @@
     <div class="btns">
         <a href="/studentslist" class="btn btn-sm add-btn text-white mb-2 ml-3">Students list</a>
     </div>
-<div class="student-details mt-3">
+<div class="student-details mt-3 p-3">
     <div class="row">
         <div class="col-md-5">
             <!-- image -->
             {% if student.profile_image %}
+<<<<<<< HEAD
                 <div class="profile_image">
                     <img class="img-thumbnail" src="{{ student.profile_image.url }}" style="">
+=======
+                <div class="image">
+                    <img class="img-thumbnail" src="{{ student.profile_image.url }}" >
+>>>>>>> f47de0e687157bd458f4072e99937bd1bd6278b0
                 </div>
                 {% else %}
                 <div class="profile_image">
@@ -25,15 +30,7 @@
                 </div>
             {% endif %}
             <a href="#edit_image{{student.stdnumber}}" class="edit-image btn" data-toggle="modal">
-                <i class="fas fa-camera   p-3" style="
-                    font-size: 4rem;
-                    border-radius: 50%;
-                    position: absolute;
-                    top: 280;
-                    left: 340;
-                    color: #ffffff;
-                    background: #f00;
-                    "></i>
+                <i class="fas fa-camera   p-3 image_icon"></i>
             </a>
 
             <!-- edit image -->
@@ -70,7 +67,7 @@
         </div>
         <div class="col-md-7">
             <!-- student data -->
-            <div class=" row student-data">
+            <div class=" row student-data p-3">
                 {% if messages %}
                     <ul class="messages">
                         <script>
@@ -160,8 +157,8 @@
                             <p>{{ student.mothername }}</p>
                         </div>
                         <div class="d-flex ">
-                            <h6 class="mr-3"><b>Mother's Contact: </b></h6>
-                            <p>{{ student.mcontact }}</p>
+                            <h6 class="mr-3" style="margin-left: -20px;"><b>Mother's Contact: </b></h6>
+                            <p style="margin-left: -10px;">{{ student.mcontact }}</p>
                         </div>
                     </div>
                     <div class="d-flex">

@@ -4,20 +4,32 @@
 {% block  main %} 
 
 <!-- inner-content -->
+<<<<<<< HEAD
 <div class="inner-content ">
     <nav class="navbar navbar-light bg-white settings_links ">
         <ul class="d-flex" style="list-style-type: none;">
             <li class="nav-item active">
                 <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+=======
+<div class="inner-content">
+    <nav class=" ml-2 mt-2">
+        <ul class="d-flex"style="list-style-type: none;" >
+            <li class="nav-item active" >
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+>>>>>>> f47de0e687157bd458f4072e99937bd1bd6278b0
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
             </li>
             
         </ul>
     </nav>
     <!-- current term -->
+<<<<<<< HEAD
     <div class="row ml-2 mt-2 align-items-center">
+=======
+    <div class="row ml-2 align-items-center">
+>>>>>>> f47de0e687157bd458f4072e99937bd1bd6278b0
         {% for data in term_data %}
         <div class="current-term mr-3">
             <a class=" btn-md btn-primary text-white p-2">Current Term: </a>
@@ -52,7 +64,7 @@
         <div class="col-md-8">
             <form action="" class=" form shadow mt-4 rounded p-4 " method="post">
                 {% csrf_token %}
-    
+                <h5 class="text-center">Add Term</h5>
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">Select Term:</label>

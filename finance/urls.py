@@ -24,11 +24,18 @@ urlpatterns = [
     path('finance/', views.financelogin , name='financeloginpage'),
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
+    path('students/', views.students_list, name='students_list'),
+    path('assign_code/<str:stdnumber>/', views.assign_school_code, name='assign_school_code'),
+    
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
     path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     path('delete_fee/', views.delete_fee, name='delete_fee'),
     path('edit_std_fees/', views.edit_std_fees, name='edit_std_fees'),
+    path('feesclearedstudents/', views.feesclearedstudents, name='Cleared Students List'),
+    path('feesclearedstudents_byclass/<int:class_id>/', views.feesclearedstudents_byclass, name='Cleared Students by Class'),
+    path('generate_clearance/<str:stdnumber>/', views.generate_clearance, name='Generate Clearance'),
+    path('clearance_card/<str:stdnumber>/', views.clearance_card, name='Clearance Card'),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
@@ -66,9 +73,11 @@ urlpatterns = [
 
     # path('export_excel/', views.export_to_excel, name='export_excel'),
     path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
+    path('export-fees-by-class/<int:class_id>/', views.export_fees_by_class, name='export_fees_by_class'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
     path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
     path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
     path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
+    path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
 ]

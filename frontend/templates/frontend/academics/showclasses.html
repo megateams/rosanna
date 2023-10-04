@@ -45,7 +45,7 @@
                             <li>{{ subject.subjectname }}</li> <span class="mr-2"> , </span>
                             {% endfor %}
                         </ul>
-                        <a href="" data-toggle="modal" class="text-primary mr-3"> <i class="fas fa-edit    "></i></a>
+                        <a href="#editSubjectsModal{{ class_obj.classid }}" data-toggle="modal" class="text-primary mr-3"> <i class="fas fa-edit    "></i>Edit subjects</a>
                     </td>
                     <!-- <td>{{class_obj.class_level}}</td> -->
                     <td>
@@ -55,6 +55,40 @@
                         <a href="#edit{{class_obj.classid}}" data-toggle="modal" class="text-primary mr-3"> <i class="fas fa-edit    "></i></a>
                         <a href="#delete{{class_obj.classid}}" data-toggle="modal" class="text-danger"> <i class="fas fa-trash    "></i></a>
                     </td>
+
+                    <!-- edit subject modal -->
+                    <!-- edit subject modal -->
+                    <div class="modal fade" id="editSubjectsModal{{ class_obj.classid }}" tabindex="-1" role="dialog" aria-labelledby="editSubjectsModalLabel{{ class_instance.classid }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editSubjectsModalLabel{{ class_instance.classid }}">Edit Subjects for {{ class_instance.classname }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Include a form for editing selected subjects here -->
+                                    <form method="post" action="/edit-class-subjects/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="classid" value="{{class_obj.classid}}">
+                                        <!-- Subject checkboxes -->
+                                        <div class="form-group col-md-6">
+                                            
+                                            <label for="class-checkbox">Attached Subjects:</label><br>
+                                            {% for subject in all_subjects %}
+                                                <input type="checkbox" name="subjects[]" id="subject{{ subject.subjectid }}" value="{{ subject.subjectid }}" {% if subject in class_instance.subjects.all %}checked{% endif %}>
+                                                <label for="subject{{ subject.subjectid }}">{{ subject.subjectname }}</label>
+                                                <br>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- edit class modal -->
                     <div class="modal fade" id="edit{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
