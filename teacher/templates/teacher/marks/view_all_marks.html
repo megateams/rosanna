@@ -5,20 +5,22 @@
 
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex" style="margin-bottom: 10px;">
+    <div class="header d-flex" style="margin-bottom: 5px;">
         <div class="class-btns">
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
             <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_types.0.0 }}" class="btn btn-sm btn-danger">Add Marks</a>
         </div>
     </div>
-    {% for mark_type in mark_types %}
+    <div class="ml-2">
+        {% for mark_type in mark_types %}
             <a href="/teacher/his_class/view_mark/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_type.0 }}"
             class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
                 {{ mark_type.1 }} Results
             </a>
     {% endfor %}
-    <div class="header">
+    </div>
+    <div class="ml-2">
         <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
     </div>
 

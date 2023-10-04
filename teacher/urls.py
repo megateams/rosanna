@@ -12,6 +12,8 @@ urlpatterns = [
 
     # marks urls
     path('teacher/his_class/addmarks/<class_id>/<teacher_id>', views.addmarks, name="Add Marks"),
+    path('submit_marks/<class_id>/<teacher_id>/', views.submit_marks, name="Submit Marks"),
+    path('submit_subject_marks/<class_id>/<teacher_id>/<subject_id>/', views.submit_subject_marks, name="Submit Marks"),
     path('teacher/his_class/view_marks/<class_id>/<teacher_id>', views.view_marks, name="View Marks"),
     path('teacher/his_class/view_mark/<int:class_id>/<str:teacher_id>/', views.view_marks_by_marktype, name='view_marks_by_marktype'),
     path('teacher/class_marks/<int:class_id>/<str:teacher_id>/', views.class_marks_by_marktype, name='class_marks_by_marktype'),

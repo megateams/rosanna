@@ -10,6 +10,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
     <style>
         body{
             margin: 10px;
@@ -19,7 +20,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 5px solid #251a1b;
+            border-bottom: 3px solid #251a1b;
         }
         .inner-content
         {
@@ -50,8 +51,9 @@
     </style>
 </head>
   <body>
-
-    <div class="inner-content">
+    <a href="#" class="btn btn-success btn-sm print mt-3 ml-4"><i class="fas fa-print    "></i> Print Clearance Card</a>
+    <div class="inner-content m-4">
+        
         <div class="header">
             <div class="mybadge">
                 {% get_school_info as school_info %}
@@ -84,12 +86,67 @@
             <h4 class="text-uppercase text-center"> <b><u>Fees clearance card</u></b></h4>
         </div>
         <div class="card-section d-flex">
-            <div id="print_section" class="p-5">
-                <!-- <h1>Clearance Card</h1> -->
-                <h2>Student Information</h2>
-                <h5><b>Student Number:</b> {{ student.stdnumber.stdnumber }}</h5>
-                <h5><b>Student Name: </b>{{ student.stdname }}</h5>
-                <h5><b>Student Class:</b> {{ student.studentclass }}</h5>
+            <div id="print_section" class="p-2 pl-5 pr-5">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-7">
+                                <h5>Student Number: </h5>
+                            </div>
+                            <div class="col-5" style="border-bottom: 2px dashed #000;">
+                                <h6>{{ student.stdnumber.stdnumber }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-7">
+                                <h5>School Pay code: </h5>
+                            </div>
+                            <div class="col-5" style="border-bottom: 2px dashed #000;">
+                                <h6></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <h5>Student Name: </h5>
+                    </div>
+                    <div class="col-8" style="border-bottom: 2px dashed #000;">
+                        <h4 class="text-uppercase">{{ student.stdname }}</h4>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <h5>Class: </h5>
+                    </div>
+                    <div class="col-8" style="border-bottom: 2px dashed #000;">
+                        <h4 class="text-uppercase">{{ student.studentclass }}</h4>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-5">
+                                <h5>Issue Date: </h5>
+                            </div>
+                            <div class="col-7" style="border-bottom: 2px dashed #000;">
+                                <p class="">{% now 'l. d M, Y' %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <h5>Expiry Date: </h5>
+                            </div>
+                            <div class="col-6" style="border-bottom: 2px dashed #000;">
+                                <p class="">{{term_data.end_date}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="student-info p-2">
                 {% if student_img.profile_image %}
@@ -104,12 +161,15 @@
             </div>
             
         </div>
+        <div class="footer text-center p-2" style="border-top: 2px solid #000;">
+            <h5><b>NB: </b>THIS CARD IS INVALID WITHOUT BURSAR STAMP</h5>
+        </div>
         
     
         <!-- Include additional clearance details and styling here -->
     
         <!-- Add a button or link to print the clearance card -->
-        <a href="#" class="btn btn-primary print ml-5 mb-3">Print Clearance Card</a>
+        
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

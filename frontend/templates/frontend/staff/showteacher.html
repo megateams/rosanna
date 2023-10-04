@@ -9,13 +9,13 @@
     <div class="btns">
         <a href="/teacherlist" class="btn btn-sm add-btn text-white mb-2 ml-3">Teachers list</a>
     </div>
-    <div class="student-details mt-3">
+    <div class="student-details mt-3 p-2">
         <div class="row">
             <div class="col-md-5">
                 <!-- image -->
                 {% if teacher.profile_image %}
                     <div class="image">
-                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}" style="height: 60vh;">
+                        <img class="img-thumbnail" src="{{ teacher.profile_image.url }}">
                     </div>
                     {% else %}
                     <div class="image">
@@ -23,15 +23,7 @@
                     </div>
                 {% endif %}
                 <a href="#edit_image{{teacher.teacherid}}" class="edit-image btn" data-toggle="modal">
-                    <i class="fas fa-camera   p-3" style="
-                        font-size: 4rem;
-                        border-radius: 50%;
-                        position: absolute;
-                        top: 280;
-                        left: 340;
-                        color: #ffffff;
-                        background: #f00;
-                        "></i>
+                    <i class="fas fa-camera   p-3 image_icon"></i>
                 </a>
     
                 <!-- edit image -->
@@ -83,7 +75,7 @@
                 {% endfor %}
                 </ul>
                 {% endif %}
-                <div class=" row teacher-data">
+                <div class=" row teacher-data p-2">
                     <div class="col-md-6">
                         <div class="d-flex mb-3">
                             <h6><b>Teacher's ID: </b></h6>
@@ -143,11 +135,10 @@
                         <div class="d-flex mb-3">
                             <h6><b>Username: </b></h6>
                             <p class="ml-2">{{teacher.username}}</p>
-                        </div>
-                           
+                        </div> 
                     </div>
                         <!-- btns -->
-                        <div class="btn ">
+                        <div class="btn">
                             <a href="#edit{{teacher.teacherid}}" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-edit    "></i> Edit teacher</a>
                             <a href="#delete{{teacher.teacherid}}" class="btn btn-sm btn-danger" data-toggle="modal"><i class="fas fa-trash    "></i> Delete</a>
                             <a href="#edit_classes{{teacher.teacherid}}" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-edit    "></i> Edit Teacher Classes</a>
