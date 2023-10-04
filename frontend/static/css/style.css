@@ -10,10 +10,7 @@
 .main{
     display: flex;
     width: 100%;
-    position: relative;
-    /* display: none; */
-    height: 100vh;
-    overflow: hidden;
+    /* position: fixed; */
 
 }
 .sidebar{
@@ -29,7 +26,6 @@
 
 .inner-content{
     padding: 10px;
-    
     height: 80vh;
     overflow: hidden;
     overflow-y: scroll;
@@ -124,11 +120,9 @@
 }
 .inner-content .table-section
 {
-    /* padding: 3px 15px; */
+    padding: 3px 15px;
     /* background-color: #fff; */
     border-radius: 10px;
-    /* display: none; */
-    padding: 0 -10px;
 }
 .table-section .table thead
 {
@@ -174,9 +168,6 @@
     padding-right: 50px;
     padding-top: 10px;
     color: #fff;
-    border-left: 3px solid #fff;
-    /* margin-top: -10px; */
-    /* margin-bottom: 10px; */
     
 }
 
@@ -186,11 +177,17 @@
     color: #fff;
     border-radius: 5px;
     /* display: none; */
-    box-shadow: 1px 1px 1px 1px rgb(64, 43, 43);
+    box-shadow: 2px 2px 2px 2px rgb(64, 43, 43);
 }
 
 .cards .card:hover{
     background-color: rgb(95,86,86);
+}
+
+.card .cbody
+{
+    border-right: 3px solid #fff;
+    margin-bottom: 10px;
 }
 
 .cards .session_card{
@@ -279,12 +276,6 @@
     height: 10px;
 }
 
-.profile_image img{
-    width: 100%;
-    height: 60vh;
-    /* display: none; */
-}
-
 .list-header{
     display: flex;
 }
@@ -304,7 +295,6 @@
     color: #ffffff;
     background: #f00;
 }
-
 /* small screen */
 @media (max-width: 770px){
     tbody td{
@@ -372,11 +362,10 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         /* display: none; */
-        margin: 0 -15px;
     }
 
     .cards .card{
-        height: 15vh;
+        height: 13vh;
         padding: 10px 5px;
         margin: 10px 7px;
         box-shadow: 1px 1px 1px 1px black;
@@ -388,80 +377,10 @@
         justify-content: center;
         padding: 15px 5px;
         color: #fff;
-        margin: 0;
-        margin-left: -10px;
     }
 
     .current_date{
         display: none;
-    }
-
-    .table-section{
-        /* margin-left: -20px; */
-        /* padding: 30px; */
-        width: 100%;
-        /* overflow-x: scroll; */
-        /* background: #fff; */
-        padding-top: 20px;
-    }
-
-    .dataTables_filter{
-        /* display: none; */
-        margin-left: 180px;
-        margin-right: -170px;
-        position: fixed;
-        z-index: 1;
-        /* top: 0; */
-    }
-
-    .dataTables_filter input{
-        width: 120px;
-    }
-
-    .dataTables_length{
-        margin-left: 10px;
-        /* margin-left: -210px; */
-        margin-bottom: -50px;
-        position: fixed;
-        /* z-index: 1; */
-        /* top: 0; */
-    }
-    .current-year, .current-term{
-        /* display: none; */
-        font-size: 13px;
-    }
-
-    .page_link{
-        display: none;
-    }
-
-    .inner-content{
-        padding-top: 20px;
-    }
-
-    .dataTables_wrapper {
-        overflow-y: scroll;
-        /* max-height: 100px; Adjust the maximum height as needed */
-    }
-
-    #table{
-        margin-top: 50px;
-    }
-
-    .inner-content form{
-        /* display: none; */
-        margin-right: 10px;
-        margin-top: 10px;
-    }
-
-    .profile_image img{
-        /* display: none; */
-        height: 30vh;
-    }
-
-    .student-data
-    {
-        padding: 25px;
     }
 
     .inner-content{

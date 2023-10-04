@@ -16,16 +16,11 @@
         <div class="col-md-5">
             <!-- image -->
             {% if student.profile_image %}
-<<<<<<< HEAD
-                <div class="profile_image">
-                    <img class="img-thumbnail" src="{{ student.profile_image.url }}" style="">
-=======
                 <div class="image">
                     <img class="img-thumbnail" src="{{ student.profile_image.url }}" >
->>>>>>> f47de0e687157bd458f4072e99937bd1bd6278b0
                 </div>
                 {% else %}
-                <div class="profile_image">
+                <div class="image">
                     <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
                 </div>
             {% endif %}

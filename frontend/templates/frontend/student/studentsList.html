@@ -6,10 +6,11 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <div class="btns" style="margin-left: -18px;">
-        <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
-        <a href="/export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
-    <div class="d-flex">
+    <div class="list-header">
+        <div class="btns">
+            <a href="/addstudent" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Student</a>
+            <a href="/export-excel" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        </div>
         <div class="btns mb-3 ml-4">
             <a href="/studentslist/" class="btn btn-sm btn-primary">View All</a>
             {% for class in classes %}
@@ -17,7 +18,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="table-section ml-3" style="font-size: 14px;"> 
+    <div class="table-section" style="font-size: 14px;"> 
         {% if messages %}
             <ul class="messages">
                 <script>

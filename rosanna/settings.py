@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
-import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-ho*_i16!y#ql3!v%43tp8=8@ovb*!yji^r!t3m*p1yeh@=u9ar
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -92,9 +91,6 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': 'localhost',             
     }
-    # "default":dj_database_url.parse(os.environ.get("DATABASE_URL"))
-
-
 }
 # DATABASES = {
 #     'default': {

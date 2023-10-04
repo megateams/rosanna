@@ -232,7 +232,7 @@
 
         <!-- sidebar -->
         <!-- content -->
-        <div class="content bg-white">
+        <div class="content bg-light">
 
             <!-- navbar -->
             <nav class="navbar bg-light shadow align-items-center">
@@ -243,7 +243,7 @@
                     <a class="btn btn-sm btn-primary text-white p-2">Current Date: </a>
                     <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
-                <div class="right d-flex align-items-center mt-2">
+                <div class="right d-flex al">
                     {% if user.is_authenticated %}
                     <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ user.username }}</p>
                     {% endif %}
@@ -255,7 +255,7 @@
             <!-- navbar -->
 
             <!-- page header -->
-            <div class="m-2 mt-3 page_link">
+            <div class="m-2 mt-3">
                 <a href="/dashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
                 <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
             </div>
