@@ -85,14 +85,14 @@ WSGI_APPLICATION = 'rosanna.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # connecting to mysql database
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'rosanna',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'HOST': 'localhost',             
-    # }
-    "default":dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rosanna',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',             
+    }
+    # "default":dj_database_url.parse(os.environ.get("DATABASE_URL"))
 
 
 }
