@@ -689,16 +689,21 @@ def financeteacherpaymentsList(request):
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
     supportstaffdata = Supportstaff.objects.all()
+    
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
         supportstaffid = request.POST.get('support-staffid')
         supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
         staffnames = supportstaffname.supportstaffnames
-        paymentdate = request.POST.get('paymentdate')
+        # paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amountpaid = float(request.POST.get('amountpaid'))
         term = term_data.current_term
         year = term_data.current_year
+
+        # Capture the current date
+        current_date = date.today()
+
 
         if amountpaid > float(supportstaffname.salary):
             messages.error(request , 'Payment not Added')
@@ -710,7 +715,7 @@ def financeaddsupportstaffpayments(request):
             Supportstaffpayment.objects.create(
                 supportstaffid = supportstaffid ,
                 staffname = staffnames ,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
@@ -726,7 +731,7 @@ def financeaddsupportstaffpayments(request):
             Supportstaffpayment.objects.create(
                 supportstaffid = supportstaffid ,
                 staffname = staffnames ,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
@@ -748,7 +753,7 @@ def financeaddsupportstaffpayments(request):
                 Supportstaffpayment.objects.create(
                     supportstaffid = supportstaffid ,
                     staffname = staffnames ,
-                    paymentdate = paymentdate,
+                    paymentdate = current_date,
                     salary = salary,
                     amountpaid = amountpaid,
                     accumulatedamount = accumulatedpayment,
