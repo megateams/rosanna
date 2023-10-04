@@ -8,6 +8,8 @@ import os
 from xhtml2pdf import pisa
 from django.conf import settings
 from django.db.models import Avg
+from frontend.views import encryptpassword
+import bcrypt
 # Create your views here.
 
 # view for the login page
@@ -28,7 +30,7 @@ def teacher_login(request):
             except Teachers.DoesNotExist:
                 teacher = None
 
-        if teacher and teacher.password == password:
+        if teacher and teacher.password == str(encryptpassword(password)):
             # If the credentials are valid, redirect to the teacher dashboard
             request.session['teacher_id'] = teacher.teacherid  # Save the teacher's ID in the session
             return redirect('Teacher Dashboard')  # Replace 'dashboard' with the name/url of your teacher dashboard view
@@ -36,7 +38,11 @@ def teacher_login(request):
         else:
             # If the credentials are invalid, display an error message
             messages.error(request, 'Invalid username/email or password.')
+<<<<<<< HEAD
             return redirect('Teacher Login Page')
+=======
+            return redirect('teacherloginpage')
+>>>>>>> ca725275c4ed052a6556ab97caf30cee49a19f59
     
 
 def logout_view(request):
@@ -45,13 +51,21 @@ def logout_view(request):
     # Add a success message to inform the user about the successful logout
     messages.success(request, 'You have been logged out.')
     # Redirect to the login page
+<<<<<<< HEAD
     return redirect('Teacher Login Page')
+=======
+    return redirect('teacherloginpage')
+>>>>>>> ca725275c4ed052a6556ab97caf30cee49a19f59
 
 def dashboard(request):
     # Check if the teacher is authenticated (if you are using sessions)
     if 'teacher_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
+<<<<<<< HEAD
         return redirect('Teacher Login Page')  # Replace 'login' with the name/url of your login view
+=======
+        return redirect('teacherloginpage')  # Replace 'login' with the name/url of your login view
+>>>>>>> ca725275c4ed052a6556ab97caf30cee49a19f59
 
     # Get the teacher ID from the session
     teacher_id = request.session['teacher_id']

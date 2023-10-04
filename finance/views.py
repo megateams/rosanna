@@ -15,13 +15,14 @@ from collections import defaultdict
 from django.contrib.auth import authenticate, login
 from django.db.models import OuterRef, Subquery
 from django.db.models import F
+from frontend.views import encryptpassword
 
 def financelogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         bursar = Administrators.objects.get(role = 'Bursar')
-        if bursar.username == username and bursar.password == password:
+        if bursar.username == username and bursar.password == str(encryptpassword(password)):
             messages.success(request , "Login Successfull")
             expenses = ExpenseRecord.objects.all()
             total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
