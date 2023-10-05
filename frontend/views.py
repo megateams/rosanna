@@ -17,6 +17,14 @@ import openpyxl
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from django.db.models import Q 
+import bcrypt
+
+salt = bcrypt.gensalt()
+print(salt)
+
+def encryptpassword(password):
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), b'$2b$12$QW/1zgrHumeirkSwiM437u')
+    return hashed_password
 
 def edit_teacher_class(request):
     if request.method == 'POST':
@@ -125,17 +133,17 @@ def addadmins(request):
                 bankaccnum =  bankaccnum ,
                 salary = salary ,
                 username = username ,
-                password = password ,
+                password = encryptpassword(password) ,
             )
             
             Administrators.save
-            User.objects.create_user(
-                username = username ,
-                password = password ,
-                email = email ,
-                is_staff = True ,
-                is_superuser = True ,
-            )
+            # User.objects.create_user(
+            #     username = username ,
+            #     password = password ,
+            #     email = email ,
+            #     is_staff = True ,
+            #     is_superuser = True ,
+            # )
             
             messages.success(request , "Administrator Created Successfully")
             return redirect('adminslist') 
@@ -765,7 +773,7 @@ def studentReg(request):
             address = address ,
             house = house ,
             username = username ,
-            password = default_password ,
+            password = encryptpassword(default_password) ,
             fathername = fathername ,
             fcontact = fcontact ,
             foccupation = foccupation ,
@@ -1180,7 +1188,7 @@ def teachers(request):
             salary=salary,
             bankaccnum=bankaccnum,
             username=username,
-            password=default_password
+            password=encryptpassword(default_password)
         )
         if profile_image:
             fs = FileSystemStorage()

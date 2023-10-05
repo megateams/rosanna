@@ -15,20 +15,17 @@ from collections import defaultdict
 from django.contrib.auth import authenticate, login
 from django.db.models import OuterRef, Subquery
 from django.db.models import F
+from frontend.views import encryptpassword
 
 def financelogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         bursar = Administrators.objects.get(role = 'Bursar')
-        if bursar.username == username and bursar.password == password:
+
+        if bursar.username == username and bursar.password == str(encryptpassword(password)):
+            request.session['admin_id'] = bursar.id
             messages.success(request , "Login Successfull")
-            expenses = ExpenseRecord.objects.all()
-            total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
-
-            fees = Fees.objects.all()
-            total_amount = fees.aggregate(Sum('amount'))['amount__sum']
-
             return redirect("Finance Dashboard")
         else:
             messages.warning(request, 'Login Failed')
@@ -207,12 +204,21 @@ def expenserecords(request):
 
 
 def students_list(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     # Retrieve a list of students from your database
     studentslist = Student.objects.all()  
 
     # Pass the list of students to the template for rendering
     context = {
         'studentslist': studentslist,
+        'bursar': bursar,
         }
     return render(request, 'finance/students.html', context)
 
@@ -240,7 +246,16 @@ def assign_school_code(request, stdnumber):
 
 # Create your views here.
 def financedashboard(request):
-    
+    # Check if the bursar is authenticated (if you are using sessions)
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
@@ -259,7 +274,7 @@ def financedashboard(request):
     trpayments = Teacherspayment.objects.all()
     total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
-    term_data = Term.objects.all()
+    term_data = Term.objects.get(status=1)
 
     # Calculate the percentages
     if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
@@ -270,6 +285,7 @@ def financedashboard(request):
             'total_trpayments' : total_trpayments,
             'term_data' : term_data,
             'fees_list': fees_list,
+            'bursar' : bursar,
         }
         return render(request, "finance/financedashboard.html", context)
     else: 
@@ -292,12 +308,22 @@ def financedashboard(request):
             'expenses_percentage': expenses_percentage,
             'sspayments_percentage': sspayments_percentage,
             'trpayments_percentage': trpayments_percentage,
+            'bursar' : bursar,
         }
         return render(request, "finance/financedashboard.html", context)
 
 
 # fees views
 def financeaddFees(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
     if request.method == 'POST':
         stdnumber = request.POST.get('stdnumber')
         stdname = Student.objects.get(stdnumber=stdnumber).childname  # Get student name
@@ -381,8 +407,17 @@ def financeaddFees(request):
 
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
-    return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
+    return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures, 'bursar': bursar})
 def financefeesList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()
     classes = Schoolclasses.objects.all()
@@ -390,10 +425,20 @@ def financefeesList(request):
         'fees_list': fees_list,
         'total_amount': total_amount,
         'classes': classes,
+        'bursar': bursar
     }
     return render(request,'finance/fees/financefeesList.html',context)
 
 def fees_by_class(request, class_id):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
     classes = Schoolclasses.objects.all()
     
     try:
@@ -416,6 +461,7 @@ def fees_by_class(request, class_id):
         'classes': classes,
         'selected_class': selected_class,
         'classfees': classfees,  # Pass the class fees to the template
+        'bursar' : bursar
     })
 
 def delete_fee(request):
@@ -446,14 +492,30 @@ def edit_std_fees(request):
         return redirect('Fees List')  # Adjust this to the correct URL name
 
 def feesclearedstudents(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     # Filter the Fees model to get students with a balance of 0
     cleared_students = Fees.objects.filter(balance=0)
     classes = Schoolclasses.objects.all()
 
     # Pass the cleared_students queryset to the template
-    return render(request, 'finance/fees/feesclearedstudents.html', {'cleared_students': cleared_students, 'classes': classes})
+    return render(request, 'finance/fees/feesclearedstudents.html', {'cleared_students': cleared_students, 'classes': classes, 'bursar': bursar})
 
 def feesclearedstudents_byclass(request, class_id):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     classes = Schoolclasses.objects.all()
     selected_class = None  # Initialize selected_class
 
@@ -470,6 +532,7 @@ def feesclearedstudents_byclass(request, class_id):
         'cleared_students': cleared_students,
         'classes': classes,
         'selected_class': selected_class,
+        'bursar':bursar
     })
 
 def generate_clearance(request, stdnumber):
@@ -496,6 +559,14 @@ def generate_clearance(request, stdnumber):
     return redirect('Cleared Students List')  # Adjust this URL name as needed
 
 def clearance_card(request, stdnumber):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     # Retrieve the student's information based on the stdnumber
     student = Fees.objects.get(stdnumber=stdnumber,balance=0)
     
@@ -509,13 +580,22 @@ def clearance_card(request, stdnumber):
     context={
         'student': student,
         'student_img': student_img,
-        'term_data':term_data
+        'term_data':term_data,
+        'bursar' : bursar
     }
     return render(request, 'finance/fees/clearancecard.html',context)
 
 # fees views
 
 def financeaddFeesstructure(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     if request.method == 'POST':
         classname = request.POST.get('classname')
         amount = request.POST.get('amount')
@@ -539,12 +619,21 @@ def financeaddFeesstructure(request):
             messages.success(request, f"Fees Structure for class '{classname}' added successfully.")
         return redirect('Add Fees Structure')
     classes = Schoolclasses.objects.all()
-    return render(request, 'finance/feesstructure/financeaddFeesstructure.html',{"classes":classes})
+    return render(request, 'finance/feesstructure/financeaddFeesstructure.html',{"classes":classes,'bursar': bursar})
 
 def financefeesstructureList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     fees_list = Feesstructure.objects.all()
     context = {
         'fees_list': fees_list,
+        'bursar' : bursar,
     }
 
     return render(request, 'finance/feesstructure/financefeesstructureList.html', context)
@@ -577,6 +666,14 @@ def editfeesstructure(request, feesstructureid):
 
 # teacherpayments views
 def financeaddTeacherpayments(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     teachersdata = Teachers.objects.all()
 
     if request.method == 'POST':
@@ -611,7 +708,7 @@ def financeaddTeacherpayments(request):
             )
 
             messages.success(request, 'Teacher payment added successfully.')
-            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata, 'bursar': bursar})
 
         if payment.balance == 0:
             Teacherspayment.objects.create(
@@ -627,7 +724,7 @@ def financeaddTeacherpayments(request):
             )
 
             messages.success(request, 'Teacher payment added successfully.')
-            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+            return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata, 'bursar': bursar})
 
         if payment.balance > 0:
             accumulatedpayment = payment.accumulatedpayment + amountpaid
@@ -648,22 +745,39 @@ def financeaddTeacherpayments(request):
                     year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
-                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+                return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata,'bursar': bursar})
 
-    return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata})
+    return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata,'bursar':bursar})
 
 def financeteacherpaymentsList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     teacherspayment = Teacherspayment.objects.all()
     context = {
        'teachers':teacherspayment,
        'total_trpayments': total_trpayments, 
+       'bursar': bursar
     }
     return render(request,'finance/staffpayments/financeteacherpaymentsList.html' ,context)
 # teacherpayments views
 
 # supportstaffpayments views
 def financeaddsupportstaffpayments(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     supportstaffdata = Supportstaff.objects.all()
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
@@ -678,7 +792,7 @@ def financeaddsupportstaffpayments(request):
 
         if amountpaid > float(supportstaffname.salary):
             messages.error(request , 'Payment not Added')
-            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata})
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'balancealert':"Amount Paid must not be greater than the Salary" , 'supportstaff': supportstaffdata, 'bursar': bursar})
 
         payment = Supportstaffpayment.objects.filter(supportstaffid = supportstaffid).last()
 
@@ -696,7 +810,7 @@ def financeaddsupportstaffpayments(request):
             )
 
             messages.success(request, 'Support Staff payment added successfully.')
-            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata, 'bursar' :bursar})
         
         if payment.balance == 0:
             Supportstaffpayment.objects.create(
@@ -712,7 +826,7 @@ def financeaddsupportstaffpayments(request):
             )
 
             messages.success(request, 'Support staff payment added successfully.')
-            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+            return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata, 'bursar':bursar})
         
         if payment.balance > 0:
             accumulatedpayment = payment.accumulatedamount + amountpaid
@@ -733,15 +847,24 @@ def financeaddsupportstaffpayments(request):
                 year = year
                 )
                 messages.success(request, 'Teacher payment added successfully.')
-                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata})
-    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata})
+                return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'teachers': supportstaffdata, 'bursar':bursar})
+    return render(request, 'finance/staffpayments/financeaddsupportstaffpayments.html', {'supportstaff': supportstaffdata, 'bursar': bursar})
 
 def financesupportstaffpaymentsList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     support_staff_payments = Supportstaffpayment.objects.all()
     context = {
         'supportstaffpayments': support_staff_payments,
         'total_sspayments': total_sspayments,
+        'bursar': bursar
     }
 
     return render(request, 'finance/staffpayments/financesupportstaffpaymentsList.html', context)
@@ -750,6 +873,14 @@ def financesupportstaffpaymentsList(request):
 
 # expenses views
 def financeaddExpenses(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
 
@@ -769,14 +900,23 @@ def financeaddExpenses(request):
         messages.success(request, 'Expense added successfully.')  # Display a success message
         return redirect('Add Expenses')  # Redirect to expenses list page
 
-    return render(request, 'finance/expenses/financeaddExpenses.html')
+    return render(request, 'finance/expenses/financeaddExpenses.html', {'bursar':bursar})
 
 def financeexpensesList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
     expenses = ExpenseRecord.objects.all()
     context = {
         'expenses': expenses,
         'total_amount_paid': total_amount_paid,
+        'bursar': bursar
     }
     return render(request, 'finance/expenses/financeexpensesList.html', context)
 
@@ -794,6 +934,14 @@ def delete_expense(request):
 
 
 def edit_expense(request, expenseid):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     try:
         expense = ExpenseRecord.objects.get(expenseid=expenseid)
 
@@ -808,7 +956,7 @@ def edit_expense(request, expenseid):
             messages.success(request, 'Expense updated successfully.')
             return redirect('Add Expenses')
 
-        context = {'expense': expense}
+        context = {'expense': expense, 'bursar': bursar}
         return render(request, 'finance/expenses/edit_expense.html', context)
 
     except ExpenseRecord.DoesNotExist:
@@ -817,10 +965,34 @@ def edit_expense(request, expenseid):
 # expenses views
 
 def financeReports(request):
-    return render(request, 'finance/financeReports.html')
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
+    context ={
+        'bursar': bursar
+    }
+    return render(request, 'finance/financeReports.html', context)
 
 def financeStatistics(request):
-    return render(request, 'finance/financeStatistics.html')
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
+    context = {
+        'bursar': bursar
+    }
+    return render(request, 'finance/financeStatistics.html',context)
 
 def get_stdclass(request, stdnumber):
     try:
