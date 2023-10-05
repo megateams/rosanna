@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
+from datetime import date 
 from collections import defaultdict
 from django.contrib.auth import authenticate, login
 from django.db.models import OuterRef, Subquery
@@ -186,15 +187,18 @@ def expenserecords(request):
         expenseid = request.POST.get('expenseid')
         category = request.POST.get('category')
         amountrequired = request.POST.get('amountrequired')
-        expensedate = request.POST.get('expensedate')
+        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST,get('amountpaid')
         balance = request.POST.get('balance')
+
+        # Capture the current date
+        current_date = date.today()
         
         ExpenseRecord.objects.create(
             expenseid = expenseid ,
             category = category ,
             amountrequired = amountrequired ,
-            expensedate = expensedate ,
+            expensedate = current_date ,
             amountpaid = amountpaid ,
             balance = balance
         )
@@ -702,9 +706,12 @@ def financeaddTeacherpayments(request):
         teacherid = request.POST.get('teacherid')
         term_data = Term.objects.get(status=1)
 
+        # Capture the current date
+        current_date = date.today()
+
         teacher = Teachers.objects.get(teacherid=teacherid)
         teachername = teacher.teachernames
-        paymentdate = request.POST.get('paymentdate')
+        # paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
         term = term_data.current_term
@@ -720,7 +727,7 @@ def financeaddTeacherpayments(request):
             Teacherspayment.objects.create(
                 teacherid = teacherid,
                 teachername = teachername,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
@@ -736,7 +743,7 @@ def financeaddTeacherpayments(request):
             Teacherspayment.objects.create(
                 teacherid = teacherid,
                 teachername = teachername,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
@@ -758,7 +765,7 @@ def financeaddTeacherpayments(request):
                 Teacherspayment.objects.create(
                     teacherid = teacherid,
                     teachername = teachername,
-                    paymentdate = paymentdate,
+                    paymentdate = current_date,
                     salary = salary,
                     amountpaid = amountpaid,
                     accumulatedpayment = accumulatedpayment,
@@ -911,14 +918,17 @@ def financeaddExpenses(request):
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
 
+        # Capture the current date
+        current_date = date.today()
+
         term = term_data.current_term
         year = term_data.current_year
         category = request.POST.get('category')
-        expensedate = request.POST.get('expensedate')
+        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
         expense_record = ExpenseRecord(
             category=category,
-            expensedate=expensedate,
+            expensedate=current_date,
             amountpaid=amountpaid,
             term = term,
             year = year
