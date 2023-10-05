@@ -23,6 +23,8 @@ def financelogin(request):
         password = request.POST.get('password')
         bursar = Administrators.objects.get(role = 'Bursar')
         if bursar.username == username and bursar.password == str(encryptpassword(password)):
+            request.session['admin_id'] = bursar.id
+
             messages.success(request , "Login Successfull")
             expenses = ExpenseRecord.objects.all()
             total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -264,6 +266,16 @@ def assign_school_code(request, stdnumber):
 
 # Create your views here.
 def financedashboard(request):
+
+    # Check if the teacher is authenticated (if you are using sessions)
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
     
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -294,6 +306,7 @@ def financedashboard(request):
             'total_trpayments' : total_trpayments,
             'term_data' : term_data,
             'fees_list': fees_list,
+            'bursar': bursar,
         }
         return render(request, "finance/financedashboard.html", context)
     else: 
@@ -316,6 +329,7 @@ def financedashboard(request):
             'expenses_percentage': expenses_percentage,
             'sspayments_percentage': sspayments_percentage,
             'trpayments_percentage': trpayments_percentage,
+            'bursar': bursar,
         }
         return render(request, "finance/financedashboard.html", context)
 
@@ -406,6 +420,7 @@ def financeaddFees(request):
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures})
+
 def financefeesList(request):
     total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
     fees_list = Fees.objects.all()

@@ -138,13 +138,13 @@ def addadmins(request):
             )
             
             Administrators.save
-            User.objects.create_user(
-                username = username ,
-                password = password ,
-                email = email ,
-                is_staff = True ,
-                is_superuser = True ,
-            )
+            # User.objects.create_user(
+            #     username = username ,
+            #     password = password ,
+            #     email = email ,
+            #     is_staff = True ,
+            #     is_superuser = True ,
+            # )
             
             messages.success(request , "Administrator Created Successfully")
             return redirect('adminslist') 
