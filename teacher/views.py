@@ -607,7 +607,7 @@ def edit_teacher_profile(request, teacher_id):
         
         if new_pass == confirm_pass:
             # Update teacher's password (replace this with your actual password update logic)
-            teacher.password = new_pass
+            teacher.password = encryptpassword(new_pass)
             teacher.username = username
             teacher.save()
             
