@@ -12,6 +12,7 @@ from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
 from datetime import date 
+from datetime import datetime 
 from collections import defaultdict
 from django.contrib.auth import authenticate, login
 from django.db.models import OuterRef, Subquery
@@ -357,9 +358,13 @@ def financeaddFees(request):
         classfees = request.POST.get("classfees")
         amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
-        date = request.POST.get('date')
-        timestamp = request.POST.get('timestamp')
+        # date = request.POST.get('date')
+        # timestamp = request.POST.get('timestamp')
         
+        # Capture the current date and time
+        current_date = date.today()
+        current_time = datetime.now().time()
+
         term_data = Term.objects.get(status=1)
         # Calculate balance
         balance = int(classfees) - int(amount)
@@ -378,8 +383,8 @@ def financeaddFees(request):
                     amount=amount,
                     balance=balance,
                     modeofpayment=modeofpayment,
-                    date=date,
-                    timestamp=timestamp,
+                    date=current_date,
+                    timestamp=current_time,
                     accumulatedpayment=amount,
                     term = term_data.current_term,
                     year = term_data.current_year
@@ -396,8 +401,8 @@ def financeaddFees(request):
                         amount=amount,
                         balance=balance,
                         modeofpayment=modeofpayment,
-                        date=date,
-                        timestamp=timestamp,
+                        date=current_date,
+                        timestamp=current_time,
                         accumulatedpayment=amount,
                         term = term_data.current_term,
                         year = term_data.current_year
@@ -418,8 +423,8 @@ def financeaddFees(request):
                             amount=amount,
                             balance=new_balance,
                             modeofpayment=modeofpayment,
-                            date=date,
-                            timestamp=timestamp,
+                            date=current_date,
+                            timestamp=current_time,
                             accumulatedpayment=accumulatedpayment,
                             term = term_data.current_term,
                             year = term_data.current_year
