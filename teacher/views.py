@@ -59,7 +59,7 @@ def dashboard(request):
     teacher_id = request.session['teacher_id']
 
     teacher = Teachers.objects.get(teacherid=teacher_id)    
-    term_data = Term.objects.all()
+    term_data = Term.objects.get(status=1)
     return render(request, 'teacher/dashboard.html',{'teacher': teacher, 'term_data':term_data})
 
 def profile(request,teacher_id):

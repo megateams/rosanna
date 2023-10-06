@@ -88,6 +88,7 @@ def editadministrator(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def deleteadmin(request):
     if request.method == 'POST':
         adminid = request.POST.get('adminid')
@@ -98,10 +99,12 @@ def deleteadmin(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def adminslist(request):
     admins = Administrators.objects.all()
     return render(request , 'frontend/staff/administratorsList.html' , {'admins' : admins})
 
+@login_required
 def addadmins(request):
     if request.method == 'POST':
         fullname = request.POST.get('fullname')
@@ -161,6 +164,7 @@ def register(request):
     return render(request, "frontend/registration.html", {"form": form})
 
 # login views for the admin user
+
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)

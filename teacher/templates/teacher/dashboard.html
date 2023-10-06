@@ -14,16 +14,14 @@
             </div>
             
             <div class="d-flex align-items-center  ml-2" style="margin: 20px 0">
-                {% for data in term_data %}
                     <div class="current-term mr-3">
                         <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
-                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_term}} </a>
+                        <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
                     </div>
                     <div class="current-year"> 
                         <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
-                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{data.current_year}} </a>
+                        <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
                     </div>
-                {% endfor %}
             </div>
             <hr>
             <div class="header mt-3 ml-2">
