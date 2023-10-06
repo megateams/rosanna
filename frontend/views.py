@@ -16,11 +16,10 @@ from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
-from django.db.models import Q 
+from django.db.models import Q  
 import bcrypt
 
 salt = bcrypt.gensalt()
-print(salt)
 
 def encryptpassword(password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), b'$2b$12$QW/1zgrHumeirkSwiM437u')
