@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.shortcuts import render, HttpResponse,redirect
 from .models import *
 from django.db.models import Sum
+from django.db.models import Max
 from frontend.models import *
 from django.core import serializers
 from django.http import JsonResponse
@@ -11,6 +12,8 @@ from django.urls import reverse
 from django.db.models.functions import ExtractMonth
 from django.db import transaction
 import openpyxl
+from datetime import date 
+from datetime import datetime 
 from collections import defaultdict
 from django.contrib.auth import authenticate, login
 from django.db.models import OuterRef, Subquery
@@ -186,15 +189,18 @@ def expenserecords(request):
         expenseid = request.POST.get('expenseid')
         category = request.POST.get('category')
         amountrequired = request.POST.get('amountrequired')
-        expensedate = request.POST.get('expensedate')
+        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST,get('amountpaid')
         balance = request.POST.get('balance')
+
+        # Capture the current date
+        current_date = date.today()
         
         ExpenseRecord.objects.create(
             expenseid = expenseid ,
             category = category ,
             amountrequired = amountrequired ,
-            expensedate = expensedate ,
+            expensedate = current_date ,
             amountpaid = amountpaid ,
             balance = balance
         )
@@ -213,14 +219,36 @@ def students_list(request):
 
     bursar = Administrators.objects.get(id=admin_id)
     # Retrieve a list of students from your database
-    studentslist = Student.objects.all()  
+    studentslist = Student.objects.all() 
+    classes = Schoolclasses.objects.all() 
 
     # Pass the list of students to the template for rendering
     context = {
         'studentslist': studentslist,
+        'classes': classes,
         'bursar': bursar,
         }
     return render(request, 'finance/students.html', context)
+
+def students_by_class(request, class_id):
+    # Retrieve all available classes
+    classes = Schoolclasses.objects.all()
+
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+
+        # Fetch students in the selected class
+        students_in_class = Student.objects.filter(stdclass=selected_class.classid)
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        students_in_class = []
+
+    return render(request, 'finance/studentsbyclass.html', {
+        'studentslist': students_in_class,
+        'classes': classes,
+        'selected_class': selected_class,
+    })
 
 def assign_school_code(request, stdnumber):
     student = get_object_or_404(Student, stdnumber=stdnumber)
@@ -241,8 +269,9 @@ def assign_school_code(request, stdnumber):
 
             return redirect("students_list")
 
-    # Handle the default case where there's no POST request or no school_code
-    # return render(request, 'finance/students.html', {'student': student, 'error_message': error_message})
+
+
+    
 
 # Create your views here.
 def financedashboard(request):
@@ -255,18 +284,19 @@ def financedashboard(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
-
     expenses = ExpenseRecord.objects.all()
     total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
 
-    # Retrieve only the latest balance for each student based on the latest timestamp
-    latest_timestamps = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-timestamp')
+    # Retrieve only the latest balance for each student based on the latest timestamp and date
+
+    latest_dates = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-date')
     fees_list = Fees.objects.annotate(
-        latest_timestamp=Subquery(latest_timestamps.values('timestamp')[:1])
-    ).filter(balance__gt=0.0, timestamp=F('latest_timestamp'))
+        latest_date=Subquery(latest_dates.values('date')[:1])
+    ).filter(balance__gt=0.0, date=F('latest_date'))
+
     
     sspayments = Supportstaffpayment.objects.all()
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
@@ -331,9 +361,14 @@ def financeaddFees(request):
         classfees = request.POST.get("classfees")
         amount = request.POST.get("amount")  # Get amount from fees structure
         modeofpayment = request.POST.get('modeofpayment')
-        date = request.POST.get('date')
-        timestamp = request.POST.get('timestamp')
+        # date = request.POST.get('date')
+        # timestamp = request.POST.get('timestamp')
         
+        # Capture the current date and time
+        current_date = date.today()
+        current_time = datetime.now().time()
+        print(current_time)
+
         term_data = Term.objects.get(status=1)
         # Calculate balance
         balance = int(classfees) - int(amount)
@@ -352,8 +387,6 @@ def financeaddFees(request):
                     amount=amount,
                     balance=balance,
                     modeofpayment=modeofpayment,
-                    date=date,
-                    timestamp=timestamp,
                     accumulatedpayment=amount,
                     term = term_data.current_term,
                     year = term_data.current_year
@@ -370,8 +403,6 @@ def financeaddFees(request):
                         amount=amount,
                         balance=balance,
                         modeofpayment=modeofpayment,
-                        date=date,
-                        timestamp=timestamp,
                         accumulatedpayment=amount,
                         term = term_data.current_term,
                         year = term_data.current_year
@@ -392,8 +423,6 @@ def financeaddFees(request):
                             amount=amount,
                             balance=new_balance,
                             modeofpayment=modeofpayment,
-                            date=date,
-                            timestamp=timestamp,
                             accumulatedpayment=accumulatedpayment,
                             term = term_data.current_term,
                             year = term_data.current_year
@@ -680,9 +709,12 @@ def financeaddTeacherpayments(request):
         teacherid = request.POST.get('teacherid')
         term_data = Term.objects.get(status=1)
 
+        # Capture the current date
+        current_date = date.today()
+
         teacher = Teachers.objects.get(teacherid=teacherid)
         teachername = teacher.teachernames
-        paymentdate = request.POST.get('paymentdate')
+        # paymentdate = request.POST.get('paymentdate')
         salary = float(teacher.salary)
         amountpaid = float(request.POST.get('amount'))
         term = term_data.current_term
@@ -698,7 +730,7 @@ def financeaddTeacherpayments(request):
             Teacherspayment.objects.create(
                 teacherid = teacherid,
                 teachername = teachername,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
@@ -714,7 +746,7 @@ def financeaddTeacherpayments(request):
             Teacherspayment.objects.create(
                 teacherid = teacherid,
                 teachername = teachername,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedpayment = amountpaid,
@@ -736,7 +768,7 @@ def financeaddTeacherpayments(request):
                 Teacherspayment.objects.create(
                     teacherid = teacherid,
                     teachername = teachername,
-                    paymentdate = paymentdate,
+                    paymentdate = current_date,
                     salary = salary,
                     amountpaid = amountpaid,
                     accumulatedpayment = accumulatedpayment,
@@ -779,16 +811,21 @@ def financeaddsupportstaffpayments(request):
 
     bursar = Administrators.objects.get(id=admin_id)
     supportstaffdata = Supportstaff.objects.all()
+    
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
         supportstaffid = request.POST.get('support-staffid')
         supportstaffname = Supportstaff.objects.get(supportstaffid = supportstaffid)
         staffnames = supportstaffname.supportstaffnames
-        paymentdate = request.POST.get('paymentdate')
+        # paymentdate = request.POST.get('paymentdate')
         salary = float(request.POST.get('salary'))
         amountpaid = float(request.POST.get('amountpaid'))
         term = term_data.current_term
         year = term_data.current_year
+
+        # Capture the current date
+        current_date = date.today()
+
 
         if amountpaid > float(supportstaffname.salary):
             messages.error(request , 'Payment not Added')
@@ -800,7 +837,7 @@ def financeaddsupportstaffpayments(request):
             Supportstaffpayment.objects.create(
                 supportstaffid = supportstaffid ,
                 staffname = staffnames ,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
@@ -816,7 +853,7 @@ def financeaddsupportstaffpayments(request):
             Supportstaffpayment.objects.create(
                 supportstaffid = supportstaffid ,
                 staffname = staffnames ,
-                paymentdate = paymentdate,
+                paymentdate = current_date,
                 salary = salary,
                 amountpaid = amountpaid,
                 accumulatedamount = amountpaid,
@@ -838,7 +875,7 @@ def financeaddsupportstaffpayments(request):
                 Supportstaffpayment.objects.create(
                     supportstaffid = supportstaffid ,
                     staffname = staffnames ,
-                    paymentdate = paymentdate,
+                    paymentdate = current_date,
                     salary = salary,
                     amountpaid = amountpaid,
                     accumulatedamount = accumulatedpayment,
@@ -884,14 +921,17 @@ def financeaddExpenses(request):
     if request.method == 'POST':
         term_data = Term.objects.get(status=1)
 
+        # Capture the current date
+        current_date = date.today()
+
         term = term_data.current_term
         year = term_data.current_year
         category = request.POST.get('category')
-        expensedate = request.POST.get('expensedate')
+        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
         expense_record = ExpenseRecord(
             category=category,
-            expensedate=expensedate,
+            expensedate=current_date,
             amountpaid=amountpaid,
             term = term,
             year = year
