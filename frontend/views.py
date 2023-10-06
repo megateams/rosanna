@@ -17,11 +17,10 @@ from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
-from django.db.models import Q 
+from django.db.models import Q  
 import bcrypt
 
 salt = bcrypt.gensalt()
-print(salt)
 
 def encryptpassword(password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), b'$2b$12$QW/1zgrHumeirkSwiM437u')
@@ -89,6 +88,7 @@ def editadministrator(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def deleteadmin(request):
     if request.method == 'POST':
         adminid = request.POST.get('adminid')
@@ -99,10 +99,12 @@ def deleteadmin(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def adminslist(request):
     admins = Administrators.objects.all()
     return render(request , 'frontend/staff/administratorsList.html' , {'admins' : admins})
 
+@login_required
 def addadmins(request):
     if request.method == 'POST':
         fullname = request.POST.get('fullname')
@@ -162,6 +164,7 @@ def register(request):
     return render(request, "frontend/registration.html", {"form": form})
 
 # login views for the admin user
+
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -175,7 +178,7 @@ def user_login(request):
             messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
-    return render(request, "frontend/login.html")
+    return render(request, "frontend/registration/login.html")
 
 @login_required
 def user_logout(request):
@@ -183,14 +186,13 @@ def user_logout(request):
     messages.success(request, "You have successfully logged out")
     request.session['logged_out'] = True # Set the session variable to True
     return redirect("Admin Login") # Redirect to the login page after logout
-# Create your views here.
-# creating views for dashboard
 
 @login_required
 def home(request):
-    if request.session.get('logged_out', False):
-        messages.warning(request, "You need to login to access the dashboard")
-        return redirect("login")
+    if not request.user.is_authenticated:
+        # User is not logged in, show a message and redirect to the login page
+        messages.warning(request, "You need to log in to access this page.")
+        return redirect("Admin Login")
 
     boys_count = Student.objects.filter(gender='m').count()
     girls_count = Student.objects.filter(gender='f').count()
