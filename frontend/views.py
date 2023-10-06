@@ -12,6 +12,7 @@ from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from datetime import datetime,date
+from django.utils.timezone import now
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
@@ -561,13 +562,16 @@ def supportstaffreg(request):
         else:
             default_supportstaffid = 'RSS0001' 
 
+        # Capture the current date
+        current_date = date.today()
+
 
         # Retrieve other form fields
         gender = request.POST.get('gender')
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        joiningdate = request.POST.get('joiningdate')
+        # joiningdate = request.POST.get('joiningdate')
         qualification = request.POST.get('qualification')
         position = request.POST.get('position')
         salary = request.POST.get('salary')
@@ -582,7 +586,7 @@ def supportstaffreg(request):
             contact=contact,
             email=email,
             address=address,
-            joiningdate=joiningdate,
+            joiningdate=current_date,
             qualification=qualification,
             position=position,
             salary=salary,
@@ -746,8 +750,11 @@ def studentReg(request):
             new_stdnumber = 'STD001'
         default_password = "123456"
 
+        # Capture the current date
+        current_date = date.today()
 
-        regdate = request.POST.get('regdate')
+
+        # regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
         selected_class = Schoolclasses.objects.get(pk=class_id)
@@ -766,9 +773,10 @@ def studentReg(request):
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
         
+        
         student =Student.objects.create(
             stdnumber =new_stdnumber,            
-            regdate = regdate ,
+            regdate = current_date ,
             childname = childname ,
             stdclass=selected_class,
             gender = gender ,
@@ -1160,6 +1168,10 @@ def teachers(request):
         default_teacherid = 'RT{:04}'.format(int(last_teacher.teacherid[2:]) + 1) if last_teacher else 'RT0001'
         default_password = "123456"
 
+        # Capture the current date
+        current_date = date.today()
+
+
         # teacherid = request.POST.get('teacherid')
         teachernames = request.POST.get('teachernames')
         gender = request.POST.get('gender')
@@ -1167,7 +1179,7 @@ def teachers(request):
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        joiningdate = request.POST.get('joiningdate')
+        # joiningdate = request.POST.get('joiningdate')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
         qualification = request.POST.get('qualification')
@@ -1186,7 +1198,7 @@ def teachers(request):
             contact=contact,
             email=email,
             address=address,
-            joiningdate=joiningdate,
+            joiningdate=current_date,
             qualification=qualification,
             salary=salary,
             bankaccnum=bankaccnum,
