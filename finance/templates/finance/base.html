@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -52,9 +53,26 @@
                 <i class="fas fa-bars    text-white"></i>
             </div>
             <div class='header text-center p-2 mb-2'>
-                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+                {% get_school_info as school_info %}
+                    {% if school_info %}
+                        {% for info in school_info %}
+                            <div class='header text-center p-2 mb-2 mt-4'>
+                                <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge">
+                                <h5 class="text-white  mt-2"><b>{{ info.schoolname }}</b></h5>
+                                
+                            </div>
+                            
+                            <!-- Display other school information as needed -->
+                        {% endfor %}
+                    {% else %}
+                        <div class='header text-center p-2 mb-2 mt-4'>
+                            <div class="badge p-3 mb-2" style="border: 2px solid #fff; border-radius: 50%;">
+                                <i class="fa fa-camera text-white" aria-hidden="true" style="font-size: 2rem;"></i>
+                            </div>
 
-                <h5 class="text-white"><b>Rosanna Schools</b></h5>
+                            <h5 class="text-white"><b>School Name</b></h5>   
+                        </div>
+                    {% endif %}
             </div>
             <hr color="#fff" style="height: 3px;">
     
@@ -113,7 +131,6 @@
         <!-- sidebar -->
         <!-- content -->
         <div class="content bg-light">
-
             <!-- navbar -->
             <nav class="navbar bg-light shadow align-items-center">
                 <div class='brand'>
@@ -124,9 +141,7 @@
                     <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
                 <div class="right mr-5 d-flex">
-                    {% if user.is_authenticated %}
-                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ user.username }}</p>
-                    {% endif %}
+                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}</p>
                     <a class="ml-3 mr-2 text-danger" href="{% url 'financeloginpage' %}">
                         <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
                     </a>

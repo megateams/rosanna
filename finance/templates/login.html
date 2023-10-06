@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!doctype html>
 {% load static %}
 <html lang="en">
@@ -22,13 +23,27 @@
             <div class="row">
                 <!-- content contains badge, school name and a welcome message -->
                 <div class="content col-md-6 text-center">
-                    <!-- logo -->
-                    <img src="{% static 'images/rosannalogo.png' %}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-                    <!-- welcome message -->
-                    <div class="message text-white">
-                        <h4>Rosanna Schools</h4>
-                        <h6 class="text-uppercase">school management information system</h6>
-                    </div>
+                    {% get_school_info as school_info %}
+                    {% if school_info %}
+                        {% for info in school_info %}
+                            <div class='header text-center p-2 mb-2 mt-4'>
+                                <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge">
+                                <h5 class="text-white text-uppercase mt-2"><b>{{ info.schoolname }}</b></h5>
+                                <h6 class="text-uppercase text-white">information management system</h6>
+                                
+                            </div>
+                            
+                            <!-- Display other school information as needed -->
+                        {% endfor %}
+                    {% else %}
+                        <div class='header text-center p-2 mb-2 mt-4'>
+                            <div class="badge p-3 mb-2" style="border: 2px solid #fff; border-radius: 50%;">
+                                <i class="fa fa-camera text-white" aria-hidden="true" style="font-size: 2rem;"></i>
+                            </div>
+
+                            <h5 class="text-white"><b>School Name</b></h5>   
+                        </div>
+                    {% endif %}
                 </div>
     
                 <!-- login section for the user -->

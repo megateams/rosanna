@@ -58,8 +58,6 @@
                     {% for subject in subjects %}
                         <th>{{ subject.subjectname|slice:":3" }}</th>
                     {% endfor %}
-                    <th>Total</th>
-                    <th>Average</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,8 +85,6 @@
                                 {% endwith %}
                             </td>
                         {% endfor %}
-                        <td>{{ student.total_marks }}</td>
-                        <td>{{ student.average_marks|floatformat:0 }}</td>
                         
                     </tr>
                   

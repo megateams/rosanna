@@ -9,6 +9,8 @@ from xhtml2pdf import pisa
 from django.conf import settings
 from django.db.models.functions import Coalesce, Cast
 from django.db.models import Avg, F, FloatField 
+from frontend.views import encryptpassword
+
 # Create your views here.
 
 # view for the login page
@@ -29,14 +31,14 @@ def student_login(request):
             except Student.DoesNotExist:
                 student = None
 
-        if student and student.password == password:
+        if student and student.password == str(encryptpassword(password)):
             # If the credentials are valid, redirect to the student dashboard
             request.session['std_number'] = student.stdnumber  # Save the stdnumber in the session
             return redirect('Student Dashboard')  # Replace 'dashboard' with the name/url of your student dashboard view
 
         else:
             # If the credentials are invalid, display an error message
-            messages.error(request, 'Invalid username/studentnumber or password.')
+            messages.error(request, 'Invalid username/studentnumber or password. ')
             return redirect('Login Page')
     
 
