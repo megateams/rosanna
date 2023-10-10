@@ -1,6 +1,6 @@
 {% extends 'finance/base.html' %}
-{% block title %} Edit Expense {% endblock title %}
-{% block pagetitle %} Edit Expense {% endblock pagetitle %}
+{% block title %} Edit Utilities {% endblock title %}
+{% block pagetitle %} Edit Utilities {% endblock pagetitle %}
 
 {% block main %} 
 
@@ -8,7 +8,7 @@
     <form action="" method="post" class="form ml-3 p-3 shadow rounded bg-light">
         {% csrf_token %}
         <div class="title">
-            <h5 class="text-uppercase text-center">Edit Expense</h5>
+            <h5 class="text-uppercase text-center">Edit Utility</h5>
             <hr>
         </div>
         {% if messages %}
@@ -29,12 +29,12 @@
                 <!-- category-->
                 <div class="form-group col-md-6">
                     <label for=""> Category </label>
-                    <input type="text" name="category" class="form-control" value="{{ expense.category }}">
+                    <input type="text" name="category" class="form-control" value="{{ utility.category }}">
                 </div>
                 <!-- amount paid -->
                 <div class="form-group col-md-6">
                     <label for="">Amount Paid</label>
-                    <input type="text" name="amountpaid" class="form-control" value="{{ expense.amountpaid }}">
+                    <input type="text" name="amountpaid" class="form-control" value="{{ utility.amountpaid }}">
                 </div>
             </div>
             

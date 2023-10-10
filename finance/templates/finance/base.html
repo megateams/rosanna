@@ -117,7 +117,7 @@
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
-                    <a class="" href='/financeexpenseslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Expenses</span></a>    
+                    <a class="" href='/financeutilitieslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Utilities</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -204,9 +204,9 @@
     
             // Define the data for the donut chart
             var donutpaymentData = {
-                labels: ["Fees", "Expenses", "Teacherpayments","SStaffpayments"],
+                labels: ["Fees", "Utilities", "Teacherpayments","SStaffpayments"],
                 datasets: [{
-                    data: [{{ fees_percentage }}, {{ expenses_percentage }}, {{ trpayments_percentage }}, {{ sspayments_percentage }}], // Replace with your actual data
+                    data: [{{ fees_percentage }}, {{ utilities_percentage }}, {{ trpayments_percentage }}, {{ sspayments_percentage }}], // Replace with your actual data
                     backgroundColor: ["blue", "#f9b855","red","green"],
                 }]
             };

@@ -184,29 +184,29 @@ def staffpayments(request):
         Staffpayments.save()
     return render(request , 'finace/financedashboard.html')
         
-def expenserecords(request):
-    if request.method == 'POST':
-        expenseid = request.POST.get('expenseid')
-        category = request.POST.get('category')
-        amountrequired = request.POST.get('amountrequired')
-        # expensedate = request.POST.get('expensedate')
-        amountpaid = request.POST,get('amountpaid')
-        balance = request.POST.get('balance')
+# def expenserecords(request):
+#     if request.method == 'POST':
+#         expenseid = request.POST.get('expenseid')
+#         category = request.POST.get('category')
+#         amountrequired = request.POST.get('amountrequired')
+#         # expensedate = request.POST.get('expensedate')
+#         amountpaid = request.POST,get('amountpaid')
+#         balance = request.POST.get('balance')
 
-        # Capture the current date
-        current_date = date.today()
+#         # Capture the current date
+#         current_date = date.today()
         
-        ExpenseRecord.objects.create(
-            expenseid = expenseid ,
-            category = category ,
-            amountrequired = amountrequired ,
-            expensedate = current_date ,
-            amountpaid = amountpaid ,
-            balance = balance
-        )
+#         ExpenseRecord.objects.create(
+#             expenseid = expenseid ,
+#             category = category ,
+#             amountrequired = amountrequired ,
+#             expensedate = current_date ,
+#             amountpaid = amountpaid ,
+#             balance = balance
+#         )
         
-        ExpenseRecord.save()
-    return render(request , 'finance/financedashboard.html')
+#         ExpenseRecord.save()
+#     return render(request , 'finance/financedashboard.html')
 
 
 def students_list(request):
@@ -284,8 +284,8 @@ def financedashboard(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
-    expenses = ExpenseRecord.objects.all()
-    total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.all()
+    total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
 
     fees = Fees.objects.all()
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
@@ -321,7 +321,7 @@ def financedashboard(request):
     else: 
         total = total_amount + total_amount_paid + total_sspayments + total_trpayments
         fees_percentage = (total_amount / total) * 100
-        expenses_percentage = (total_amount_paid / total) * 100
+        utilities_percentage = (total_amount_paid / total) * 100
         sspayments_percentage = (total_sspayments / total) * 100
         trpayments_percentage = (total_trpayments / total) * 100
 
@@ -335,7 +335,7 @@ def financedashboard(request):
             'term_data' : term_data,
             'fees_list': fees_list,
             'fees_percentage': fees_percentage,
-            'expenses_percentage': expenses_percentage,
+            'utilities_percentage': utilities_percentage,
             'sspayments_percentage': sspayments_percentage,
             'trpayments_percentage': trpayments_percentage,
             'bursar' : bursar,
@@ -514,6 +514,7 @@ def edit_std_fees(request):
         fee.amount = amount
         fee.balance = balance
         fee.modeofpayment = modeofpayment
+
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
@@ -906,8 +907,8 @@ def financesupportstaffpaymentsList(request):
 
 # supportstaffpayments views
 
-# expenses views
-def financeaddExpenses(request):
+# utilities views
+def financeaddUtilities(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -925,22 +926,21 @@ def financeaddExpenses(request):
         term = term_data.current_term
         year = term_data.current_year
         category = request.POST.get('category')
-        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
-        expense_record = ExpenseRecord(
+        utilities = Utilities(
             category=category,
-            expensedate=current_date,
+            utilitiesdate=current_date,
             amountpaid=amountpaid,
             term = term,
             year = year
         )
-        expense_record.save()
-        messages.success(request, 'Expense added successfully.')  # Display a success message
-        return redirect('Add Expenses')  # Redirect to expenses list page
+        utilities.save()
+        messages.success(request, 'Utility added successfully.')  # Display a success message
+        return redirect('Add Utilities')  # Redirect to utilities list page
 
-    return render(request, 'finance/expenses/financeaddExpenses.html', {'bursar':bursar})
+    return render(request, 'finance/utilities/financeaddUtilities.html', {'bursar':bursar})
 
-def financeexpensesList(request):
+def financeutilitiesList(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -949,29 +949,29 @@ def financeexpensesList(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
-    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    expenses = ExpenseRecord.objects.all()
+    total_amount_paid = Utilities.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.all()
     context = {
-        'expenses': expenses,
+        'utilities': utilities,
         'total_amount_paid': total_amount_paid,
         'bursar': bursar
     }
-    return render(request, 'finance/expenses/financeexpensesList.html', context)
+    return render(request, 'finance/utilities/financeutilitiesList.html', context)
 
-def delete_expense(request):
+def delete_utilities(request):
     if request.method == 'POST':
-        expenseid = request.POST.get("expenseid")
+        utilitiesid = request.POST.get("utilitiesid")
         try:
-            expense = ExpenseRecord.objects.get(expenseid=expenseid)
-            expense.delete()
-            messages.success(request, f"Expense record {expenseid} has been deleted.")
-        except ExpenseRecord.DoesNotExist:
-            messages.error(request, f"Expense record {expenseid} does not exist.")
+            utility = Utilities.objects.get(utilitiesid=utilitiesid)
+            utility.delete()
+            messages.success(request, f"Utility record {utilitiesid} has been deleted.")
+        except Utilities.DoesNotExist:
+            messages.error(request, f"Utility record {utilitiesid} does not exist.")
 
-    return redirect('Expenses List')  # Adjust this to the correct URL name
+    return redirect('Utilities List')  # Adjust this to the correct URL name
 
 
-def edit_expense(request, expenseid):
+def edit_utilities(request, utilitiesid):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -981,25 +981,25 @@ def edit_expense(request, expenseid):
 
     bursar = Administrators.objects.get(id=admin_id)
     try:
-        expense = ExpenseRecord.objects.get(expenseid=expenseid)
+        utility = Utilities.objects.get(utilitiesid=utilitiesid)
 
         if request.method == 'POST':
             updated_category = request.POST.get('category')
-            updated_expensedate = request.POST.get('expensedate')
+            updated_utilitiesdate = request.POST.get('utilitiesdate')
             updated_amountpaid = request.POST.get('amountpaid')
-            expense.category = updated_category
-            expense.amountpaid = updated_amountpaid
-            expense.save()
-            messages.success(request, 'Expense updated successfully.')
-            return redirect('Add Expenses')
+            utility.category = updated_category
+            utility.amountpaid = updated_amountpaid
+            utility.save()
+            messages.success(request, 'Utility updated successfully.')
+            return redirect('Add Utilities')
 
-        context = {'expense': expense, 'bursar': bursar}
-        return render(request, 'finance/expenses/edit_expense.html', context)
+        context = {'utility': utility, 'bursar': bursar}
+        return render(request, 'finance/utilities/edit_utilities.html', context)
 
-    except ExpenseRecord.DoesNotExist:
-        messages.error(request, 'Expense not found.')
-        return redirect('Expenses List')
-# expenses views
+    except Utilities.DoesNotExist:
+        messages.error(request, 'Utility not found.')
+        return redirect('Utilities List')
+# utilities views
 
 def financeReports(request):
     if 'admin_id' not in request.session:
@@ -1190,15 +1190,15 @@ def export_fees_structure_to_excel(request):
 
     return response
 
-def export_expenses_to_excel(request):
-    data = ExpenseRecord.objects.all().values_list(
-        'expenseid', 'category', 'expensedate', 'amountpaid'
+def export_utilities_to_excel(request):
+    data = Utilities.objects.all().values_list(
+        'utilities', 'category', 'utilitiesdate', 'amountpaid'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
-    ws.append(['Expense ID', 'Category', 'Expense Date', 'Amount Paid'])
+    ws.append(['Utility ID', 'Category', 'Utilities Date', 'Amount Paid'])
 
     for row_data in data:
         ws.append(row_data)
@@ -1208,7 +1208,7 @@ def export_expenses_to_excel(request):
     ws.column_dimensions['C'].width = 15
     ws.column_dimensions['D'].width = 15
 
-    filename = 'expenses_data.xlsx'
+    filename = 'utilities_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
