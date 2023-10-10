@@ -1192,7 +1192,7 @@ def export_fees_structure_to_excel(request):
 
 def export_utilities_to_excel(request):
     data = Utilities.objects.all().values_list(
-        'utilities', 'category', 'utilitiesdate', 'amountpaid'
+        'utilitiesid', 'category', 'utilitiesdate', 'amountpaid'
     )
 
     wb = openpyxl.Workbook()

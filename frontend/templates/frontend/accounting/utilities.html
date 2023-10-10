@@ -1,14 +1,13 @@
 {% extends 'frontend/base.html' %}
-{% block  title %} Expenses List {% endblock title %}
-{% block  pagetitle %} Expenses List {% endblock pagetitle %}
+{% block  title %} Utilities List {% endblock title %}
+{% block  pagetitle %} Utilities List {% endblock pagetitle %}
 
 {% block  main %} 
 
 <!-- inner-content -->
 <div class="inner-content">
     <div class="btns">
-        <!-- <a href="/financeaddexpenses" class="btn btn-sm add-btn text-white mb-2 ml-3">Add Expenses</a> -->
-        <a href="/export_expenses" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+        <a href="/export_utilities" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
     </div>
     <!-- Display the total amount paid -->
     <h3>Total Amount Paid: {{ total_amount_paid|default:"0" }}</h3>
@@ -17,19 +16,19 @@
         <table class="table" id="table" border="1">
             <thead>
                 <tr>
-                    <th>Expense ID</th>
+                    <th>Utilities ID</th>
                     <th>Category</th>
-                    <th>Expense Date</th>
+                    <th>Utilities Date</th>
                     <th>Amount Paid</th>
                 </tr>
             </thead>
             <tbody>
-                {% for expense in expenses %}
+                {% for utility in utilities %}
                 <tr>
-                    <td>{{ expense.expenseid }}</td>
-                    <td>{{ expense.category }}</td>
-                    <td>{{ expense.expensedate }}</td>
-                    <td>{{ expense.amountpaid }}</td>
+                    <td>{{ utility.utilitiesid }}</td>
+                    <td>{{ utility.category }}</td>
+                    <td>{{ utility.utilitiesdate }}</td>
+                    <td>{{ utility.amountpaid }}</td>
                 </tr>
                 {% endfor %}   
             </tbody>

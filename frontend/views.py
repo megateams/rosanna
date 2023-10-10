@@ -1342,14 +1342,14 @@ def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
 
 @login_required
-def expenses(request):
-    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    expenses = ExpenseRecord.objects.all()
+def utilities(request):
+    total_amount_paid = Utilities.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.all()
     context = {
-        'expenses': expenses,
+        'utilities': utilities,
         'total_amount_paid': total_amount_paid,
         }
-    return render(request, 'frontend/accounting/expenses.html',context)
+    return render(request, 'frontend/accounting/utilities.html',context)
 
 @login_required
 def financeteacherpaymentsList(request):
