@@ -507,7 +507,6 @@ def edit_std_fees(request):
         paymentid = request.POST.get("paymentid")
         amount = float(request.POST.get("amount"))
         modeofpayment = request.POST.get("modeofpayment")
-        date = request.POST.get("date")
         fee = Fees.objects.get(paymentid=paymentid)
         classfees = float(fee.classfees)
         balance = classfees - amount
@@ -515,7 +514,6 @@ def edit_std_fees(request):
         fee.amount = amount
         fee.balance = balance
         fee.modeofpayment = modeofpayment
-        fee.date = date
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
@@ -990,7 +988,6 @@ def edit_expense(request, expenseid):
             updated_expensedate = request.POST.get('expensedate')
             updated_amountpaid = request.POST.get('amountpaid')
             expense.category = updated_category
-            expense.expensedate = updated_expensedate
             expense.amountpaid = updated_amountpaid
             expense.save()
             messages.success(request, 'Expense updated successfully.')

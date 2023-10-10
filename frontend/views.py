@@ -488,7 +488,6 @@ def edit_tr_image(request):
 def edit_student(request):
     if request.method == "POST":
         stdnumber = request.POST.get("stdnumber")
-        regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
@@ -506,7 +505,6 @@ def edit_student(request):
         username = request.POST.get("username")
 
         student = Student.objects.get(pk=stdnumber)
-        student.regdate = regdate
         student.childname = childname
         student.gender = gender
         student.dob = dob
@@ -1580,8 +1578,6 @@ def edit_supportstaff(request):
         salary = request.POST.get('salary')
         bankaccnum = request.POST.get('bankaccnum')
         dob = request.POST.get('dob')
-        joiningdate = request.POST.get('joiningdate')
-
 
         that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
 
@@ -1596,7 +1592,6 @@ def edit_supportstaff(request):
         that_support_staff.salary = salary
         that_support_staff.bankaccnum = bankaccnum
         that_support_staff.dob = dob
-        that_support_staff.joiningdate = joiningdate
 
         # Save the updated support staff
         that_support_staff.save()
