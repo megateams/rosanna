@@ -112,13 +112,13 @@ def addadmins(request):
         address = request.POST.get('address')
         contact = request.POST.get('contact')
         email = request.POST.get('email')
-        #profileimage = request.POST.get('profileimage')
         role = request.POST.get('role')
         qualification = request.POST.get('qualification')
         bankaccnum = request.POST.get('bankaccnum')
         salary = request.POST.get('salary')
         username = request.POST.get('username')
-        password = request.POST.get('password')
+
+        default_password = "123456"
         
         try:
             adminexist = Administrators.objects.get(username = username)
@@ -136,7 +136,7 @@ def addadmins(request):
                 bankaccnum =  bankaccnum ,
                 salary = salary ,
                 username = username ,
-                password = encryptpassword(password) ,
+                password = encryptpassword(default_password) ,
             )
             
             Administrators.save
