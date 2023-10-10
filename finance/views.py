@@ -184,29 +184,7 @@ def staffpayments(request):
         Staffpayments.save()
     return render(request , 'finace/financedashboard.html')
         
-# def expenserecords(request):
-#     if request.method == 'POST':
-#         expenseid = request.POST.get('expenseid')
-#         category = request.POST.get('category')
-#         amountrequired = request.POST.get('amountrequired')
-#         # expensedate = request.POST.get('expensedate')
-#         amountpaid = request.POST,get('amountpaid')
-#         balance = request.POST.get('balance')
 
-#         # Capture the current date
-#         current_date = date.today()
-        
-#         ExpenseRecord.objects.create(
-#             expenseid = expenseid ,
-#             category = category ,
-#             amountrequired = amountrequired ,
-#             expensedate = current_date ,
-#             amountpaid = amountpaid ,
-#             balance = balance
-#         )
-        
-#         ExpenseRecord.save()
-#     return render(request , 'finance/financedashboard.html')
 
 
 def students_list(request):
@@ -306,6 +284,15 @@ def financedashboard(request):
 
     term_data = Term.objects.get(status=1)
 
+    # Calculate total income (fees)
+    total_income = total_amount
+
+    # Calculate total expenses (teacher payments + support staff payments + utilities)
+    total_expenses = total_trpayments + total_sspayments + total_amount_paid
+
+    # Calculate profit
+    profit = total_income - total_expenses
+
     # Calculate the percentages
     if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
         context = {
@@ -339,6 +326,9 @@ def financedashboard(request):
             'sspayments_percentage': sspayments_percentage,
             'trpayments_percentage': trpayments_percentage,
             'bursar' : bursar,
+            'total_income' : total_income,
+            'total_expenses' : total_expenses,
+            'profit' : profit,
         }
         return render(request, "finance/financedashboard.html", context)
 
