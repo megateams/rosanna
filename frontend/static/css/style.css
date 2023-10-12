@@ -276,8 +276,30 @@
     height: 10px;
 }
 
+.list-header{
+    display: flex;
+}
+
+.student-details .image img{
+    /* display: none; */
+    height: 50vh;
+}
+
+.image_icon
+{
+    font-size: 4rem;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: -60px;
+    left: 340;
+    color: #ffffff;
+    background: #f00;
+}
 /* small screen */
 @media (max-width: 770px){
+    tbody td{
+        min-width: 90px;
+    }
     .main{
         height: 100vh;
     }
@@ -346,6 +368,7 @@
         height: 13vh;
         padding: 10px 5px;
         margin: 10px 7px;
+        box-shadow: 1px 1px 1px 1px black;
     }
 
     .cards .card .icon{
@@ -356,6 +379,54 @@
         color: #fff;
     }
 
+    .current_date{
+        display: none;
+    }
+
+    .inner-content{
+        margin-left: -10px;
+    }
+
+    .list-header{
+        display: block;
+    }
+    /* Apply horizontal scrolling to the table */
+    .table-section {
+        overflow-x: auto;
+        width: 99%;
+        margin-bottom: 30px;
+    }
+    
+    /* Fix the dataTable_filter and dataTable_length sections */
+    .dataTables_wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dataTables_filter {
+        /* flex-grow: 1; */
+        margin-bottom: 10px; /* Adjust the margin as needed */
+        margin-right: -5px;
+        flex: 0 0 auto;
+    }
+    .dataTables_filter input{
+        width: 150px;
+    }
+
+    .dataTables_length {
+        margin-bottom: 10px; /* Adjust the margin as needed */
+        margin-right: 10px;
+        flex: 0 0 auto;
+    }
+
+
+    /* edting show student */
+    .student-details .image img{
+        /* display: none; */
+        height: 30vh;
+    }
    
 }
 /* small screen */

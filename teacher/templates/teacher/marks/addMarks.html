@@ -1,16 +1,18 @@
 {% extends 'teacher/base.html' %}
 {% block title %} Add Marks {% endblock title %}
+{% block pagetitle %} Add Marks {% endblock pagetitle %}
+{% load custom_filters %}
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex justify-content-between">
-        <div class="class-btns" pr-5>
+    <div class="row header">
+        <div class="col-md-7 class-btns" pr-5>
             <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Class Information</a>
             <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">View Exam Results</a>
           
             <!-- <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">Add Marks</a> -->
             
         </div>
-        <div class="current_session d-flex mt-2">
+        <div class="col-md-5 current_session d-flex">
                 <div class="current-term mr-4">
                     <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
                     <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
@@ -28,8 +30,8 @@
         <a href="/teacher/his_class/addmarks/{{ schoolclass.classid }}/{{ teacher_id }}?marktype={{ mark_type.0 }}" class="btn btn-sm btn-warning m-1">Add {{ mark_type.0 }} Marks</a>
         {% endfor %}
     </div>
-    <div class="header">
-        <h5 class="mb-2"><b> Add {{marktype}} Marks</b></h5>
+    <div class="">
+        <h5 class="mb-2"><b> Add {{mark_type}} Marks</b></h5>
     </div>
     
     
@@ -46,39 +48,48 @@
         </ul>
     {% endif %}
     <!-- table for adding student marks -->
-    {% if marktype %}
-    <div class="table-section">
-        <table class="table" id="">
-            <thead>
+    {% if mark_type %}
+    <div class="table-section" style="font-size: 14px;">
+        <table class="table bg-white" id="table" border="1">
+            <thead class=" text-white">
                 <tr>
-                    <th>Student Number</th>
-                    <th>Student Name</th>
+                    <th>Reg Number</th>
+                    <th>Name</th>
                     {% for subject in subjects %}
-                    <th>{{ subject.subjectname }}</th>
+                        <th>{{ subject.subjectname|slice:":3" }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                {% for student in students %}
+                {% for student, marks_dict in student_marks.items %}
                     <tr>
                         <td>{{ student.stdnumber }}</td>
                         <td>{{ student.childname }}</td>
                         {% for subject in subjects %}
                             <td>
-                                <form class="form mark-form" action="" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="studentname" value="{{ student.childname }}">
-                                    <input type="hidden" name="marktype" value="{{ marktype }}">
-                                    <input type="hidden" name="subject" value="{{ subject.subjectid }}">
-                                    <div class="d-flex">
-                                        <input type="text" name="mark_obtained" style="height: 30px;" class="form-control">
-                                        <button type="submit" class="btn btn-sm btn-success ml-2"><i class="fas fa-check"></i></button>
-                                    </div>
-                                </form>
-                                <div class="mark-type-display"></div> <!-- Placeholder for displaying mark type -->
+                                {% with marks=marks_dict|get_item:subject %}
+                                    {% if marks %}
+                                        {{ marks.marks_obtained }}
+                                    {% else %}
+                                    <form class="form mark-form" action="/submit_marks/{{schoolclass.classid}}/{{teacher_id}}/" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="studentname" value="{{ student.childname }}">
+                                        <input type="hidden" name="marktype" value="{{ mark_type }}">
+                                        <input type="hidden" name="subject" value="{{ subject.subjectid }}">
+                                        <div class="d-flex">
+                                            <input type="text" name="mark_obtained" style="height: 30px;" class="form-control">
+                                            <button type="submit" class="btn btn-sm btn-success ml-2"><i class="fas fa-check"></i></button>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+                                {% endwith %}
                             </td>
                         {% endfor %}
+                        
                     </tr>
+                  
+                    
+                    
                 {% endfor %}
             </tbody>
         </table>

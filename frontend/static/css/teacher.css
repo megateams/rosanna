@@ -43,6 +43,21 @@
 
 /* small screen */
 @media (max-width: 770px){
+
+    a.btn{
+        width: 120px;
+        font-size: 12px;
+    }
+
+    .red-btns{
+        margin-top: -15px;
+    }
+    .header{
+        margin-top: -20px;
+    }
+    tbody td{
+        min-width: 100px;
+    }
     .main{
         height: 100vh;
     }
@@ -161,4 +176,6 @@
    
 }
 /* small screen */
+
+
 

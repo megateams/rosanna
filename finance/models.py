@@ -35,12 +35,11 @@ class Fees(models.Model):
     accumulatedpayment = models.IntegerField(default=0)
     balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
-    date =models.DateField(verbose_name="Date of Payment")
-    timestamp = models.TimeField(default=timezone.now)
+    date =models.DateTimeField(auto_now=True)
     term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None, null=True)
     year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None, null=True)
     
-    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'timestamp', 'term', 'year']
+    Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'term', 'year']
     
 class ExpenseRecord(models.Model):
     expenseid = models.AutoField(primary_key=True)

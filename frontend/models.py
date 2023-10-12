@@ -96,10 +96,11 @@ class Student(models.Model):
 
     guardianname = models.CharField(max_length=10 , verbose_name='Guardian Names' , blank=True)
     gcontact = models.CharField(max_length=10 , verbose_name="Guardian's Contact" , blank=True)
+    schoolpaycode = models.CharField(max_length=10 , verbose_name="School Pay Code" , blank=True)
 
     Display_Fields = [
         'stdnumber','childname' ,'stdclass', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
-    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password'
+    , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password', 'schoolpaycode'
     ]
 
 class Supportstaff(models.Model):
@@ -221,7 +222,7 @@ class Administrators(models.Model):
     salary = models.IntegerField(verbose_name='Salary')
     bankaccnum = models.IntegerField(verbose_name='Bank Account Number')
     username = models.CharField(verbose_name='User Name' , max_length=20)
-    password = models.CharField(verbose_name='Password' , max_length=20)
+    password = models.CharField(verbose_name='Password' , max_length=255)
     
     displayadministrators = [
         'fullname' , 'gender' , 'address' , 'contact' , 'email' , 'profileimage' , 'role' , 'qualification' , 

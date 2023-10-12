@@ -12,15 +12,15 @@ from django.http import JsonResponse
 # from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from datetime import datetime,date
+from django.utils.timezone import now
 from django.db.models import Max
 import openpyxl
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
-from django.db.models import Q 
+from django.db.models import Q  
 import bcrypt
 
 salt = bcrypt.gensalt()
-print(salt)
 
 def encryptpassword(password):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), b'$2b$12$QW/1zgrHumeirkSwiM437u')
@@ -88,6 +88,7 @@ def editadministrator(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def deleteadmin(request):
     if request.method == 'POST':
         adminid = request.POST.get('adminid')
@@ -98,10 +99,12 @@ def deleteadmin(request):
     admins = Administrators.objects.all()
     return render(request , "frontend/staff/administratorsList.html" , {'admins' : admins})
 
+@login_required
 def adminslist(request):
     admins = Administrators.objects.all()
     return render(request , 'frontend/staff/administratorsList.html' , {'admins' : admins})
 
+@login_required
 def addadmins(request):
     if request.method == 'POST':
         fullname = request.POST.get('fullname')
@@ -137,13 +140,13 @@ def addadmins(request):
             )
             
             Administrators.save
-            User.objects.create_user(
-                username = username ,
-                password = password ,
-                email = email ,
-                is_staff = True ,
-                is_superuser = True ,
-            )
+            # User.objects.create_user(
+            #     username = username ,
+            #     password = password ,
+            #     email = email ,
+            #     is_staff = True ,
+            #     is_superuser = True ,
+            # )
             
             messages.success(request , "Administrator Created Successfully")
             return redirect('adminslist') 
@@ -161,6 +164,7 @@ def register(request):
     return render(request, "frontend/registration.html", {"form": form})
 
 # login views for the admin user
+
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -174,7 +178,7 @@ def user_login(request):
             messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
-    return render(request, "frontend/login.html")
+    return render(request, "frontend/registration/login.html")
 
 @login_required
 def user_logout(request):
@@ -182,14 +186,13 @@ def user_logout(request):
     messages.success(request, "You have successfully logged out")
     request.session['logged_out'] = True # Set the session variable to True
     return redirect("Admin Login") # Redirect to the login page after logout
-# Create your views here.
-# creating views for dashboard
 
 @login_required
 def home(request):
-    if request.session.get('logged_out', False):
-        messages.warning(request, "You need to login to access the dashboard")
-        return redirect("login")
+    if not request.user.is_authenticated:
+        # User is not logged in, show a message and redirect to the login page
+        messages.warning(request, "You need to log in to access this page.")
+        return redirect("Admin Login")
 
     boys_count = Student.objects.filter(gender='m').count()
     girls_count = Student.objects.filter(gender='f').count()
@@ -344,6 +347,7 @@ def view_marks(request, class_id):
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
 
     mark_types = Mark.MARK_TYPES
+    term_data = Term.objects.get(status=1)
     # Create a dictionary to hold the total and average marks for each subject for each student
     subjects_marks_data = {}
     subjects_total_marks = {subject: 0 for subject in subjects}
@@ -355,15 +359,16 @@ def view_marks(request, class_id):
         for subject in subjects:
             total_marks = 0
             marks_count = 0
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject)
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject).exclude(mark_type='Test')
+
             for mark in marks:
                 total_marks += mark.marks_obtained
                 marks_count += 1
                 subjects_total_marks[subject] += mark.marks_obtained
                 subjects_marks_count[subject] += 1
 
-            average_marks = total_marks / marks_count if marks_count > 0 else 0
-            total_average_marks += average_marks
+            average_marks = total_marks / 3 if marks_count > 0 else 0
+            total_average_marks += int(average_marks)
             final_average = total_average_marks / subjects_count if marks_count > 0 else 0
               # Accumulate average marks for the student
             student_subjects_data.append({
@@ -371,15 +376,12 @@ def view_marks(request, class_id):
                 'total_marks': total_marks,
                 'average_marks': average_marks,
             })
-
         subjects_marks_data[student] = student_subjects_data
-        student.total_average_marks = total_average_marks  # Store total average marks for the student
         student.final_average = final_average
-        # Calculate average marks for each subject across all students
-        subjects_average_marks = {subject: total_marks / marks_count if marks_count > 0 else 0
-                                for subject, total_marks in subjects_total_marks.items()}
-        # Sort the students based on their final average marks in descending order
-        # students = sorted(students, key=lambda student: student.final_average, reverse=True)
+        student.total_average_marks = total_average_marks  # Store total average marks for the student
+
+    # Sort the students based on their total marks in descending order
+    students = sorted(students, key=lambda student: student.total_average_marks, reverse=True)
 
     # Assign ranks to students based on their position in the sorted list
     for rank, student in enumerate(students, start=1):
@@ -559,13 +561,16 @@ def supportstaffreg(request):
         else:
             default_supportstaffid = 'RSS0001' 
 
+        # Capture the current date
+        current_date = date.today()
+
 
         # Retrieve other form fields
         gender = request.POST.get('gender')
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        joiningdate = request.POST.get('joiningdate')
+        # joiningdate = request.POST.get('joiningdate')
         qualification = request.POST.get('qualification')
         position = request.POST.get('position')
         salary = request.POST.get('salary')
@@ -580,7 +585,7 @@ def supportstaffreg(request):
             contact=contact,
             email=email,
             address=address,
-            joiningdate=joiningdate,
+            joiningdate=current_date,
             qualification=qualification,
             position=position,
             salary=salary,
@@ -744,8 +749,11 @@ def studentReg(request):
             new_stdnumber = 'STD001'
         default_password = "123456"
 
+        # Capture the current date
+        current_date = date.today()
 
-        regdate = request.POST.get('regdate')
+
+        # regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         class_id = request.POST['stdclass']
         selected_class = Schoolclasses.objects.get(pk=class_id)
@@ -764,9 +772,10 @@ def studentReg(request):
         guardianname = request.POST.get('guardianname')
         gcontact = request.POST.get('gcontact')
         
+        
         student =Student.objects.create(
             stdnumber =new_stdnumber,            
-            regdate = regdate ,
+            regdate = current_date ,
             childname = childname ,
             stdclass=selected_class,
             gender = gender ,
@@ -1104,24 +1113,42 @@ def admins_export_to_excel(request):
     wb = openpyxl.Workbook()
     ws = wb.active
 
+    # Define the fields to export (excluding 'profileimage' and 'password')
+    fields_to_export = [
+        'fullname', 'gender', 'address', 'contact', 'email',
+        'role', 'qualification', 'salary', 'bankaccnum'
+    ]
+
     # Write field names to the worksheet as headers
-    field_names = Administrators._meta.get_fields()
-    header_row = [field.name for field in field_names]
-    ws.append(header_row)
+    ws.append(fields_to_export)
+
+    # Set column widths for all columns
+    ws.column_dimensions['A'].width = 20
+    ws.column_dimensions['B'].width = 10
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 15
+    ws.column_dimensions['G'].width = 15
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 15
 
     # Write data to the worksheet
     for row_data in data:
-        ws.append(list(row_data.values()))
+        # Extract values only for the fields to export
+        row_values = [row_data[field] for field in fields_to_export]
+        ws.append(row_values)
 
     # Set the filename and content type for the response
-    filename = 'admins_data.xlsx'
+    filename = 'administrators_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     # Save the workbook to the response
     wb.save(response)
 
-    return response      
+    return response
+    
     
 def teachers(request):
     if request.method == 'POST':
@@ -1140,6 +1167,10 @@ def teachers(request):
         default_teacherid = 'RT{:04}'.format(int(last_teacher.teacherid[2:]) + 1) if last_teacher else 'RT0001'
         default_password = "123456"
 
+        # Capture the current date
+        current_date = date.today()
+
+
         # teacherid = request.POST.get('teacherid')
         teachernames = request.POST.get('teachernames')
         gender = request.POST.get('gender')
@@ -1147,7 +1178,7 @@ def teachers(request):
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        joiningdate = request.POST.get('joiningdate')
+        # joiningdate = request.POST.get('joiningdate')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
         qualification = request.POST.get('qualification')
@@ -1166,7 +1197,7 @@ def teachers(request):
             contact=contact,
             email=email,
             address=address,
-            joiningdate=joiningdate,
+            joiningdate=current_date,
             qualification=qualification,
             salary=salary,
             bankaccnum=bankaccnum,

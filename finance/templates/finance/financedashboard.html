@@ -1,5 +1,6 @@
 {% extends 'finance/base.html' %}
 {% block  title %} Dashboard {% endblock title %}
+{% block  pagetitle %} Dashboard {% endblock pagetitle %}
 {% load static %}
 {% block  main %}
 <div class="inner-content">
@@ -16,16 +17,14 @@
         </ul>
         {% endif %}
     <div class="d-flex align-items-center  ml-2" style="margin: 5px 0">
-        {% for data in term_data %}
             <div class="current-term mr-3">
                 <a class=" btn btn-sm  text-white p-2" style="background-color: #f9b855;">Current Term: </a>
-                <a  class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{data.current_term}} </a>
+                <a  class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_term}} </a>
             </div>
             <div class="current-year"> 
                 <a class="btn btn-sm text-white p-2" style="background-color: #f9b855;">Current Year: </a>
-                <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{data.current_year}} </a>
+                <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_year}} </a>
             </div>
-        {% endfor %}
     </div>
     <div class="row pt-4">
         <div class="col-md-3">
