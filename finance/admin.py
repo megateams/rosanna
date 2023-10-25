@@ -6,9 +6,9 @@ from .models import *
 class FeesAdmin(admin.ModelAdmin):
     list_display =Fees.Display_Fees
     
-@admin.register(ExpenseRecord)
-class ExpenseRecord(admin.ModelAdmin):
-    list_display =ExpenseRecord.Display_ExpenseRecords
+@admin.register(Utilities)
+class Utilities(admin.ModelAdmin):
+    list_display =Utilities.Display_Utilities
 
 # Register your models here.
 

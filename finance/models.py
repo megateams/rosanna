@@ -41,15 +41,15 @@ class Fees(models.Model):
     
     Display_Fees =['paymentid', 'stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date', 'term', 'year']
     
-class ExpenseRecord(models.Model):
-    expenseid = models.AutoField(primary_key=True)
-    category =models.CharField(max_length=255, blank=True, verbose_name="Expense category")
-    expensedate =models.DateField(verbose_name="Date of Expense")
+class Utilities(models.Model):
+    utilitiesid = models.AutoField(primary_key=True)
+    category =models.CharField(max_length=255, blank=True, verbose_name="Utility category")
+    utilitiesdate =models.DateField(verbose_name="Date of Utilities")
     amountpaid =models.CharField(max_length=20, blank=True, verbose_name="Amount paid")
     term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
     year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
     
-    Display_ExpenseRecords =['expenseid', 'category', 'expensedate', 'amountpaid', 'term', 'year']
+    Display_Utilities =['utilitiesid', 'category', 'utilitiesdate', 'amountpaid', 'term', 'year']
 
 
 
