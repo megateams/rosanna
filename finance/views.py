@@ -261,8 +261,14 @@ def financedashboard(request):
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
 
+<<<<<<< HEAD
     term_data = Term.objects.get(status=1)
     terms = Term.objects.all()
+=======
+    bursar = Administrators.objects.get(id=admin_id)
+    utilities = Utilities.objects.all()
+    total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
+>>>>>>> 7e0a2ac36f983b6cd8e2cbf60ab3dec3dc49c641
 
     bursar = Administrators.objects.get(id=admin_id)
     utilities = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year)
@@ -296,11 +302,18 @@ def financedashboard(request):
     # Calculate total income (fees)
     total_income = total_amount
 
+<<<<<<< HEAD
+=======
+    # Calculate total income (fees)
+    total_income = total_amount
+
+>>>>>>> 7e0a2ac36f983b6cd8e2cbf60ab3dec3dc49c641
     # Calculate total expenses (teacher payments + support staff payments + utilities)
     total_expenses = total_trpayments + total_sspayments + total_amount_paid
 
     # Calculate profit
     profit = total_income - total_expenses
+<<<<<<< HEAD
     total = total_amount + total_amount_paid + total_sspayments + total_trpayments
     if total == 0:
         fees_percentage = 0
@@ -308,6 +321,23 @@ def financedashboard(request):
         sspayments_percentage = 0
         trpayments_percentage = 0
     else:
+=======
+
+    # Calculate the percentages
+    if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+            'bursar' : bursar,
+        }
+        return render(request, "finance/financedashboard.html", context)
+    else: 
+        total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+>>>>>>> 7e0a2ac36f983b6cd8e2cbf60ab3dec3dc49c641
         fees_percentage = (total_amount / total) * 100
         utilities_percentage = (total_amount_paid / total) * 100
         sspayments_percentage = (total_sspayments / total) * 100
@@ -332,12 +362,32 @@ def financedashboard(request):
     }
     return render(request, "finance/financedashboard.html", context)
 
+<<<<<<< HEAD
 # that term
 def that_term(request, id):
     # Check if the bursar is authenticated (if you are using sessions)
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+=======
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+            'fees_percentage': fees_percentage,
+            'utilities_percentage': utilities_percentage,
+            'sspayments_percentage': sspayments_percentage,
+            'trpayments_percentage': trpayments_percentage,
+            'bursar' : bursar,
+            'total_income' : total_income,
+            'total_expenses' : total_expenses,
+            'profit' : profit,
+        }
+        return render(request, "finance/financedashboard.html", context)
+>>>>>>> 7e0a2ac36f983b6cd8e2cbf60ab3dec3dc49c641
 
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
