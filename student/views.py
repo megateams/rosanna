@@ -5,7 +5,7 @@ from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 from django.conf import settings
 from django.db.models.functions import Coalesce, Cast
 from django.db.models import Avg, F, FloatField 
