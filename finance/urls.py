@@ -23,9 +23,12 @@ urlpatterns = [
     path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
     path('finance/', views.financelogin , name='financeloginpage'),
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
+    
+    path('bursar_profile/', views.bursar_profile, name='bursar_profile'),
     path('that_term/<id>', views.that_term, name="that_term"), 
     
     path('students/', views.students_list, name='students_list'),
+
     path('finance/students_by_class/<int:class_id>/', views.students_by_class, name='students_by_class'),
     path('assign_code/<str:stdnumber>/', views.assign_school_code, name='assign_school_code'),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),

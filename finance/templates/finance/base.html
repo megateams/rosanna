@@ -141,7 +141,17 @@
                     <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
                 <div class="right mr-5 d-flex">
-                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}</p>
+                    <!-- <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}</p> -->
+                    <div class="dropdown bursar-profile">
+                        <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="bursarDropdown" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="bursarDropdown">
+                            <a href=" {% url 'bursar_profile' %} " class="dropdown-item">Profile</a>
+                        </div>
+                    </div>
+
                     <a class="ml-3 mr-2 text-danger" href="{% url 'financeloginpage' %}">
                         <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
                     </a>
