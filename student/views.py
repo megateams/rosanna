@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from frontend.models import *
 from finance.models import *
@@ -70,6 +70,29 @@ def dashboard(request):
 def profile(request,std_number):
     students = Student.objects.get(stdnumber = std_number)
     return render(request, 'student/profile.html',{'student':students})
+
+def edit_student_profile(request, std_number):
+    student = get_object_or_404(Student, stdnumber=std_number)
+
+    
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+        
+        if new_pass == confirm_pass:
+            # Update student's password (replace this with your actual password update logic)
+            student.password = encryptpassword(new_pass)
+            student.username = username
+            student.save()
+            
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+            
+        return redirect("Student Profile", std_number=std_number)
+    
+    return render(request, 'student/profile.html', {'student': student})
 
 # Paymentistory
 def paymenthistory(request,std_number):
