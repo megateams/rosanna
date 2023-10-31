@@ -690,6 +690,9 @@ def feesclearedstudents(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
+
+    
+    term_data = Term.objects.get(status=1)
     # Filter the Fees model to get students with a balance of 0
     cleared_students = Fees.objects.filter(balance=0 ,term=term_data.current_term, year=term_data.current_year)
     classes = Schoolclasses.objects.all()
