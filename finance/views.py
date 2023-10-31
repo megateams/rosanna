@@ -472,6 +472,34 @@ def bursar_profile(request):
         # You can redirect or show an error message here
         pass
 
+def edit_bursar_profile(request):
+    try:
+        # Retrieve the Bursar's data based on their role
+        bursar = Administrators.objects.get(role='Bursar')
+    except Administrators.DoesNotExist:
+        raise Http404("Bursar profile not found")
+
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+
+        if new_pass == confirm_pass:
+            # Update the Bursar's password (replace this with your actual password update logic)
+            bursar.password = encryptpassword(new_pass)
+            bursar.username = username
+            bursar.save()
+
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+
+        return redirect("bursar_profile")
+
+    return render(request, 'finance/profile.html', {'bursar': bursar})
+
+
+
 # fees views
 def financeaddFees(request):
     if 'admin_id' not in request.session:

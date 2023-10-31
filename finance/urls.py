@@ -25,6 +25,8 @@ urlpatterns = [
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
     path('bursar_profile/', views.bursar_profile, name='bursar_profile'),
+    path('edit_bursar_profile/', views.edit_bursar_profile, name='edit_bursar_profile'),
+
     path('that_term/<id>', views.that_term, name="that_term"), 
     
     path('students/', views.students_list, name='students_list'),
