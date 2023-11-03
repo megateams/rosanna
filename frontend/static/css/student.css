@@ -20,6 +20,7 @@
 .std_cards .card .icon{
     padding-left: 20px;
     padding-top: 10px;
+    font-size: 2rem;
 }
 
 .std_cards .results_card {
@@ -38,4 +39,16 @@
 .std_image .image img
 {
     width: 100%;
+}
+
+@media (max-width: 770px){
+    .std_cards .card h5{
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .std_cards .card .icon{
+        font-size: 1.5rem;
+        margin-left: -10px;
+    }
 }
