@@ -41,6 +41,10 @@
     width: 100%;
 }
 
+.table-section{
+    margin-left: -20px;
+}
+
 @media (max-width: 770px){
     .std_cards .card h5{
         font-size: 13px;
@@ -50,5 +54,39 @@
     .std_cards .card .icon{
         font-size: 1.5rem;
         margin-left: -10px;
+    }
+    .std_image .image img{
+        width: 50%;
+        margin: 0 25% ;
+        
+    }
+    .studentresults{
+        margin-left: 10%;
+    }
+
+    .table-section{
+        width: 109%;
+    }
+
+    .payments{
+        margin: 0;
+        width: 100%;
+    }
+    .student-details .image img{
+        width: 50%;
+        height: 50%;
+        margin: 0 25% ;   
+    }
+    .edit-profile{
+        margin-left: 30px;
+        margin-bottom: 10px;
+    }
+    .personal-info{
+        width: 90%;
+        margin-left: 25px;
+    }
+    .parent-info{
+        width: 90%;
+        margin-left: 25px;  
     }
 }
