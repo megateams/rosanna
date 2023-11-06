@@ -15,27 +15,27 @@
             </div>
         {% endfor %}
         </ul>
-        {% endif %}
-    <div class="d-flex align-items-center  ml-2" style="margin: 0px">
-        <div class="current-term mr-3">
-            <a class=" btn btn-sm  text-white p-2" style="background-color: green;">Current Term: </a>
-            <a  class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_term}} </a>
+    {% endif %}
+    <div class="top_cards  ml-2">
+        <div class="current-term">
+            <a class=" btn btn-l btn-sm  text-white p-2" style="background-color: green;">Current Term: </a>
+            <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_term}} </a>
         </div>
-        <div class="current-year mr-3"> 
-            <a class="btn btn-sm text-white p-2" style="background-color:  #f9b855;">Current Year: </a>
-            <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_year}}</a>
+        <div class="current-year"> 
+            <a class="btn btn-sm btn-l text-white p-2" style="background-color:  #f9b855;">Current Year: </a>
+            <a class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_year}}</a>
         </div>
-        <div class="current-term mr-3">
-            <a class=" btn btn-sm  text-white p-2" style="background-color: blue;">Total Income: </a>
-            <a  class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{ total_income|default:"0"}} </a>
+        <div class="current-term">
+            <a class=" btn btn-sm btn-l  text-white p-2" style="background-color: blue;">Total Income: </a>
+            <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ total_income|default:"0"}} </a>
         </div>
-        <div class="current-year mr-3"> 
-            <a class="btn btn-sm text-white p-2" style="background-color: red;">Total Expenses: </a>
-            <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{ total_expenses|default:"0" }}</a>
+        <div class="current-year"> 
+            <a class="btn btn-sm btn-l text-white p-2" style="background-color: red;">Total Expenses: </a>
+            <a class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ total_expenses|default:"0" }}</a>
         </div>
-        <div class="current-term mr-3">
-            <a class=" btn btn-sm  text-white p-2" style="background-color: green;">Profits: </a>
-            <a  class="btn btn-sm btn-dark text-white p-2" style="margin-left: -7px;">{{ profit|default:"0" }}</a>
+        <div class="current-term">
+            <a class=" btn btn-sm btn-l text-white p-2" style="background-color: green;">Profits: </a>
+            <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ profit|default:"0" }}</a>
         </div>
         <!-- previous terms -->
         <div class="dropdown previous-terms">
@@ -51,8 +51,8 @@
         </div>
         <!-- previous terms -->
     </div>
-    <div class="row pt-4">
-        <div class="col-md-3">
+    <div class="link_cards pt-4">
+        <div class="">
             <a href="/financefeeslist" style="text-decoration: none;">
                 <div class="card feescard p-3">
                     <div class="row">
@@ -68,7 +68,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3">
+        <div class="">
             <a href="/financeteacherpaymentslist" style="text-decoration: none;">
                 <div class="card trpaymentscard p-3">
                     <div class="row">
@@ -84,7 +84,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3">
+        <div class="">
             <a href="/financesupportstaffpaymentslist" style="text-decoration: none;">
                 <div class="card sspaymentscard p-3">
                     <div class="row">
@@ -100,7 +100,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3">
+        <div class="">
             <a href="/financeutilitieslist" style="text-decoration: none;">
                 <div class="card expensecard p-3">
                     <div class="row">
@@ -128,44 +128,46 @@
         <div class="col-lg-8 ">
             <div class="bg-white p-2" style="font-size: 13px;">
                 <h5 class="text-center"><u>Fees Defaulters</u></h5>
-                <table class="table" id="table" border="1">
-                    <thead class="bg-dark text-white">
-                        <tr>
-                            <th>Fees ID</th>
-                            <th>Student Number</th>
-                            <th>Student Name</th>
-                            <th>Student Class</th>
-                            <th>Amount</th>
-                            <th>Balance</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for fee in fees_list %}
-                            {% if fee.balance != 0 %}
-                                {% with fee.stdnumber as last_stdnumber %}
-                                    {% for previous_fee in fees_list %}
-                                        {% if previous_fee.stdnumber == last_stdnumber %}
-                                            {% if previous_fee.date > fee.date %}
-                                                {% with fee=previous_fee %}
-                                                {% endwith %}
+                <div class="table-section">
+                    <table class="table" id="table" border="1">
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th>Fees ID</th>
+                                <th>Student Number</th>
+                                <th>Student Name</th>
+                                <th>Student Class</th>
+                                <th>Amount</th>
+                                <th>Balance</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fee in fees_list %}
+                                {% if fee.balance != 0 %}
+                                    {% with fee.stdnumber as last_stdnumber %}
+                                        {% for previous_fee in fees_list %}
+                                            {% if previous_fee.stdnumber == last_stdnumber %}
+                                                {% if previous_fee.date > fee.date %}
+                                                    {% with fee=previous_fee %}
+                                                    {% endwith %}
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endwith %}
-                                <tr>
-                                    <td>{{ fee.paymentid }}</td>
-                                    <td>{{ fee.stdnumber.stdnumber }}</td>
-                                    <td>{{ fee.stdname }}</td>
-                                    <td>{{ fee.studentclass }}</td>
-                                    <td>{{ fee.amount }}</td>
-                                    <td>{{ fee.balance }}</td>
-                                    <td>{{ fee.date }}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                        {% endfor %}
+                                    {% endwith %}
+                                    <tr>
+                                        <td>{{ fee.paymentid }}</td>
+                                        <td>{{ fee.stdnumber.stdnumber }}</td>
+                                        <td>{{ fee.stdname }}</td>
+                                        <td>{{ fee.studentclass }}</td>
+                                        <td>{{ fee.amount }}</td>
+                                        <td>{{ fee.balance }}</td>
+                                        <td>{{ fee.date }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         
