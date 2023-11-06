@@ -20,13 +20,28 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
     path('finance/', views.financelogin , name='financeloginpage'),
-    path('financedashboard/', views.financedashboard, name=""), 
+    path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
+    path('bursar_profile/', views.bursar_profile, name='bursar_profile'),
+    path('edit_bursar_profile/', views.edit_bursar_profile, name='edit_bursar_profile'),
+
+    path('that_term/<id>', views.that_term, name="that_term"), 
+    
+    path('students/', views.students_list, name='students_list'),
+
+    path('finance/students_by_class/<int:class_id>/', views.students_by_class, name='students_by_class'),
+    path('assign_code/<str:stdnumber>/', views.assign_school_code, name='assign_school_code'),
     path('financeaddfees/', views.financeaddFees, name="Add Fees"),
     path('financefeeslist/', views.financefeesList, name="Fees List"),
+    path('finance/fees_by_class/<int:class_id>/', views.fees_by_class, name='fees_by_class'),
     path('delete_fee/', views.delete_fee, name='delete_fee'),
     path('edit_std_fees/', views.edit_std_fees, name='edit_std_fees'),
+    path('feesclearedstudents/', views.feesclearedstudents, name='Cleared Students List'),
+    path('feesclearedstudents_byclass/<int:class_id>/', views.feesclearedstudents_byclass, name='Cleared Students by Class'),
+    path('generate_clearance/<str:stdnumber>/', views.generate_clearance, name='Generate Clearance'),
+    path('clearance_card/<str:stdnumber>/', views.clearance_card, name='Clearance Card'),
 
     path('financeaddfeesstructure/', views.financeaddFeesstructure, name="Add Fees Structure"),
     path('financefeesstructurelist/', views.financefeesstructureList, name="Fees Structure List"),
@@ -34,10 +49,10 @@ urlpatterns = [
     path('deletefeesstructure/<int:feesstructureid>/', views.deletefeesstructure, name='deletefeesstructure'),
 
    
-    path('financeaddexpenses/', views.financeaddExpenses, name="Add Expenses"),
-    path('financeexpenseslist/', views.financeexpensesList, name="Expenses List"),
-    path('delete_expense/', views.delete_expense, name='delete_expense'),
-    path('edit_expense/<str:expenseid>/', views.edit_expense, name='edit_expense'),
+    path('financeaddutilities/', views.financeaddUtilities, name="Add Utilities"),
+    path('financeutilitieslist/', views.financeutilitiesList, name="Utilities List"),
+    path('delete_utilities/', views.delete_utilities, name='delete_utilities'),
+    path('edit_utilities/<str:utilitiesid>/', views.edit_utilities, name='edit_utilities'),
 
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="AddTeacherpayments"),
 
@@ -64,9 +79,11 @@ urlpatterns = [
 
     # path('export_excel/', views.export_to_excel, name='export_excel'),
     path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
+    path('export-fees-by-class/<int:class_id>/', views.export_fees_by_class, name='export_fees_by_class'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
-    path('export_expenses/', views.export_expenses_to_excel, name='export_expenses'),
+    path('export_utilities/', views.export_utilities_to_excel, name='export_utilities'),
     path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
     path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
+    path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
 ]

@@ -18,18 +18,29 @@
                 {{ mark_type.1 }} Results
             </a>
         {% endfor %}
-        <div class="header">
+        <div class="">
             <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
         </div>
-        <div class="students-list" style="font-size: 14px;">
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong> 
+                </div>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="table-section" style="font-size: 14px;">
             <table class="table bg-white" id="table" border="1">
-                <thead class="bg-dark text-white">
+                <thead class=" text-white">
                     <tr>
                         <th>Reg Number</th>
                         <th>Name</th>
                         {% for subject in subjects %}
                             <th>{{ subject.subjectname|slice:":3" }}</th>
-                            <th>Grade</th>
                         {% endfor %}
                         <th>Total</th>
                         <th>Average</th>
@@ -46,33 +57,6 @@
                                     {% with marks=marks_dict|get_item:subject %}
                                         {% if marks %}
                                             {{ marks.marks_obtained }}
-                                        {% else %}
-                                            --
-                                        {% endif %}
-                                    {% endwith %}
-                                </td>
-                                <td>
-                                    {% with marks=marks_dict|get_item:subject %}
-                                        {% if marks %}
-                                            {% if marks.marks_obtained >= 80 %}
-                                                <p>D1</p>
-                                            {% elif marks.marks_obtained >= 75 %}
-                                                <p>D2</p>
-                                            {% elif marks.marks_obtained >= 70 %}
-                                                <p>C3</p>
-                                            {% elif marks.marks_obtained >= 65 %}
-                                                <p>C4</p>
-                                            {% elif marks.marks_obtained >= 60 %}
-                                                <p>C5</p>
-                                            {% elif marks.marks_obtained >= 50 %}
-                                                <p>C6</p>
-                                            {% elif marks.marks_obtained >= 45 %}
-                                                <p>P7</p>
-                                            {% elif marks.marks_obtained >= 40 %}
-                                                <p>P8</p>
-                                            {% else %}
-                                                <p>F9</p>
-                                            {% endif %}
                                         {% else %}
                                             --
                                         {% endif %}
@@ -101,6 +85,8 @@
                                         <form action="/teacher/edit_all_marks" method="post">
                                             {% csrf_token %}
                                             <input type="hidden" name="student_id" value="{{ student.stdnumber }}">
+                                            <input type="hidden" name="mark_type" value="{{ mark_type}}">
+                                            <input type="hidden" name="teacherid" value="{{ teacher.teacherid}}">
                                             <div>
                                                     {% for subject in subjects %}
                                                         <div class="form-group">
@@ -125,7 +111,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
+        </div>
             
     </div>
     {% endblock main %}

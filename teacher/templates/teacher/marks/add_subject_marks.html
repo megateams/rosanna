@@ -1,58 +1,78 @@
 {% extends 'teacher/base.html' %}
-{% block title %} Add Subject Marks {% endblock title %}
+{% block title %} Add {{subject.subjectname}} Marks {% endblock title %}
+{% block pagetitle %} Add {{subject.subjectname}} Marks {% endblock pagetitle %}
+
+{% load custom_filters %}
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex">
-        <div class="d-flex mr-4">
-            <h5 class="mr-4">Class: {{ schoolclass.classname }}</h5>
-            <h5>Subject: {{ subject.subjectname }}</h5>
+    <div class=" row "  style="margin-bottom: 10px;">
+        <div class="col-md-7 d-flex ml-3" >
+            <h5 class="mr-2">Class:</h5>
+            <h5>{{ schoolclass.classname }}</h5>
         </div>
-        <div class="class-btns">
-            <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher_id }}" class="btn btn-sm btn-danger">View Marks</a>
+        <div class="col-md-5 current_session d-flex mt-2">
+            <div class="current-term mr-2">
+                <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+            </div>
+            <div class="current-year"> 
+                <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+            </div>
         </div>
+        
     </div>
-    <!-- <p>Teacher ID: {{ teacher_id }}</p> -->
-    <form action="" method="post" class="p-4 shadow rounded col-6 m-2 bg-white">
-        {% csrf_token %}
+    <!-- <hr> -->
+    <div class="class-btns align-items-center">
+        <a href="/teacher/class_details/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Marks</a>
 
-        {% if messages %}
-            <ul class="messages">
-            {% for message in messages %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <strong>{{ message }}</strong> 
-                </div>
+        {% for mark_type in mark_types %}
+            <a href="/teacher/class_details/addmarks/{{ schoolclass.classid }}/{{ teacher.teacherid }}/{{ subject.subjectid }}?marktype={{ mark_type.0 }}"
+            class="btn btn-sm btn-warning {% if mark_type.0 == mark_type %}active{% endif %}">
+            Add {{ mark_type.0 }} Marks
+            </a>
+        {% endfor %}
+    </div>
+    <div class=" ml-2">
+        <h5 class="mb-2"><b>Enter {{mark_type}} Results</b></h5>
+    </div>
+    <!-- students for this class -->
+    <div class="table-section" style="font-size: 14px;">
+        <table class="table" id="table" border="1">
+            <thead class=" text-white">
+                <tr>
+                    <th>Reg Number</th>
+                    <th>Name</th>
+                    <th>{{ subject.subjectname }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student, marks_dict in student_marks.items %}
+                <tr>
+                    <td>{{ student.stdnumber }}</td>
+                    <td>{{ student.childname }}</td>
+                        <td>
+                            {% with marks=marks_dict|get_item:subject %}
+                                {% if marks %}
+                                    {{ marks.marks_obtained }}
+                                {% else %}
+                                <form class="form mark-form" action="/submit_subject_marks/{{schoolclass.classid}}/{{teacher.teacherid}}/{{subject.subjectid}}/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="studentname" value="{{ student.stdnumber }}">
+                                    <input type="hidden" name="marktype" value="{{ mark_type }}">
+                                    <input type="hidden" name="subject" value="{{ subject.subjectid }}">
+                                    <div class="d-flex">
+                                        <input type="text" name="mark_obtained" style="height: 30px;" class="form-control">
+                                        <button type="submit" class="btn btn-sm btn-success ml-2"><i class="fas fa-check"></i></button>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                </tr>
             {% endfor %}
-            </ul>
-        {% endif %}
-        <div class="form-group">
-            <label for="">Select Type of Mark: </label>
-            <select name="marktype" class="form-control">
-                <option value="" selected disabled>---</option>
-                {% for mark_type in mark_types %}
-                    <option value="{{ mark_type.0 }}">{{ mark_type.1 }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group mt-4">
-            <label for="">Select Student: </label>
-            <select name="studentname" id="" class="form-control">
-                <option value="" selected disabled>---</option>
-                {% for student in students %}
-                        <option value="{{ student.stdnumber }}">{{ student.childname }}</option>
-                    
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group mt-4">
-            <label for="">Enter Mark obtained</label>
-            <input type="text" name="mark_obtained" class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-dark btn-sm">Submit Marks</button>
-    </form>
+            </tbody>
+        </table>
+        
+    </div>
 </div>
 {% endblock main %}

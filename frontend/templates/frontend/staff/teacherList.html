@@ -25,7 +25,6 @@
                     <th>Email Address</th>
                     <th>Classes Taught</th>
                     <th>Joining Date</th>
-                    <th>Position</th>
                     <th>Subject</th>
                     <th>Actions</th>
                 </tr>
@@ -49,13 +48,11 @@
                         {{ class.classname }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}</td>
                     <td>{{teacher.joiningdate}}</td>
-                    <td>{{teacher.position}}</td>
                     <td>{% for subject in teacher.subjects.all %}
                         {{ subject.subjectname }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}</td>
                     <td>
                         <a href="/showteacher/{{teacher.teacherid}}" class="btn btn-sm btn-primary">More ...</a>
-                        
                     </td>
                 </tr>
                 {% endfor %} 

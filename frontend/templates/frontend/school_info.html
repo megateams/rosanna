@@ -7,13 +7,13 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <nav class="navbar navbar-expand-sm navbar-light bg-white">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+    <nav class=" ml-2 mt-2">
+        <ul class="d-flex"style="list-style-type: none;" >
+            <li class="nav-item active" >
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
             </li>
             
         </ul>
@@ -117,10 +117,72 @@
                             <p>{{data.website}}</p>
                         </div>
                         <hr>
+                        <div class="btns  d-flex justify-content-center ">
+                            <a href="#edit{{data.id}}" data-toggle="modal" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i>Edit</a>   
+                        </div>
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="edit{{data.id}}" tabindex="-1" role="dialog" aria-labelledby="editSchoolModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark">Edit School Information</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Edit School Information Form -->
+                                        <form action="/edit_school_info/" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="id" value="{{ data.id }}">
+                                            
+                                            <div class="form-group text-dark">
+                                                <label for="schoolname">School Name:</label>
+                                                <input type="text" name="schoolname" class="form-control" value="{{ data.schoolname }}" required>
+                                            </div>
+                                            
+                                            <div class="form-group text-dark">
+                                                <label for="badge">Badge:</label>
+                                                <input type="file" name="badge" accept="image/*">
+                                            </div>
+                                            
+                                            <div class="form-group text-dark">
+                                                <label for="contact">Contacts:</label>
+                                                <input type="text" name="contact" class="form-control" value="{{ data.contact }}" required>
+                                            </div>
+                                            
+                                            <div class="form-group text-dark">
+                                                <label for="box_number">P.O. Box Number:</label>
+                                                <input type="text" name="box_number" class="form-control" value="{{ data.box_number }}" required>
+                                            </div>
+                                            
+                                            <div class="form-group text-dark">
+                                                <label for="email">Email:</label>
+                                                <input type="email" name="email" class="form-control" value="{{ data.email }}">
+                                            </div>
+                                            
+                                            <div class="form-group text-dark" >
+                                                <label for="website">Website link:</label>
+                                                <input type="text" name="website" class="form-control" value="{{ data.website }}">
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+
+                      
                     </div>
                 {% endfor %}
 
             </div>
+            
         </div>
     </div>
 </div>

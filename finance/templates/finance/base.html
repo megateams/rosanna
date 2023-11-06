@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -52,9 +53,26 @@
                 <i class="fas fa-bars    text-white"></i>
             </div>
             <div class='header text-center p-2 mb-2'>
-                <img src="{% static 'images/rosannalogo.png' %}"   alt="Rosanna Schools Logo">
+                {% get_school_info as school_info %}
+                    {% if school_info %}
+                        {% for info in school_info %}
+                            <div class='header text-center p-2 mb-2 mt-4'>
+                                <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge">
+                                <h5 class="text-white  mt-2"><b>{{ info.schoolname }}</b></h5>
+                                
+                            </div>
+                            
+                            <!-- Display other school information as needed -->
+                        {% endfor %}
+                    {% else %}
+                        <div class='header text-center p-2 mb-2 mt-4'>
+                            <div class="badge p-3 mb-2" style="border: 2px solid #fff; border-radius: 50%;">
+                                <i class="fa fa-camera text-white" aria-hidden="true" style="font-size: 2rem;"></i>
+                            </div>
 
-                <h5 class="text-white"><b>Rosanna Schools</b></h5>
+                            <h5 class="text-white"><b>School Name</b></h5>   
+                        </div>
+                    {% endif %}
             </div>
             <hr color="#fff" style="height: 3px;">
     
@@ -65,11 +83,19 @@
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
+                    <a class="" href='/students'><i class="fas fa-users  mr-2  "></i><span>Student Pay Codes</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
                     <a class="" href='/financefeesstructurelist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Fees Structure</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
                     <a class="" href='/financefeeslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Fees</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href='/feesclearedstudents'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Fees Cleared Students</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -85,13 +111,13 @@
                             <a href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt    mr-2"></i> <span>Teachers  </span></a>
                         </li>
                         <li>
-                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff </span></a>
+                            <a href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt    mr-2"></i> <span> Support Staff</span></a>
                         </li>
-                    </ul>    
+                    </ul>
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
-                    <a class="" href='/financeexpenseslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Expenses</span></a>    
+                    <a class="" href='/financeutilitieslist'><i class="fas fa-money-bill-wave  mr-2  "></i><span>Utilities</span></a>    
                 </li>
                 <hr color="#fff">
                 <li class="sidebar-item active">
@@ -105,7 +131,6 @@
         <!-- sidebar -->
         <!-- content -->
         <div class="content bg-light">
-
             <!-- navbar -->
             <nav class="navbar bg-light shadow align-items-center">
                 <div class='brand'>
@@ -116,9 +141,17 @@
                     <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
                 </div>
                 <div class="right mr-5 d-flex">
-                    {% if user.is_authenticated %}
-                    <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ user.username }}</p>
-                    {% endif %}
+                    <!-- <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}</p> -->
+                    <div class="dropdown bursar-profile">
+                        <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="bursarDropdown" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="bursarDropdown">
+                            <a href=" {% url 'bursar_profile' %} " class="dropdown-item">Profile</a>
+                        </div>
+                    </div>
+
                     <a class="ml-3 mr-2 text-danger" href="{% url 'financeloginpage' %}">
                         <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
                     </a>
@@ -181,10 +214,10 @@
     
             // Define the data for the donut chart
             var donutpaymentData = {
-                labels: ["Fees", "Expenses", "Teacherpayments","SStaffpayments"],
+                labels: ["Fees", "Utilities", "Teacherpayments","SStaffpayments"],
                 datasets: [{
-                    data: [65, 35, 45, 25], // Replace with your actual data
-                    backgroundColor: ["red", "blue","#f9b855","green"],
+                    data: [{{ fees_percentage }}, {{ utilities_percentage }}, {{ trpayments_percentage }}, {{ sspayments_percentage }}], // Replace with your actual data
+                    backgroundColor: ["blue", "#f9b855","red","green"],
                 }]
             };
     
@@ -237,7 +270,7 @@
             });
         });
         $(document).ready(function() {
-            $('#support-staffid').on('change', function() {
+            $('#supportstaffid').on('change', function() {
                 const id = $(this).val();
                 // alert(id);
                 // const stdclass_fees = $('#class_fees');
@@ -288,7 +321,29 @@
                 const id = $('#teachersid').val();
                 const amountpaid = $(this).val();
                 $.ajax({
-                    url: `/get_teacher_balance/${id}/${amountpaid}/`,
+                    url: `/get_teacher_balance/${id}/`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Received Data:', data);
+                        $('#balance').val(data.balance);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+
+        $(document).ready(function() {
+
+            $('#amountpaid').on('change', function() {
+                const id = $('#supportstaffid').val();
+                const amountpaid = $(this).val();
+                $.ajax({
+                    url: `/getsupportstaffbalance/${id}/`,
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {

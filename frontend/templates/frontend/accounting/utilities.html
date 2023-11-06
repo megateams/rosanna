@@ -1,0 +1,43 @@
+{% extends 'frontend/base.html' %}
+{% block  title %} Utilities List {% endblock title %}
+{% block  pagetitle %} Utilities List {% endblock pagetitle %}
+
+{% block  main %} 
+
+<!-- inner-content -->
+<div class="inner-content">
+    <div class="btns">
+        <a href="/export_utilities" class="btn btn-sm bg-success text-white mb-2 ml-2 ">Export excel</a>
+    </div>
+    <!-- Display the total amount paid -->
+    <h3>Total Amount Paid: {{ total_amount_paid|default:"0" }}</h3>
+    <div class="table-section" style="font-size: 14px;"> 
+        
+        <table class="table" id="table" border="1">
+            <thead>
+                <tr>
+                    <th>Utilities ID</th>
+                    <th>Category</th>
+                    <th>Utilities Date</th>
+                    <th>Amount Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utility in utilities %}
+                <tr>
+                    <td>{{ utility.utilitiesid }}</td>
+                    <td>{{ utility.category }}</td>
+                    <td>{{ utility.utilitiesdate }}</td>
+                    <td>{{ utility.amountpaid }}</td>
+                </tr>
+                {% endfor %}   
+            </tbody>
+        </table>
+    </div>
+    <!-- student show -->
+    <div class="show_user">
+        
+    </div>
+</div>
+<!-- inner-content -->
+{% endblock main %}

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'frontend',
     'finance',
     'teacher',
+    'student',
 ]
 
 MIDDLEWARE = [
@@ -82,21 +83,21 @@ WSGI_APPLICATION = 'rosanna.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # connecting to mysql database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'rosanna',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',             
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'rosanna',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',             
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -148,5 +149,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = "Dashboard"
+LOGIN_REDIRECT_URL = "Admin Login"
+LOGIN_URL = "Admin Login"
 # APPEND_SLASH = False

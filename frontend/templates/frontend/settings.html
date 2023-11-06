@@ -5,19 +5,19 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
+    <nav class=" ml-2 mt-2">
+        <ul class="d-flex"style="list-style-type: none;" >
+            <li class="nav-item active" >
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/enrollment"><b>Enrollment</b> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-sm btn-outline-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
+                <a class="nav-link btn btn-sm btn-danger mr-2" href="/settings/school_info/"><b>School information</b></a>
             </li>
             
         </ul>
     </nav>
     <!-- current term -->
-    <div class="row ml-2 mt-4 align-items-center">
+    <div class="row ml-2 align-items-center">
         {% for data in term_data %}
         <div class="current-term mr-3">
             <a class=" btn-md btn-primary text-white p-2">Current Term: </a>
@@ -51,7 +51,7 @@
         <div class="col-md-8">
             <form action="" class=" form shadow mt-4 rounded p-4 " method="post">
                 {% csrf_token %}
-    
+                <h5 class="text-center">Add Term</h5>
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="">Select Term:</label>
@@ -162,23 +162,23 @@
                                     <input type="hidden" name="id" value="{{data.id}}">
 
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Current Term:</label>
                                             <input type="text" name="term" value="{{data.current_term}}" class="form-control" required>
                                             
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Current Year:</label>
                                             <input type="text" name="year" value="{{data.current_year}}" class="form-control" value="{% now 'Y' %}" readonly>
                                         </div>
                                     </div>
                         
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">Start Date:</label>
                                             <input type="date" name="start_date" value="{{data.start_date}}" class="form-control" required>
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 text-dark">
                                             <label for="">End Date:</label>
                                             <input type="date" name="end_date" value="{{data.end_date}}" class="form-control" required>
                                         </div>

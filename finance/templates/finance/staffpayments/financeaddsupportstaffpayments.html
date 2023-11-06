@@ -11,6 +11,20 @@
                
     <!-- form-section -->
     <form action="" method="post" class="form ml-3 p-3 shadow rounded bg-light">
+
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
         {% csrf_token %}
         <div class="title">
             <h5 class="text-uppercase text-center">Register Supportstaffpayments</h5>
@@ -23,9 +37,9 @@
                 <!-- teacherid -->
                 <div class="form-group col-md-6">
                     <label for="">Staff name: </label>
-                    <select type="text" id="support-staffid" name="support-staffid" class="form-control">
+                    <select type="text" id="supportstaffid" name="support-staffid" class="form-control">
                         <option value="" selected disabled>---</option>
-                        {% for staff in support_staff %}
+                        {% for staff in supportstaff %}
                             <option value="{{staff.supportstaffid}}"  >{{staff.supportstaffnames}}</option>
                         {% endfor %}
                     </select>
@@ -41,15 +55,25 @@
                 <!-- amountpaid -->
                 <div class="form-group col-md-6">
                     <label for="">Amount Paid</label>
-                    <input type="text" name="amountpaid" class="form-control">
+                    <input id='amountpaid' type="text" name="amountpaid" class="form-control">
+                    {% if balancealert %}
+                            <ul class="messages">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <strong>{{ balancealert }}</strong>
+                                </div>
+                            </ul>
+                    {% endif %}
                 </div>
 
-                <!-- datepaid -->
+            {% comment %} <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="">Payment Date </label>
-                    <input type="date" name="paymentdate" class="form-control">
+                    <label for=""> Balance </label>
+                    <input id='balance' type="number" name="balance" class="form-control" readonly>
                 </div>
-            </div>
+            </div> {% endcomment %}
 
 
             
@@ -66,3 +90,62 @@
 <!-- inner-content -->
 
 {% endblock main %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

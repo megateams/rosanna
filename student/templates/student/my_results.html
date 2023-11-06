@@ -1,0 +1,120 @@
+{% extends 'student/base.html' %}
+{% block title %} My Results {% endblock title %}
+{% block pagetitle %} My Results {% endblock pagetitle %}
+{% load static %}
+{% load custom_filters %}
+{% block main %}
+<div class="inner-content">
+    <!-- Header with student information -->
+    <div class="header box">
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Student image -->
+                <div class="std_image p-3">
+                    {% if student.profile_image %}
+                    <div class="image">
+                        <img class="img-thumbnail" src="{{ student.profile_image.url }}">
+                    </div>
+                    {% else %}
+                    <div class="image">
+                        <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Student details -->
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <h6><b>Student Number:</b> {{ student.stdnumber }}</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><b>Name:</b> {{ student.childname }}</h6>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <h6><b>Class:</b> {{ student.stdclass.classname }}</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><b>Date of Birth:</b> {{ student.dob }}</h6>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <h6><b>Gender:</b> 
+                            {% if student.gender == 'm' %} 
+                                {{ "Male" }} 
+                                {% else %}
+                                {{ "Female" }} 
+                            {% endif %}</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><b>Address:</b> {{ student.address }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- Results for each term -->
+    <!-- Your existing HTML code here -->
+
+<!-- Your existing HTML code here -->
+
+<div class="results-section ml-3 mr-3">
+    <div class="row">
+        {% for term_year, marks_data in term_year_marks.items %}
+            <div class="box col-12">
+                <div class="box-header">
+                    <h5><b><u>{{ term_year }}</u></b></h5>
+                </div>
+
+                <div class="box-body table-section" style="font-size: 13px;">
+                    <table class="table bg-white" border="1">
+                        <thead>
+                            <tr>
+                                <th>Subject ID</th>
+                                <th>Subject Name</th>
+                                <!-- Loop through mark types for table headers -->
+                                {% for mark_type in mark_types %}
+                                    <th>{{ mark_type.0 }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject.subjectid }}</td>
+                                <td>{{ subject.subjectname }}</td>
+                                <!-- Loop through mark types for marks -->
+                                {% for mark_type in mark_types %}
+                                    <td>
+                                        {% for mark_data in marks_data %}
+                                            {% if subject.subjectid == mark_data.subject_id and mark_type.0 == mark_data.mark_type %}
+                                                {{ mark_data.average_mark }}
+                                            
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<!-- Your existing HTML code here -->
+
+<!-- Your existing HTML code here -->
+
+</div>
+{% endblock main %}

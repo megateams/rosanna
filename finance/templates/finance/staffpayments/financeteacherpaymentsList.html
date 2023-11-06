@@ -1,7 +1,6 @@
 {% extends 'finance/base.html' %}
 {% block  title %} Teacher Payments List {% endblock title %}
 {% block  pagetitle %} Teacher Payments List {% endblock pagetitle %}
-
 {% block  main %}
 <!-- inner-content -->
 <div class="inner-content">
@@ -33,6 +32,7 @@
                     <th> Payment Date</th>
                     <th>Salary</th>
                     <th>Amount Paid</th>
+                    <th>Accumulated Amount</th>
                     <th>Balance</th>
                     {% comment %} <th>Payment Method</th>
                     <th>Bank Account No.</th> {% endcomment %}
@@ -41,27 +41,33 @@
             </thead>
             <tbody>
                 {% for teacher in teachers %}
+
                 <tr>
                     <td>{{ teacher.teacherid }}</td>
                     <td>{{ teacher.teachername }}</td>
                     <td>{{ teacher.paymentdate }}</td>
                     <td>{{ teacher.salary }}</td>
                     <td>{{ teacher.amountpaid }}</td>
+                    <td>{{ teacher.accumulatedpayment }}</td>
                     <td>{{ teacher.balance }}</td>
                    <td>
+
                     <div>
                         <a href="#edit{{ teacher.paymentid }}" data-toggle='modal'  class="text-primary"><i class="fas fa-edit  mr-2  "> </i></a>
                         <a href="#delete{{ teacher.paymentid }}" data-toggle='modal' class="text-danger"><i class="fa fa-trash    "> </i></a>
-                    </div> 
+                    </div>
+
                     <div class="modal fade" id="delete{{ teacher.paymentid }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Delete Teacher Payment</h5>
+
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                 </div>
+
                                 <div class="modal-body">
                                     <form action='/deleteteacherpayment/' method='POST'>
                                         {% csrf_token %}
@@ -80,6 +86,7 @@
                                         </div>
 
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -90,36 +97,37 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Edit Teacher Payment</h5>
+
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
+
                                 </div>
                                 <div class="modal-body">
                                     <form method="post" action='/editteacherpayments/'>
                                         {% csrf_token %}
-                                
+
                                         <div class="row">
                                             <div class="form-group">
                                                 <input type="hidden" name="paymentid" value="{{ teacher.paymentid }}" class="form-control" required>
                                                 <input type="hidden" name="teacherid" value="{{ teacher.teacherid }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Teacher Name:</label>
                                                 <input type="text" name="teachername" value="{{ teacher.teachername }}" class="form-control" required>
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Salary:</label>
                                                 <input type="number" name="salary" value="{{ teacher.salary }}" class="form-control" readonly>
-
                                             </div>
                                         </div>
-                                
+
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="amount">Amount Paid:</label>
@@ -134,7 +142,7 @@
 
                                     </form>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -151,3 +159,61 @@
 </div>
 <!-- inner-content -->
 {% endblock main %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

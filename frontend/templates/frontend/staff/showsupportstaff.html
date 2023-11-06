@@ -5,200 +5,253 @@
 {% block  main %} 
 
 {% load static %}
-<div class="staff-details mt-3">
-    <div class="row">
-        <div class="col-md-5">
-            <!-- image -->
-            <div class="image">
-               <img class="img-thumbnail" src="{% static 'images/student.jpg' %}" alt="support staff image"> 
-            </div>
-            <!-- image -->
-        </div>
-        <div class="col-md-7">
-            <!-- staff data -->
-            <!-- Success message after data has been updated -->
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <strong>{{ message }}</strong> 
-                </div>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <div class=" row teacher-data">
+<div class="inner-content">
+    <div class="btns">
+        <a href="/support-staff-list" class="btn btn-sm add-btn text-white mb-2 ml-3">Support Staff list</a>
+    </div>
+    <div class="staff-details mt-3">
+        <div class="row">
+            <div class="col-md-5">
+                <!-- image -->
                 {% for staff in supportstaffs %}
-                <div class="col-md-6">
-                    <div class="d-flex mb-3">
-                        <h6><b>Full Name: </b></h6>
-                        <p class="ml-2">{{staff.supportstaffnames}}</p>
+                {% if staff.profile_image %}
+                    <div class="image">
+                        <img class="img-thumbnail" src="{{ staff.profile_image.url }}" style="height: 45vh;">
                     </div>
-                    <div class="d-flex mb-3">
-                        <h6><b>Contact: </b></h6>
-                        <p class="ml-2">{{staff.contact}}</p>
+                    {% else %}
+                    <div class="image">
+                        <img src="{% static 'images/person.jpg' %}" alt="" class="img-thumbnail" style="height: 45vh;">
                     </div>
-                    <div class="d-flex mb-3">
-                        <h6><b>Email: </b></h6>
-                        <p class="ml-2">{{staff.email}}</p>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <h6><b>Address: </b></h6>
-                        <p class="ml-2">{{staff.address}}</p>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <h6><b>Gender: </b></h6>
-                        <p class="ml-2">{{staff.gender}}</p>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <h6><b>Date of Birth: </b></h6>
-                        <p class="ml-2">{{staff.dob}}</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex mb-3">
-                        <h6><b>Staff Number: </b></h6>
-                        <p class="ml-2">{{staff.supportstaffid}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Qualifications: </b></h6>
-                        <p class="ml-2">{{staff.qualification}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Position: </b></h6>
-                        <p class="ml-2">{{staff.position}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Salary: </b></h6>
-                        <p class="ml-2">{{staff.salary}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Bank Acc Num: </b></h6>
-                        <p class="ml-2">{{staff.bankaccnum}}</p>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <h6><b>Joining Date: </b></h6>
-                        <p class="ml-2">{{staff.joiningdate}}</p>
-                    </div>
-                    <!-- More details from supportstaffList.html leaf -->
-                    <!-- Insert code from supportstaffList.html leaf here -->
-                </div>
-
-                <div class="btn ">
-                    <a href="#edit{{staff.supportstaffid}}" class="btn btn-md btn-primary" data-toggle="modal">Edit Support Staff</a>
-                    <a href="#delete{{staff.supportstaffid}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Support Staff</a>
-                </div>
-
-                 <!-- delete -->
-            <div class="modal fade" id="delete{{staff.supportstaffid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Delete {{staff.supportstaffnames}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="/delete_supportstaff/" method="post">
-                                {% csrf_token%}
-                                <input type="hidden" name="supportstaffid" value="{{staff.supportstaffid}}">
-                                <p>Are you sure you want to delete {{staff.supportstaffnames}}</p>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm btn-success" data-dismiss="modal">no</button>
-                                    <button type="submit" class="btn btn-sm btn-danger">yes</button>
-                                </div>
-                            </form>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
-                <!-- Modals for editing support staff information -->
-                
-                <div class="modal fade" id="edit{{staff.supportstaffid }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
+                {% endif %}
+                <a href="#edit_image{{staff.supportstaffid}}" class="edit-image btn" data-toggle="modal">
+                    <i class="fas fa-camera   p-3" style="
+                        font-size: 4rem;
+                        border-radius: 50%;
+                        position: absolute;
+                        top: 280;
+                        left: 340;
+                        color: #ffffff;
+                        background: #f00;
+                        "></i>
+                </a>
+    
+                <!-- edit image -->
+                <div class="modal fade" id="edit_image{{staff.supportstaffid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Edit Support Staff</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <h5 class="modal-title">Edit Image</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                             </div>
                             <div class="modal-body">
-                                <!-- Add a form for editing support staff information -->
-                                <form method="post" action="/edit_supportstaff/">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="supportstaffid" value="{{ staff.supportstaffid }}">
-                                    <div class="row">  
-                                        <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="edit-supportstaffnames">Full Name</label>
-                                        <input type="text" class="form-control" id="edit-supportstaffnames" name="supportstaffnames" value="{{ staff.supportstaffnames }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="edit-gender">Gender</label>
-                                        <input type="text" class="form-control" id="edit-gender" name="gender" value="{{ staff.gender }}">
-                                    </div>
+                                <form action="/edit_sstaff_image/" method="post" enctype="multipart/form-data">
+                                    {% csrf_token%}
+                                    <input type="hidden" name="supportstaffid" value="{{staff.supportstaffid}}">
                                     
                                     <div class="form-group">
-                                        <label for="edit-contact">Contact</label>
-                                        <input type="text" class="form-control" id="edit-contact" name="contact" value="{{ staff.contact }}">
+                                        <label for="">Edit Image:</label><br>
+                                        <input type="file" name="profile_image" id="">
                                     </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="edit-email">Email</label>
-                                        <input type="email" class="form-control" id="edit-email" name="email" value="{{ staff.email }}">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-sm btn-danger">Update</button>
                                     </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="edit-address">Address</label>
-                                        <input type="text" class="form-control" id="edit-address" name="address" value="{{ staff.address }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="edit-position">Date of Birth</label>
-                                        <input type="date" class="form-control" id="edit-dob" name="dob" value="{{ staff.dob }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="edit-position">Position</label>
-                                        <input type="text" class="form-control" id="edit-position" name="position" value="{{ staff.position }}">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="edit-qualification">Qualifications</label>
-                                        <input type="text" class="form-control" id="edit-qualification" name="qualification" value="{{ staff.qualification }}">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="edit-salary">Salary</label>
-                                        <input type="text" class="form-control" id="edit-salary" name="salary" value="{{ staff.salary }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="edit-position">Joining Date</label>
-                                        <input type="date" class="form-control" id="edit-joiningdate" name="joiningdate" value="{{ staff.joiningdate }}">
-                                    </div>
-                                </div>
-                                </div> 
-                                    <!-- Add more form fields as needed -->
-                                    <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </form>
+                                
                             </div>
+                            
                         </div>
                     </div>
                 </div>
                 
-                <!-- End of Modals -->
-
+                <!-- image -->
                 {% endfor %}
+    
+    
             </div>
-            <!-- staff data -->
+            <div class="col-md-7">
+                <!-- staff data -->
+                <!-- Success message after data has been updated -->
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{ message }}</strong> 
+                    </div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class=" row teacher-data">
+                    {% for staff in supportstaffs %}
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <h6><b>Full Name: </b></h6>
+                            <p class="ml-2">{{staff.supportstaffnames}}</p>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <h6><b>Contact: </b></h6>
+                            <p class="ml-2">{{staff.contact}}</p>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <h6><b>Email: </b></h6>
+                            <p class="ml-2">{{staff.email}}</p>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <h6><b>Address: </b></h6>
+                            <p class="ml-2">{{staff.address}}</p>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <h6><b>Gender: </b></h6>
+                            <p class="ml-2">{{staff.gender}}</p>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <h6><b>Date of Birth: </b></h6>
+                            <p class="ml-2">{{staff.dob}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <h6><b>Staff Number: </b></h6>
+                            <p class="ml-2">{{staff.supportstaffid}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Qualifications: </b></h6>
+                            <p class="ml-2">{{staff.qualification}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Position: </b></h6>
+                            <p class="ml-2">{{staff.position}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Salary: </b></h6>
+                            <p class="ml-2">{{staff.salary}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Bank Acc Num: </b></h6>
+                            <p class="ml-2">{{staff.bankaccnum}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Joining Date: </b></h6>
+                            <p class="ml-2">{{staff.joiningdate}}</p>
+                        </div>
+                        <!-- More details from supportstaffList.html leaf -->
+                        <!-- Insert code from supportstaffList.html leaf here -->
+                    </div>
+    
+                    <div class="btn ">
+                        <a href="#edit{{staff.supportstaffid}}" class="btn btn-md btn-primary" data-toggle="modal">Edit Support Staff</a>
+                        <a href="#delete{{staff.supportstaffid}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Support Staff</a>
+                    </div>
+    
+                     <!-- delete -->
+                <div class="modal fade" id="delete{{staff.supportstaffid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete {{staff.supportstaffnames}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/delete_supportstaff/" method="post">
+                                    {% csrf_token%}
+                                    <input type="hidden" name="supportstaffid" value="{{staff.supportstaffid}}">
+                                    <p>Are you sure you want to delete {{staff.supportstaffnames}}</p>
+    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-success" data-dismiss="modal">no</button>
+                                        <button type="submit" class="btn btn-sm btn-danger">yes</button>
+                                    </div>
+                                </form>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+    
+                    <!-- Modals for editing support staff information -->
+                    
+                    <div class="modal fade" id="edit{{staff.supportstaffid }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Edit Support Staff</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Add a form for editing support staff information -->
+                                    <form method="post" action="/edit_supportstaff/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="supportstaffid" value="{{ staff.supportstaffid }}">
+                                        <div class="row">  
+                                            <div class="col-md-6">                                
+                                        <div class="form-group">
+                                            <label for="edit-supportstaffnames">Full Name</label>
+                                            <input type="text" class="form-control" id="edit-supportstaffnames" name="supportstaffnames" value="{{ staff.supportstaffnames }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="edit-gender">Gender</label>
+                                            <input type="text" class="form-control" id="edit-gender" name="gender" value="{{ staff.gender }}">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="edit-contact">Contact</label>
+                                            <input type="text" class="form-control" id="edit-contact" name="contact" value="{{ staff.contact }}">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="edit-email">Email</label>
+                                            <input type="email" class="form-control" id="edit-email" name="email" value="{{ staff.email }}">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="edit-address">Address</label>
+                                            <input type="text" class="form-control" id="edit-address" name="address" value="{{ staff.address }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="edit-position">Date of Birth</label>
+                                            <input type="date" class="form-control" id="edit-dob" name="dob" value="{{ staff.dob }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="edit-position">Position</label>
+                                            <input type="text" class="form-control" id="edit-position" name="position" value="{{ staff.position }}">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="edit-qualification">Qualifications</label>
+                                            <input type="text" class="form-control" id="edit-qualification" name="qualification" value="{{ staff.qualification }}">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="edit-salary">Salary</label>
+                                            <input type="text" class="form-control" id="edit-salary" name="salary" value="{{ staff.salary }}">
+                                        </div>
+                                    </div>
+                                    </div> 
+                                        <!-- Add more form fields as needed -->
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- End of Modals -->
+    
+                    {% endfor %}
+                </div>
+                <!-- staff data -->
+            </div>
         </div>
     </div>
 </div>

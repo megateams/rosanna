@@ -5,12 +5,18 @@
 {% block  main %} 
 
 <!-- Success message after data has been sent  -->
+
 {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
+    <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    </ul>
 {% endif %}
 
 <!-- inner-content -->
@@ -47,7 +53,8 @@
                 <!-- email -->
                 <div class="form-group col-md-6">
                     <label for="">Email: </label>
-                    <input type="email" name="email" class="form-control">
+                    <input type="email" id="emails" name="email" class="form-control">
+                    <div id="result"></div>
                 </div>
                 <!-- Address -->
                 <div class="form-group col-md-6">
@@ -103,26 +110,9 @@
                     <label for="">Username: </label>
                     <input type="text" name="username" id="" class="form-control pr-2">
                 </div>
-                <!-- position -->
-                <div class="form-group col-md-6">
-                    <label for="">Password </label>
-                    <input type="password" name="password" class="form-control">
-                </div>
-
-            </div>
-            <div class="row">
-                <!-- joiningdate -->
-                <div class="form-group col-md-6">
-                    <label for="">Joining Date </label>
-                    <input type="date" name="joiningdate" id="" class="form-control pr-2">
-                </div>
             </div>
         </div>
         
-        <!-- student info section -->
-
-        
-
         <!-- button -->
         <div class="form-group">
             <button type="submit" class="btn btn-sm bg-dark text-white w-25">SUBMIT</button>
