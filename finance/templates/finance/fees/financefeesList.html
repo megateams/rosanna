@@ -80,6 +80,22 @@
                                                     <input type="text" name="amount"  value="{{fee.amount}}" class="form-control">
                                                 </div>
                                             </div>
+
+                                            <div class="row">
+                                                <!-- accumulated fees -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Accumulated Fees</label>
+                                                    <input type="text" name="accumulatedpayment" value="{{ fee.accumulatedpayment }}" class="form-control" id="edit-accumulatedpayment" readonly>
+                                                </div>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <!-- balance -->
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Balance</label>
+                                                    <input type="text" name="balance" value="{{ fee.balance }}" class="form-control" id="edit-balance" readonly>
+                                                </div>
+                                            </div>
                                 
                                             <div class="row">
                                                 <!-- modeofpayment -->
@@ -138,8 +154,21 @@
     <div class="show_user">
         
     </div>
+    <script>
+        // JavaScript to calculate accumulated fees and balance
+        document.getElementById('edit-amount').addEventListener('input', function() {
+            var amount = parseFloat(this.value) || 0;
+            var accumulatedpayment = parseFloat('{{ fee.accumulatedpayment }}') || 0;
+            var classfees = parseFloat('{{ fee.classfees }}') || 0;
+            var balance = classfees - (accumulatedpayment + amount);
+    
+            document.getElementById('edit-accumulatedpayment').value = accumulatedpayment + amount;
+            document.getElementById('edit-balance').value = balance;
+        });
+    </script>
 </div>
 <!-- inner-content -->
+
 
 
 

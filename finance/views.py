@@ -664,22 +664,40 @@ def delete_fee(request):
         return redirect('Fees List')  # Adjust this to the correct URL name
 
     return redirect('Fees List')  # Adjust this to the correct URL name
+
 def edit_std_fees(request):
     if request.method == 'POST':
         paymentid = request.POST.get("paymentid")
         amount = float(request.POST.get("amount"))
         modeofpayment = request.POST.get("modeofpayment")
         fee = Fees.objects.get(paymentid=paymentid)
-        classfees = float(fee.classfees)
-        balance = classfees - amount
 
+        # Fetch the existing balance and accumulated payment from the database and convert them to float
+        balance = float(fee.balance)
+        accumulatedpayment = float(fee.accumulatedpayment)
+
+        # Explicitly convert fee.classfees to float
+        classfees = float(fee.classfees)
+
+        # Calculate the new accumulated payment
+        new_accumulatedpayment = accumulatedpayment - float(fee.amount) + amount
+
+        # Calculate the new balance based on the class fees and the new accumulated payment
+        balance = classfees - new_accumulatedpayment
+
+        # Update the fee record
         fee.amount = amount
         fee.balance = balance
         fee.modeofpayment = modeofpayment
-
+        fee.accumulatedpayment = new_accumulatedpayment
         fee.save()
+
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
+
+    # Rest of your code for GET requests
+
+
 
 def feesclearedstudents(request):
     if 'admin_id' not in request.session:
