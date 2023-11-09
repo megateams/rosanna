@@ -686,6 +686,87 @@ def generate_report(request, student_id,position):
     return render(request, "teacher/reports/report_card.html", context)
 
 
+# enroll student
+def enroll_student(request, classid,teacher_id):
+    teacher = Teachers.objects.get(teacherid=teacher_id) 
+
+    term_data = Term.objects.get(status=1)
+    students = Student.objects.filter(stdclass=classid)
+    that_class = Schoolclasses.objects.get(pk=classid)
+
+    # Get the list of stdnumbers already enrolled for the current term
+    enrolled_students = Enrollment.objects.filter(current_term=term_data.current_term, current_year=term_data.current_year, stdclass=that_class).values_list('stdnumber', flat=True)
+
+    # Filter out students who are not yet enrolled for the current term
+    not_enrolled_students = students.exclude(pk__in=enrolled_students)
+
+    if request.method == 'POST':
+        stdnumber = request.POST.get("stdnumber")
+        current_term = request.POST.get("current_term")
+        current_year = request.POST.get("current_year")
+
+        student = Student.objects.get(pk=stdnumber)
+
+        if Enrollment.objects.filter(stdnumber=stdnumber, current_term=current_term, stdclass=that_class).exists():
+            messages.success(request, "Student has already been enrolled")
+            return redirect("enroll_student", classid=classid, teacher_id=teacher_id)
+
+        else:
+            enroll = Enrollment.objects.create(
+                stdnumber=student,
+                current_term=current_term,
+                current_year=current_year,
+                stdclass=that_class,
+            )
+
+            enroll.save()
+
+            messages.success(request, "Student successfully enrolled")
+            return redirect("enroll_student", classid=classid, teacher_id=teacher_id)
+
+    context = {
+        'term_data': term_data,
+        'students': not_enrolled_students,
+        'class': that_class,
+        'teacher': teacher,
+        'enrolled': enrolled_students,
+    }
+    return render(request, 'teacher/enroll_student.html', context)
+
+
+# enrollment history
+def enrollment_history(request, classid, teacher_id):
+    teacher = Teachers.objects.get(teacherid=teacher_id)
+    terms = Term.objects.all()
+
+    that_class = Schoolclasses.objects.get(pk=classid)
+    this_term = Term.objects.get(status=1)
+    enrollment_data = []
+
+    for term in terms:
+        # Get the enrollment data for the current term and year
+        enrollment_for_term = Enrollment.objects.filter(current_term=term.current_term, current_year=term.current_year, stdclass_id=classid)
+
+        # Create a dictionary for each term's enrollment data
+        term_data = {
+            'term_name': term.current_term,
+            'term_year': term.current_year,
+            'enrollment_data': enrollment_for_term,
+        }
+
+        # Append the term data to the list
+        enrollment_data.append(term_data)
+
+    context = {
+        'enrollment_data': enrollment_data,
+        'this_term': this_term,
+        'class': that_class,
+        'teacher': teacher
+    }
+
+    return render(request, 'teacher/enrollment_history.html', context)
+
+
 
 
  

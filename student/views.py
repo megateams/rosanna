@@ -58,13 +58,18 @@ def dashboard(request):
         # If the student is not logged in, redirect to the login page
         return redirect('Login Page')  # Replace 'login' with the name/url of your login view
 
+    term_data = Term.objects.get(status=1)
     # Get the studentnumber from the session
     std_number = request.session['std_number']
 
     student = Student.objects.get(stdnumber=std_number)   
-    term_data = Term.objects.all().first()
+    that_student = Enrollment.objects.filter(stdnumber=std_number,current_term=term_data.current_term, current_year=term_data.current_year)   
 
-    return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student})
+    if that_student.exists():
+        return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student, 'that_student':that_student})
+    
+    else:
+        return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student})
 
 # profile
 def profile(request,std_number):
