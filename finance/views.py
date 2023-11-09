@@ -40,25 +40,46 @@ def financelogin(request):
 def editteacherpayments(request):
     if request.method == 'POST':
         paymentid = request.POST.get('paymentid')
-        teacherpayment = Teacherspayment.objects.get(paymentid = paymentid)
-        salary = request.POST.get('salary')
-        amountpaid = request.POST.get('amountpaid')
-        balance = int(salary) - int(amountpaid)
+        teacherpayment = Teacherspayment.objects.get(paymentid=paymentid)
+        salary = int(request.POST.get('salary'))
+        amountpaid = int(request.POST.get('amountpaid'))
         teacherid = request.POST.get('teacherid')
         teachername = request.POST.get('teachername')
 
-        teacherpayment.salary = salary 
-        teacherpayment.amountpaid = amountpaid 
-        teacherpayment.balance = balance 
-        teacherpayment.teacherid = teacherid 
-        teacherpayment.teachername = teachername 
+        # Calculate the new balance
+        balance = salary - amountpaid
 
+        # Fetch all payments made by the teacher
+        payments = Teacherspayment.objects.filter(teacherid=teacherid)
+
+        # Initialize accumulated payment with the edited amount paid
+        new_accumulatedpayment = amountpaid
+
+        # Calculate the new accumulated payment for all payments
+        for payment in payments:
+            if payment.paymentid == paymentid:
+                # Skip the edited payment
+                continue
+
+            # Calculate the new accumulated payment for this payment
+            new_accumulatedpayment += payment.amountpaid
+
+        teacherpayment.salary = salary
+        teacherpayment.amountpaid = amountpaid
+        teacherpayment.balance = balance
+        teacherpayment.teacherid = teacherid
+        teacherpayment.teachername = teachername
+
+        # Update the accumulated payment
+        teacherpayment.accumulatedpayment = new_accumulatedpayment
         teacherpayment.save()
-        messages.success(request , "Teacher Payment Edit Successfull")
 
+        messages.success(request, "Teacher Payment Edit Successful")
         return redirect('teacherpaymentslists')
 
-    return render(request , 'finance/staffpayments/editteacherpayments.html' , {'teacherpayment' : teacherpayment})
+    # Rest of your code for GET requests
+
+
 
 def editsupportstaffpayment(request):
     if request.method == 'POST':
