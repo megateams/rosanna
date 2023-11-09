@@ -20,6 +20,8 @@ urlpatterns = [
     
     path('get_students_by_class/<int:class_id>/', views.get_students_by_class, name='get_students_by_class'),
     path('get_subjects/<int:class_id>/', views.get_subjects, name='get_subjects'), 
+    path('enroll_student/<classid>/<teacher_id>', views.enroll_student, name='enroll_student'), 
+    path('enrollment_history/<classid>/<teacher_id>', views.enrollment_history, name='enrollment_history'), 
 
     # class details url
     path('teacher/class_details/<int:class_id>/<teacher_id>', views.class_details, name='Class Details'),

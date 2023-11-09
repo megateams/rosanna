@@ -6,6 +6,16 @@
     {% block main %}
     <div class="inner-content">
         <div class="header d-flex" style="margin-bottom: 10px;">
+            <div class="btns d-flex align-items-center mr-3">
+                <div class="current-term mr-3">
+                    <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                    <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+                </div>
+                <div class="current-year"> 
+                    <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                    <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+                </div>
+            </div>
             <div class="class-btns" pr-5>
                 <a href="/teacher/his_class/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">Class Information</a>
                 <a href="/teacher/his_class/view_marks/{{ schoolclass.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger">View Exam Results</a>
