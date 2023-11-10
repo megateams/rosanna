@@ -44,11 +44,11 @@
         <h5 class="text-uppercase"><b>Enrollment History</b></h5>
 
         {% for term_data in enrollment_data %}
-            <div class="box mt-3 shadow">
+            <div class="box mt-3 shadow" style="border: 0.5px solid #aaa7a7; border-radius: 10px 10px 0 0;">
                    
-                <div class="box-header d-flex justify-content-between p-2" style="border-radius: 10px 10px 0 0; background: rgb(238, 235, 235);">
+                <div class="box-header d-flex justify-content-between p-2" data-toggle="collapse" data-target="#enrollmentCollapse{{ term_data.term_name|slugify }}{{ term_data.term_year }}" style="border-radius: 10px 10px 0 0; background: rgb(238, 235, 235);">
                     <h6>{{ term_data.term_name }} - {{ term_data.term_year }}</h6>
-                    <a class="" data-toggle="collapse" data-target="#enrollmentCollapse{{ term_data.term_name|slugify }}{{ term_data.term_year }}" aria-expanded="false" aria-controls="enrollmentCollapse">
+                    <a class=""  aria-expanded="false" aria-controls="enrollmentCollapse">
                         <strong><i class="fas fa-chevron-down    "></i></strong>
                     </a>
                 </div>

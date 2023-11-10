@@ -68,9 +68,32 @@ def profile(request,teacher_id):
 
 
 def paymenthistory(request,teacher_id):
+    terms = Term.objects.all()
+
+    teacher_payments_data = []
+    for term in terms:
+        # Get the enrollment data for the current term and year
+        term_teacher_payments = Teacherspayment.objects.filter(term=term.current_term, year=term.current_year, teacherid=teacher_id)
+
+        # Create a dictionary for each term's enrollment data
+        term_data = {
+            'term': term.current_term,
+            'year': term.current_year,
+            'trpayments_data': term_teacher_payments,
+        }
+
+        # Append the term data to the list
+        teacher_payments_data.append(term_data)
+
+        print(teacher_payments_data)
+
     teachers = Teachers.objects.get(teacherid = teacher_id)
-    teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
-    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data, 'teacher':teachers})   
+    # teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
+
+    context ={
+        "teacher_payments_data": teacher_payments_data, 'teacher':teachers
+        }
+    return render(request, 'teacher/paymenthistory.html',context)   
 
 # marks logic
 def get_students_by_class(request, class_id):
