@@ -41,7 +41,11 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-  
+
+.profile .student-image .image img{
+    width: 50%;
+    height: 150px;
+}
 
 .std_image .image img
 {
