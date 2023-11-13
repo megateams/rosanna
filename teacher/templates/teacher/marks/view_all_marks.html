@@ -5,8 +5,8 @@
 
 {% block main %}
 <div class="inner-content">
-    <div class="header d-flex" style="margin-bottom: 8px;">
-        <div class="btns d-flex align-items-center mr-3">
+    <div class="header " style="margin-bottom: 8px;">
+        <div class="current_sessions align-items-center mr-3 ml-2">
             <div class="current-term mr-3">
                 <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
                 <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
@@ -23,16 +23,16 @@
         </div>
         
     </div>
-    <div class="ml-2">
+    <div class="result-cards">
         {% for mark_type in mark_types %}
             <a href="/teacher/his_class/view_mark/{{ schoolclass.classid }}/{{ teacher.teacherid }}?marktype={{ mark_type.0 }}"
             class="btn btn-sm btn-warning mb-2 {% if mark_type.0 == mark_type %}active{% endif %}">
-                {{ mark_type.1 }} Results
+                {{ mark_type.0 }} Results
             </a>
     {% endfor %}
     </div>
-    <div class="ml-2">
-        <h5 class="mb-2"><b>{{mark_type}} Examination results</b></h5>
+    <div class="ml-3 mt-2">
+        <h5 class="mb-2 text-uppercase"><b>{{mark_type}} Examination results</b></h5>
     </div>
 
     <div class="table-section" style="font-size: 14px;">

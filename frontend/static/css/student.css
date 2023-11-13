@@ -40,13 +40,17 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-      
+
+  
 
 .std_image .image img
 {
     width: 100%;
 }
 
+.table-section{
+    margin-left: -20px;
+}
 
 @media (max-width: 770px){
     .std_cards .card h5{
@@ -62,5 +66,57 @@
     .btn_displays{
         display: grid;
         grid-template-columns: 1fr 1fr;
+    }
+
+    .btn_displays .class, .btn_displays .enroll{
+        margin-top: 20px;
+    }
+
+    .btn_displays .class{
+        margin-left: 13px;
+    }
+
+    .profile{
+        margin: 10px 18px;
+    }
+
+    .profile .student-image .image img{
+        width: 50%;
+        height: 200px;
+    }
+
+    .std_image .image img{
+        width: 50%;
+        margin: 0 25% ;
+        
+    }
+    .studentresults{
+        margin-left: 10%;
+    }
+
+    .table-section{
+        width: 109%;
+    }
+
+    .payments{
+        margin: 0;
+        width: 100%;
+    }
+    .student-details .image img{
+        width: 50%;
+        height: 200px;
+        margin: 0 25% ;   
+    }
+    .edit-profile{
+        margin-left: 30px;
+        margin-bottom: 10px;
+    }
+    .personal-info{
+        width: 90%;
+        margin-left: 25px;
+    }
+    .parent-info{
+        width: 90%;
+        margin-left: 25px;  
     }
 }

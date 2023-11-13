@@ -34,10 +34,27 @@
     
 }
 
-
-
-
 .buttons{
+    display: flex;
+}
+
+.buttons .current_session{
+    display: flex;
+}
+
+.enroll_btns {
+    display: flex;
+}
+
+.enroll_btns .current-term, .enroll_btns .current-year{
+    margin: 5px;
+}
+
+.header{
+    display: flex;
+}
+
+.header .current_sessions{
     display: flex;
 }
 
@@ -53,11 +70,14 @@
         margin-top: -15px;
     }
     .header{
-        margin-top: -20px;
+        margin-top: 10px;
+        display: block;
     }
+
     tbody td{
         min-width: 100px;
     }
+
     .main{
         height: 100vh;
     }
@@ -87,23 +107,25 @@
 
    
    .current-term{
-    margin-left: 15px;
+        margin-left: 15px;
    }
+
    .card.classcard{
-    margin-left: 15px;
+        margin-left: 15px;
     
-}
+    }
+
    .card.classcard2{
-   margin-top: 20px;
-   margin-left: 15px;
+        margin-top: 20px;
+        margin-left: 15px;
    }
 
    .profile{
-    margin-top: 50px;
+        margin-top: 50px;
    }
 
    .table-section{
-    overflow-x: scroll;
+        overflow-x: scroll;
     
    }
 
@@ -156,8 +178,16 @@
     }
 
     .class-btns{
-        display: flex;
-        margin:20px 5px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+
+    .result-cards, .add-btns{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-left: 20px;
     }
 
     .class-btns a{
@@ -168,8 +198,24 @@
         display: block;
     }
 
-    .current_session{
-        display: flex;
+    .buttons .current_session{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .buttons .current_session .enroll-student{
+        margin-top: 20px;
+    }
+
+    .buttons .class-btns{
+        margin-left: 13px;
+    }
+
+    .enroll_btns {
+        display: grid;
+        grid-template-columns: 1fr 1fr ;
+        margin: 20px 10px;
+
     }
 
 

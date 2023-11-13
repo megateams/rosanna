@@ -556,7 +556,7 @@ def view_marks_by_marktype(request, class_id, teacher_id):
     schoolclass = Schoolclasses.objects.get(classid=class_id)
     teacher = Teachers.objects.get(teacherid=teacher_id)
     mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
-    
+    term_data = Term.objects.get(status=1)
     students = Student.objects.filter(stdclass=schoolclass)
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
     mark_types = Mark.MARK_TYPES
@@ -587,6 +587,7 @@ def view_marks_by_marktype(request, class_id, teacher_id):
         'student_marks': student_marks,
         'mark_types' :mark_types,
         'mark_type' :mark_type,
+        'term_data': term_data
     })
 
 
