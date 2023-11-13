@@ -6,40 +6,52 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <div class="table-section" style="font-size: 14px;"> 
-        
-        <table class="table" id="table">
-            <thead>
-                <tr>
-                    <th>Staff ID</th>
-                    <th>Staff Name</th>
-                    <th>Date Paid</th>
-                    <th>Term $ Year</th>
-                    <th>Salary</th>
-                    <th>Amount Paid</th>
-                    <th>Balance</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for teacher in teacher_data %}
-                <tr>
-                    <td>{{teacher.teacherid}}</td>
-                    <td>{{teacher.teachername}}</td>
-                    <td>{{teacher.paymentdate}}</td>
-                    <td>TERM I 2024</td>
-                    <td>{{teacher.salary}}</td>
-                    <td>{{teacher.amountpaid}}</td>
-                    <td>{{teacher.balance}}</td>
-                </tr>
-                {% endfor %}
-  
-            </tbody>
-        </table>
-    </div>
+    
     <!-- student show -->
-    <div class="show_user">
-        
-    </div>
+    {% for term_data in teacher_payments_data %}
+            <div class="box mt-3 shadow" style="border: 0.5px solid #aaa7a7; border-radius: 10px 10px 0 0;">
+                
+                <div class="box-header d-flex justify-content-between p-2" data-toggle="collapse" data-target="#enrollmentCollapse{{ term_data.term|slugify }}{{ term_data.year }}"  style=" border-radius: 10px 10px 0 0;background: rgb(238, 235, 235);">
+                    <h6>Teacher Payments History ({{ term_data.term }} - {{ term_data.year }})</h6>
+                    <a class=""   aria-expanded="false" aria-controls="enrollmentCollapse">
+                        <strong><i class="fas fa-chevron-down    "></i></strong>
+                    </a>
+                </div>
+                
+                <div class="collapse mt-3" id="enrollmentCollapse{{ term_data.term|slugify }}{{ term_data.year }}">
+                    <div class="table-section" style="font-size: 13px;">
+                        <table class="table" border="1">
+                            <thead class="text-uppercase">
+                                <tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Staff ID</th>
+                                            <th>Staff Name</th>
+                                            <th>Date Paid</th>
+                                            <th>Salary</th>
+                                            <th>Amount Paid</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in term_data.trpayments_data %}
+                                    <tr>
+                                        <td>{{payment.teacherid}}</td>
+                                        <td>{{payment.teachername}}</td>
+                                        <td>{{payment.paymentdate}}</td>
+                                        <td>{{payment.salary}}</td>
+                                        <td>{{payment.amountpaid}}</td>
+                                        <td>{{payment.balance}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 </div>
 <!-- inner-content -->
 {% endblock main %}
