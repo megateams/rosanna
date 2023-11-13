@@ -36,10 +36,17 @@
     color: #fff;
 }
 
+.btn_displays{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+      
+
 .std_image .image img
 {
     width: 100%;
 }
+
 
 @media (max-width: 770px){
     .std_cards .card h5{
@@ -50,5 +57,10 @@
     .std_cards .card .icon{
         font-size: 1.5rem;
         margin-left: -10px;
+    }
+
+    .btn_displays{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 }
