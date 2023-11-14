@@ -36,3 +36,15 @@ urlpatterns = [
     path('teacher/assign_subject/', views.assign_subject, name='assign_subject'),
 
 ]
+
+
+
+
+
+
+
+
+
+
+
+
