@@ -332,7 +332,7 @@ def financedashboard(request):
 
 
     # Calculate the percentages
-    if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
+    if total_amount == 0 or total_amount_paid== 0 or total_sspayments==0 or total_trpayments==0: 
         context = {
             'total_amount_paid': total_amount_paid,
             'total_amount': total_amount,
@@ -341,6 +341,7 @@ def financedashboard(request):
             'term_data' : term_data,
             'fees_list': fees_list,
             'bursar' : bursar,
+            'terms' : terms,
         }
         return render(request, "finance/financedashboard.html", context)
     else: 
@@ -855,6 +856,7 @@ def financeaddFeesstructure(request):
 
 def financefeesstructureList(request):
     if 'admin_id' not in request.session:
+        
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
 
@@ -991,10 +993,11 @@ def financeteacherpaymentsList(request):
 
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
+    term_data = Term.objects.get(status=1)
 
     bursar = Administrators.objects.get(id=admin_id)
-    total_trpayments = Teacherspayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    teacherspayment = Teacherspayment.objects.all()
+    total_trpayments = Teacherspayment.objects.filter(term=term_data.current_term, year=term_data.current_year).aggregate(Sum('amountpaid'))['amountpaid__sum']
+    teacherspayment = Teacherspayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
     context = {
        'teachers':teacherspayment,
        'total_trpayments': total_trpayments, 
@@ -1097,10 +1100,11 @@ def financesupportstaffpaymentsList(request):
 
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
+    term_data = Term.objects.get(status=1)
 
     bursar = Administrators.objects.get(id=admin_id)
-    total_sspayments = Supportstaffpayment.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    support_staff_payments = Supportstaffpayment.objects.all()
+    total_sspayments = Supportstaffpayment.objects.filter(term=term_data.current_term, year=term_data.current_year).aggregate(Sum('amountpaid'))['amountpaid__sum']
+    support_staff_payments = Supportstaffpayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
     context = {
         'supportstaffpayments': support_staff_payments,
         'total_sspayments': total_sspayments,
@@ -1151,10 +1155,11 @@ def financeutilitiesList(request):
 
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
+    term_data = Term.objects.get(status=1)
 
     bursar = Administrators.objects.get(id=admin_id)
-    total_amount_paid = Utilities.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    utilities = Utilities.objects.all()
+    total_amount_paid = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year).aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year)
     context = {
         'utilities': utilities,
         'total_amount_paid': total_amount_paid,
