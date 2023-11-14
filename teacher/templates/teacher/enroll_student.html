@@ -1,0 +1,100 @@
+{% extends 'teacher/base.html' %}
+{% block  title %} Enroll student {% endblock title %}
+{% block  pagetitle %} Enroll Student {% endblock pagetitle %}
+{% load static %}
+{% block  main %}
+<div class="inner-content">
+    <div class="header d-flex">
+        <div class="btns d-flex align-items-center mr-3">
+            <a href="/teacher/his_class/{{ class.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger mr-3">Class Information</a>
+
+            <div class="current-term mr-3">
+                <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
+                <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
+            </div>
+            <div class="current-year"> 
+                <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
+                <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
+            </div>
+            <div class="current-year ml-3"> 
+                <a class=" btn-sm btn-info text-white p-2">Class: </a>
+                <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{class.classname}} </a>
+            </div>
+            <a href="/enrollment_history/{{class.classid}}/{{teacher.teacherid}}" class="btn btn-sm btn-info p-1 ml-3">Enrollment History</a>
+
+        </div>
+    </div>
+
+    <!-- students table -->
+    {% if messages %}
+        <ul class="messages mt-3">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>{{ message }}</strong> 
+            </div>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="table-section mt-3" style="font-size: 13px;">
+        <h5 class="text-uppercase"><b>Enroll Students</b></h5>
+        <table class="table" id="table" border="1">
+            <thead>
+                <tr>
+                    <th>Student Number</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.stdnumber }}</td>
+                        <td>{{ student.childname }}</td>
+                        <td>
+                            <a href="#enroll{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-success">Enroll</a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="enroll{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Enroll {{student.childname}} to {{ term_data.current_term }} - {{ term_data.current_year }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="/enroll_student/{{class.classid}}/{{teacher.teacherid}}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="stdnumber" value="{{ student.stdnumber }}">
+                                        <input type="hidden" name="current_term" value="{{ term_data.current_term }}">
+                                        <input type="hidden" name="current_year" value="{{ term_data.current_year }}">
+                                        <!-- <input type="hidden" name="std_class" value="{{ class.classid }}"> -->
+
+                                        <p style="font-size: 18px;">Confirm Enrollment</p>
+                                        
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- students table -->
+
+</div> 
+{% endblock main %} 

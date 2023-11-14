@@ -237,7 +237,15 @@ class TeacherSubject(models.Model):
     def __str__(self):
         return f"{self.teacher} - {', '.join([str(subject) for subject in self.subjects.all()])} ({self.schoolclass})"
 
-
+class Enrollment(models.Model):
+    stdnumber = models.ForeignKey(Student, on_delete=models.CASCADE)
+    stdclass = models.ForeignKey(Schoolclasses, on_delete=models.CASCADE)
+    current_term = models.CharField(max_length= 25, verbose_name = "Current Term")
+    current_year = models.CharField(max_length= 25, verbose_name = "Current Year")
+    
+    display_enrollment = [
+        'stdnumber' , 'stdclass', 'current_term', 'current_year',
+    ]
 
     
     

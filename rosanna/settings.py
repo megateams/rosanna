@@ -79,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rosanna.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # connecting to mysql database
@@ -92,6 +91,7 @@ DATABASES = {
         'HOST': 'localhost',             
     }
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',

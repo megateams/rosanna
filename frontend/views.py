@@ -112,13 +112,13 @@ def addadmins(request):
         address = request.POST.get('address')
         contact = request.POST.get('contact')
         email = request.POST.get('email')
-        #profileimage = request.POST.get('profileimage')
         role = request.POST.get('role')
         qualification = request.POST.get('qualification')
         bankaccnum = request.POST.get('bankaccnum')
         salary = request.POST.get('salary')
         username = request.POST.get('username')
-        password = request.POST.get('password')
+
+        default_password = "123456"
         
         try:
             adminexist = Administrators.objects.get(username = username)
@@ -136,7 +136,7 @@ def addadmins(request):
                 bankaccnum =  bankaccnum ,
                 salary = salary ,
                 username = username ,
-                password = encryptpassword(password) ,
+                password = encryptpassword(default_password) ,
             )
             
             Administrators.save
@@ -488,7 +488,6 @@ def edit_tr_image(request):
 def edit_student(request):
     if request.method == "POST":
         stdnumber = request.POST.get("stdnumber")
-        regdate = request.POST.get('regdate')
         childname = request.POST.get('childname')
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
@@ -506,7 +505,6 @@ def edit_student(request):
         username = request.POST.get("username")
 
         student = Student.objects.get(pk=stdnumber)
-        student.regdate = regdate
         student.childname = childname
         student.gender = gender
         student.dob = dob
@@ -1344,14 +1342,14 @@ def supportstaffpayments(request):
     return render(request, 'frontend/accounting/supportstaffpayments.html')
 
 @login_required
-def expenses(request):
-    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    expenses = ExpenseRecord.objects.all()
+def utilities(request):
+    total_amount_paid = Utilities.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.all()
     context = {
-        'expenses': expenses,
+        'utilities': utilities,
         'total_amount_paid': total_amount_paid,
         }
-    return render(request, 'frontend/accounting/expenses.html',context)
+    return render(request, 'frontend/accounting/utilities.html',context)
 
 @login_required
 def financeteacherpaymentsList(request):
@@ -1580,8 +1578,6 @@ def edit_supportstaff(request):
         salary = request.POST.get('salary')
         bankaccnum = request.POST.get('bankaccnum')
         dob = request.POST.get('dob')
-        joiningdate = request.POST.get('joiningdate')
-
 
         that_support_staff = Supportstaff.objects.get(pk=supportstaffid)
 
@@ -1596,7 +1592,6 @@ def edit_supportstaff(request):
         that_support_staff.salary = salary
         that_support_staff.bankaccnum = bankaccnum
         that_support_staff.dob = dob
-        that_support_staff.joiningdate = joiningdate
 
         # Save the updated support staff
         that_support_staff.save()

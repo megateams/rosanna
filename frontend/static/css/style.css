@@ -10,7 +10,7 @@
 .main{
     display: flex;
     width: 100%;
-    /* position: fixed; */
+    overflow: hidden;
 
 }
 .sidebar{
@@ -320,6 +320,7 @@
         width: 100%;
         height: 60px;
         padding-top: 10px;
+        position: absolute;
     }
 
     .donut-chart, .bar-chart{

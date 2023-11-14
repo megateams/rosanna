@@ -5,6 +5,7 @@ from .models import *
 from django.db.models import Sum
 from django.db.models import Max
 from frontend.models import *
+from django.http import Http404
 from django.core import serializers
 from django.http import JsonResponse
 from django.urls import reverse
@@ -184,29 +185,7 @@ def staffpayments(request):
         Staffpayments.save()
     return render(request , 'finace/financedashboard.html')
         
-def expenserecords(request):
-    if request.method == 'POST':
-        expenseid = request.POST.get('expenseid')
-        category = request.POST.get('category')
-        amountrequired = request.POST.get('amountrequired')
-        # expensedate = request.POST.get('expensedate')
-        amountpaid = request.POST,get('amountpaid')
-        balance = request.POST.get('balance')
 
-        # Capture the current date
-        current_date = date.today()
-        
-        ExpenseRecord.objects.create(
-            expenseid = expenseid ,
-            category = category ,
-            amountrequired = amountrequired ,
-            expensedate = current_date ,
-            amountpaid = amountpaid ,
-            balance = balance
-        )
-        
-        ExpenseRecord.save()
-    return render(request , 'finance/financedashboard.html')
 
 
 def students_list(request):
@@ -283,28 +262,53 @@ def financedashboard(request):
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
 
-    bursar = Administrators.objects.get(id=admin_id)
-    expenses = ExpenseRecord.objects.all()
-    total_amount_paid = expenses.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    term_data = Term.objects.get(status=1)
+    terms = Term.objects.all()
 
-    fees = Fees.objects.all()
+    bursar = Administrators.objects.get(id=admin_id)
+    utilities = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_amount_paid == None:
+        total_amount_paid = 0
+
+    fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+    if total_amount == None:
+        total_amount = 0
 
     # Retrieve only the latest balance for each student based on the latest timestamp and date
 
     latest_dates = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-date')
     fees_list = Fees.objects.annotate(
         latest_date=Subquery(latest_dates.values('date')[:1])
-    ).filter(balance__gt=0.0, date=F('latest_date'))
+    ).filter(balance__gt=0.0, date=F('latest_date'),term=term_data.current_term, year=term_data.current_year)
 
     
-    sspayments = Supportstaffpayment.objects.all()
+    sspayments = Supportstaffpayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_sspayments == None:
+        total_sspayments = 0
 
-    trpayments = Teacherspayment.objects.all()
+    trpayments = Teacherspayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_trpayments == None:
+        total_trpayments = 0
 
-    term_data = Term.objects.get(status=1)
+    # Calculate total income (fees)
+    total_income = total_amount
+    # Calculate total expenses (teacher payments + support staff payments + utilities)
+    total_expenses = total_trpayments + total_sspayments + total_amount_paid
+
+    # Calculate profit
+    profit = total_income - total_expenses
+    # total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    # if total == 0:
+    #     fees_percentage = 0
+    #     utilities_percentage = 0
+    #     sspayments_percentage = 0
+    #     trpayments_percentage = 0
+    # else:
+
 
     # Calculate the percentages
     if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
@@ -320,12 +324,38 @@ def financedashboard(request):
         return render(request, "finance/financedashboard.html", context)
     else: 
         total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+
         fees_percentage = (total_amount / total) * 100
-        expenses_percentage = (total_amount_paid / total) * 100
+        utilities_percentage = (total_amount_paid / total) * 100
         sspayments_percentage = (total_sspayments / total) * 100
         trpayments_percentage = (total_trpayments / total) * 100
 
-        
+    context = {
+        'total_amount_paid': total_amount_paid,
+        'total_amount': total_amount,
+        'total_sspayments' : total_sspayments,
+        'total_trpayments' : total_trpayments,
+        'term_data' : term_data,
+        'fees_list': fees_list,
+        'fees_percentage': fees_percentage,
+        'utilities_percentage': utilities_percentage,
+        'sspayments_percentage': sspayments_percentage,
+        'trpayments_percentage': trpayments_percentage,
+        'bursar' : bursar,
+        'total_income' : total_income,
+        'total_expenses' : total_expenses,
+        'profit' : profit,
+        'terms' : terms,
+    }
+    return render(request, "finance/financedashboard.html", context)
+
+
+# that term
+def that_term(request, id):
+    # Check if the bursar is authenticated (if you are using sessions)
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
 
         context = {
             'total_amount_paid': total_amount_paid,
@@ -335,12 +365,139 @@ def financedashboard(request):
             'term_data' : term_data,
             'fees_list': fees_list,
             'fees_percentage': fees_percentage,
-            'expenses_percentage': expenses_percentage,
+            'utilities_percentage': utilities_percentage,
             'sspayments_percentage': sspayments_percentage,
             'trpayments_percentage': trpayments_percentage,
             'bursar' : bursar,
+            'total_income' : total_income,
+            'total_expenses' : total_expenses,
+            'profit' : profit,
         }
         return render(request, "finance/financedashboard.html", context)
+
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    term_data = Term.objects.get(id=id)
+    terms = Term.objects.all()
+
+    bursar = Administrators.objects.get(id=admin_id)
+    utilities = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_amount_paid == None:
+        total_amount_paid = 0
+
+    fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+    if total_amount == None:
+        total_amount = 0
+
+    # Retrieve only the latest balance for each student based on the latest timestamp and date
+
+    latest_dates = Fees.objects.filter(stdnumber=OuterRef('stdnumber')).order_by('-date')
+    fees_list = Fees.objects.annotate(
+        latest_date=Subquery(latest_dates.values('date')[:1])
+    ).filter(balance__gt=0.0, date=F('latest_date'),term=term_data.current_term, year=term_data.current_year)
+
+    
+    sspayments = Supportstaffpayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_sspayments == None:
+        total_sspayments = 0
+
+    trpayments = Teacherspayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_trpayments = trpayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_trpayments == None:
+        total_trpayments = 0
+
+    # Calculate total income (fees)
+    total_income = total_amount
+
+    # Calculate total expenses (teacher payments + support staff payments + utilities)
+    total_expenses = total_trpayments + total_sspayments + total_amount_paid
+
+    # Calculate profit
+    profit = total_income - total_expenses
+    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    if total == 0:
+        fees_percentage = 0
+        utilities_percentage = 0
+        sspayments_percentage = 0
+        trpayments_percentage = 0
+    else:
+        fees_percentage = (total_amount / total) * 100
+        utilities_percentage = (total_amount_paid / total) * 100
+        sspayments_percentage = (total_sspayments / total) * 100
+        trpayments_percentage = (total_trpayments / total) * 100
+
+    context = {
+        'total_amount_paid': total_amount_paid,
+        'total_amount': total_amount,
+        'total_sspayments' : total_sspayments,
+        'total_trpayments' : total_trpayments,
+        'term_data' : term_data,
+        'fees_list': fees_list,
+        'fees_percentage': fees_percentage,
+        'utilities_percentage': utilities_percentage,
+        'sspayments_percentage': sspayments_percentage,
+        'trpayments_percentage': trpayments_percentage,
+        'bursar' : bursar,
+        'total_income' : total_income,
+        'total_expenses' : total_expenses,
+        'profit' : profit,
+        'terms' : terms,
+    }
+    return render(request, "finance/financedashboard.html", context)
+
+# @login_required
+
+def bursar_profile(request):
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        # Query the Administrators model to get the Bursar administrator
+        try:
+            bursar = Administrators.objects.get(role='Bursar')
+        except Administrators.DoesNotExist:
+            # Handle the case where there is no Bursar in the database
+            raise Http404("Bursar profile not found")
+        
+        context = {
+            'bursar': bursar,
+        }
+
+        return render(request, 'finance/profile.html', context)
+    else:
+        # Handle the case where the user is not authenticated
+        # You can redirect or show an error message here
+        pass
+
+def edit_bursar_profile(request):
+    try:
+        # Retrieve the Bursar's data based on their role
+        bursar = Administrators.objects.get(role='Bursar')
+    except Administrators.DoesNotExist:
+        raise Http404("Bursar profile not found")
+
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+
+        if new_pass == confirm_pass:
+            # Update the Bursar's password (replace this with your actual password update logic)
+            bursar.password = encryptpassword(new_pass)
+            bursar.username = username
+            bursar.save()
+
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+
+        return redirect("bursar_profile")
+
+    return render(request, 'finance/profile.html', {'bursar': bursar})
+
 
 
 # fees views
@@ -437,24 +594,28 @@ def financeaddFees(request):
     students = Student.objects.all()
     fees_structures = Feesstructure.objects.all()
     return render(request, 'finance/fees/financeaddFees.html', {'students': students, 'fees_structures': fees_structures, 'bursar': bursar})
+
 def financefeesList(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
 
+    term_data = Term.objects.get(status=1)
+    terms = Term.objects.all()
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
 
-    total_amount = Fees.objects.aggregate(Sum('amount'))['amount__sum']
-    fees_list = Fees.objects.all()
+    fees_list = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
     classes = Schoolclasses.objects.all()
     context = {
         'fees_list': fees_list,
         'total_amount': total_amount,
         'classes': classes,
-        'bursar': bursar
+        'bursar': bursar,
+        'terms': terms
     }
     return render(request,'finance/fees/financefeesList.html',context)
 
@@ -469,17 +630,18 @@ def fees_by_class(request, class_id):
     bursar = Administrators.objects.get(id=admin_id)
 
     classes = Schoolclasses.objects.all()
+    term_data = Term.objects.get(status=1)
     
     try:
         # Fetch the selected class based on the class_id
         selected_class = Schoolclasses.objects.get(classid=class_id)
         
         # Fetch fees records for students in the selected class
-        fees_list = Fees.objects.filter(studentclass=selected_class.classname)
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname, term=term_data.current_term, year=term_data.current_year)
         
         # Retrieve the class fees from the Fees model
-        classfees = Fees.objects.filter(studentclass=selected_class.classname).first()
-        classfees = classfees.classfees if classfees else 0  # Default value if class fees are not found
+        total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
+        # classfees = classfees.amount
     except Schoolclasses.DoesNotExist:
         selected_class = None
         fees_list = []
@@ -489,7 +651,7 @@ def fees_by_class(request, class_id):
         'fees_list': fees_list,
         'classes': classes,
         'selected_class': selected_class,
-        'classfees': classfees,  # Pass the class fees to the template
+        'total_amount': total_amount,  # Pass the class fees to the template
         'bursar' : bursar
     })
 
@@ -507,7 +669,6 @@ def edit_std_fees(request):
         paymentid = request.POST.get("paymentid")
         amount = float(request.POST.get("amount"))
         modeofpayment = request.POST.get("modeofpayment")
-        date = request.POST.get("date")
         fee = Fees.objects.get(paymentid=paymentid)
         classfees = float(fee.classfees)
         balance = classfees - amount
@@ -515,7 +676,7 @@ def edit_std_fees(request):
         fee.amount = amount
         fee.balance = balance
         fee.modeofpayment = modeofpayment
-        fee.date = date
+
         fee.save()
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
@@ -529,8 +690,11 @@ def feesclearedstudents(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
+
+    
+    term_data = Term.objects.get(status=1)
     # Filter the Fees model to get students with a balance of 0
-    cleared_students = Fees.objects.filter(balance=0)
+    cleared_students = Fees.objects.filter(balance=0 ,term=term_data.current_term, year=term_data.current_year)
     classes = Schoolclasses.objects.all()
 
     # Pass the cleared_students queryset to the template
@@ -908,8 +1072,8 @@ def financesupportstaffpaymentsList(request):
 
 # supportstaffpayments views
 
-# expenses views
-def financeaddExpenses(request):
+# utilities views
+def financeaddUtilities(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -927,22 +1091,21 @@ def financeaddExpenses(request):
         term = term_data.current_term
         year = term_data.current_year
         category = request.POST.get('category')
-        # expensedate = request.POST.get('expensedate')
         amountpaid = request.POST.get('amountpaid')
-        expense_record = ExpenseRecord(
+        utilities = Utilities(
             category=category,
-            expensedate=current_date,
+            utilitiesdate=current_date,
             amountpaid=amountpaid,
             term = term,
             year = year
         )
-        expense_record.save()
-        messages.success(request, 'Expense added successfully.')  # Display a success message
-        return redirect('Add Expenses')  # Redirect to expenses list page
+        utilities.save()
+        messages.success(request, 'Utility added successfully.')  # Display a success message
+        return redirect('Add Utilities')  # Redirect to utilities list page
 
-    return render(request, 'finance/expenses/financeaddExpenses.html', {'bursar':bursar})
+    return render(request, 'finance/utilities/financeaddUtilities.html', {'bursar':bursar})
 
-def financeexpensesList(request):
+def financeutilitiesList(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -951,29 +1114,29 @@ def financeexpensesList(request):
     admin_id = request.session['admin_id']
 
     bursar = Administrators.objects.get(id=admin_id)
-    total_amount_paid = ExpenseRecord.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
-    expenses = ExpenseRecord.objects.all()
+    total_amount_paid = Utilities.objects.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    utilities = Utilities.objects.all()
     context = {
-        'expenses': expenses,
+        'utilities': utilities,
         'total_amount_paid': total_amount_paid,
         'bursar': bursar
     }
-    return render(request, 'finance/expenses/financeexpensesList.html', context)
+    return render(request, 'finance/utilities/financeutilitiesList.html', context)
 
-def delete_expense(request):
+def delete_utilities(request):
     if request.method == 'POST':
-        expenseid = request.POST.get("expenseid")
+        utilitiesid = request.POST.get("utilitiesid")
         try:
-            expense = ExpenseRecord.objects.get(expenseid=expenseid)
-            expense.delete()
-            messages.success(request, f"Expense record {expenseid} has been deleted.")
-        except ExpenseRecord.DoesNotExist:
-            messages.error(request, f"Expense record {expenseid} does not exist.")
+            utility = Utilities.objects.get(utilitiesid=utilitiesid)
+            utility.delete()
+            messages.success(request, f"Utility record {utilitiesid} has been deleted.")
+        except Utilities.DoesNotExist:
+            messages.error(request, f"Utility record {utilitiesid} does not exist.")
 
-    return redirect('Expenses List')  # Adjust this to the correct URL name
+    return redirect('Utilities List')  # Adjust this to the correct URL name
 
 
-def edit_expense(request, expenseid):
+def edit_utilities(request, utilitiesid):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
@@ -983,26 +1146,25 @@ def edit_expense(request, expenseid):
 
     bursar = Administrators.objects.get(id=admin_id)
     try:
-        expense = ExpenseRecord.objects.get(expenseid=expenseid)
+        utility = Utilities.objects.get(utilitiesid=utilitiesid)
 
         if request.method == 'POST':
             updated_category = request.POST.get('category')
-            updated_expensedate = request.POST.get('expensedate')
+            updated_utilitiesdate = request.POST.get('utilitiesdate')
             updated_amountpaid = request.POST.get('amountpaid')
-            expense.category = updated_category
-            expense.expensedate = updated_expensedate
-            expense.amountpaid = updated_amountpaid
-            expense.save()
-            messages.success(request, 'Expense updated successfully.')
-            return redirect('Add Expenses')
+            utility.category = updated_category
+            utility.amountpaid = updated_amountpaid
+            utility.save()
+            messages.success(request, 'Utility updated successfully.')
+            return redirect('Add Utilities')
 
-        context = {'expense': expense, 'bursar': bursar}
-        return render(request, 'finance/expenses/edit_expense.html', context)
+        context = {'utility': utility, 'bursar': bursar}
+        return render(request, 'finance/utilities/edit_utilities.html', context)
 
-    except ExpenseRecord.DoesNotExist:
-        messages.error(request, 'Expense not found.')
-        return redirect('Expenses List')
-# expenses views
+    except Utilities.DoesNotExist:
+        messages.error(request, 'Utility not found.')
+        return redirect('Utilities List')
+# utilities views
 
 def financeReports(request):
     if 'admin_id' not in request.session:
@@ -1193,15 +1355,15 @@ def export_fees_structure_to_excel(request):
 
     return response
 
-def export_expenses_to_excel(request):
-    data = ExpenseRecord.objects.all().values_list(
-        'expenseid', 'category', 'expensedate', 'amountpaid'
+def export_utilities_to_excel(request):
+    data = Utilities.objects.all().values_list(
+        'utilitiesid', 'category', 'utilitiesdate', 'amountpaid'
     )
 
     wb = openpyxl.Workbook()
     ws = wb.active
 
-    ws.append(['Expense ID', 'Category', 'Expense Date', 'Amount Paid'])
+    ws.append(['Utility ID', 'Category', 'Utilities Date', 'Amount Paid'])
 
     for row_data in data:
         ws.append(row_data)
@@ -1211,7 +1373,7 @@ def export_expenses_to_excel(request):
     ws.column_dimensions['C'].width = 15
     ws.column_dimensions['D'].width = 15
 
-    filename = 'expenses_data.xlsx'
+    filename = 'utilities_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 

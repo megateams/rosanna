@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from frontend.models import *
 from finance.models import *
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 import os
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 from django.conf import settings
 from django.db.models.functions import Coalesce, Cast
 from django.db.models import Avg, F, FloatField 
@@ -58,18 +58,46 @@ def dashboard(request):
         # If the student is not logged in, redirect to the login page
         return redirect('Login Page')  # Replace 'login' with the name/url of your login view
 
+    term_data = Term.objects.get(status=1)
     # Get the studentnumber from the session
     std_number = request.session['std_number']
 
     student = Student.objects.get(stdnumber=std_number)   
-    term_data = Term.objects.all().first()
+    that_student = Enrollment.objects.filter(stdnumber=std_number,current_term=term_data.current_term, current_year=term_data.current_year)   
 
-    return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student})
+    if that_student.exists():
+        return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student, 'that_student':that_student})
+    
+    else:
+        return render(request, 'student/dashboard.html',{'term_data':term_data,'student':student})
 
 # profile
 def profile(request,std_number):
     students = Student.objects.get(stdnumber = std_number)
     return render(request, 'student/profile.html',{'student':students})
+
+def edit_student_profile(request, std_number):
+    student = get_object_or_404(Student, stdnumber=std_number)
+
+    
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+        
+        if new_pass == confirm_pass:
+            # Update student's password (replace this with your actual password update logic)
+            student.password = encryptpassword(new_pass)
+            student.username = username
+            student.save()
+            
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+            
+        return redirect("Student Profile", std_number=std_number)
+    
+    return render(request, 'student/profile.html', {'student': student})
 
 # Paymentistory
 def paymenthistory(request,std_number):
