@@ -341,6 +341,7 @@ def financedashboard(request):
             'term_data' : term_data,
             'fees_list': fees_list,
             'bursar' : bursar,
+            'terms': terms
         }
         return render(request, "finance/financedashboard.html", context)
     else: 

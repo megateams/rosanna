@@ -494,6 +494,8 @@ def view_marks(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
+    promotion_marks = Promotion.objects.get(class_id=class_id)
+
     # Get all subjects
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
     subjects_count = Subjects.objects.filter(schoolclasses=schoolclass).count()
@@ -511,7 +513,7 @@ def view_marks(request, class_id, teacher_id):
         for subject in subjects:
             total_marks = 0
             marks_count = 0
-            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject).exclude(mark_type='Test')
+            marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, subject=subject,current_term=term_data.current_term, current_year=term_data.current_year).exclude(mark_type='Test')
 
             for mark in marks:
                 total_marks += mark.marks_obtained
@@ -521,7 +523,7 @@ def view_marks(request, class_id, teacher_id):
 
             average_marks = total_marks / 3 if marks_count > 0 else 0
             total_average_marks += int(average_marks)
-            final_average = total_average_marks / subjects_count if marks_count > 0 else 0
+            final_average = total_average_marks / subjects_count if subjects_count > 0 else 0
               # Accumulate average marks for the student
             student_subjects_data.append({
                 'subject': subject,
@@ -546,7 +548,8 @@ def view_marks(request, class_id, teacher_id):
         'subjects': subjects,
         'mark_types': mark_types,
         'subjects_marks_data': subjects_marks_data,
-        'term_data': term_data
+        'term_data': term_data,
+        'promotion_marks': promotion_marks,
     })
 
 
@@ -562,7 +565,7 @@ def view_marks_by_marktype(request, class_id, teacher_id):
     mark_types = Mark.MARK_TYPES
     student_marks = {}
     for student in students:
-        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, mark_type=mark_type)
+        marks = Mark.objects.filter(class_name=schoolclass, student_name=student.childname, mark_type=mark_type,current_term=term_data.current_term, current_year=term_data.current_year)
         student_marks[student] = {subject: marks.filter(subject=subject).first() for subject in subjects}
 
     # Calculate total marks and average marks for each student
@@ -654,6 +657,8 @@ def generate_report(request, student_id,position):
     # Get the class of the student
     student_class = student.stdclass
 
+    promotion_mark = Promotion.objects.get(class_id=student_class)
+
     # Fetch the subjects associated with the student's class
     subjects = Subjects.objects.filter(schoolclasses=student_class)
 
@@ -691,6 +696,8 @@ def generate_report(request, student_id,position):
 
     # Calculate the final average
     final_average = int(total_averages) / len(subjects)
+
+    promotion_mark = int(promotion_mark.promotion_mark)
     # Render the report template
     context = {
         "student": student,
@@ -705,6 +712,7 @@ def generate_report(request, student_id,position):
         "position": position,
         "student_count": student_count,
         "classteacher": classteacher,
+        "promotion_mark": promotion_mark
     }
 
     return render(request, "teacher/reports/report_card.html", context)
@@ -791,7 +799,27 @@ def enrollment_history(request, classid, teacher_id):
     return render(request, 'teacher/enrollment_history.html', context)
 
 
+# set promotion mark
+def set_promotion_mark(request,class_id,teacher_id):
+    if request.method == "POST":
+        promotion_mark = request.POST.get("promotion_mark")
 
+        that_class = Schoolclasses.objects.get(pk=class_id)
+        promotion_list = Promotion.objects.get(class_id = class_id)
+
+        if promotion_list:
+            promotion = Promotion.objects.create(promotion_mark=promotion_mark,class_id=that_class)
+            promotion.save()
+            messages.success(request, "Promotion mark updated successfully")
+            return redirect('View Marks',class_id=class_id,teacher_id=teacher_id)
+
+        else:
+
+            promotion = Promotion.objects.create(promotion_mark=promotion_mark,class_id=that_class)
+            promotion.save()
+
+            messages.success(request, "Promotion mark set successfully")
+            return redirect('View Marks',class_id=class_id,teacher_id=teacher_id)
 
  
 

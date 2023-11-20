@@ -34,5 +34,8 @@ urlpatterns = [
     path('teacher/edit_all_marks', views.edit_all_marks, name='edit_all_marks'),    
     path('get_mark/<str:student_id>/<str:subject_id>/<str:mark_type>/', views.get_mark, name='get_mark'),
     path('teacher/assign_subject/', views.assign_subject, name='assign_subject'),
+    path('teacher/assign_subject/', views.assign_subject, name='assign_subject'),
+    path('set_promotion_mark/<class_id>/<teacher_id>/', views.set_promotion_mark, name='set_promotion_mark'),
+
 
 ]
