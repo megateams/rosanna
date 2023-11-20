@@ -62,8 +62,14 @@
 @media (max-width: 770px){
 
     a.btn{
-        width: 120px;
+        /* width: 120px; */
         font-size: 12px;
+        margin-right: 5px;
+    }
+
+
+    .promote a{
+        margin-left: 20px;
     }
 
     .red-btns{
@@ -128,9 +134,7 @@
         overflow-x: scroll;
     
    }
-
-
-
+   
     /* toggle actions */
     .sidebar.active{
         display: block;
@@ -201,6 +205,7 @@
     .buttons .current_session{
         display: grid;
         grid-template-columns: 1fr 1fr;
+        margin-right: -20px;
     }
 
     .buttons .current_session .enroll-student{
@@ -217,11 +222,7 @@
         margin: 20px 10px;
 
     }
-
-
-   
 }
-/* small screen */
 
 
 
