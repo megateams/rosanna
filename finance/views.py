@@ -1519,6 +1519,66 @@ def export_clearedstudents_to_excel(request):
 
     return response
 
+def feesReport(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    term_data = Term.objects.get(status=1)
+    terms = Term.objects.all()
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
+    fees_list = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
+    classes = Schoolclasses.objects.all()
+    context = {
+        'fees_list': fees_list,
+        'total_amount': total_amount,
+        'classes': classes,
+        'bursar': bursar,
+        'terms': terms
+    }
+    return render(request,'finance/reports/feesreport.html',context)
+
+def feesreport_by_class(request, class_id):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+
+    classes = Schoolclasses.objects.all()
+    term_data = Term.objects.get(status=1)
+    
+    try:
+        # Fetch the selected class based on the class_id
+        selected_class = Schoolclasses.objects.get(classid=class_id)
+        
+        # Fetch fees records for students in the selected class
+        fees_list = Fees.objects.filter(studentclass=selected_class.classname, term=term_data.current_term, year=term_data.current_year)
+        
+        # Retrieve the class fees from the Fees model
+        total_amount = fees_list.aggregate(Sum('amount'))['amount__sum']
+        # classfees = classfees.amount
+    except Schoolclasses.DoesNotExist:
+        selected_class = None
+        fees_list = []
+        classfees = 0  # Default value if class is not found or fees not set
+    
+    return render(request, 'finance/reports/feesreport_by_class.html', {
+        'fees_list': fees_list,
+        'classes': classes,
+        'selected_class': selected_class,
+        'total_amount': total_amount,  # Pass the class fees to the template
+        'bursar' : bursar
+    })
+
 
 
 

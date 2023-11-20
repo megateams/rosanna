@@ -86,4 +86,9 @@ urlpatterns = [
     path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
     path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
+    # reports
+    path('feesreport/', views.feesReport, name="Fees Report"),
+    path('finance/feesreport_by_class/<int:class_id>/', views.feesreport_by_class, name='feesreport_by_class'),
+
+
 ]
