@@ -10,6 +10,7 @@ from django.conf import settings
 from django.db.models import Avg
 from frontend.views import encryptpassword
 import bcrypt
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 # view for the login page
@@ -494,7 +495,10 @@ def view_marks(request, class_id, teacher_id):
     # Get the students for this class taught by the teacher
     students = Student.objects.filter(stdclass=schoolclass)
 
-    promotion_marks = Promotion.objects.get(class_id=class_id)
+    try:
+        promotion_marks = Promotion.objects.get(class_id=class_id)
+    except ObjectDoesNotExist:
+        promotion_marks = None
 
     # Get all subjects
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
@@ -657,7 +661,10 @@ def generate_report(request, student_id,position):
     # Get the class of the student
     student_class = student.stdclass
 
-    promotion_mark = Promotion.objects.get(class_id=student_class)
+    try:
+        promotion_mark = Promotion.objects.get(class_id=student_class)
+    except ObjectDoesNotExist:
+        promotion_mark = None
 
     # Fetch the subjects associated with the student's class
     subjects = Subjects.objects.filter(schoolclasses=student_class)
@@ -697,7 +704,6 @@ def generate_report(request, student_id,position):
     # Calculate the final average
     final_average = int(total_averages) / len(subjects)
 
-    promotion_mark = int(promotion_mark.promotion_mark)
     # Render the report template
     context = {
         "student": student,
@@ -805,7 +811,11 @@ def set_promotion_mark(request,class_id,teacher_id):
         promotion_mark = request.POST.get("promotion_mark")
 
         that_class = Schoolclasses.objects.get(pk=class_id)
-        promotion_list = Promotion.objects.get(class_id = class_id)
+        
+        try:
+            promotion_list = Promotion.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            promotion_list = None
 
         if promotion_list:
             promotion = Promotion.objects.create(promotion_mark=promotion_mark,class_id=that_class)

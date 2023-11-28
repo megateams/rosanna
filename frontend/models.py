@@ -248,7 +248,7 @@ class Enrollment(models.Model):
     ]
 
 class Promotion(models.Model):
-    promotion_mark = models.CharField(max_length=10, default=None, verbose_name="Promotion Mark")
+    promotion_mark = models.IntegerField(verbose_name='Promotion Mark')
     class_id = models.ForeignKey(Schoolclasses, default=None, on_delete=models.CASCADE)
 
     display_promotion = ['promotion_mark', 'class_id']

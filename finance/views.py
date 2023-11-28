@@ -269,16 +269,14 @@ def assign_school_code(request, stdnumber):
 
             return redirect("students_list")
 
-
-
-    
-
 # Create your views here.
 def financedashboard(request):
     # Check if the bursar is authenticated (if you are using sessions)
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+
 
     # Get the teacher ID from the session
     admin_id = request.session['admin_id']
@@ -317,40 +315,19 @@ def financedashboard(request):
 
     # Calculate total income (fees)
     total_income = total_amount
+
     # Calculate total expenses (teacher payments + support staff payments + utilities)
     total_expenses = total_trpayments + total_sspayments + total_amount_paid
 
     # Calculate profit
     profit = total_income - total_expenses
-    # total = total_amount + total_amount_paid + total_sspayments + total_trpayments
-    # if total == 0:
-    #     fees_percentage = 0
-    #     utilities_percentage = 0
-    #     sspayments_percentage = 0
-    #     trpayments_percentage = 0
-    # else:
-
-
-    # Calculate the percentages
-    if total_amount == 0 or total_amount_paid== 0 or total_sspayments==0 or total_trpayments==0: 
-        context = {
-            'total_amount_paid': total_amount_paid,
-            'total_amount': total_amount,
-            'total_sspayments' : total_sspayments,
-            'total_trpayments' : total_trpayments,
-            'term_data' : term_data,
-            'fees_list': fees_list,
-            'bursar' : bursar,
-<<<<<<< HEAD
-            'terms' : terms,
-=======
-            'terms': terms
->>>>>>> 178cfd9c2d4031c178a1ebac73192ecd6422ed79
-        }
-        return render(request, "finance/financedashboard.html", context)
-    else: 
-        total = total_amount + total_amount_paid + total_sspayments + total_trpayments
-
+    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    if total == 0:
+        fees_percentage = 0
+        utilities_percentage = 0
+        sspayments_percentage = 0
+        trpayments_percentage = 0
+    else:
         fees_percentage = (total_amount / total) * 100
         utilities_percentage = (total_amount_paid / total) * 100
         sspayments_percentage = (total_sspayments / total) * 100
@@ -383,23 +360,6 @@ def that_term(request, id):
         # If the teacher is not logged in, redirect to the login page
         return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
 
-        context = {
-            'total_amount_paid': total_amount_paid,
-            'total_amount': total_amount,
-            'total_sspayments' : total_sspayments,
-            'total_trpayments' : total_trpayments,
-            'term_data' : term_data,
-            'fees_list': fees_list,
-            'fees_percentage': fees_percentage,
-            'utilities_percentage': utilities_percentage,
-            'sspayments_percentage': sspayments_percentage,
-            'trpayments_percentage': trpayments_percentage,
-            'bursar' : bursar,
-            'total_income' : total_income,
-            'total_expenses' : total_expenses,
-            'profit' : profit,
-        }
-        return render(request, "finance/financedashboard.html", context)
 
 
     # Get the teacher ID from the session

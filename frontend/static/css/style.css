@@ -31,7 +31,7 @@
     overflow-y: scroll;
     /* display: none; */
 }
-.head img{
+.header img, .head img{
     width: 50px;
     
 }
@@ -242,7 +242,7 @@
     width: 92%;
 }
 
-.sidebar.active .header h5{
+.sidebar.active .head h5{
     font-size: 13px;
 }
 
