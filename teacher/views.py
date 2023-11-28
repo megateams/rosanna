@@ -661,10 +661,8 @@ def generate_report(request, student_id,position):
     # Get the class of the student
     student_class = student.stdclass
 
-    try:
-        promotion_mark = Promotion.objects.get(class_id=student_class)
-    except ObjectDoesNotExist:
-        promotion_mark = None
+    promotion_mark = Promotion.objects.get(class_id=student_class)
+
 
     # Fetch the subjects associated with the student's class
     subjects = Subjects.objects.filter(schoolclasses=student_class)
@@ -718,7 +716,7 @@ def generate_report(request, student_id,position):
         "position": position,
         "student_count": student_count,
         "classteacher": classteacher,
-        "promotion_mark": promotion_mark
+        "promotion_mark": int(promotion_mark.promotion_mark)
     }
 
     return render(request, "teacher/reports/report_card.html", context)

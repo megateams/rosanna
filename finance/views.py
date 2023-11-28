@@ -895,6 +895,8 @@ def financeaddTeacherpayments(request):
 
         payment = Teacherspayment.objects.filter(teacherid = teacherid).last()
 
+        print(payment.paymentdate)
+
         if payment == None:
             Teacherspayment.objects.create(
                 teacherid = teacherid,
@@ -912,20 +914,29 @@ def financeaddTeacherpayments(request):
             return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata, 'bursar': bursar})
 
         if payment.balance == 0:
-            Teacherspayment.objects.create(
-                teacherid = teacherid,
-                teachername = teachername,
-                paymentdate = current_date,
-                salary = salary,
-                amountpaid = amountpaid,
-                accumulatedpayment = amountpaid,
-                balance = float(teacher.salary) - amountpaid,
-                term = term,
-                year = year
-            )
+            
+            if payment.balance == 0 and payment.paymentdate.month == current_date.month and payment.paymentdate.year == current_date.year:
+                messages.success(request, 'Teacher already paid for this month.')
 
-            messages.success(request, 'Teacher payment added successfully.')
+            else:
+                Teacherspayment.objects.create(
+                    teacherid = teacherid,
+                    teachername = teachername,
+                    paymentdate = current_date,
+                    salary = salary,
+                    amountpaid = amountpaid,
+                    accumulatedpayment = amountpaid,
+                    balance = float(teacher.salary) - amountpaid,
+                    term = term,
+                    year = year
+                )
+                messages.success(request, 'Payment successfull.')
             return render(request, 'finance/staffpayments/financeaddTeacherpayments.html', {'teachers': teachersdata, 'bursar': bursar})
+
+
+            
+
+            
 
         if payment.balance > 0:
             accumulatedpayment = payment.accumulatedpayment + amountpaid
