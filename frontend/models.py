@@ -247,6 +247,12 @@ class Enrollment(models.Model):
         'stdnumber' , 'stdclass', 'current_term', 'current_year',
     ]
 
+class Promotion(models.Model):
+    promotion_mark = models.IntegerField(verbose_name='Promotion Mark')
+    class_id = models.ForeignKey(Schoolclasses, default=None, on_delete=models.CASCADE)
+
+    display_promotion = ['promotion_mark', 'class_id']
+
     
     
     

@@ -256,7 +256,19 @@
         <div class="class-teacher-details m-4">
             <div class="row">
                 <div class="col-6">
-                    <h6><b>Next Term begins on: </b> <span style=""> ______ /______ /_______   </span></h6>
+                    <h6><b>Next Term begins on: </b> <span> ______ /______ /_______   </span></h6>
+
+                    {% if term_data.current_term == "Term III" %}
+                        {% if final_average >= promotion_mark %}
+                            <div class="promotion ">
+                                <h5 class="text-uppercase text-success"><b>Promoted to the next class</b></h5>
+                            </div>
+                        {% else %}
+                            <div class="repeat-class ">
+                                <h5 class="text-uppercase text-danger"><b>Advised to repeat {{student.stdclass.classname}}</b></h5>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
                 <div class="col-6">
                     <h6>Class Teacher Signature: </h6>
@@ -280,7 +292,8 @@
     <script>
         $(".print").click(function (e) { 
             e.preventDefault();
-            $(".print").hide()
+            alert("success");
+            $(".print").hide();
             window.print();
         });
     </script>

@@ -26,11 +26,11 @@
             <a class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_year}}</a>
         </div>
         <div class="current-term">
-            <a class=" btn btn-sm btn-l  text-white p-2" style="background-color: blue;">Total Income: </a>
+            <a class=" btn btn-sm btn-l  text-white p-2" style="background-color: blue;">Income: </a>
             <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ total_income|default:"0"}} </a>
         </div>
         <div class="current-year"> 
-            <a class="btn btn-sm btn-l text-white p-2" style="background-color: red;">Total Expenses: </a>
+            <a class="btn btn-sm btn-l text-white p-2" style="background-color: red;">Expenses: </a>
             <a class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ total_expenses|default:"0" }}</a>
         </div>
         <div class="current-term">
@@ -38,6 +38,7 @@
             <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{ profit|default:"0" }}</a>
         </div>
         <!-- previous terms -->
+        
         <div class="dropdown previous-terms">
             <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
