@@ -332,7 +332,7 @@ def financedashboard(request):
 
 
     # Calculate the percentages
-    if total_amount == None or total_amount_paid== None or total_sspayments==None or total_trpayments==None: 
+    if total_amount == 0 or total_amount_paid== 0 or total_sspayments==0 or total_trpayments==0: 
         context = {
             'total_amount_paid': total_amount_paid,
             'total_amount': total_amount,
