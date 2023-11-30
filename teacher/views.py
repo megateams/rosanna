@@ -68,9 +68,32 @@ def profile(request,teacher_id):
 
 
 def paymenthistory(request,teacher_id):
+    terms = Term.objects.all()
+
+    teacher_payments_data = []
+    for term in terms:
+        # Get the enrollment data for the current term and year
+        term_teacher_payments = Teacherspayment.objects.filter(term=term.current_term, year=term.current_year, teacherid=teacher_id)
+
+        # Create a dictionary for each term's enrollment data
+        term_data = {
+            'term': term.current_term,
+            'year': term.current_year,
+            'trpayments_data': term_teacher_payments,
+        }
+
+        # Append the term data to the list
+        teacher_payments_data.append(term_data)
+
+        print(teacher_payments_data)
+
     teachers = Teachers.objects.get(teacherid = teacher_id)
-    teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
-    return render(request, 'teacher/paymenthistory.html', {"teacher_data": teacher_data, 'teacher':teachers})   
+    # teacher_data = Teacherspayment.objects.filter(teacherid=teacher_id)
+
+    context ={
+        "teacher_payments_data": teacher_payments_data, 'teacher':teachers
+        }
+    return render(request, 'teacher/paymenthistory.html',context)   
 
 # marks logic
 def get_students_by_class(request, class_id):
@@ -533,7 +556,7 @@ def view_marks_by_marktype(request, class_id, teacher_id):
     schoolclass = Schoolclasses.objects.get(classid=class_id)
     teacher = Teachers.objects.get(teacherid=teacher_id)
     mark_type = request.GET.get('marktype')  # Get the mark type from the query parameter
-    
+    term_data = Term.objects.get(status=1)
     students = Student.objects.filter(stdclass=schoolclass)
     subjects = Subjects.objects.filter(schoolclasses=schoolclass)
     mark_types = Mark.MARK_TYPES
@@ -564,6 +587,7 @@ def view_marks_by_marktype(request, class_id, teacher_id):
         'student_marks': student_marks,
         'mark_types' :mark_types,
         'mark_type' :mark_type,
+        'term_data': term_data
     })
 
 

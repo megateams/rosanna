@@ -3,78 +3,30 @@
 {% load static %}
 {% block  main %}
 
-<!-- create a report -->
-
-<header>
-    <h1>Student Payment Report</h1>
-</header>
-    <div>
-        <p>Date: [Current Date]</p>
-        <button class="print" onclick="printReport()">Print Report</button>
-        <button class="export" onclick="exportPDF()">Export PDF</button>
+<div class="inner-content">
+    <div class="report-buttons">
+        <a href='/financefeeslist'>
+            <button>
+                Fees
+            </button>
+        </a>
+        <a href="">
+            <button>
+                Fees Cleared Students
+            </button>
+        </a>
+        <a href="">
+            <button>
+                Fees Defaulters
+            </button>
+        </a>
+        <a href="">
+            <button>
+                Fees Structure
+            </button>
+        </a>
     </div>
+</div>
 
 
-<section class="payment-table">
-    <table>
-        <thead class="text-white" style="background-color: rgb(24, 32, 32);">
-            <tr>
-                <th>Student ID</th>
-                <th>Student Name</th>
-                <th>Payment Amount</th>
-                <th>Payment Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>101</td>
-                <td>John Doe</td>
-                <td>$500</td>
-                <td>2023-08-01</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<footer>
-    <p>Total Revenue: [Total Amount]</p>
-</footer>
-
-<script>
-    function printReport() {
-    window.print();
-}
-
-function exportPDF() {
-        const pdf = new jsPDF();
-        
-        // Add header
-        pdf.setFontSize(18);
-        pdf.text("Student Payment Report", 20, 20);
-        
-        // Add table content
-        const table = document.querySelector('.payment-table table');
-        const rows = table.querySelectorAll('tbody tr');
-        const tableData = [];
-        
-        rows.forEach(row => {
-            const columns = row.querySelectorAll('td');
-            const rowData = Array.from(columns).map(column => column.textContent);
-            tableData.push(rowData);
-        });
-
-        pdf.autoTable({
-            startY: 30,
-            head: [['Student ID', 'Student Name', 'Payment Amount', 'Payment Date']],
-            body: tableData,
-        });
-
-        // Save and download the PDF
-        pdf.save('student_payments.pdf');
-    }
-
-
-</script>
-
-<!-- create a report -->
 {% endblock main %} 

@@ -40,25 +40,46 @@ def financelogin(request):
 def editteacherpayments(request):
     if request.method == 'POST':
         paymentid = request.POST.get('paymentid')
-        teacherpayment = Teacherspayment.objects.get(paymentid = paymentid)
-        salary = request.POST.get('salary')
-        amountpaid = request.POST.get('amountpaid')
-        balance = int(salary) - int(amountpaid)
+        teacherpayment = Teacherspayment.objects.get(paymentid=paymentid)
+        salary = int(request.POST.get('salary'))
+        amountpaid = int(request.POST.get('amountpaid'))
         teacherid = request.POST.get('teacherid')
         teachername = request.POST.get('teachername')
 
-        teacherpayment.salary = salary 
-        teacherpayment.amountpaid = amountpaid 
-        teacherpayment.balance = balance 
-        teacherpayment.teacherid = teacherid 
-        teacherpayment.teachername = teachername 
+        # Calculate the new balance
+        balance = salary - amountpaid
 
+        # Fetch all payments made by the teacher
+        payments = Teacherspayment.objects.filter(teacherid=teacherid)
+
+        # Initialize accumulated payment with the edited amount paid
+        new_accumulatedpayment = amountpaid
+
+        # Calculate the new accumulated payment for all payments
+        for payment in payments:
+            if payment.paymentid == paymentid:
+                # Skip the edited payment
+                continue
+
+            # Calculate the new accumulated payment for this payment
+            new_accumulatedpayment += payment.amountpaid
+
+        teacherpayment.salary = salary
+        teacherpayment.amountpaid = amountpaid
+        teacherpayment.balance = balance
+        teacherpayment.teacherid = teacherid
+        teacherpayment.teachername = teachername
+
+        # Update the accumulated payment
+        teacherpayment.accumulatedpayment = new_accumulatedpayment
         teacherpayment.save()
-        messages.success(request , "Teacher Payment Edit Successfull")
 
+        messages.success(request, "Teacher Payment Edit Successful")
         return redirect('teacherpaymentslists')
 
-    return render(request , 'finance/staffpayments/editteacherpayments.html' , {'teacherpayment' : teacherpayment})
+    # Rest of your code for GET requests
+
+
 
 def editsupportstaffpayment(request):
     if request.method == 'POST':
@@ -664,22 +685,40 @@ def delete_fee(request):
         return redirect('Fees List')  # Adjust this to the correct URL name
 
     return redirect('Fees List')  # Adjust this to the correct URL name
+
 def edit_std_fees(request):
     if request.method == 'POST':
         paymentid = request.POST.get("paymentid")
         amount = float(request.POST.get("amount"))
         modeofpayment = request.POST.get("modeofpayment")
         fee = Fees.objects.get(paymentid=paymentid)
-        classfees = float(fee.classfees)
-        balance = classfees - amount
 
+        # Fetch the existing balance and accumulated payment from the database and convert them to float
+        balance = float(fee.balance)
+        accumulatedpayment = float(fee.accumulatedpayment)
+
+        # Explicitly convert fee.classfees to float
+        classfees = float(fee.classfees)
+
+        # Calculate the new accumulated payment
+        new_accumulatedpayment = accumulatedpayment - float(fee.amount) + amount
+
+        # Calculate the new balance based on the class fees and the new accumulated payment
+        balance = classfees - new_accumulatedpayment
+
+        # Update the fee record
         fee.amount = amount
         fee.balance = balance
         fee.modeofpayment = modeofpayment
-
+        fee.accumulatedpayment = new_accumulatedpayment
         fee.save()
+
         messages.success(request, f"Fee record {paymentid} has been edited.")
         return redirect('Fees List')  # Adjust this to the correct URL name
+
+    # Rest of your code for GET requests
+
+
 
 def feesclearedstudents(request):
     if 'admin_id' not in request.session:

@@ -5,10 +5,9 @@
 {% block  main %}
 <div class="inner-content">
     <div class="header d-flex">
-        <div class="btns d-flex align-items-center mr-3">
-            <a href="/teacher/his_class/{{ class.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger mr-3">Class Information</a>
+        <div class="enroll_btns align-items-center mr-3">
 
-            <div class="current-term mr-3">
+            <div class="current-term">
                 <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
                 <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{this_term.current_term}} </a>
             </div>
@@ -16,11 +15,12 @@
                 <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
                 <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{this_term.current_year}} </a>
             </div>
-            <div class="current-year ml-3"> 
+            <div class="current-year"> 
                 <a class=" btn-sm btn-info text-white p-2">Class: </a>
                 <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{class.classname}} </a>
             </div>
-            <a href="/enroll_student/{{class.classid}}/{{teacher.teacherid}}" class="btn btn-sm btn-success p-1 ml-3">Enroll Students</a>
+            <a href="/teacher/his_class/{{ class.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger m-2">Class Information</a>
+            <a href="/enroll_student/{{class.classid}}/{{teacher.teacherid}}" class="btn btn-sm btn-success p-1 m-1">Enroll Students</a>
 
         </div>
     </div>
@@ -44,11 +44,11 @@
         <h5 class="text-uppercase"><b>Enrollment History</b></h5>
 
         {% for term_data in enrollment_data %}
-            <div class="box mt-3 shadow">
+            <div class="box mt-3 shadow" style="border: 0.5px solid #aaa7a7; border-radius: 10px 10px 0 0;">
                    
-                <div class="box-header d-flex justify-content-between p-2" style="border-radius: 10px 10px 0 0; background: rgb(238, 235, 235);">
+                <div class="box-header d-flex justify-content-between p-2" data-toggle="collapse" data-target="#enrollmentCollapse{{ term_data.term_name|slugify }}{{ term_data.term_year }}" style="border-radius: 10px 10px 0 0; background: rgb(238, 235, 235);">
                     <h6>{{ term_data.term_name }} - {{ term_data.term_year }}</h6>
-                    <a class="" data-toggle="collapse" data-target="#enrollmentCollapse{{ term_data.term_name|slugify }}{{ term_data.term_year }}" aria-expanded="false" aria-controls="enrollmentCollapse">
+                    <a class=""  aria-expanded="false" aria-controls="enrollmentCollapse">
                         <strong><i class="fas fa-chevron-down    "></i></strong>
                     </a>
                 </div>

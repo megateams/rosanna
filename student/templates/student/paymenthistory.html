@@ -6,7 +6,7 @@
 
 <!-- inner-content -->
 <div class="inner-content">
-    <div class="table-section" style="font-size: 14px;"> 
+    <div class="table-section payments" style="font-size: 14px;"> 
         
         <table class="table" id="table">
             <thead>
@@ -20,7 +20,6 @@
                     <th>Balance</th>
                     <th>Mode of Payment</th>
                     <th>Date</th>
-                    <th>Timestamp</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +34,6 @@
                     <td>{{ fee.balance }}</td>
                     <td>{{ fee.modeofpayment }}</td>
                     <td>{{ fee.date }}</td>
-                    <td>{{ fee.timestamp }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

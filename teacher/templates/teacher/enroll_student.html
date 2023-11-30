@@ -5,10 +5,9 @@
 {% block  main %}
 <div class="inner-content">
     <div class="header d-flex">
-        <div class="btns d-flex align-items-center mr-3">
-            <a href="/teacher/his_class/{{ class.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger mr-3">Class Information</a>
+        <div class="enroll_btns align-items-center mr-3">
 
-            <div class="current-term mr-3">
+            <div class="current-term">
                 <a class=" btn-sm btn-primary text-white p-2">Current Term: </a>
                 <a  class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_term}} </a>
             </div>
@@ -16,11 +15,13 @@
                 <a class=" btn-sm btn-primary text-white p-2">Current Year: </a>
                 <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{term_data.current_year}} </a>
             </div>
-            <div class="current-year ml-3"> 
+
+            <div class="current-year"> 
                 <a class=" btn-sm btn-info text-white p-2">Class: </a>
                 <a class=" btn-sm btn-dark text-white p-2" style="margin-left: -5px;">{{class.classname}} </a>
             </div>
-            <a href="/enrollment_history/{{class.classid}}/{{teacher.teacherid}}" class="btn btn-sm btn-info p-1 ml-3">Enrollment History</a>
+            <a href="/teacher/his_class/{{ class.classid }}/{{ teacher.teacherid }}" class="btn btn-sm btn-danger m-2">Class Information</a>
+            <a href="/enrollment_history/{{class.classid}}/{{teacher.teacherid}}" class="btn btn-sm btn-info p-1 m-1">Enrollment History</a>
 
         </div>
     </div>
