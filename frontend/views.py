@@ -68,6 +68,7 @@ def editadministrator(request):
         gender = request.POST.get('gender')
         qualification = request.POST.get('qualification')
         role = request.POST.get('role')
+        username = request.POST.get('username')
         
         admin = Administrators.objects.get(pk = adminid)
         
@@ -79,6 +80,7 @@ def editadministrator(request):
         admin.qualification = qualification 
         admin.role = role 
         admin.fullname = fullname
+        admin.username = username
         
         admin.save()
         
@@ -492,6 +494,7 @@ def edit_student(request):
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
         address = request.POST.get('address')
+        lin = request.POST.get('lin')
         house = request.POST.get('house')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
@@ -520,6 +523,7 @@ def edit_student(request):
         student.guardianname = guardianname
         student.gcontact = gcontact
         student.username = username
+        student.lin = lin
 
         student.save()
         messages.success(request, 'Student edited successfully')
@@ -568,6 +572,7 @@ def supportstaffreg(request):
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
+        nin = request.POST.get('nin')
         # joiningdate = request.POST.get('joiningdate')
         qualification = request.POST.get('qualification')
         position = request.POST.get('position')
@@ -582,6 +587,7 @@ def supportstaffreg(request):
             gender=gender,
             contact=contact,
             email=email,
+            nin=nin,
             address=address,
             joiningdate=current_date,
             qualification=qualification,
@@ -759,6 +765,7 @@ def studentReg(request):
         dob = request.POST.get('dob')
         address = request.POST.get('address')
         house = request.POST.get('house')
+        lin = request.POST.get('lin')
         username = request.POST.get('username')
         fathername = request.POST.get('fathername')
         fcontact = request.POST.get('fcontact')
@@ -778,6 +785,7 @@ def studentReg(request):
             stdclass=selected_class,
             gender = gender ,
             dob = dob ,
+            lin = lin ,
             address = address ,
             house = house ,
             username = username ,
@@ -916,7 +924,7 @@ def export_to_excel(request):
 
         # Write headers to the worksheet
         headers = [
-            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Lin', 'Address', 'House', 'Class',
             'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
             "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
             "Guardian's Name", "Guardian's Contact"
@@ -929,7 +937,7 @@ def export_to_excel(request):
         ws.column_dimensions['C'].width = 10
         ws.column_dimensions['D'].width = 15
         ws.column_dimensions['E'].width = 20
-        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['F'].width = 20
         ws.column_dimensions['G'].width = 15
         ws.column_dimensions['H'].width = 20
         ws.column_dimensions['I'].width = 15
@@ -941,11 +949,12 @@ def export_to_excel(request):
         ws.column_dimensions['O'].width = 15
         ws.column_dimensions['P'].width = 15
         ws.column_dimensions['Q'].width = 20
+        ws.column_dimensions['R'].width = 20
 
         # Write student data to the worksheet
         for student in students:
             ws.append([
-                student.stdnumber, student.childname, student.gender, student.dob,
+                student.stdnumber, student.childname, student.gender, student.dob, student.lin,
                 student.address, student.house, student.stdclass.classname, student.regdate,
                 student.fathername, student.fcontact, student.foccupation,
                 student.mothername, student.mcontact, student.moccupation,
@@ -978,7 +987,7 @@ def export_students_by_class(request, class_id):
 
         # Write headers to the worksheet
         headers = [
-            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Address', 'House', 'Class',
+            'Student Number', 'Child Name', 'Gender', 'Date of Birth', 'Lin', 'Address', 'House', 'Class',
             'Registration Date', "Father's Name", "Father's Contact", "Father's Occupation",
             "Mother's Name", "Mother's Contact", "Mother's Occupation", 'Living With',
             "Guardian's Name", "Guardian's Contact"
@@ -991,7 +1000,7 @@ def export_students_by_class(request, class_id):
         ws.column_dimensions['C'].width = 10
         ws.column_dimensions['D'].width = 15
         ws.column_dimensions['E'].width = 20
-        ws.column_dimensions['F'].width = 15
+        ws.column_dimensions['F'].width = 20
         ws.column_dimensions['G'].width = 15
         ws.column_dimensions['H'].width = 20
         ws.column_dimensions['I'].width = 15
@@ -1003,11 +1012,12 @@ def export_students_by_class(request, class_id):
         ws.column_dimensions['O'].width = 15
         ws.column_dimensions['P'].width = 15
         ws.column_dimensions['Q'].width = 20
+        ws.column_dimensions['R'].width = 20
 
         # Write student data to the worksheet
         for student in students:
             ws.append([
-                student.stdnumber, student.childname, student.gender, student.dob,
+                student.stdnumber, student.childname, student.gender, student.dob, student.lin,
                 student.address, student.house, student.stdclass.classname, student.regdate,
                 student.fathername, student.fcontact, student.foccupation,
                 student.mothername, student.mcontact, student.moccupation,
@@ -1050,6 +1060,7 @@ def support_staff_export_to_excel(request):
         ws.column_dimensions['K'].width = 20
         ws.column_dimensions['L'].width = 15
         ws.column_dimensions['M'].width = 15
+        ws.column_dimensions['N'].width = 15
         
         #write data to the worksheet
         for row_data in data:
@@ -1068,7 +1079,7 @@ def support_staff_export_to_excel(request):
 def teacher_export_to_excel(request):
     #fetch all the data from the database
         data =Teachers.objects.all().values_list(
-            'teacherid', 'teachernames', 'dob', 'gender', 'contact', 'email', 'address', 'classes', 'joiningdate','subjects', 'qualification'
+            'teacherid', 'teachernames', 'dob', 'gender', 'nin', 'contact', 'email', 'address', 'classes', 'joiningdate','subjects', 'qualification'
             )
         
         #create new workbook and add in a worksheet
@@ -1076,7 +1087,7 @@ def teacher_export_to_excel(request):
         ws =wb.active
         
         #write data to the worksheet
-        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Subjects', 'Qualification'])
+        ws.append(['Teacher ID', 'Name', 'DOB', 'Gender', 'Nin', 'Contact', 'Email', 'Address', 'Classes Taught', 'Date Joined','Subjects', 'Qualification'])
         
         # Set column widths for all columns
         ws.column_dimensions['A'].width = 15
@@ -1090,6 +1101,7 @@ def teacher_export_to_excel(request):
         ws.column_dimensions['I'].width = 15
         ws.column_dimensions['J'].width = 15
         ws.column_dimensions['K'].width = 20
+        ws.column_dimensions['L'].width = 20
 
         for row_data in data:
             ws.append(row_data)
@@ -1114,7 +1126,7 @@ def admins_export_to_excel(request):
     # Define the fields to export (excluding 'profileimage' and 'password')
     fields_to_export = [
         'fullname', 'gender', 'address', 'contact', 'email',
-        'role', 'qualification', 'salary', 'bankaccnum'
+        'role', 'qualification', 'salary', 'bankaccnum','username'
     ]
 
     # Write field names to the worksheet as headers
@@ -1130,6 +1142,7 @@ def admins_export_to_excel(request):
     ws.column_dimensions['G'].width = 15
     ws.column_dimensions['H'].width = 20
     ws.column_dimensions['I'].width = 15
+    ws.column_dimensions['J'].width = 15
 
     # Write data to the worksheet
     for row_data in data:
@@ -1176,7 +1189,7 @@ def teachers(request):
         contact = request.POST.get('contact')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        # joiningdate = request.POST.get('joiningdate')
+        nin = request.POST.get('nin')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
         qualification = request.POST.get('qualification')
@@ -1194,6 +1207,7 @@ def teachers(request):
             dob=dob,
             contact=contact,
             email=email,
+            nin=nin,
             address=address,
             joiningdate=current_date,
             qualification=qualification,
@@ -1227,6 +1241,7 @@ def edit_teacher(request):
         
         contact = request.POST.get('contact')
         email = request.POST.get('email')
+        nin = request.POST.get('nin')
         address = request.POST.get('address')
         classes = request.POST.getlist('classes')  # Get a list of selected classes
         subjects = request.POST.getlist('subjects')  # Get a list of selected subjects
@@ -1244,6 +1259,7 @@ def edit_teacher(request):
         that_teacher.gender = gender
         that_teacher.contact = contact
         that_teacher.email = email
+        that_teacher.nin = nin
         that_teacher.address = address
         that_teacher.position = position
         that_teacher.qualification = qualification
@@ -1572,6 +1588,7 @@ def edit_supportstaff(request):
         gender = request.POST.get('gender')
         contact = request.POST.get('contact')
         email = request.POST.get('email')
+        nin = request.POST.get('nin')
         address = request.POST.get('address')
         position = request.POST.get('position')
         qualification = request.POST.get('qualification')
@@ -1586,6 +1603,7 @@ def edit_supportstaff(request):
         that_support_staff.gender = gender
         that_support_staff.contact = contact
         that_support_staff.email = email
+        that_support_staff.nin = nin
         that_support_staff.address = address
         that_support_staff.position = position
         that_support_staff.qualification = qualification

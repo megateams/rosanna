@@ -77,38 +77,38 @@
                 {% endif %}
                 <div class=" row teacher-data p-2">
                     <div class="col-md-6">
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Teacher's ID: </b></h6>
                             <p class="ml-2">{{teacher.teacherid}}</p>
                         </div>
                         
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Teacher's Name: </b></h6>
                             <p class="ml-2">{{teacher.teachernames}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Date of Birth: </b></h6>
                             <p class="ml-2">{{teacher.dob}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Gender: </b></h6>
                             <p class="ml-2">{{teacher.gender}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Contact: </b></h6>
                             <p class="ml-2">{{teacher.contact}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Email: </b></h6>
                             <p class="ml-2">{{teacher.email}}</p>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Address: </b></h6>
                             <p class="ml-2">{{teacher.address}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Classes </b></h6>
                             {% for class in teacher.classes.all %}
                                 <p class="ml-3">{{ class.classname }}{% if not forloop.last %}, {% endif %}</p>
@@ -116,11 +116,11 @@
                             {% endfor %}
                             
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Joining Date: </b></h6>
                             <p class="ml-2">{{teacher.joiningdate}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h5><b>Subject: </b></h5>
                             {% for subject in teacher.subjects.all %}
                                 <p class="ml-3">{{ subject.subjectname }}{% if not forloop.last %}, {% endif %}</p>
@@ -128,13 +128,17 @@
                             {% endfor %}
                         </div>
                         
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Qualification: </b></h6>
                             <p class="ml-2">{{teacher.qualification}}</p>
                         </div>
-                        <div class="d-flex mb-3">
+                        <div class="d-flex mb-2">
                             <h6><b>Username: </b></h6>
                             <p class="ml-2">{{teacher.username}}</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <h6><b>Nin: </b></h6>
+                            <p class="ml-2">{{teacher.nin}}</p>
                         </div> 
                     </div>
                         <!-- btns -->
@@ -298,17 +302,18 @@
                                                 <div class="parent-info">
                                                     <div class="row">
                                                       
-                                                        <!-- qualification-->
+                                                        <!-- nin-->
                                                         <div class="form-group col-md-6">
-                                                            <label for="">Academic Qualification </label>
-                                                            <input type="text" name="qualification" class="form-control" value="{{teacher.qualification}}">
+                                                            <label for="">Nin </label>
+                                                            <input type="text" name="nin" class="form-control" value="{{teacher.nin}}">
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="row">
+                                                        <!-- qualification-->
                                                         <div class="form-group col-md-6">
-                                                            <label for="">Position </label>
-                                                            <input type="text" name="position" class="form-control" value="{{teacher.position}}">
+                                                            <label for="">Academic Qualification </label>
+                                                            <input type="text" name="qualification" class="form-control" value="{{teacher.qualification}}">
                                                         </div>
                                                         <!-- username-->
                                                         <div class="form-group col-md-6">

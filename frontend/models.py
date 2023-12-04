@@ -79,6 +79,7 @@ class Student(models.Model):
     stdclass = models.ForeignKey(Schoolclasses, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Class')
     gender = models.CharField(max_length=10 , verbose_name="Child's Gender" , blank=True)
     dob = models.DateField(verbose_name='Date of Birth' , blank=True , default= None)
+    lin = models.CharField(max_length=20, verbose_name='Lin' , blank=True , default= None)
     address = models.CharField(max_length=20 , verbose_name='Address' , blank=True)
     house = models.CharField(max_length=20 , verbose_name='House' , blank=True)
     regdate =models.DateField(verbose_name="Date of Registration")
@@ -99,7 +100,7 @@ class Student(models.Model):
     schoolpaycode = models.CharField(max_length=10 , verbose_name="School Pay Code" , blank=True)
 
     Display_Fields = [
-        'stdnumber','childname' ,'stdclass', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
+        'stdnumber','childname' ,'stdclass', 'lin', 'gender' , 'dob' , 'address' , 'house', 'foccupation' , 'mothername'
     , 'mcontact' , 'moccupation' , 'livingwith' , 'guardianname' , 'gcontact' , 'username' , 'password', 'schoolpaycode'
     ]
 
@@ -117,10 +118,10 @@ class Supportstaff(models.Model):
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications' , default=None)
     salary = models.CharField(max_length=100, verbose_name='Salary' , default = None )
     bankaccnum = models.CharField(max_length=100, verbose_name='Bank Account Number' , default = None)
-    # username = models.CharField(max_length=50 , verbose_name='Username' , default=None)
+    nin = models.CharField(max_length=50 , verbose_name='Nin' , default=None)
     # password = models.CharField(max_length=100, verbose_name='Password' , default=None)
     
-    Display_Supportstaff =['supportstaffid','supportstaffnames','gender','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
+    Display_Supportstaff =['supportstaffid','supportstaffnames','gender','nin','dob','contact','email', 'position' , 'qualification' , 'salary' , 'bankaccnum']
 
 class Teachers(models.Model):
 
@@ -137,12 +138,13 @@ class Teachers(models.Model):
     subjects = models.ManyToManyField(Subjects)  # Replace 'YourAppSubjectName' with the actual class name for subjects.
     qualification = models.CharField(max_length=100, verbose_name='Academic Qualifications')
     username = models.CharField(max_length=50 , verbose_name='Username')
+    nin = models.CharField(max_length=50 , verbose_name='Nin', default=None)
     password = models.CharField(max_length=100, verbose_name='Password')
     salary = models.CharField(max_length=100, default=None, verbose_name='Salary')
     bankaccnum = models.CharField(max_length=100, default=None, verbose_name='Bank Account No.')
 
     Display_Teachers = [
-        'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'address' , 'joiningdate' , 'qualification' , 'username' , 'password', 'salary', 'bankaccnum', 
+        'teacherid' , 'teachernames' , 'dob' , 'gender' , 'contact' , 'email' , 'nin', 'address' , 'joiningdate' , 'qualification' , 'username' , 'password', 'salary', 'bankaccnum', 
     ]
 
  
