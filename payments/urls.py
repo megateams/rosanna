@@ -10,8 +10,6 @@ urlpatterns = [
     path('paymentsdashboard/', views.paymentsdashboard, name="Payments Dashboard"),
 
     path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
- 
-    path('that_term/<id>', views.that_term, name="that_term"), 
     
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="AddTeacherpayments"),
     path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),

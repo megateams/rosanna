@@ -52,6 +52,16 @@ def paymentsdashboard(request):
 
     administrator = Administrators.objects.get(id=admin_id)
    
+    utilities = Utilities.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
+    if total_amount_paid == None:
+        total_amount_paid = 0
+
+    fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amount = fees.aggregate(Sum('amount'))['amount__sum']
+    if total_amount == None:
+        total_amount = 0
+        
     sspayments = Supportstaffpayment.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_sspayments = sspayments.aggregate(Sum('amountpaid'))['amountpaid__sum']
     if total_sspayments == None:
@@ -62,11 +72,23 @@ def paymentsdashboard(request):
     if total_trpayments == None:
         total_trpayments = 0
 
+     # Calculate total income (fees)
+    total_income = total_amount
 
+    # Calculate total expenses (teacher payments + support staff payments + utilities)
+    total_expenses = total_trpayments + total_sspayments + total_amount_paid
+
+    # Calculate profit
+    profit = total_income - total_expenses
 
     context = {
+        'total_amount_paid': total_amount_paid,
+        'total_amount': total_amount,
         'total_sspayments' : total_sspayments,
         'total_trpayments' : total_trpayments,
+        'total_income' : total_income,
+        'total_expenses' : total_expenses,
+        'profit' : profit,
         'term_data' : term_data,
         'administrator' : administrator,
         'terms' : terms,
