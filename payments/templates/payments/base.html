@@ -1,0 +1,171 @@
+{% load custom_tags %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <title>Rosanna Schools | {% block title %}{% endblock title %}</title>
+    <!-- Required meta tags -->
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- calendar link -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/finances.css' %}">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-vpXtB+IuSt5xeIoRZy5o/xpMwXbhCsBBOtDKfUfWJB0mzzM9b9AqPWPhdbtf1KVg" crossorigin="anonymous">
+    
+    <!-- jquery datatables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    
+    <style>
+        
+    </style>
+</head>
+  <body>
+    <!-- {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+        {% endif %} -->
+
+    <div class="main">
+        <!-- sidebar -->
+        <aside class="sidebar">
+            <div class="dismiss">
+                <i class="fas fa-bars    text-white"></i>
+            </div>
+            <div class='header text-center p-2 mb-2'>
+                {% get_school_info as school_info %}
+                    {% if school_info %}
+                        {% for info in school_info %}
+                            <div class='header text-center p-2 mb-2 mt-4'>
+                                <img src="{{ info.badge.url }}" alt="{{ info.schoolname }} Badge">
+                                <h5 class="text-white  mt-2"><b>{{ info.schoolname }}</b></h5>
+                                
+                            </div>
+                            
+                            <!-- Display other school information as needed -->
+                        {% endfor %}
+                    {% else %}
+                        <div class='header text-center p-2 mb-2 mt-4'>
+                            <div class="badge p-3 mb-2" style="border: 2px solid #fff; border-radius: 50%;">
+                                <i class="fa fa-camera text-white" aria-hidden="true" style="font-size: 2rem;"></i>
+                            </div>
+
+                            <h5 class="text-white"><b>School Name</b></h5>   
+                        </div>
+                    {% endif %}
+            </div>
+            <hr color="#fff" style="height: 3px;">
+    
+            <ul class='sidebar-links pt-3 mr-2'>
+                
+                <li class="sidebar-item active">
+                    <a class="" href='/paymentsdashboard'><i class="fas fa-home  mr-2  "></i><span>Dashboard</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href="/financeteacherpaymentslist"><i class="fas fa-money-bill-alt  mr-2  "></i><span>Teachers</span></a>    
+                </li>
+                <hr color="#fff">
+                <li class="sidebar-item active">
+                    <a class="" href="/financesupportstaffpaymentslist"> <i class="fas fa-money-bill-alt  mr-2  "></i><span>Support Staff</span></a>    
+                </li>
+                <hr color="#fff">
+            </ul>
+        </aside>
+
+        <!-- sidebar -->
+        <!-- content -->
+        <div class="content bg-light">
+            <!-- navbar -->
+            <nav class="navbar bg-light shadow align-items-center">
+                <div class='brand'>
+                    <i class="fas fa-bars " ></i>    
+                </div>
+                <div class="current_date ml-5"> 
+                    <a class="btn btn-sm btn-primary text-white p-2">Current Date: </a>
+                    <a class="btn btn-sm btn-dark text-white p-2" style="margin-left: -8px;">{% now 'l. d M, Y' %} </a>
+                </div>
+                <div class="right mr-5 d-flex">
+                    <!-- <p class=' mr-2'><i class="fas fa-user-circle   mr-2 "></i>{{ bursar.username }}</p> -->
+                    <div class="dropdown bursar-profile">
+                        <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="bursarDropdown" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="fas fa-user-circle   mr-2 "></i>Username
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="bursarDropdown">
+                            <a href="" class="dropdown-item">Profile</a>
+                        </div>
+                    </div>
+
+                    <a class="ml-3 mr-2 text-danger" href="{% url 'paymentsloginpage' %}">
+                        <p class="ml-3 mr-2"><i class="fas fa-power-off mr-2"></i>Logout</p>
+                    </a>
+                </div>  
+            </nav>
+            <!-- navbar -->
+
+            <!-- page header -->
+            <div class="m-2 mt-3">
+                <a href="/financedashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
+                <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
+            </div>
+            <!-- page header -->
+
+            <!-- extending to other pages -->
+            {% block main %}
+            {% endblock main %}
+            <!-- extending to other pages -->
+            <footer class="footer ">
+                <div class="container"><p class="text-center">All Rights Reserved | &copy; {% now 'Y' %} Rosanna Schools</p></div>
+
+            </footer>
+        </div>
+        <!-- content -->
+    </div>
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous"></script>
+
+    <!-- ajax -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- datatables -->
+    <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- custom js -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <!-- charts.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static 'js/charts.js' %}"></script>
+    <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+ 
+</body>
+
+</html>

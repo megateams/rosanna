@@ -1,0 +1,83 @@
+{% extends 'payments/base.html' %}
+{% block  title %} Dashboard {% endblock title %}
+{% block  pagetitle %} Dashboard {% endblock pagetitle %}
+{% load static %}
+{% block  main %}
+<div class="inner-content">
+     {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="top_cards  ml-2">
+        <div class="current-term">
+            <a class=" btn btn-l btn-sm  text-white p-2" style="background-color: green;">Current Term: </a>
+            <a  class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_term}} </a>
+        </div>
+        <div class="current-year"> 
+            <a class="btn btn-sm btn-l text-white p-2" style="background-color:  #f9b855;">Current Year: </a>
+            <a class="btn btn-sm btn-r btn-dark text-white p-2" style="margin-left: -7px;">{{term_data.current_year}}</a>
+        </div>
+       
+        <!-- previous terms -->
+        
+        <div class="dropdown previous-terms">
+            <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                        select term
+                    </button>
+            <div class="dropdown-menu" aria-labelledby="triggerId">
+                {% for term in terms %}
+                    <a href="/that_term/{{term.id}}" class="dropdown-item">{{term.current_term}} - {{term.current_year}}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- previous terms -->
+    </div>
+    <div class="link_cards pt-4">
+       
+        <div class="">
+            <a href="/financeteacherpaymentslist" style="text-decoration: none;">
+                <div class="card trpaymentscard p-3">
+                    <div class="row">
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-alt icon circle-icon" ></i>
+                        </div>
+                        <div class="col-8 ">
+                            <h5 class="text-center">{{ total_trpayments|default:"0" }}</h5>
+                            <p class="text-center"> Tr Payments</p> 
+                        </div>
+                    </div>
+                   
+                </div>
+            </a>
+        </div>
+        <div class="">
+            <a href="/financesupportstaffpaymentslist" style="text-decoration: none;">
+                <div class="card sspaymentscard p-3">
+                    <div class="row">
+                        <div class="col-4 text-center pt-2" style="border-right: 2px solid #fff;">
+                            <i class="fas fa-money-bill-alt icon circle-icon" ></i>
+                        </div>
+                        <div class="col-8 ">
+                            <h5 class="text-center">{{ total_sspayments|default:"0" }}</h5>
+                            <p class="text-center">  S-Staff Payments</p> 
+                        </div>
+                    </div>
+                   
+                </div>
+            </a>
+        </div>
+     
+    </div>
+
+    
+</div> 
+{% endblock main %} 

@@ -1263,7 +1263,7 @@ def getsupportstaffbalance(request , id):
 def export_finance_fees_to_excel(request):
     # Fetch all the data from the Fees model
     data = Fees.objects.all().values_list(
-        'paymentid', 'stdnumber__stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment', 'date'
+        'paymentid', 'stdnumber__stdnumber', 'stdname', 'studentclass', 'amount', 'balance', 'modeofpayment'
     )
 
     # Create a new workbook and add a worksheet
@@ -1271,7 +1271,7 @@ def export_finance_fees_to_excel(request):
     ws = wb.active
 
     # Write field names to the worksheet as headers
-    ws.append(['Payment ID', 'Student Number', 'Student Name', 'Student Class', 'Amount', 'Balance', 'Mode of Payment', 'Date'])
+    ws.append(['Payment ID', 'Student Number', 'Student Name', 'Student Class', 'Amount', 'Balance', 'Mode of Payment'])
 
     # Write data to the worksheet
     for row_data in data:
@@ -1295,6 +1295,7 @@ def export_finance_fees_to_excel(request):
     wb.save(response)
 
     return response
+
 
 def export_fees_by_class(request, class_id):
     try:

@@ -558,10 +558,10 @@ def supportstaffreg(request):
         profile_image = request.FILES.get('profile_image')
         last_supportstaff = Supportstaff.objects.order_by('-supportstaffid').first()
 
-        if last_supportstaff:
-            default_supportstaffid = 'RSS{:04}'.format(int(last_supportstaff.supportstaffid[3:]) + 1) 
-        else:
-            default_supportstaffid = 'RSS0001' 
+        # if last_supportstaff:
+        #     default_supportstaffid = 'RSS{:04}'.format(int(last_supportstaff.supportstaffid[3:]) + 1) 
+        # else:
+        #     default_supportstaffid = 'RSS0001' 
 
         # Capture the current date
         current_date = date.today()
@@ -581,7 +581,7 @@ def supportstaffreg(request):
 
         # Create and save the SupportStaff object to the database
         staff = Supportstaff.objects.create(
-            supportstaffid=default_supportstaffid,
+            # supportstaffid=default_supportstaffid,
             supportstaffnames=supportstaffnames,
             dob=dob,
             gender=gender,

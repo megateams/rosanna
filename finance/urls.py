@@ -20,7 +20,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
     path('finance/', views.financelogin , name='financeloginpage'),
     path('financedashboard/', views.financedashboard, name="Finance Dashboard"), 
     
@@ -48,42 +47,17 @@ urlpatterns = [
     path('editfeesstructure/<int:feesstructureid>/', views.editfeesstructure, name='editfeesstructure'),
     path('deletefeesstructure/<int:feesstructureid>/', views.deletefeesstructure, name='deletefeesstructure'),
 
-   
     path('financeaddutilities/', views.financeaddUtilities, name="Add Utilities"),
     path('financeutilitieslist/', views.financeutilitiesList, name="Utilities List"),
     path('delete_utilities/', views.delete_utilities, name='delete_utilities'),
     path('edit_utilities/<str:utilitiesid>/', views.edit_utilities, name='edit_utilities'),
-
-    path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="AddTeacherpayments"),
-
-    path('financeteacherpaymentslist/', views.financeteacherpaymentsList, name="teacherpaymentslists"),
-
-    path('financeaddsupportstaffpayments/', views.financeaddsupportstaffpayments, name="Add Supportstaffpayments"),
-    path('financesupportstaffpaymentslist/', views.financesupportstaffpaymentsList, name="SupportstaffpaymentsLists"),
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
-    
-    path('deletesupportstaffpayment/' , views.deletesupportstaffpayment , name='deletesupportstaffpayments'),
-    path('deleteteacherpayment/' , views.deleteteacherpayment , name='deleteteacherpayments'),
-
-    path('get_stdclass/<stdnumber>/', views.get_stdclass, name =" Get Student class"),
-    path('financesupportstaffpaymentslist/editsupportstaffpayment/<paymentid>' , views.editsupportstaffpayment , name = "editsupportstaffpayments"),
-    path('editsupportstaffpayments/' , views.editsupportstaffpayment , name = 'editsupportstafpaymentsform'),
-    path('editteacherpayments/' , views.editteacherpayments , name = 'editteacherpayments'),
-
-    path('financeteacherpaymentslist/editteacherpayment/<id>' , views.editteacherpayments , name = 'editteacherpayment'),
-    path('get_staff_salary/<id>/' , views.get_staff_salary , name = 'get_staff_salary'),
-    path('get_teacher_salary/<id>/' , views.get_teacher_salary , name = 'get_teacher_salary'),
-    path('get_teacher_balance/<id>/<amountpaid>/' , views.get_teacher_balance , name = 'get_teacher_balance'),
-
-    # path('export_excel/', views.export_to_excel, name='export_excel'),
     path('export_financefees/', views.export_finance_fees_to_excel, name='export_finance_fees_to_excel'),
     path('export-fees-by-class/<int:class_id>/', views.export_fees_by_class, name='export_fees_by_class'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
     path('export_utilities/', views.export_utilities_to_excel, name='export_utilities'),
-    path('export_teacher_payments/', views.export_teacher_payments_to_excel, name='export_teacher_payments'),
-    path('export_support_staffpayments/', views.export_support_staff_payments_to_excel, name='export_support_staff_payments'),
     path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
     # reports
