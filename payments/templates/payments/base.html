@@ -109,10 +109,10 @@
                     <div class="dropdown bursar-profile">
                         <button class="btn dropdown-toggle" style="border: 1px solid black;" type="button" id="bursarDropdown" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
-                            <i class="fas fa-user-circle   mr-2 "></i>Username
+                            <i class="fas fa-user-circle   mr-2 "></i>{{ administrator.username }}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="bursarDropdown">
-                            <a href="" class="dropdown-item">Profile</a>
+                            <a href=" {% url 'administrator_profile' %} " class="dropdown-item">Profile</a>
                         </div>
                     </div>
 
@@ -125,7 +125,7 @@
 
             <!-- page header -->
             <div class="m-2 mt-3">
-                <a href="/financedashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
+                <a href="/paymentsdashboard" class="text-dark"><i class="fas fa-home    mr-2"></i> </a>
                 <span><b> -> </b> {% block pagetitle %}{% endblock pagetitle %} </span>
             </div>
             <!-- page header -->
@@ -164,6 +164,42 @@
     <script src="{% static 'js/charts.js' %}"></script>
     <!-- <script src="{% static 'js/calendar.js' %}"><  /script> -->
     <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the canvas context
+            var donutpaymentCtx = document.getElementById("paymentDonutChart").getContext("2d");
+    
+            // Define the data for the donut chart
+            var donutpaymentData = {
+                labels: ["Fees", "Utilities", "Teacherpayments","SStaffpayments"],
+                datasets: [{
+                    data: [{{ fees_percentage }}, {{ utilities_percentage }}, {{ trpayments_percentage }}, {{ sspayments_percentage }}], // Replace with your actual data
+                    backgroundColor: ["blue", "#f9b855","red","green"],
+                }]
+            };
+    
+            // Define the options for the chart
+            var donutpaymentOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: "bottom"
+                },
+                title: {
+                    display: true,
+                    text: "Annual Payments"
+                }
+            };
+    
+            // Create the donut chart
+            var donutpaymentChart = new Chart(donutpaymentCtx, {
+                type: "doughnut",
+                data: donutpaymentData,
+                options: donutpaymentOptions
+            });
+        });
+    </script>
 
  
 </body>

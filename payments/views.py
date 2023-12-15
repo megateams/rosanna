@@ -36,7 +36,7 @@ def paymentslogin(request):
         else:
             messages.warning(request, 'Login Failed')
             return redirect('paymentsloginpage')
-    return render(request , 'login.html')
+    return render(request , 'payments/login.html')
 
 def paymentsdashboard(request):
     # Check if the bursar is authenticated (if you are using sessions)
@@ -81,11 +81,27 @@ def paymentsdashboard(request):
     # Calculate profit
     profit = total_income - total_expenses
 
+    total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    if total == 0:
+        fees_percentage = 0
+        utilities_percentage = 0
+        sspayments_percentage = 0
+        trpayments_percentage = 0
+    else:
+        fees_percentage = (total_amount / total) * 100
+        utilities_percentage = (total_amount_paid / total) * 100
+        sspayments_percentage = (total_sspayments / total) * 100
+        trpayments_percentage = (total_trpayments / total) * 100
+
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
         'total_sspayments' : total_sspayments,
         'total_trpayments' : total_trpayments,
+        'fees_percentage': fees_percentage,
+        'utilities_percentage': utilities_percentage,
+        'sspayments_percentage': sspayments_percentage,
+        'trpayments_percentage': trpayments_percentage,
         'total_income' : total_income,
         'total_expenses' : total_expenses,
         'profit' : profit,
@@ -94,6 +110,56 @@ def paymentsdashboard(request):
         'terms' : terms,
     }
     return render(request, "payments/paymentsdashboard.html", context)  
+
+# @login_required
+
+def administrator_profile(request):
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        # Query the Administrators model to get the Bursar administrator
+        try:
+            administrator = Administrators.objects.get(role='Payments')
+        except Administrators.DoesNotExist:
+            # Handle the case where there is no Bursar in the database
+            raise Http404("Administrator profile not found")
+        
+        context = {
+            'administrator': administrator,
+        }
+
+        return render(request, 'payments/profile.html', context)
+    else:
+        # Handle the case where the user is not authenticated
+        # You can redirect or show an error message here
+        # Redirect to the login page or display an error message
+        return redirect('administrator_profile')
+
+def edit_administrator_profile(request):
+    try:
+        # Retrieve the Bursar's data based on their role
+        administrator = Administrators.objects.get(role='Payments')
+    except Administrators.DoesNotExist:
+        raise Http404("Administrator profile not found")
+
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        new_pass = request.POST.get("new_password")
+        confirm_pass = request.POST.get("confirm_password")
+
+        if new_pass == confirm_pass:
+            # Update the Bursar's password (replace this with your actual password update logic)
+            administrator.password = encryptpassword(new_pass)
+            administrator.username = username
+            administrator.save()
+
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Passwords do not match")
+
+        return redirect("administrator_profile")
+
+    return render(request, 'payments/profile.html', {'administrator': administrator})
+
 
 # teacherpayments views
 def financeaddTeacherpayments(request):

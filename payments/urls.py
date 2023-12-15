@@ -9,6 +9,9 @@ urlpatterns = [
     path('payments/', views.paymentslogin , name='paymentsloginpage'), 
     path('paymentsdashboard/', views.paymentsdashboard, name="Payments Dashboard"),
 
+    path('administrator_profile/', views.administrator_profile, name='administrator_profile'),
+    path('edit_administrator_profile/', views.edit_administrator_profile, name='edit_administrator_profile'),
+
     path('getsupportstaffbalance/<id>/<amountpaid>/' , views.getsupportstaffbalance, name = 'getsupportstaffbalance'),
     
     path('financeaddteacherpayments/', views.financeaddTeacherpayments, name="AddTeacherpayments"),
