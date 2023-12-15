@@ -57,6 +57,11 @@ def paymentsdashboard(request):
     if total_amount_paid == None:
         total_amount_paid = 0
 
+    supplementary = Supplementaryincome.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amt = supplementary.aggregate(Sum('amount'))['amount__sum']
+    if total_amt == None:
+        total_amt = 0
+
     fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
     if total_amount == None:
@@ -73,7 +78,7 @@ def paymentsdashboard(request):
         total_trpayments = 0
 
      # Calculate total income (fees)
-    total_income = total_amount
+    total_income = total_amount + total_amt
 
     # Calculate total expenses (teacher payments + support staff payments + utilities)
     total_expenses = total_trpayments + total_sspayments + total_amount_paid
@@ -96,6 +101,7 @@ def paymentsdashboard(request):
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
+        'total_amt': total_amt,
         'total_sspayments' : total_sspayments,
         'total_trpayments' : total_trpayments,
         'fees_percentage': fees_percentage,

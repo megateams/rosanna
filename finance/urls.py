@@ -51,6 +51,12 @@ urlpatterns = [
     path('financeutilitieslist/', views.financeutilitiesList, name="Utilities List"),
     path('delete_utilities/', views.delete_utilities, name='delete_utilities'),
     path('edit_utilities/<str:utilitiesid>/', views.edit_utilities, name='edit_utilities'),
+
+    path('addsupplementaryincome/', views.addSupplementaryincome, name="Add Supplementary Income"),
+    path('supplementaryincomelist/', views.supplementaryincomeList, name="Supplementary Income List"),
+    path('delete_supplementary/', views.delete_supplementary, name='delete_supplementary'),
+    path('edit_supplementary/<str:supplementaryincomeid>/', views.edit_supplementary, name='edit_supplementary'),
+
     path('financereports/', views.financeReports, name =" Reports"),
     path('financestatistics/', views.financeStatistics, name =" Statistics"),
 
@@ -58,6 +64,7 @@ urlpatterns = [
     path('export-fees-by-class/<int:class_id>/', views.export_fees_by_class, name='export_fees_by_class'),
     path('export-feesstructure/', views.export_fees_structure_to_excel, name='export_fees_structure_to_excel'),
     path('export_utilities/', views.export_utilities_to_excel, name='export_utilities'),
+    path('export_supplementaryincome/', views.export_supplementaryincome_to_excel, name='export_supplementaryincome'),
     path('export_clearedstudents_to_excel/', views.export_clearedstudents_to_excel, name='Export Cleared Students to Excel'),
 
     # reports

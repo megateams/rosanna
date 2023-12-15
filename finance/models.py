@@ -51,6 +51,16 @@ class Utilities(models.Model):
     
     Display_Utilities =['utilitiesid', 'category', 'utilitiesdate', 'amountpaid', 'term', 'year']
 
+class Supplementaryincome(models.Model):
+    supplementaryincomeid = models.AutoField(primary_key=True)
+    category =models.CharField(max_length=255, blank=True, verbose_name="Category")
+    date =models.DateField(verbose_name="Date")
+    amount =models.CharField(max_length=20, blank=True, verbose_name="Amount")
+    term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None)
+    year = models.PositiveIntegerField(blank=True, verbose_name="Year", default=None)
+    
+    Display_Supplementaryincome =['supplemetaryincomeid', 'category', 'date', 'amount', 'term', 'year']
+
 
 
 # Create your models here.

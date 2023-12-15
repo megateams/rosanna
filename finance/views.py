@@ -290,6 +290,12 @@ def financedashboard(request):
     if total_amount_paid == None:
         total_amount_paid = 0
 
+    supplementary = Supplementaryincome.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amt = supplementary.aggregate(Sum('amount'))['amount__sum']
+    if total_amt == None:
+        total_amt = 0
+    
+
     fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
     if total_amount == None:
@@ -314,7 +320,7 @@ def financedashboard(request):
         total_trpayments = 0
 
     # Calculate total income (fees)
-    total_income = total_amount
+    total_income = total_amount + total_amt
 
     # Calculate total expenses (teacher payments + support staff payments + utilities)
     total_expenses = total_trpayments + total_sspayments + total_amount_paid
@@ -360,6 +366,7 @@ def financedashboard(request):
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
+        'total_amt': total_amt,
         'total_sspayments' : total_sspayments,
         'total_trpayments' : total_trpayments,
         'term_data' : term_data,
@@ -397,6 +404,11 @@ def that_term(request, id):
     total_amount_paid = utilities.aggregate(Sum('amountpaid'))['amountpaid__sum']
     if total_amount_paid == None:
         total_amount_paid = 0
+
+    supplementary = Supplementaryincome.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    total_amt = supplementary.aggregate(Sum('amount'))['amount__sum']
+    if total_amt == None:
+        total_amt = 0
 
     fees = Fees.objects.filter(term=term_data.current_term, year=term_data.current_year)
     total_amount = fees.aggregate(Sum('amount'))['amount__sum']
@@ -444,6 +456,7 @@ def that_term(request, id):
     context = {
         'total_amount_paid': total_amount_paid,
         'total_amount': total_amount,
+        'total_amt': total_amt,
         'total_sspayments' : total_sspayments,
         'total_trpayments' : total_trpayments,
         'term_data' : term_data,
@@ -1209,6 +1222,101 @@ def edit_utilities(request, utilitiesid):
         return redirect('Utilities List')
 # utilities views
 
+# Supplementary Income views
+def addSupplementaryincome(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+    if request.method == 'POST':
+        term_data = Term.objects.get(status=1)
+
+        # Capture the current date
+        current_date = date.today()
+
+        term = term_data.current_term
+        year = term_data.current_year
+        category = request.POST.get('category')
+        amount = request.POST.get('amount')
+        supplementary = Supplementaryincome(
+            category=category,
+            date=current_date,
+            amount=amount,
+            term = term,
+            year = year
+        )
+        supplementary.save()
+        messages.success(request, 'Supplementary income added successfully.')  # Display a success message
+        return redirect('Add Supplementary Income')  # Redirect to utilities list page
+
+    return render(request, 'finance/supplementaryincome/addSupplementaryincome.html', {'bursar':bursar})
+
+def supplementaryincomeList(request):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+    term_data = Term.objects.get(status=1)
+
+    bursar = Administrators.objects.get(id=admin_id)
+    total_amt = Supplementaryincome.objects.filter(term=term_data.current_term, year=term_data.current_year).aggregate(Sum('amount'))['amount__sum']
+    supplementary = Supplementaryincome.objects.filter(term=term_data.current_term, year=term_data.current_year)
+    context = {
+        'supplementaryincomes': supplementary,
+        'total_amt': total_amt,
+        'bursar': bursar
+    }
+    return render(request, 'finance/supplementaryincome/supplementaryincomeList.html', context)
+
+def delete_supplementary(request):
+    if request.method == 'POST':
+        supplementaryincomeid = request.POST.get("supplementaryincomeid")
+        try:
+            supplementary = Supplementaryincome.objects.get(supplementaryincomeid=supplementaryincomeid)
+            supplementary.delete()
+            messages.success(request, f"Supplementaryincome record {supplementaryincomeid} has been deleted.")
+        except Supplementaryincome.DoesNotExist:
+            messages.error(request, f"Supplementaryincome record {supplementaryincomeid} does not exist.")
+
+    return redirect('Supplementary Income List')  # Adjust this to the correct URL name
+
+
+def edit_supplementary(request, supplementaryincomeid):
+    if 'admin_id' not in request.session:
+        # If the teacher is not logged in, redirect to the login page
+        return redirect('financeloginpage')  # Replace 'login' with the name/url of your login view
+
+    # Get the teacher ID from the session
+    admin_id = request.session['admin_id']
+
+    bursar = Administrators.objects.get(id=admin_id)
+    try:
+        supplementary = Supplementaryincome.objects.get(supplementaryincomeid=supplementaryincomeid)
+
+        if request.method == 'POST':
+            updated_category = request.POST.get('category')
+            updated_date = request.POST.get('date')
+            updated_amount = request.POST.get('amount')
+            supplementary.category = updated_category
+            supplementary.amount = updated_amount
+            supplementary.save()
+            messages.success(request, 'Supplementary updated successfully.')
+            return redirect('Add supplementary')
+
+        context = {'supplementary': supplementary, 'bursar': bursar}
+        return render(request, 'finance/supplementaryincome/edit_supplementary.html', context)
+
+    except Supplementaryincome.DoesNotExist:
+        messages.error(request, 'Supplementary not found.')
+        return redirect('Supplementary Income List')
+# Supplementary Income views
+
 def financeReports(request):
     if 'admin_id' not in request.session:
         # If the teacher is not logged in, redirect to the login page
@@ -1418,6 +1526,32 @@ def export_utilities_to_excel(request):
     ws.column_dimensions['D'].width = 15
 
     filename = 'utilities_data.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb.save(response)
+
+    return response
+
+def export_supplementaryincome_to_excel(request):
+    data = Supplementaryincome.objects.all().values_list(
+        'supplementaryincomeid', 'category', 'date', 'amount'
+    )
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    ws.append(['Supplementyaryid', 'Category', 'Date', 'Amount'])
+
+    for row_data in data:
+        ws.append(row_data)
+
+    ws.column_dimensions['A'].width = 15
+    ws.column_dimensions['B'].width = 15
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 15
+
+    filename = 'supplementaryincome_data.xlsx'
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
