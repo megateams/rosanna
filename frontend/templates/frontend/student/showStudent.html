@@ -183,12 +183,12 @@
             <!-- student data -->
             <div class="btns mb-5   ">
                 <a href="#edit{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-primary"><i class="fas fa-edit    mr-2"></i>Edit Student</a>
-                <a href="#delete{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Student</a>
+                {% comment %} <a href="#delete{{student.stdnumber}}" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fas fa-trash    mr-2"></i>Delete Student</a> {% endcomment %}
             </div>
 
 
             <!-- delete -->
-            <div class="modal fade" id="delete{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            {% comment %} <div class="modal fade" id="delete{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -213,7 +213,7 @@
                         
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
 
             <!-- edit -->
             <div class="modal fade" id="edit{{student.stdnumber}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">

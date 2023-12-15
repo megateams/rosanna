@@ -321,6 +321,30 @@ def financedashboard(request):
 
     # Calculate profit
     profit = total_income - total_expenses
+    # total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+    # if total == 0:
+    #     fees_percentage = 0
+    #     utilities_percentage = 0
+    #     sspayments_percentage = 0
+    #     trpayments_percentage = 0
+    # else:
+
+
+    # Calculate the percentages
+    if total_amount == 0 or total_amount_paid== 0 or total_sspayments==0 or total_trpayments==0: 
+        context = {
+            'total_amount_paid': total_amount_paid,
+            'total_amount': total_amount,
+            'total_sspayments' : total_sspayments,
+            'total_trpayments' : total_trpayments,
+            'term_data' : term_data,
+            'fees_list': fees_list,
+            'bursar' : bursar,
+        }
+        return render(request, "finance/financedashboard.html", context)
+    else: 
+        total = total_amount + total_amount_paid + total_sspayments + total_trpayments
+
     total = total_amount + total_amount_paid + total_sspayments + total_trpayments
     if total == 0:
         fees_percentage = 0
