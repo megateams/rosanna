@@ -33,7 +33,7 @@ class Fees(models.Model):
     amount = models.CharField(max_length= 20, verbose_name='Amount paid' , blank=True)
     # accumulatedpayment = models.IntegerField(verbose_name = 'Accumulated Amount' , default = None)
     accumulatedpayment = models.IntegerField(default=0)
-    balance = models.CharField(max_length=20 , verbose_name='Balance' , blank=True)
+    balance = models.IntegerField(verbose_name='Balance' , blank=True)
     modeofpayment =models.CharField(max_length=255, blank=True, verbose_name="Mode of Payment")
     date =models.DateTimeField(auto_now=True)
     term = models.CharField(max_length=10, blank=True, verbose_name="Term", default=None, null=True)
