@@ -58,107 +58,108 @@
 
                     <!-- edit subject modal -->
                     <!-- edit subject modal -->
-                    <div class="modal fade" id="editSubjectsModal{{ class_obj.classid }}" tabindex="-1" role="dialog" aria-labelledby="editSubjectsModalLabel{{ class_instance.classid }}" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editSubjectsModalLabel{{ class_instance.classid }}">Edit Subjects for {{ class_instance.classname }}</h5>
+                    
+                </tr>
+                <div class="modal fade" id="editSubjectsModal{{ class_obj.classid }}" tabindex="-1" role="dialog" aria-labelledby="editSubjectsModalLabel{{ class_instance.classid }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSubjectsModalLabel{{ class_instance.classid }}">Edit Subjects for {{ class_instance.classname }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Include a form for editing selected subjects here -->
+                                <form method="post" action="/edit-class-subjects/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="classid" value="{{class_obj.classid}}">
+                                    <!-- Subject checkboxes -->
+                                    <div class="form-group col-md-6">
+                                        
+                                        <label for="class-checkbox">Attached Subjects:</label><br>
+                                        {% for subject in all_subjects %}
+                                            <input type="checkbox" name="subjects[]" id="subject{{ subject.subjectid }}" value="{{ subject.subjectid }}" {% if subject in class_instance.subjects.all %}checked{% endif %}>
+                                            <label for="subject{{ subject.subjectid }}">{{ subject.subjectname }}</label>
+                                            <br>
+                                        {% endfor %}
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- edit class modal -->
+                <div class="modal fade" id="edit{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit {{class_obj.classname}}</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Include a form for editing selected subjects here -->
-                                    <form method="post" action="/edit-class-subjects/">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="classid" value="{{class_obj.classid}}">
-                                        <!-- Subject checkboxes -->
-                                        <div class="form-group col-md-6">
-                                            
-                                            <label for="class-checkbox">Attached Subjects:</label><br>
-                                            {% for subject in all_subjects %}
-                                                <input type="checkbox" name="subjects[]" id="subject{{ subject.subjectid }}" value="{{ subject.subjectid }}" {% if subject in class_instance.subjects.all %}checked{% endif %}>
-                                                <label for="subject{{ subject.subjectid }}">{{ subject.subjectname }}</label>
-                                                <br>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/edit_class/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="classid" value="{{class_obj.classid}}">
+
+                                    <div class="form-group">
+                                        <label for="">Class name:</label>
+                                        <input type="text" name="classname" value="{{class_obj.classname}}" class="form-control">
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <label for="">Assign classteacher</label>
+                                        <select name="classteacher" id="" class="form-control" value="{{class_obj.classteacher}}">
+                                            <option value="" selected disabled>---</option>
+                                            {% for teacher in teachers %}
+                                                <option value="{{teacher.teachernames}}">{{teacher.teachernames}}</option>
                                             {% endfor %}
-                                        </div>
-                                        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- edit class modal -->
-                    <div class="modal fade" id="edit{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Edit {{class_obj.classname}}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="/edit_class/" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="classid" value="{{class_obj.classid}}">
-
-                                        <div class="form-group">
-                                            <label for="">Class name:</label>
-                                            <input type="text" name="classname" value="{{class_obj.classname}}" class="form-control">
-                                        </div>
-                                       
-                                        <div class="form-group">
-                                            <label for="">Assign classteacher</label>
-                                            <select name="classteacher" id="" class="form-control" value="{{class_obj.classteacher}}">
-                                                <option value="" selected disabled>---</option>
-                                                {% for teacher in teachers %}
-                                                    <option value="{{teacher.teachernames}}">{{teacher.teachernames}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                                         
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-sm btn-primary">Update</button>
-                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                            
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- delete modal -->
-                    <div class="modal fade" id="delete{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Delete Class</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="/delete_class/" method="post">
-                                        {% csrf_token %}
-
-                                        <input type="hidden" value="{{class_obj.classid}}" name="classid">
-                                        <p>Are You Sure you want to delete the class {{class_obj.classname}}</p>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-sm btn-success">Yes</button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">No</button>
-                                            
-                                        </div>
-                                    </form>
-                                </div>
-                                
+                <!-- delete modal -->
+                <div class="modal fade" id="delete{{class_obj.classid}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete Class</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                             </div>
+                            <div class="modal-body">
+                                <form action="/delete_class/" method="post">
+                                    {% csrf_token %}
+
+                                    <input type="hidden" value="{{class_obj.classid}}" name="classid">
+                                    <p>Are You Sure you want to delete the class {{class_obj.classname}}</p>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-sm btn-success">Yes</button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">No</button>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                            
                         </div>
                     </div>
-                </tr>
+                </div>
                 {% endfor %}
             </tbody>
         </table>

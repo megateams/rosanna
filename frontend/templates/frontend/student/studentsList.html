@@ -34,7 +34,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <table class="table" id="table">
+        <table class="table table-striped" id="table">
             <thead>
                 <tr>
                     <th>Student number</th>
@@ -42,10 +42,10 @@
                     <th>Child Fullname</th>
                     <th>Gender</th>
                     <th>Date of Birth</th>
-                    <th>Address</th>
+                    <!-- <th>Address</th> -->
                     <th>Registration Date </th>
-                    <th>House</th>
-                    <th>Username</th>
+                    <!-- <th>House</th> -->
+                    <!-- <th>Username</th> -->
                     <th>Class</th>
                     <th>Actions</th>
                 </tr>
@@ -70,10 +70,10 @@
                         {% endif %}
                     </td>
                     <td>{{ student.dob }}</td>
-                    <td>{{ student.address }}</td>
+                    <!-- <td>{{ student.address }}</td> -->
                     <td>{{ student.regdate }}</td>
-                    <td>{{ student.house }}</td>
-                    <td>{{ student.username }}</td>
+                    <!-- <td>{{ student.house }}</td> -->
+                    <!-- <td>{{ student.username }}</td> -->
                     <td>{{ student.stdclass.classname }}</td>
                      <td>   
                         <a href="/showstudent/{{student.stdnumber}}" class="btn btn-sm btn-primary ">More ...</a> 

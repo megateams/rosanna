@@ -4,6 +4,12 @@
     user-select: none;
     margin: 0;
     padding: 0;
+    /* display: none; */
+    font-size: 15px;
+}
+
+.sidebbar li{
+    margin-bottom: 10px;
 }
 
 
@@ -11,6 +17,8 @@
     display: flex;
     width: 100%;
     /* position: fixed; */
+    height: 100vh;
+    overflow: hidden;
 
 }
 .sidebar{
@@ -124,42 +132,22 @@
     /* background-color: #fff; */
     border-radius: 10px;
 }
-.table-section .table thead
-{
-    background-color: rgb(26, 1, 1);
-    color: #fff;
-}
 
-.table-section .table tbody tr td{
+
+/* .table-section .table tbody tr td{
     background-color: #fff;
     border: 1px solid #000;
-}
+} */
 
 /* table */
 
 .cards{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 15px;
     /* display: none; */
 }
 
-.cards .card{
-    margin: 10px;
-}
-
-.cards .card:hover{
-    background-color: rgb(95, 86, 86);
-}
-
-.cards .session_card
-{
-    background-color: blue;
-}
-
-.cards .stud_card
-{
-    background-color: green;
-}
 
 .cards .card .icon{
     font-size: 2rem;
@@ -167,30 +155,27 @@
     justify-content: center;
     padding-right: 50px;
     padding-top: 10px;
-    color: #fff;
+    color: #626060;
     
 }
 
 .cards .card{
     text-align: center;
     padding-top: 20px;
-    color: #fff;
-    border-radius: 5px;
+    color: #626060;
+    /* border-radius: 5px; */
     /* display: none; */
-    box-shadow: 2px 2px 2px 2px rgb(64, 43, 43);
+    /* box-shadow: 2px 2px 2px 2px rgb(64, 43, 43); */
 }
 
-.cards .card:hover{
-    background-color: rgb(95,86,86);
-}
 
 .card .cbody
 {
-    border-right: 3px solid #fff;
+    border-right: 3px solid #626060;
     margin-bottom: 10px;
 }
 
-.cards .session_card{
+/* .cards .session_card{
     background-color: blue;
 }
 
@@ -203,7 +188,7 @@
 }
 .cards .staff-card{
     background-color: #f9b855;
-}
+} */
 .donut-chart {
     /* width: 400px; */
     height: 300px;
@@ -228,8 +213,8 @@
 }
 
 .footer{
-    background-color: #251a1b;
-    color: #fff;
+    background-color: #ffffff;
+    color: #626060;
     height: 5vh;
 }
 
